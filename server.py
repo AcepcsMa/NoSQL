@@ -1,5 +1,9 @@
+__author__ = 'Ma Haoxiang'
+
+# import
 import flask
 import db
+from configParser import configParser
 
 app = flask.Flask(__name__)
 
@@ -8,9 +12,10 @@ def makeElem(expression):
     if("->" not in expression):
         return "Expression Error!"
     else:
-        elemName = expression.split("->")[0]
-        elemValue = expression.split("->")[1]
-        result = myDb.createElem(elemName,elemValue)
+        dbName = expression.split("->")[0]
+        elemName = expression.split("->")[1]
+        elemValue = expression.split("->")[2]
+        result = myDb.createElem(elemName, elemValue, dbName)
         if(result == myDb.CREATE_ELEM_SUCCESS):
             return "Make Element Success"
         elif(result == myDb.ELEM_ALREADY_EXIST):
@@ -19,9 +24,11 @@ def makeElem(expression):
             return "Element Type Error"
 
 
-@app.route("/get/<elemName>",methods=["GET"])
-def getElem(elemName):
-    result = myDb.getElem(elemName)
+@app.route("/get/<element>",methods=["GET"])
+def getElem(element):
+    dbName = element.split("->")[0]
+    elemName = element.split("->")[1]
+    result = myDb.getElem(elemName, dbName)
     if(result[0] == myDb.ELEM_NOT_EXIST):
         return None
     elif(result[0] == myDb.GET_ELEM_SUCCESS):
@@ -30,12 +37,26 @@ def getElem(elemName):
         return None
 
 
-@app.route("/searchElem/<string:expression>",methods=["GET"])
-def searchElem(expression):
-    result = myDb.searchElem(expression)
+@app.route("/searchElem/<dbName>/<string:expression>",methods=["GET"])
+def searchElem(dbName,expression):
+    result = myDb.searchElem(expression, dbName)
     return flask.jsonify(result)
 
 
+@app.route("/getAllElem/<dbName>",methods=["GET"])
+def getAllElem(dbName):
+    return flask.jsonify(myDb.getAllElem(dbName))
+
+
+
 if __name__ == '__main__':
+
+    # init the database
     myDb = db.NoSqlDb()
-    app.run(host="localhost",port=8888,debug=True)
+
+    # init the config parser and read the server config
+    confParser = configParser()
+    serverConfig = confParser.getServerConfig("server.conf")
+
+    # run the server
+    app.run(host=serverConfig["HOST"],port=serverConfig["PORT"],debug=serverConfig["DEBUG"])

@@ -11,6 +11,8 @@ class NoSqlDb:
     ELEM_NOT_EXIST = 3
     UPDATE_ELEM_SUCCESS = 4
     GET_ELEM_SUCCESS = 5
+    ELEM_INCR_SUCCESS = 6
+    ELEM_DECR_SUCCESS = 7
 
     def __init__(self):
         self.dbNameSet = (["db0","db1","db2","db3","db4"])
@@ -25,6 +27,13 @@ class NoSqlDb:
     # check if the type of elem is valid (string or int)
     def isValidType(self, elem):
         if('str' in str(type(elem)) or 'int' in str(type(elem))):
+            return True
+        else:
+            return False
+
+
+    def isInt(self, elem):
+        if("int" in str(type(elem))):
             return True
         else:
             return False
@@ -91,6 +100,32 @@ class NoSqlDb:
     # get all element names in the db
     def getAllElem(self, dbName):
         return list(self.elemName[dbName])
+
+
+    # increase the value of an element
+    def increaseElem(self, elemName, dbName):
+        if(self.isValidType(elemName) and self.isValidType(dbName)):
+            if(elemName not in self.elemName[dbName]):
+                return NoSqlDb.ELEM_NOT_EXIST
+            else:
+                if(self.isInt(self.elemDict[dbName][elemName])): # check if the element can be increased
+                    self.elemDict[dbName][elemName] += 1
+                    return NoSqlDb.ELEM_INCR_SUCCESS
+                else:
+                    return NoSqlDb.ELEM_TYPE_ERROR
+
+
+    # decrease the value of an element
+    def decreaseElem(self, elemName, dbName):
+        if (self.isValidType(elemName) and self.isValidType(dbName)):
+            if (elemName not in self.elemName[dbName]):
+                return NoSqlDb.ELEM_NOT_EXIST
+            else:
+                if (self.isInt(self.elemDict[dbName][elemName])): # check if the element can be decreased
+                    self.elemDict[dbName][elemName] -= 1
+                    return NoSqlDb.ELEM_DECR_SUCCESS
+                else:
+                    return NoSqlDb.ELEM_TYPE_ERROR
 
 
 if __name__ == '__main__':

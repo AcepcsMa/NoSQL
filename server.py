@@ -15,6 +15,10 @@ def makeElem(expression):
         dbName = expression.split("->")[0]
         elemName = expression.split("->")[1]
         elemValue = expression.split("->")[2]
+        if(elemValue[0] == "\"" and elemValue[-1] == "\""):
+            elemValue = str(elemValue[1:-1])
+        else:
+            elemValue = int(elemValue)
         result = myDb.createElem(elemName, elemValue, dbName)
         if(result == myDb.CREATE_ELEM_SUCCESS):
             return "Make Element Success"
@@ -32,7 +36,7 @@ def getElem(element):
     if(result[0] == myDb.ELEM_NOT_EXIST):
         return None
     elif(result[0] == myDb.GET_ELEM_SUCCESS):
-        return result[1]
+        return str(result[1])
     elif(result[0] == myDb.ELEM_TYPE_ERROR):
         return None
 
@@ -47,6 +51,33 @@ def searchElem(dbName,expression):
 def getAllElem(dbName):
     return flask.jsonify(myDb.getAllElem(dbName))
 
+
+@app.route("/increaseElem/<element>",methods=["GET"])
+def increaseElem(element):
+    dbName = element.split("->")[0]
+    elemName = element.split("->")[1]
+    result = myDb.increaseElem(elemName, dbName)
+
+    if(result == myDb.ELEM_NOT_EXIST):
+        return "Element does not exist"
+    elif(result == myDb.ELEM_INCR_SUCCESS):
+        return "Element increase success"
+    elif(result == myDb.ELEM_TYPE_ERROR):
+        return "Element type error"
+
+
+@app.route("/decreaseElem/<element>",methods=["GET"])
+def decreaseElem(element):
+    dbName = element.split("->")[0]
+    elemName = element.split("->")[1]
+    result = myDb.decreaseElem(elemName, dbName)
+
+    if (result == myDb.ELEM_NOT_EXIST):
+        return "Element does not exist"
+    elif (result == myDb.ELEM_DECR_SUCCESS):
+        return "Element decrease success"
+    elif (result == myDb.ELEM_TYPE_ERROR):
+        return "Element type error"
 
 
 if __name__ == '__main__':

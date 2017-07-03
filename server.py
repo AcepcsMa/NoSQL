@@ -15,7 +15,7 @@ def makeElem(expression):
         dbName = expression.split("->")[0]
         elemName = expression.split("->")[1]
         elemValue = expression.split("->")[2]
-        if(elemValue[0] == "\"" and elemValue[-1] == "\""):
+        if(elemValue[0] == "\"" and elemValue[-1] == "\""): # distinguish string value and int value
             elemValue = str(elemValue[1:-1])
         else:
             elemValue = int(elemValue)

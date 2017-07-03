@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.py" afterPath="$PROJECT_DIR$/db.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.py" afterPath="$PROJECT_DIR$/server.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,7 +21,7 @@
             <entry file="file://$PROJECT_DIR$/db.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="428">
-                  <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
+                  <caret line="116" column="0" lean-forward="true" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -67,8 +66,8 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="494">
-                  <caret line="55" column="26" lean-forward="true" selection-start-line="55" selection-start-column="26" selection-end-line="55" selection-end-column="26" />
+                <state relative-caret-position="277">
+                  <caret line="17" column="100" lean-forward="false" selection-start-line="17" selection-start-column="100" selection-end-line="17" selection-end-column="100" />
                   <folding>
                     <element signature="e#37#49#0" expanded="true" />
                   </folding>
@@ -433,15 +432,15 @@
     <entry file="file://$PROJECT_DIR$/db.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="428">
-          <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
+          <caret line="116" column="0" lean-forward="true" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="55" column="26" lean-forward="true" selection-start-line="55" selection-start-column="26" selection-end-line="55" selection-end-column="26" />
+        <state relative-caret-position="277">
+          <caret line="17" column="100" lean-forward="false" selection-start-line="17" selection-start-column="100" selection-end-line="17" selection-end-column="100" />
           <folding>
             <element signature="e#37#49#0" expanded="true" />
           </folding>

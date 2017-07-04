@@ -80,10 +80,19 @@ def decreaseElem(element):
         return "Element type error"
 
 
+@app.route("/save",methods=["GET"])
+def saveDb():
+    myDb.saveDb()
+    return "Save success"
+
+
 if __name__ == '__main__':
 
     # init the database
     myDb = db.NoSqlDb()
+
+    # load data from file
+    myDb.loadDb()
 
     # init the config parser and read the server config
     confParser = configParser()

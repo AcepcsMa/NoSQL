@@ -2,9 +2,12 @@ __author__ = 'Ma Haoxiang'
 
 # import
 import re
+import os
+import json
 
 class NoSqlDb:
 
+    # return types
     ELEM_TYPE_ERROR = 0
     CREATE_ELEM_SUCCESS = 1
     ELEM_ALREADY_EXIST = 2
@@ -15,7 +18,7 @@ class NoSqlDb:
     ELEM_DECR_SUCCESS = 7
 
     def __init__(self):
-        self.dbNameSet = (["db0","db1","db2","db3","db4"])
+        self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"} # initial db names
         self.elemName = dict()
         self.elemDict = dict()
 
@@ -128,5 +131,42 @@ class NoSqlDb:
                     return NoSqlDb.ELEM_TYPE_ERROR
 
 
-if __name__ == '__main__':
+    # save the data into file
+    def saveDb(self):
+        try:    # check if the data directory exists
+            os.makedirs("data")
+            for dbName in self.dbNameSet:
+                os.makedirs("data{}{}".format(os.sep,dbName))
+        except Exception as e:
+            print (e)
+
+        for dbName in self.dbNameSet:
+            # save elements of each db
+            with open("data" + os.sep + dbName + os.sep + "elemName.txt", "w") as elemNameFile:
+                elemNameFile.write(json.dumps(list(self.elemName[dbName])))
+            with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "w") as elemValueFile:
+                elemValueFile.write((json.dumps(self.elemDict[dbName])))
+
+
+    # recover data from file
+    def loadDb(self):
+        try:
+            dbNameSet = os.listdir("data")  # find all dbName in the data directory
+            for dbName in dbNameSet:
+                self.dbNameSet.add(dbName)
+
+                # recover element names
+                with open("data"+os.sep+dbName+os.sep+"elemName.txt","r") as elemNameFile:
+                    elemNames = json.loads(elemNameFile.read())
+                    for elemName in elemNames:
+                        self.elemName[dbName].add(elemName)
+                # recover element values
+                with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "r") as elemValueFile:
+                    self.elemDict[dbName] = json.loads(elemValueFile.read())
+
+        except Exception as e:
+            print (e)
+
+
+if __name__ == "__main__":
     pass

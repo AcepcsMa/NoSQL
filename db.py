@@ -4,6 +4,7 @@ __author__ = 'Ma Haoxiang'
 import re
 import os
 import json
+import time
 
 class NoSqlDb:
 
@@ -16,8 +17,18 @@ class NoSqlDb:
     GET_ELEM_SUCCESS = 5
     ELEM_INCR_SUCCESS = 6
     ELEM_DECR_SUCCESS = 7
+    ELEM_SEARCH_SUCCESS = 8
+    DB_SAVE_ERROR = 9
+    DB_SAVE_SUCCESS = 10
 
     def __init__(self):
+        
+        self.msg = {
+            "msg":None,
+            "typeCode":None,
+            "data":None
+        }
+        
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"} # initial db names
         self.elemName = dict()
         self.elemDict = dict()
@@ -44,34 +55,53 @@ class NoSqlDb:
 
     # create an element in the db
     def createElem(self, elemName, value, dbName):
+
         if(self.isValidType(elemName)
            and self.isValidType(value)
            and self.isValidType(dbName)): # check the type of elem name and elem value
             if elemName not in self.elemName[dbName]:
                 self.elemName[dbName].add(elemName)
                 self.elemDict[dbName][elemName] = value
-                return NoSqlDb.CREATE_ELEM_SUCCESS
+                self.msg["msg"] = "Make Element Success"
+                self.msg["typeCode"] = NoSqlDb.CREATE_ELEM_SUCCESS
+                self.msg["data"] = elemName
+                return self.msg
 
             else:   # this elem already exists in the db
-                return NoSqlDb.ELEM_ALREADY_EXIST
+                self.msg["msg"] = "Element Already Exists"
+                self.msg["typeCode"] = NoSqlDb.ELEM_ALREADY_EXIST
+                self.msg["data"] = elemName
+                return self.msg
 
         else:   # the type of elem name or elem value is invalid
-            return NoSqlDb.ELEM_TYPE_ERROR
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = NoSqlDb.ELEM_TYPE_ERROR
+            self.msg["data"] = elemName
+            return self.msg
 
 
     # update the value of an elem in the db
     def updateElem(self, elemName, value, dbName):
         if elemName not in self.elemName[dbName]:
-            return NoSqlDb.ELEM_NOT_EXIST
+            self.msg["msg"] = "Element Does Not Exist"
+            self.msg["typeCode"] = NoSqlDb.ELEM_NOT_EXIST
+            self.msg["data"] = elemName
+            return self.msg
 
         else:   # find the elem in the db
             if(self.isValidType(elemName)
                and self.isValidType(value)
                and self.isValidType(dbName)):
                 self.elemDict[dbName][elemName] = value
-                return NoSqlDb.UPDATE_ELEM_SUCCESS
+                self.msg["msg"] = "Element Update Success"
+                self.msg["typeCode"] = NoSqlDb.UPDATE_ELEM_SUCCESS
+                self.msg["data"] = elemName
+                return self.msg
             else:
-                return NoSqlDb.ELEM_TYPE_ERROR
+                self.msg["msg"] = "Element Type Error"
+                self.msg["typeCode"] = NoSqlDb.ELEM_TYPE_ERROR
+                self.msg["data"] = elemName
+                return self.msg
 
 
     # get the value of existed elem
@@ -79,12 +109,21 @@ class NoSqlDb:
         if(self.isValidType(elemName)
            and self.isValidType(dbName)):
             if(elemName not in self.elemName[dbName]):
-                return (NoSqlDb.ELEM_NOT_EXIST,None)
+                self.msg["msg"] = "Element Does Not Exist"
+                self.msg["typeCode"] = NoSqlDb.ELEM_NOT_EXIST
+                self.msg["data"] = elemName
+                return self.msg
             else:
-                return (NoSqlDb.GET_ELEM_SUCCESS,self.elemDict[dbName][elemName])
+                self.msg["msg"] = "Element Get Success"
+                self.msg["typeCode"] = NoSqlDb.GET_ELEM_SUCCESS
+                self.msg["data"] = self.elemDict[dbName][elemName]
+                return self.msg
 
         else:
-            return (NoSqlDb.ELEM_TYPE_ERROR,None)
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = NoSqlDb.ELEM_TYPE_ERROR
+            self.msg["data"] = elemName
+            return self.msg
 
 
     # search element using regular expression
@@ -97,38 +136,62 @@ class NoSqlDb:
             except:
                 continue
 
-        return list(searchResult)
+        self.msg["msg"] = "Element Search Success"
+        self.msg["typeCode"] = NoSqlDb.ELEM_SEARCH_SUCCESS
+        self.msg["data"] = list(searchResult)
+        return self.msg
 
 
     # get all element names in the db
-    def getAllElem(self, dbName):
-        return list(self.elemName[dbName])
+    def searchAllElem(self, dbName):
+        self.msg["msg"] = "All Elements Search Success"
+        self.msg["typeCode"] = NoSqlDb.ELEM_SEARCH_SUCCESS
+        self.msg["data"] = list(self.elemName[dbName])
+        return self.msg
 
 
     # increase the value of an element
     def increaseElem(self, elemName, dbName):
         if(self.isValidType(elemName) and self.isValidType(dbName)):
             if(elemName not in self.elemName[dbName]):
-                return NoSqlDb.ELEM_NOT_EXIST
+                self.msg["msg"] = "Element Does Not Exist"
+                self.msg["typeCode"] = NoSqlDb.ELEM_NOT_EXIST
+                self.msg["data"] = elemName
+                return self.msg
             else:
                 if(self.isInt(self.elemDict[dbName][elemName])): # check if the element can be increased
                     self.elemDict[dbName][elemName] += 1
-                    return NoSqlDb.ELEM_INCR_SUCCESS
+                    self.msg["msg"] = "Element Increase Success"
+                    self.msg["typeCode"] = NoSqlDb.ELEM_INCR_SUCCESS
+                    self.msg["data"] = self.elemDict[dbName][elemName]
+                    return self.msg
                 else:
-                    return NoSqlDb.ELEM_TYPE_ERROR
+                    self.msg["msg"] = "Element Type Error"
+                    self.msg["typeCode"] = NoSqlDb.ELEM_TYPE_ERROR
+                    self.msg["data"] = elemName
+                    return self.msg
 
 
     # decrease the value of an element
     def decreaseElem(self, elemName, dbName):
         if (self.isValidType(elemName) and self.isValidType(dbName)):
             if (elemName not in self.elemName[dbName]):
-                return NoSqlDb.ELEM_NOT_EXIST
+                self.msg["msg"] = "Element Does Not Exist"
+                self.msg["typeCode"] = NoSqlDb.ELEM_NOT_EXIST
+                self.msg["data"] = elemName
+                return self.msg
             else:
                 if (self.isInt(self.elemDict[dbName][elemName])): # check if the element can be decreased
                     self.elemDict[dbName][elemName] -= 1
-                    return NoSqlDb.ELEM_DECR_SUCCESS
+                    self.msg["msg"] = "Element Increase Success"
+                    self.msg["typeCode"] = NoSqlDb.ELEM_DECR_SUCCESS
+                    self.msg["data"] = self.elemDict[dbName][elemName]
+                    return self.msg
                 else:
-                    return NoSqlDb.ELEM_TYPE_ERROR
+                    self.msg["msg"] = "Element Type Error"
+                    self.msg["typeCode"] = NoSqlDb.ELEM_TYPE_ERROR
+                    self.msg["data"] = elemName
+                    return self.msg
 
 
     # save the data into file
@@ -146,6 +209,11 @@ class NoSqlDb:
                 elemNameFile.write(json.dumps(list(self.elemName[dbName])))
             with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "w") as elemValueFile:
                 elemValueFile.write((json.dumps(self.elemDict[dbName])))
+
+        self.msg["msg"] = "Database Save Success"
+        self.msg["typeCode"] = NoSqlDb.DB_SAVE_SUCCESS
+        self.msg["data"] = time.time()
+        return self.msg
 
 
     # recover data from file

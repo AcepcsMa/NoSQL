@@ -20,12 +20,7 @@ def makeElem(expression):
         else:
             elemValue = int(elemValue)
         result = myDb.createElem(elemName, elemValue, dbName)
-        if(result == myDb.CREATE_ELEM_SUCCESS):
-            return "Make Element Success"
-        elif(result == myDb.ELEM_ALREADY_EXIST):
-            return "Element Already Exists"
-        elif(result == myDb.ELEM_TYPE_ERROR):
-            return "Element Type Error"
+        return flask.jsonify(result)
 
 
 @app.route("/get/<element>",methods=["GET"])
@@ -33,12 +28,8 @@ def getElem(element):
     dbName = element.split("->")[0]
     elemName = element.split("->")[1]
     result = myDb.getElem(elemName, dbName)
-    if(result[0] == myDb.ELEM_NOT_EXIST):
-        return None
-    elif(result[0] == myDb.GET_ELEM_SUCCESS):
-        return str(result[1])
-    elif(result[0] == myDb.ELEM_TYPE_ERROR):
-        return None
+
+    return flask.jsonify(result)
 
 
 @app.route("/searchElem/<dbName>/<string:expression>",methods=["GET"])
@@ -48,8 +39,9 @@ def searchElem(dbName,expression):
 
 
 @app.route("/getAllElem/<dbName>",methods=["GET"])
-def getAllElem(dbName):
-    return flask.jsonify(myDb.getAllElem(dbName))
+def searchAllElem(dbName):
+    result = myDb.searchAllElem(dbName)
+    return flask.jsonify(result)
 
 
 @app.route("/increaseElem/<element>",methods=["GET"])
@@ -58,12 +50,7 @@ def increaseElem(element):
     elemName = element.split("->")[1]
     result = myDb.increaseElem(elemName, dbName)
 
-    if(result == myDb.ELEM_NOT_EXIST):
-        return "Element does not exist"
-    elif(result == myDb.ELEM_INCR_SUCCESS):
-        return "Element increase success"
-    elif(result == myDb.ELEM_TYPE_ERROR):
-        return "Element type error"
+    return flask.jsonify(result)
 
 
 @app.route("/decreaseElem/<element>",methods=["GET"])
@@ -72,18 +59,13 @@ def decreaseElem(element):
     elemName = element.split("->")[1]
     result = myDb.decreaseElem(elemName, dbName)
 
-    if (result == myDb.ELEM_NOT_EXIST):
-        return "Element does not exist"
-    elif (result == myDb.ELEM_DECR_SUCCESS):
-        return "Element decrease success"
-    elif (result == myDb.ELEM_TYPE_ERROR):
-        return "Element type error"
+    return flask.jsonify(result)
 
 
 @app.route("/save",methods=["GET"])
 def saveDb():
-    myDb.saveDb()
-    return "Save success"
+    result = myDb.saveDb()
+    return flask.jsonify(result)
 
 
 if __name__ == '__main__':

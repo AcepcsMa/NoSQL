@@ -2,6 +2,7 @@ __author__ = 'Ma Haoxiang'
 
 # import
 import flask
+import handler
 import db
 from configParser import configParser
 
@@ -12,6 +13,7 @@ def makeElem(expression):
     if("->" not in expression):
         return "Expression Error!"
     else:
+        myHandler = handler.dbHandler(database)
         dbName = expression.split("->")[0]
         elemName = expression.split("->")[1]
         elemValue = expression.split("->")[2]
@@ -19,62 +21,64 @@ def makeElem(expression):
             elemValue = str(elemValue[1:-1])
         else:
             elemValue = int(elemValue)
-        result = myDb.createElem(elemName, elemValue, dbName)
+        result = myHandler.createElem(elemName, elemValue, dbName)
         return flask.jsonify(result)
 
 
 @app.route("/get/<element>",methods=["GET"])
 def getElem(element):
+    myHandler = handler.dbHandler(database)
     dbName = element.split("->")[0]
     elemName = element.split("->")[1]
-    result = myDb.getElem(elemName, dbName)
+    result = myHandler.getElem(elemName, dbName)
 
     return flask.jsonify(result)
 
 
 @app.route("/searchElem/<dbName>/<string:expression>",methods=["GET"])
 def searchElem(dbName,expression):
-    result = myDb.searchElem(expression, dbName)
+    myHandler = handler.dbHandler(database)
+    result = myHandler.searchElem(expression, dbName)
     return flask.jsonify(result)
 
 
 @app.route("/getAllElem/<dbName>",methods=["GET"])
 def searchAllElem(dbName):
-    result = myDb.searchAllElem(dbName)
+    myHandler = handler.dbHandler(database)
+    result = myHandler.searchAllElem(dbName)
     return flask.jsonify(result)
 
 
 @app.route("/increaseElem/<element>",methods=["GET"])
 def increaseElem(element):
+    myHandler = handler.dbHandler(database)
     dbName = element.split("->")[0]
     elemName = element.split("->")[1]
-    result = myDb.increaseElem(elemName, dbName)
+    result = myHandler.increaseElem(elemName, dbName)
 
     return flask.jsonify(result)
 
 
 @app.route("/decreaseElem/<element>",methods=["GET"])
 def decreaseElem(element):
+    myHandler = handler.dbHandler(database)
     dbName = element.split("->")[0]
     elemName = element.split("->")[1]
-    result = myDb.decreaseElem(elemName, dbName)
+    result = myHandler.decreaseElem(elemName, dbName)
 
     return flask.jsonify(result)
 
 
 @app.route("/save",methods=["GET"])
 def saveDb():
-    result = myDb.saveDb()
+    myHandler = handler.dbHandler(database)
+    result = myHandler.saveDb()
     return flask.jsonify(result)
 
 
 if __name__ == '__main__':
-
     # init the database
-    myDb = db.NoSqlDb()
-
-    # load data from file
-    myDb.loadDb()
+    database = db.NoSqlDb()
 
     # init the config parser and read the server config
     confParser = configParser()

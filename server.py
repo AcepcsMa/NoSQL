@@ -11,7 +11,12 @@ app = flask.Flask(__name__)
 @app.route("/make/<expression>",methods=["GET"])
 def makeElem(expression):
     if("->" not in expression):
-        return "Expression Error!"
+        msg = {
+            "msg":"Wrong Expression",
+            "typeCode":None,
+            "data":None
+        }
+        return flask.jsonify(msg)
     else:
         myHandler = handler.dbHandler(database)
         dbName = expression.split("->")[0]
@@ -74,6 +79,23 @@ def saveDb():
     myHandler = handler.dbHandler(database)
     result = myHandler.saveDb()
     return flask.jsonify(result)
+
+
+@app.route("/deleteElem/<string:element>",methods=["GET"])
+def deleteElem(element):
+    dbName = element.split("->")[0]
+    elemName = element.split("->")[1]
+    myHandler = handler.dbHandler(database)
+    result = myHandler.deleteElem(elemName, dbName)
+    return flask.jsonify(result)
+
+
+@app.route("/addDatabase/<string:dbName>",methods=["GET"])
+def addDatabase(dbName):
+    myHandler = handler.dbHandler(database)
+    result = myHandler.addDatabase(dbName)
+    return flask.jsonify(result)
+
 
 
 if __name__ == '__main__':

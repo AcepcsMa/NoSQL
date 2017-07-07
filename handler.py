@@ -23,6 +23,9 @@ class dbHandler:
     DB_SAVE_SUCCESS = 10
     ELEM_IS_LOCKED = 11
     DB_SAVE_LOCKED = 12
+    ELEM_DELETE_SUCCESS = 13
+    DB_EXISTED = 14
+    DB_CREATE_SUCCESS = 15
 
 
     def __init__(self, database):
@@ -194,6 +197,53 @@ class dbHandler:
                     self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
                     self.msg["data"] = elemName
                     return self.msg
+
+
+    # delete an element in the database
+    def deleteElem(self, elemName, dbName):
+        if(self.isValidType(elemName) and self.isValidType(dbName)):
+            if (self.database.isElemExist(dbName, elemName) is False):
+                self.msg["msg"] = "Element Does Not Exist"
+                self.msg["typeCode"] = dbHandler.ELEM_NOT_EXIST
+                self.msg["data"] = elemName
+            else:
+                result = self.database.deleteElem(elemName, dbName)
+                if(result == NoSqlDb.ELEM_LOCKED):
+                    self.msg["msg"] = "Element Is Locked"
+                    self.msg["typeCode"] = dbHandler.ELEM_IS_LOCKED
+                    self.msg["data"] = elemName
+                elif(result == NoSqlDb.ELEM_DELETE_SUCCESS):
+                    self.msg["msg"] = "Element Delete Success"
+                    self.msg["typeCode"] = dbHandler.ELEM_DELETE_SUCCESS
+                    self.msg["data"] = elemName
+        else:
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = elemName
+        return self.msg
+
+
+    # add a customized database
+    def addDatabase(self, dbName):
+        if(self.isValidType(dbName)):
+            result = self.database.addDb(dbName)
+            if(result == NoSqlDb.DB_EXISTED):
+                self.msg["msg"] = "Database Already Exists"
+                self.msg["typeCode"] = dbHandler.DB_EXISTED
+                self.msg["data"] = dbName
+            elif(result == NoSqlDb.DB_CREATE_SUCCESS):
+                self.msg["msg"] = "Database Create Success"
+                self.msg["typeCode"] = dbHandler.DB_CREATE_SUCCESS
+                self.msg["data"] = dbName
+            elif(result == NoSqlDb.DB_SAVE_LOCK):
+                self.msg["msg"] = "Database Is Locked"
+                self.msg["typeCode"] = dbHandler.DB_SAVE_LOCKED
+                self.msg["data"] = dbName
+        else:
+            self.msg["msg"] = "Database Name Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = dbName
+        return self.msg
 
 
     # save the data into file

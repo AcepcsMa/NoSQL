@@ -5,6 +5,7 @@ import flask
 import handler
 import db
 from configParser import configParser
+import timer
 
 app = flask.Flask(__name__)
 
@@ -36,7 +37,6 @@ def getElem(element):
     dbName = element.split("->")[0]
     elemName = element.split("->")[1]
     result = myHandler.getElem(elemName, dbName)
-
     return flask.jsonify(result)
 
 
@@ -60,7 +60,6 @@ def increaseElem(element):
     dbName = element.split("->")[0]
     elemName = element.split("->")[1]
     result = myHandler.increaseElem(elemName, dbName)
-
     return flask.jsonify(result)
 
 
@@ -97,6 +96,12 @@ def addDatabase(dbName):
     return flask.jsonify(result)
 
 
+@app.route("/getAllDatabase",methods=["GET"])
+def getAllDatabase():
+    myHandler = handler.dbHandler(database)
+    result = myHandler.getAllDatabase()
+    return flask.jsonify(result)
+
 
 if __name__ == '__main__':
     # init the database
@@ -105,6 +110,10 @@ if __name__ == '__main__':
     # init the config parser and read the server config
     confParser = configParser()
     serverConfig = confParser.getServerConfig("server.conf")
+
+    #init the save timer
+    saveTimer = timer.timer(database,serverConfig["SAVE_INTERVAL"])
+    saveTimer.start()
 
     # run the server
     app.run(host=serverConfig["HOST"],port=serverConfig["PORT"],debug=serverConfig["DEBUG"])

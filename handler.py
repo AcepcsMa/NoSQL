@@ -26,6 +26,7 @@ class dbHandler:
     ELEM_DELETE_SUCCESS = 13
     DB_EXISTED = 14
     DB_CREATE_SUCCESS = 15
+    DB_GET_SUCCESS = 16
 
 
     def __init__(self, database):
@@ -61,7 +62,7 @@ class dbHandler:
            and self.isValidType(value)
            and self.isValidType(dbName)): # check the type of elem name and elem value
             if(self.database.isElemExist(dbName, elemName) is False):
-                self.database.createElem(dbName, elemName)
+                self.database.createElem(elemName, value, dbName)
                 self.msg["msg"] = "Make Element Success"
                 self.msg["typeCode"] = dbHandler.CREATE_ELEM_SUCCESS
                 self.msg["data"] = elemName
@@ -243,6 +244,14 @@ class dbHandler:
             self.msg["msg"] = "Database Name Type Error"
             self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
             self.msg["data"] = dbName
+        return self.msg
+
+
+    def getAllDatabase(self):
+        dbNameSet = self.database.getAllDatabase()
+        self.msg["msg"] = "Database Get Success"
+        self.msg["typeCode"] = dbHandler.DB_GET_SUCCESS
+        self.msg["data"] = dbNameSet
         return self.msg
 
 

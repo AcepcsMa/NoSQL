@@ -104,12 +104,12 @@ def getAllDatabase():
 
 
 if __name__ == '__main__':
-    # init the database
-    database = db.NoSqlDb()
-
     # init the config parser and read the server config
     confParser = configParser()
     serverConfig = confParser.getServerConfig("server.conf")
+
+    # init the database
+    database = db.NoSqlDb(serverConfig)
 
     #init the save timer
     saveTimer = timer.timer(database,serverConfig["SAVE_INTERVAL"])

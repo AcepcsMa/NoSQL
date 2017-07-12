@@ -18,12 +18,20 @@ class NoSqlDb:
     ELEM_DELETE_SUCCESS = 8
     DB_CREATE_SUCCESS = 9
     DB_EXISTED = 10
+    LIST_CREATE_SUCCESS = 11
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
+
+        # element structures
         self.elemName = dict()
         self.elemDict = dict()
         self.elemLockDict = dict()
+
+        # list structures
+        self.listName = dict()
+        self.listDict = dict()
+        self.listLockDict = dict()
 
         self.saveLock = False
 
@@ -31,6 +39,10 @@ class NoSqlDb:
             self.elemName[dbName] = set()
             self.elemDict[dbName] = dict()
             self.elemLockDict[dbName] = dict()
+
+            self.listName[dbName] = set()
+            self.listDict[dbName] = dict()
+            self.listDict[dbName] = dict()
 
         # check log directory
         if(os.path.exists(config["LOG_PATH"]) is False):
@@ -56,8 +68,20 @@ class NoSqlDb:
         self.elemLockDict[dbName][elemName] = False
 
 
+    def lockList(self, dbName, listName):
+        self.listLockDict[dbName][listName] = True
+
+
+    def unlockList(self, dbName, listName):
+        self.listLockDict[dbName][listName] = False
+
+
     def isElemExist(self, dbName, elemName):
         return elemName in self.elemName[dbName]
+
+
+    def isListExist(self, dbName, listName):
+        return listName in self.listName[dbName]
 
 
     def createElem(self, elemName, value, dbName):
@@ -67,6 +91,15 @@ class NoSqlDb:
         self.unlockElem(dbName, elemName)
         self.logger.info("Create Element Success {0}->{1}->{2}".format(dbName, elemName, value))
         return NoSqlDb.ELEM_CREATE_SUCCESS
+
+
+    def createList(self, listName, dbName):
+        self.lockList(dbName, listName)
+        self.listName[dbName].add(listName)
+        self.listDict[dbName][listName] = list()
+        self.unlockList(dbName, listName)
+        self.logger.info("Create List Success {0}->{1}".format(dbName, listName))
+        return NoSqlDb.LIST_CREATE_SUCCESS
 
 
     def updateElem(self, elemName, value, dbName):
@@ -162,13 +195,11 @@ class NoSqlDb:
 
 
     def getAllDatabase(self):
-        print ("!!@@##$$%%^^&&**(())")
         self.logger.info("Get All Database Names Success")
         return list(self.dbNameSet)
 
 
     def saveDb(self):
-        #print (self.elemName)
         if(self.saveLock is False):
             # check if the data directory exists
             if(os.path.exists("./data/") is False):
@@ -184,7 +215,11 @@ class NoSqlDb:
                 with open("data" + os.sep + dbName + os.sep + "elemName.txt", "w") as elemNameFile:
                     elemNameFile.write(json.dumps(list(self.elemName[dbName])))
                 with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "w") as elemValueFile:
-                    elemValueFile.write((json.dumps(self.elemDict[dbName])))
+                    elemValueFile.write(json.dumps(self.elemDict[dbName]))
+                with open("data" + os.sep + dbName + os.sep + "listName.txt", "w") as listNameFile:
+                    listNameFile.write(json.dumps(list(self.listName[dbName])))
+                with open("data" + os.sep + dbName + os.sep + "listValue.txt", "w") as listValueFile:
+                    listValueFile.write(json.dumps(self.listDict[dbName]))
 
             self.saveLock = False
             self.logger.info("Database Save Success")
@@ -200,9 +235,16 @@ class NoSqlDb:
             dbNameSet = os.listdir("data")  # find all dbName in the data directory
             for dbName in dbNameSet:
                 self.dbNameSet.add(dbName)
+
+                # init element structure
                 self.elemName[dbName] = set()
                 self.elemLockDict[dbName] = dict()
                 self.elemDict[dbName] = dict()
+
+                # init list structure
+                self.listName[dbName] = set()
+                self.listLockDict[dbName] = dict()
+                self.listDict[dbName] = dict()
 
                 # load element names
                 with open("data"+os.sep+dbName+os.sep+"elemName.txt","r") as elemNameFile:
@@ -210,9 +252,22 @@ class NoSqlDb:
                     for elemName in elemNames:
                         self.elemName[dbName].add(elemName)
                         self.elemLockDict[dbName][elemName] = False
+
                 # load element values
                 with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "r") as elemValueFile:
                     self.elemDict[dbName] = json.loads(elemValueFile.read())
+
+                # load list names
+                with open("data"+os.sep+dbName+os.sep+"listName.txt","r") as listNameFile:
+                    listNames = json.loads(listNameFile.read())
+                    for listName in listNames:
+                        self.listName[dbName].add(listName)
+                        self.listLockDict[dbName][listName] = False
+
+                # load list values
+                with open("data" + os.sep + dbName + os.sep + "listValue.txt", "r") as listValueFile:
+                    self.listDict[dbName] = json.loads(listValueFile.read())
+
             self.logger.info("Database Load Success")
 
         except Exception as e:

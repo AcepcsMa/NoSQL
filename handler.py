@@ -27,6 +27,8 @@ class dbHandler:
     DB_EXISTED = 14
     DB_CREATE_SUCCESS = 15
     DB_GET_SUCCESS = 16
+    CREATE_LIST_SUCCESS = 17
+    LIST_ALREADY_EXIST = 18
 
 
     def __init__(self, database):
@@ -57,7 +59,6 @@ class dbHandler:
 
     # create an element in the db
     def createElem(self, elemName, value, dbName):
-
         if(self.isValidType(elemName)
            and self.isValidType(value)
            and self.isValidType(dbName)): # check the type of elem name and elem value
@@ -78,6 +79,26 @@ class dbHandler:
             self.msg["msg"] = "Element Type Error"
             self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
             self.msg["data"] = elemName
+            return self.msg
+
+
+    def createList(self, listName, dbName):
+        if(self.isValidType(listName) and self.isValidType(dbName)):
+            if(self.database.isListExist(dbName, listName) is False):
+                self.database.createList(listName, dbName)
+                self.msg["msg"] = "Make List Success"
+                self.msg["typeCode"] = dbHandler.CREATE_LIST_SUCCESS
+                self.msg["data"] = listName
+                return self.msg
+            else:
+                self.msg["msg"] = "List Already Exists"
+                self.msg["typeCode"] = dbHandler.LIST_ALREADY_EXIST
+                self.msg["data"] = listName
+                return self.msg
+        else:  # the type of elem name or elem value is invalid
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = listName
             return self.msg
 
 

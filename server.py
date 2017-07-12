@@ -9,7 +9,7 @@ import timer
 
 app = flask.Flask(__name__)
 
-@app.route("/make/<expression>",methods=["GET"])
+@app.route("/makeElem/<expression>",methods=["GET"])
 def makeElem(expression):
     if("->" not in expression):
         msg = {
@@ -31,7 +31,7 @@ def makeElem(expression):
         return flask.jsonify(result)
 
 
-@app.route("/get/<element>",methods=["GET"])
+@app.route("/getElem/<element>",methods=["GET"])
 def getElem(element):
     myHandler = handler.dbHandler(database)
     dbName = element.split("->")[0]
@@ -86,6 +86,15 @@ def deleteElem(element):
     elemName = element.split("->")[1]
     myHandler = handler.dbHandler(database)
     result = myHandler.deleteElem(elemName, dbName)
+    return flask.jsonify(result)
+
+
+@app.route("/makeList/<string:expression>",methods=["GET"])
+def makeList(expression):
+    myHandler = handler.dbHandler(database)
+    dbName = expression.split("->")[0]
+    listName = expression.split("->")[1]
+    result = myHandler.createList(listName, dbName)
     return flask.jsonify(result)
 
 

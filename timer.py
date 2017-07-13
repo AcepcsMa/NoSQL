@@ -12,10 +12,8 @@ class timer(threading.Thread):
         self.saveInterval = saveInterval
         self.database = database
 
-
     def setInterval(self, interval):
         self.saveInterval = interval
-
 
     def run(self):
         while(True):

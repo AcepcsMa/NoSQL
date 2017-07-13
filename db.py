@@ -19,6 +19,10 @@ class NoSqlDb:
     DB_CREATE_SUCCESS = 9
     DB_EXISTED = 10
     LIST_CREATE_SUCCESS = 11
+    LIST_LOCKED = 12
+    LIST_INSERT_SUCCESS = 13
+    LIST_REMOVE_SUCCESS = 14
+    LIST_NOT_CONTAIN_VALUE = 15
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -59,30 +63,26 @@ class NoSqlDb:
         # load data from local file
         self.loadDb()
 
-
     def lockElem(self, dbName, elemName):
         self.elemLockDict[dbName][elemName] = True
-
 
     def unlockElem(self, dbName, elemName):
         self.elemLockDict[dbName][elemName] = False
 
-
     def lockList(self, dbName, listName):
         self.listLockDict[dbName][listName] = True
-
 
     def unlockList(self, dbName, listName):
         self.listLockDict[dbName][listName] = False
 
+    def isDbExist(self, dbName):
+        return dbName in self.dbNameSet
 
     def isElemExist(self, dbName, elemName):
         return elemName in self.elemName[dbName]
 
-
     def isListExist(self, dbName, listName):
         return listName in self.listName[dbName]
-
 
     def createElem(self, elemName, value, dbName):
         self.lockElem(dbName, elemName) # lock this element avoiding r/w implements
@@ -92,7 +92,6 @@ class NoSqlDb:
         self.logger.info("Create Element Success {0}->{1}->{2}".format(dbName, elemName, value))
         return NoSqlDb.ELEM_CREATE_SUCCESS
 
-
     def createList(self, listName, dbName):
         self.lockList(dbName, listName)
         self.listName[dbName].add(listName)
@@ -100,7 +99,6 @@ class NoSqlDb:
         self.unlockList(dbName, listName)
         self.logger.info("Create List Success {0}->{1}".format(dbName, listName))
         return NoSqlDb.LIST_CREATE_SUCCESS
-
 
     def updateElem(self, elemName, value, dbName):
         if self.elemLockDict[dbName][elemName] is True: # element is locked
@@ -114,7 +112,6 @@ class NoSqlDb:
             self.logger.info("Update Element Success {0}->{1}->{2}".format(dbName, elemName, value))
             return NoSqlDb.ELEM_UPDATE_SUCCESS
 
-
     def getElem(self, elemName, dbName):
         try:
             elemValue = self.elemDict[dbName][elemName]
@@ -123,8 +120,9 @@ class NoSqlDb:
         self.logger.info("Get Element Success {0}->{1}".format(dbName, elemName))
         return elemValue
 
-
     def searchElem(self, expression, dbName):
+        if(self.isDbExist(dbName) is False):
+            return []
         searchResult = set()
         expression = re.sub("\*",".*",expression)   # convert expression to regular expression
         for elemName in self.elemName[dbName]:
@@ -136,11 +134,11 @@ class NoSqlDb:
         self.logger.info("Search Element Success {0} {1}".format(dbName, expression))
         return list(searchResult)
 
-
     def searchAllElem(self, dbName):
+        if(self.isDbExist(dbName) is False):
+            return []
         self.logger.info("Search All Elements in {0}".format(dbName))
         return list(self.elemName[dbName])
-
 
     def increaseElem(self, elemName, dbName):
         if(self.elemLockDict[dbName][elemName] is True): # element is locked
@@ -153,7 +151,6 @@ class NoSqlDb:
             self.logger.info("Increase Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_INCREASE_SUCCESS
 
-
     def decreaseElem(self, elemName, dbName):
         if(self.elemLockDict[dbName][elemName] is True): # element is locked
             self.logger.warning("Decrease Element Locked {0}->{1}".format(dbName, elemName))
@@ -165,7 +162,6 @@ class NoSqlDb:
             self.logger.info("Decrease Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_DECREASE_SUCCESS
 
-
     def deleteElem(self, elemName, dbName):
         if (self.elemLockDict[dbName][elemName] is True):  # element is locked
             self.logger.warning("Delete Element Locked {0}->{1}".format(dbName, elemName))
@@ -176,6 +172,50 @@ class NoSqlDb:
             self.logger.info("Delete Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_DELETE_SUCCESS
 
+    def insertList(self, listName, value, dbName):
+        if(self.listLockDict[dbName][listName] is True):
+            self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
+            return NoSqlDb.LIST_LOCKED
+        else:
+            self.lockList(dbName, listName)
+            self.listDict[dbName][listName].append(value)
+            self.unlockList(dbName, listName)
+            self.logger.info("Insert List Success {0}->{1}->{2}".format(dbName, listName, value))
+            return NoSqlDb.LIST_INSERT_SUCCESS
+
+    def rmFromList(self, dbName, listName, value):
+        if (self.listLockDict[dbName][listName] is True):
+            self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
+            return NoSqlDb.LIST_LOCKED
+        else:
+            if(value not in self.listDict[dbName][listName]):
+                return NoSqlDb.LIST_NOT_CONTAIN_VALUE
+            else:
+                self.lockList(dbName, listName)
+                self.listDict[dbName][listName].remove(value)
+                self.unlockList(dbName, listName)
+                self.logger.info("Remove From List Success {0}->{1}->{2}".format(dbName, listName, value))
+                return NoSqlDb.LIST_REMOVE_SUCCESS
+
+    def searchList(self, dbName, expression):
+        if(self.isDbExist(dbName) is False):
+            return []
+        searchResult = set()
+        expression = re.sub("\*", ".*", expression)  # convert expression to regular expression
+        for listName in self.listName[dbName]:
+            try:
+                searchResult.add(re.findall("({})".format(expression), listName)[0])
+            except:
+                continue
+
+        self.logger.info("Search List Success {0} {1}".format(dbName, expression))
+        return list(searchResult)
+
+    def searchAllList(self, dbName):
+        if(self.isDbExist(dbName) is False):
+            return []
+        self.logger.info("Search All List Success {0}".format(dbName))
+        return list(self.listName[dbName])
 
     def addDb(self, dbName):
         if(self.saveLock is True):
@@ -193,11 +233,9 @@ class NoSqlDb:
                 self.logger.warning("Database Already Exists {0}".format(dbName))
                 return NoSqlDb.DB_EXISTED
 
-
     def getAllDatabase(self):
         self.logger.info("Get All Database Names Success")
         return list(self.dbNameSet)
-
 
     def saveDb(self):
         if(self.saveLock is False):
@@ -228,7 +266,6 @@ class NoSqlDb:
         else:
             self.logger.warning("Database Save Locked")
             return NoSqlDb.DB_SAVE_LOCK
-
 
     def loadDb(self):
         try:

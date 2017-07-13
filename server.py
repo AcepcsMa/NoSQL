@@ -30,7 +30,6 @@ def makeElem(expression):
         result = myHandler.createElem(elemName, elemValue, dbName)
         return flask.jsonify(result)
 
-
 @app.route("/getElem/<element>",methods=["GET"])
 def getElem(element):
     myHandler = handler.dbHandler(database)
@@ -39,20 +38,17 @@ def getElem(element):
     result = myHandler.getElem(elemName, dbName)
     return flask.jsonify(result)
 
-
 @app.route("/searchElem/<dbName>/<string:expression>",methods=["GET"])
 def searchElem(dbName,expression):
     myHandler = handler.dbHandler(database)
     result = myHandler.searchElem(expression, dbName)
     return flask.jsonify(result)
 
-
 @app.route("/getAllElem/<dbName>",methods=["GET"])
 def searchAllElem(dbName):
     myHandler = handler.dbHandler(database)
     result = myHandler.searchAllElem(dbName)
     return flask.jsonify(result)
-
 
 @app.route("/increaseElem/<element>",methods=["GET"])
 def increaseElem(element):
@@ -62,23 +58,19 @@ def increaseElem(element):
     result = myHandler.increaseElem(elemName, dbName)
     return flask.jsonify(result)
 
-
 @app.route("/decreaseElem/<element>",methods=["GET"])
 def decreaseElem(element):
     myHandler = handler.dbHandler(database)
     dbName = element.split("->")[0]
     elemName = element.split("->")[1]
     result = myHandler.decreaseElem(elemName, dbName)
-
     return flask.jsonify(result)
-
 
 @app.route("/save",methods=["GET"])
 def saveDb():
     myHandler = handler.dbHandler(database)
     result = myHandler.saveDb()
     return flask.jsonify(result)
-
 
 @app.route("/deleteElem/<string:element>",methods=["GET"])
 def deleteElem(element):
@@ -88,7 +80,6 @@ def deleteElem(element):
     result = myHandler.deleteElem(elemName, dbName)
     return flask.jsonify(result)
 
-
 @app.route("/makeList/<string:expression>",methods=["GET"])
 def makeList(expression):
     myHandler = handler.dbHandler(database)
@@ -97,13 +88,49 @@ def makeList(expression):
     result = myHandler.createList(listName, dbName)
     return flask.jsonify(result)
 
+@app.route("/insertList/<string:expression>",methods=["GET"])
+def insertList(expression):
+    myHandler = handler.dbHandler(database)
+    dbName = expression.split("->")[0]
+    listName = expression.split("->")[1]
+    value = expression.split("->")[2]
+    if (value[0] == "\"" and value[-1] == "\""):  # distinguish string value and int value
+        value = str(value[1:-1])
+    else:
+        value = int(value)
+    result = myHandler.insertList(listName, value, dbName)
+    return flask.jsonify(result)
+
+@app.route("/rmFromList/<string:expression>",methods=["GET"])
+def rmFromList(expression):
+    myHandler = handler.dbHandler(database)
+    dbName = expression.split("->")[0]
+    listName = expression.split("->")[1]
+    value = expression.split("->")[2]
+    if (value[0] == "\"" and value[-1] == "\""):  # distinguish string value and int value
+        value = str(value[1:-1])
+    else:
+        value = int(value)
+    result = myHandler.rmFromList(dbName, listName, value)
+    return flask.jsonify(result)
+
+@app.route("/searchList/<string:dbName>/<string:expression>",methods=["GET"])
+def searchList(dbName, expression):
+    myHandler = handler.dbHandler(database)
+    result = myHandler.searchList(dbName, expression)
+    return flask.jsonify(result)
+
+@app.route("/searchAllList/<string:dbName>",methods=["GET"])
+def searchAllList(dbName):
+    myHandler = handler.dbHandler(database)
+    result = myHandler.searchAllList(dbName)
+    return flask.jsonify(result)
 
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = handler.dbHandler(database)
     result = myHandler.addDatabase(dbName)
     return flask.jsonify(result)
-
 
 @app.route("/getAllDatabase",methods=["GET"])
 def getAllDatabase():

@@ -29,6 +29,12 @@ class dbHandler:
     DB_GET_SUCCESS = 16
     CREATE_LIST_SUCCESS = 17
     LIST_ALREADY_EXIST = 18
+    LIST_IS_LOCKED = 19
+    LIST_INSERT_SUCCESS = 20
+    LIST_NOT_CONTAIN_VALUE = 21
+    LIST_REMOVE_SUCCESS = 22
+    LIST_NOT_EXIST = 23
+    LIST_SEARCH_SUCCESS = 24
 
 
     def __init__(self, database):
@@ -49,13 +55,12 @@ class dbHandler:
         else:
             return False
 
-
+    # check if the type of an elem is INT
     def isInt(self, elem):
         if("int" in str(type(elem))):
             return True
         else:
             return False
-
 
     # create an element in the db
     def createElem(self, elemName, value, dbName):
@@ -81,27 +86,6 @@ class dbHandler:
             self.msg["data"] = elemName
             return self.msg
 
-
-    def createList(self, listName, dbName):
-        if(self.isValidType(listName) and self.isValidType(dbName)):
-            if(self.database.isListExist(dbName, listName) is False):
-                self.database.createList(listName, dbName)
-                self.msg["msg"] = "Make List Success"
-                self.msg["typeCode"] = dbHandler.CREATE_LIST_SUCCESS
-                self.msg["data"] = listName
-                return self.msg
-            else:
-                self.msg["msg"] = "List Already Exists"
-                self.msg["typeCode"] = dbHandler.LIST_ALREADY_EXIST
-                self.msg["data"] = listName
-                return self.msg
-        else:  # the type of elem name or elem value is invalid
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = listName
-            return self.msg
-
-
     # update the value of an elem in the db
     def updateElem(self, elemName, value, dbName):
         if(self.database.isElemExist(dbName, elemName) is False):
@@ -125,7 +109,6 @@ class dbHandler:
                 self.msg["data"] = elemName
                 return self.msg
 
-
     # get the value of existed elem
     def getElem(self, elemName, dbName):
         if(self.isValidType(elemName)
@@ -148,7 +131,6 @@ class dbHandler:
             self.msg["data"] = elemName
             return self.msg
 
-
     # search element using regular expression
     def searchElem(self, expression, dbName):
         searchResult = self.database.searchElem(expression, dbName)
@@ -157,14 +139,12 @@ class dbHandler:
         self.msg["data"] = searchResult
         return self.msg
 
-
     # get all element names in the db
     def searchAllElem(self, dbName):
         self.msg["msg"] = "All Elements Search Success"
         self.msg["typeCode"] = dbHandler.ELEM_SEARCH_SUCCESS
         self.msg["data"] = self.database.searchAllElem(dbName)
         return self.msg
-
 
     # increase the value of an element
     def increaseElem(self, elemName, dbName):
@@ -191,7 +171,6 @@ class dbHandler:
                     self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
                     self.msg["data"] = elemName
                     return self.msg
-
 
     # decrease the value of an element
     def decreaseElem(self, elemName, dbName):
@@ -220,7 +199,6 @@ class dbHandler:
                     self.msg["data"] = elemName
                     return self.msg
 
-
     # delete an element in the database
     def deleteElem(self, elemName, dbName):
         if(self.isValidType(elemName) and self.isValidType(dbName)):
@@ -244,6 +222,108 @@ class dbHandler:
             self.msg["data"] = elemName
         return self.msg
 
+    # create a list in the database
+    def createList(self, listName, dbName):
+        if(self.isValidType(listName) and self.isValidType(dbName)):
+            if(self.database.isListExist(dbName, listName) is False):
+                self.database.createList(listName, dbName)
+                self.msg["msg"] = "Make List Success"
+                self.msg["typeCode"] = dbHandler.CREATE_LIST_SUCCESS
+                self.msg["data"] = listName
+                return self.msg
+            else:
+                self.msg["msg"] = "List Already Exists"
+                self.msg["typeCode"] = dbHandler.LIST_ALREADY_EXIST
+                self.msg["data"] = listName
+                return self.msg
+        else:  # the type of elem name or elem value is invalid
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = listName
+            return self.msg
+
+    # insert a value into the given list
+    def insertList(self, listName, value, dbName):
+        if(self.isValidType(listName)
+           and self.isValidType(value)
+           and self.isValidType(dbName)):
+            # if list exists, execute the insertion
+            if(self.database.isListExist(dbName, listName) is True):
+                result = self.database.insertList(listName, value, dbName)
+                if(result == NoSqlDb.LIST_LOCKED):
+                    self.msg["msg"] = "List Is Locked"
+                    self.msg["typeCode"] = dbHandler.LIST_IS_LOCKED
+                    self.msg["data"] = listName
+                elif(result == NoSqlDb.LIST_INSERT_SUCCESS):
+                    self.msg["msg"] = "List Insert Success"
+                    self.msg["typeCode"] = dbHandler.LIST_INSERT_SUCCESS
+                    self.msg["data"] = listName
+            else:
+                self.msg["msg"] = "List Does Not Exist"
+                self.msg["typeCode"] = dbHandler.LIST_NOT_EXIST
+                self.msg["data"] = listName
+        else:
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = listName
+        return self.msg
+
+    # remove a value from the given list
+    def rmFromList(self, dbName, listName, value):
+        if(self.isValidType(dbName)
+           and self.isValidType(listName)
+           and self.isValidType(value)):
+            # if list exists, execute the removal
+            if(self.database.isListExist(dbName, listName) is True):
+                result = self.database.rmFromList(dbName, listName, value)
+                if(result == NoSqlDb.LIST_NOT_CONTAIN_VALUE):
+                    self.msg["msg"] = "List Does Not Contain This Value"
+                    self.msg["typeCode"] = dbHandler.LIST_NOT_CONTAIN_VALUE
+                    self.msg["data"] = listName
+                elif(result == NoSqlDb.LIST_REMOVE_SUCCESS):
+                    self.msg["msg"] = "List Remove Value Success"
+                    self.msg["typeCode"] = dbHandler.LIST_REMOVE_SUCCESS
+                    self.msg["data"] = listName
+                elif(result == NoSqlDb.LIST_LOCKED):
+                    self.msg["msg"] = "List Is Locked"
+                    self.msg["typeCode"] = dbHandler.LIST_IS_LOCKED
+                    self.msg["data"] = listName
+
+            else:   # if list does not exist
+                self.msg["msg"] = "List Does Not Exist"
+                self.msg["typeCode"] = dbHandler.LIST_NOT_EXIST
+                self.msg["data"] = listName
+        else:
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = listName
+        return self.msg
+
+    # search list names using regular expression
+    def searchList(self, dbName, expression):
+        if(self.isValidType(dbName)):
+            searchResult = self.database.searchList(dbName, expression)
+            self.msg["msg"] = "Search List Success"
+            self.msg["typeCode"] = dbHandler.LIST_SEARCH_SUCCESS
+            self.msg["data"] = searchResult
+        else:
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = dbName
+        return self.msg
+
+    # get all list names in the given database
+    def searchAllList(self, dbName):
+        if(self.isValidType(dbName)):
+            searchResult = self.database.searchAllList(dbName)
+            self.msg["msg"] = "Search All List Success"
+            self.msg["typeCode"] = dbHandler.LIST_SEARCH_SUCCESS
+            self.msg["data"] = searchResult
+        else:
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = dbName
+        return self.msg
 
     # add a customized database
     def addDatabase(self, dbName):
@@ -267,14 +347,13 @@ class dbHandler:
             self.msg["data"] = dbName
         return self.msg
 
-
+    # get all database names
     def getAllDatabase(self):
         dbNameSet = self.database.getAllDatabase()
         self.msg["msg"] = "Database Get Success"
         self.msg["typeCode"] = dbHandler.DB_GET_SUCCESS
         self.msg["data"] = dbNameSet
         return self.msg
-
 
     # save the data into file
     def saveDb(self):

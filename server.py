@@ -88,6 +88,14 @@ def makeList(expression):
     result = myHandler.createList(listName, dbName)
     return flask.jsonify(result)
 
+@app.route("/getList/<string:expression>",methods=["GET"])
+def getList(expression):
+    myHandler = handler.dbHandler(database)
+    dbName = expression.split("->")[0]
+    listName = expression.split("->")[1]
+    result = myHandler.getList(listName, dbName)
+    return flask.jsonify(result)
+
 @app.route("/insertList/<string:expression>",methods=["GET"])
 def insertList(expression):
     myHandler = handler.dbHandler(database)
@@ -99,6 +107,14 @@ def insertList(expression):
     else:
         value = int(value)
     result = myHandler.insertList(listName, value, dbName)
+    return flask.jsonify(result)
+
+@app.route("/deleteList/<string:expression>",methods=["GET"])
+def deleteList(expression):
+    myHandler = handler.dbHandler(database)
+    dbName = expression.split("->")[0]
+    listName = expression.split("->")[1]
+    result = myHandler.deleteList(listName, dbName)
     return flask.jsonify(result)
 
 @app.route("/rmFromList/<string:expression>",methods=["GET"])

@@ -23,6 +23,7 @@ class NoSqlDb:
     LIST_INSERT_SUCCESS = 13
     LIST_REMOVE_SUCCESS = 14
     LIST_NOT_CONTAIN_VALUE = 15
+    LIST_DELETE_SUCCESS = 16
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -79,10 +80,16 @@ class NoSqlDb:
         return dbName in self.dbNameSet
 
     def isElemExist(self, dbName, elemName):
-        return elemName in self.elemName[dbName]
+        if(self.isDbExist(dbName) is True):
+            return elemName in self.elemName[dbName]
+        else:
+            return False
 
     def isListExist(self, dbName, listName):
-        return listName in self.listName[dbName]
+        if(self.isDbExist(dbName) is True):
+            return listName in self.listName[dbName]
+        else:
+            return False
 
     def createElem(self, elemName, value, dbName):
         self.lockElem(dbName, elemName) # lock this element avoiding r/w implements
@@ -91,14 +98,6 @@ class NoSqlDb:
         self.unlockElem(dbName, elemName)
         self.logger.info("Create Element Success {0}->{1}->{2}".format(dbName, elemName, value))
         return NoSqlDb.ELEM_CREATE_SUCCESS
-
-    def createList(self, listName, dbName):
-        self.lockList(dbName, listName)
-        self.listName[dbName].add(listName)
-        self.listDict[dbName][listName] = list()
-        self.unlockList(dbName, listName)
-        self.logger.info("Create List Success {0}->{1}".format(dbName, listName))
-        return NoSqlDb.LIST_CREATE_SUCCESS
 
     def updateElem(self, elemName, value, dbName):
         if self.elemLockDict[dbName][elemName] is True: # element is locked
@@ -172,6 +171,22 @@ class NoSqlDb:
             self.logger.info("Delete Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_DELETE_SUCCESS
 
+    def createList(self, listName, dbName):
+        self.lockList(dbName, listName)
+        self.listName[dbName].add(listName)
+        self.listDict[dbName][listName] = list()
+        self.unlockList(dbName, listName)
+        self.logger.info("Create List Success {0}->{1}".format(dbName, listName))
+        return NoSqlDb.LIST_CREATE_SUCCESS
+
+    def getList(self, listName, dbName):
+        try:
+            listValue = self.listDict[dbName][listName]
+        except:
+            listValue = None
+        self.logger.info("Get List Success {0}->{1}".format(dbName, listName))
+        return listValue
+
     def insertList(self, listName, value, dbName):
         if(self.listLockDict[dbName][listName] is True):
             self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
@@ -182,6 +197,19 @@ class NoSqlDb:
             self.unlockList(dbName, listName)
             self.logger.info("Insert List Success {0}->{1}->{2}".format(dbName, listName, value))
             return NoSqlDb.LIST_INSERT_SUCCESS
+
+    def deleteList(self, listName, dbName):
+        if(self.listLockDict[dbName][listName] is True):
+            self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
+            return NoSqlDb.LIST_LOCKED
+        else:
+            self.lockList(dbName, listName)
+            self.listName[dbName].remove(listName)
+            self.listDict[dbName].pop(listName)
+            self.unlockList(dbName, listName)
+            self.listLockDict[dbName].pop(listName)
+            self.logger.info("Delete List Success {0}->{1}".format(dbName, listName))
+            return NoSqlDb.LIST_DELETE_SUCCESS
 
     def rmFromList(self, dbName, listName, value):
         if (self.listLockDict[dbName][listName] is True):

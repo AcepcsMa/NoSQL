@@ -35,6 +35,8 @@ class dbHandler:
     LIST_REMOVE_SUCCESS = 22
     LIST_NOT_EXIST = 23
     LIST_SEARCH_SUCCESS = 24
+    GET_LIST_SUCCESS = 25
+    LIST_DELETE_SUCCESS = 26
 
 
     def __init__(self, database):
@@ -242,6 +244,23 @@ class dbHandler:
             self.msg["data"] = listName
             return self.msg
 
+    def getList(self, listName, dbName):
+        if(self.isValidType(listName) and self.isValidType(dbName)):
+            if(self.database.isListExist(dbName, listName) is True):
+                listValue = self.database.getList(listName, dbName)
+                self.msg["msg"] = "Get List Success"
+                self.msg["typeCode"] = dbHandler.GET_LIST_SUCCESS
+                self.msg["data"] = listValue
+            else:
+                self.msg["msg"] = "List Does Not Exist"
+                self.msg["typeCode"] = dbHandler.LIST_NOT_EXIST
+                self.msg["data"] = listName
+        else:
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = listName
+        return self.msg
+
     # insert a value into the given list
     def insertList(self, listName, value, dbName):
         if(self.isValidType(listName)
@@ -257,6 +276,29 @@ class dbHandler:
                 elif(result == NoSqlDb.LIST_INSERT_SUCCESS):
                     self.msg["msg"] = "List Insert Success"
                     self.msg["typeCode"] = dbHandler.LIST_INSERT_SUCCESS
+                    self.msg["data"] = listName
+            else:
+                self.msg["msg"] = "List Does Not Exist"
+                self.msg["typeCode"] = dbHandler.LIST_NOT_EXIST
+                self.msg["data"] = listName
+        else:
+            self.msg["msg"] = "Element Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = listName
+        return self.msg
+
+    # delete a list in the database
+    def deleteList(self, listName, dbName):
+        if(self.isValidType(listName) and self.isValidType(dbName)):
+            if(self.database.isListExist(dbName, listName) is True):
+                result = self.database.deleteList(listName, dbName)
+                if(result == NoSqlDb.LIST_DELETE_SUCCESS):
+                    self.msg["msg"] = "List Delete Success"
+                    self.msg["typeCode"] = dbHandler.LIST_DELETE_SUCCESS
+                    self.msg["data"] = listName
+                elif(result == NoSqlDb.LIST_LOCKED):
+                    self.msg["msg"] = "List Is Locked"
+                    self.msg["typeCode"] = dbHandler.LIST_IS_LOCKED
                     self.msg["data"] = listName
             else:
                 self.msg["msg"] = "List Does Not Exist"

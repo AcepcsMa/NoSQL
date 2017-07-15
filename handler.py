@@ -37,6 +37,8 @@ class dbHandler:
     LIST_SEARCH_SUCCESS = 24
     GET_LIST_SUCCESS = 25
     LIST_DELETE_SUCCESS = 26
+    DB_DELETE_SUCCESS = 27
+    DB_NOT_EXIST = 28
 
 
     def __init__(self, database):
@@ -395,6 +397,28 @@ class dbHandler:
         self.msg["msg"] = "Database Get Success"
         self.msg["typeCode"] = dbHandler.DB_GET_SUCCESS
         self.msg["data"] = dbNameSet
+        return self.msg
+
+    # delete the given database
+    def delDatabase(self, dbName):
+        if(self.isValidType(dbName)):
+            result = self.database.delDatabase(dbName)
+            if(result == NoSqlDb.DB_DELETE_SUCCESS):
+                self.msg["msg"] = "Database Delete Success"
+                self.msg["typeCode"] = dbHandler.DB_DELETE_SUCCESS
+                self.msg["data"] = dbName
+            elif(result == NoSqlDb.DB_SAVE_LOCK):
+                self.msg["msg"] = "Database Save Locked"
+                self.msg["typeCode"] = dbHandler.DB_SAVE_LOCKED
+                self.msg["data"] = dbName
+            elif(result == NoSqlDb.DB_NOT_EXISTED):
+                self.msg["msg"] = "Database Does Not Exist"
+                self.msg["typeCode"] = dbHandler.DB_NOT_EXIST
+                self.msg["data"] = dbName
+        else:
+            self.msg["msg"] = "Database Name Type Error"
+            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
+            self.msg["data"] = dbName
         return self.msg
 
     # save the data into file

@@ -154,6 +154,11 @@ def getAllDatabase():
     result = myHandler.getAllDatabase()
     return flask.jsonify(result)
 
+@app.route("/delDatabase/<string:dbName>",methods=["GET"])
+def delDatabase(dbName):
+    myHandler = handler.dbHandler(database)
+    result = myHandler.delDatabase(dbName)
+    return flask.jsonify(result)
 
 if __name__ == '__main__':
     # init the config parser and read the server config

@@ -24,6 +24,8 @@ class NoSqlDb:
     LIST_REMOVE_SUCCESS = 14
     LIST_NOT_CONTAIN_VALUE = 15
     LIST_DELETE_SUCCESS = 16
+    DB_DELETE_SUCCESS = 17
+    DB_NOT_EXISTED = 18
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -200,7 +202,7 @@ class NoSqlDb:
 
     def deleteList(self, listName, dbName):
         if(self.listLockDict[dbName][listName] is True):
-            self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
+            self.logger.warning("Delete List Locked {0}->{1}".format(dbName, listName))
             return NoSqlDb.LIST_LOCKED
         else:
             self.lockList(dbName, listName)
@@ -255,6 +257,9 @@ class NoSqlDb:
                 self.elemName[dbName] = set()
                 self.elemDict[dbName] = dict()
                 self.elemLockDict[dbName] = dict()
+                self.listName[dbName] = set()
+                self.listDict[dbName] = dict()
+                self.elemLockDict[dbName] = dict()
                 self.logger.info("Database Add Success {0}".format(dbName))
                 return NoSqlDb.DB_CREATE_SUCCESS
             else:
@@ -264,6 +269,24 @@ class NoSqlDb:
     def getAllDatabase(self):
         self.logger.info("Get All Database Names Success")
         return list(self.dbNameSet)
+
+    def delDatabase(self, dbName):
+        if(self.isDbExist(dbName) is True):
+            if(self.saveLock is False):
+                self.saveLock = True
+                self.dbNameSet.remove(dbName)
+                for root, dirs, files in os.walk("data"+os.sep+dbName, topdown=False):
+                    for name in files:
+                        os.remove(os.path.join(root, name))
+                    for name in dirs:
+                        os.rmdir(os.path.join(root, name))
+                os.rmdir("data"+os.sep+dbName)
+                self.saveLock = False
+                return NoSqlDb.DB_DELETE_SUCCESS
+            else:
+                return NoSqlDb.DB_SAVE_LOCK
+        else:
+            return NoSqlDb.DB_NOT_EXISTED
 
     def saveDb(self):
         if(self.saveLock is False):

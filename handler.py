@@ -66,6 +66,15 @@ class dbHandler:
         else:
             return False
 
+    # make the response message
+    def makeMessage(self, msg, typeCode, data):
+        message = {
+            "msg":msg,
+            "typeCode":typeCode,
+            "data":data
+        }
+        return message
+
     # create an element in the db
     def createElem(self, elemName, value, dbName):
         if(self.isValidType(elemName)
@@ -73,195 +82,132 @@ class dbHandler:
            and self.isValidType(dbName)): # check the type of elem name and elem value
             if(self.database.isElemExist(dbName, elemName) is False):
                 self.database.createElem(elemName, value, dbName)
-                self.msg["msg"] = "Make Element Success"
-                self.msg["typeCode"] = dbHandler.CREATE_ELEM_SUCCESS
-                self.msg["data"] = elemName
-                return self.msg
+                msg = self.makeMessage("Make Element Success", dbHandler.CREATE_ELEM_SUCCESS, elemName)
 
             else:   # this elem already exists in the db
-                self.msg["msg"] = "Element Already Exists"
-                self.msg["typeCode"] = dbHandler.ELEM_ALREADY_EXIST
-                self.msg["data"] = elemName
-                return self.msg
+                msg = self.makeMessage("Element Already Exists", dbHandler.ELEM_ALREADY_EXIST, elemName)
 
         else:   # the type of elem name or elem value is invalid
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = elemName
-            return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, elemName)
+        return msg
 
     # update the value of an elem in the db
     def updateElem(self, elemName, value, dbName):
         if(self.database.isElemExist(dbName, elemName) is False):
-            self.msg["msg"] = "Element Does Not Exist"
-            self.msg["typeCode"] = dbHandler.ELEM_NOT_EXIST
-            self.msg["data"] = elemName
-            return self.msg
+            msg = self.makeMessage("Element Does Not Exist", dbHandler.ELEM_NOT_EXIST, elemName)
 
         else:   # find the elem in the db
             if(self.isValidType(elemName)
                and self.isValidType(value)
                and self.isValidType(dbName)):
                 self.database.updateElem(elemName, value, dbName)
-                self.msg["msg"] = "Element Update Success"
-                self.msg["typeCode"] = dbHandler.UPDATE_ELEM_SUCCESS
-                self.msg["data"] = elemName
-                return self.msg
+                msg = self.makeMessage("Element Update Success", dbHandler.UPDATE_ELEM_SUCCESS, elemName)
             else:
-                self.msg["msg"] = "Element Type Error"
-                self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-                self.msg["data"] = elemName
-                return self.msg
+                msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, elemName)
+        return msg
 
     # get the value of existed elem
     def getElem(self, elemName, dbName):
         if(self.isValidType(elemName)
            and self.isValidType(dbName)):
             if (self.database.isElemExist(dbName, elemName) is False):
-                self.msg["msg"] = "Element Does Not Exist"
-                self.msg["typeCode"] = dbHandler.ELEM_NOT_EXIST
-                self.msg["data"] = elemName
-                return self.msg
+                msg = self.makeMessage("Element Does Not Exist", dbHandler.ELEM_NOT_EXIST, elemName)
             else:
-                self.msg["msg"] = "Element Get Success"
-                self.msg["typeCode"] = dbHandler.GET_ELEM_SUCCESS
-                self.msg["data"] = self.database.getElem(elemName, dbName)
-                #print (self.msg["data"])
-                return self.msg
+                msg = self.makeMessage("Element Get Success", dbHandler.GET_ELEM_SUCCESS, self.database.getElem(elemName, dbName))
 
         else:
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = elemName
-            return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, elemName)
+        return msg
 
     # search element using regular expression
     def searchElem(self, expression, dbName):
         searchResult = self.database.searchElem(expression, dbName)
-        self.msg["msg"] = "Element Search Success"
-        self.msg["typeCode"] = dbHandler.ELEM_SEARCH_SUCCESS
-        self.msg["data"] = searchResult
-        return self.msg
+        msg = self.makeMessage("Element Search Success", dbHandler.ELEM_SEARCH_SUCCESS, searchResult)
+        return msg
 
     # get all element names in the db
     def searchAllElem(self, dbName):
-        self.msg["msg"] = "All Elements Search Success"
-        self.msg["typeCode"] = dbHandler.ELEM_SEARCH_SUCCESS
-        self.msg["data"] = self.database.searchAllElem(dbName)
-        return self.msg
+        msg = self.makeMessage("All Elements Search Success", dbHandler.ELEM_SEARCH_SUCCESS, self.database.searchAllElem(dbName))
+        return msg
 
     # increase the value of an element
     def increaseElem(self, elemName, dbName):
         if(self.isValidType(elemName) and self.isValidType(dbName)):
             if(self.database.isElemExist(dbName, elemName) is False):
-                self.msg["msg"] = "Element Does Not Exist"
-                self.msg["typeCode"] = dbHandler.ELEM_NOT_EXIST
-                self.msg["data"] = elemName
-                return self.msg
+                msg = self.makeMessage("Element Does Not Exist", dbHandler.ELEM_NOT_EXIST, elemName)
             else:
                 if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                     result = self.database.increaseElem(elemName, dbName)
                     if(result == NoSqlDb.ELEM_INCREASE_SUCCESS):
-                        self.msg["msg"] = "Element Increase Success"
-                        self.msg["typeCode"] = dbHandler.ELEM_INCR_SUCCESS
-                        self.msg["data"] = self.database.getElem(elemName, dbName)
-                        return self.msg
+                        data = self.database.getElem(elemName, dbName)
+                        msg = self.makeMessage("Element Increase Success", dbHandler.ELEM_INCR_SUCCESS, data)
                     elif(result == NoSqlDb.ELEM_LOCKED):
-                        self.msg["msg"] = "Element Is Locked"
-                        self.msg["typeCode"] = dbHandler.ELEM_IS_LOCKED
-                        self.msg["data"] = self.database.getElem(elemName, dbName)
+                        data = self.database.getElem(elemName, dbName)
+                        msg = self.makeMessage("Element Is Locked", dbHandler.ELEM_IS_LOCKED, data)
                 else:
-                    self.msg["msg"] = "Element Type Error"
-                    self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-                    self.msg["data"] = elemName
-                    return self.msg
+                    msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, elemName)
+        else:
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, elemName)
+        return msg
 
     # decrease the value of an element
     def decreaseElem(self, elemName, dbName):
         if(self.isValidType(elemName) and self.isValidType(dbName)):
             if(self.database.isElemExist(dbName, elemName) is False):
-                self.msg["msg"] = "Element Does Not Exist"
-                self.msg["typeCode"] = dbHandler.ELEM_NOT_EXIST
-                self.msg["data"] = elemName
-                return self.msg
+                msg = self.makeMessage("Element Does Not Exist", dbHandler.ELEM_NOT_EXIST, elemName)
             else:
                 if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                     result = self.database.decreaseElem(elemName, dbName)
                     if(result == NoSqlDb.ELEM_DECREASE_SUCCESS):
-                        self.msg["msg"] = "Element Decrease Success"
-                        self.msg["typeCode"] = dbHandler.ELEM_DECR_SUCCESS
-                        self.msg["data"] = self.database.getElem(elemName, dbName)
-                        return self.msg
+                        data = self.database.getElem(elemName, dbName)
+                        msg = self.makeMessage("Element Decrease Success", dbHandler.ELEM_DECR_SUCCESS, data)
                     elif(result == NoSqlDb.ELEM_LOCKED):
-                        self.msg["msg"] = "Element Is Locked"
-                        self.msg["typeCode"] = dbHandler.ELEM_IS_LOCKED
-                        self.msg["data"] = self.database.getElem(elemName, dbName)
-                        return self.msg
+                        data = self.database.getElem(elemName, dbName)
+                        msg = self.makeMessage("Element Is Locked", dbHandler.ELEM_IS_LOCKED, data)
                 else:
-                    self.msg["msg"] = "Element Type Error"
-                    self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-                    self.msg["data"] = elemName
-                    return self.msg
+                    msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, elemName)
+        else:
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, elemName)
+        return msg
 
     # delete an element in the database
     def deleteElem(self, elemName, dbName):
         if(self.isValidType(elemName) and self.isValidType(dbName)):
             if (self.database.isElemExist(dbName, elemName) is False):
-                self.msg["msg"] = "Element Does Not Exist"
-                self.msg["typeCode"] = dbHandler.ELEM_NOT_EXIST
-                self.msg["data"] = elemName
+                msg = self.makeMessage("Element Does Not Exist", dbHandler.ELEM_NOT_EXIST, elemName)
             else:
                 result = self.database.deleteElem(elemName, dbName)
                 if(result == NoSqlDb.ELEM_LOCKED):
-                    self.msg["msg"] = "Element Is Locked"
-                    self.msg["typeCode"] = dbHandler.ELEM_IS_LOCKED
-                    self.msg["data"] = elemName
+                    msg = self.makeMessage("Element Is Locked", dbHandler.ELEM_IS_LOCKED, elemName)
                 elif(result == NoSqlDb.ELEM_DELETE_SUCCESS):
-                    self.msg["msg"] = "Element Delete Success"
-                    self.msg["typeCode"] = dbHandler.ELEM_DELETE_SUCCESS
-                    self.msg["data"] = elemName
+                    msg = self.makeMessage("Element Delete Success", dbHandler.ELEM_DELETE_SUCCESS, elemName)
         else:
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = elemName
-        return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, elemName)
+        return msg
 
     # create a list in the database
     def createList(self, listName, dbName):
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is False):
                 self.database.createList(listName, dbName)
-                self.msg["msg"] = "Make List Success"
-                self.msg["typeCode"] = dbHandler.CREATE_LIST_SUCCESS
-                self.msg["data"] = listName
-                return self.msg
+                msg = self.makeMessage("Make List Success", dbHandler.CREATE_LIST_SUCCESS, listName)
             else:
-                self.msg["msg"] = "List Already Exists"
-                self.msg["typeCode"] = dbHandler.LIST_ALREADY_EXIST
-                self.msg["data"] = listName
-                return self.msg
+                msg = self.makeMessage("List Already Exists", dbHandler.LIST_ALREADY_EXIST, listName)
         else:  # the type of elem name or elem value is invalid
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = listName
-            return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, listName)
+        return msg
 
+    # get the value of a given list
     def getList(self, listName, dbName):
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is True):
                 listValue = self.database.getList(listName, dbName)
-                self.msg["msg"] = "Get List Success"
-                self.msg["typeCode"] = dbHandler.GET_LIST_SUCCESS
-                self.msg["data"] = listValue
+                msg = self.makeMessage("Get List Success", dbHandler.GET_LIST_SUCCESS, listValue)
             else:
-                self.msg["msg"] = "List Does Not Exist"
-                self.msg["typeCode"] = dbHandler.LIST_NOT_EXIST
-                self.msg["data"] = listName
+                msg = self.makeMessage("List Does Not Exist", dbHandler.LIST_NOT_EXIST, listName)
         else:
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = listName
-        return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, listName)
+        return msg
 
     # insert a value into the given list
     def insertList(self, listName, value, dbName):
@@ -272,22 +218,14 @@ class dbHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 result = self.database.insertList(listName, value, dbName)
                 if(result == NoSqlDb.LIST_LOCKED):
-                    self.msg["msg"] = "List Is Locked"
-                    self.msg["typeCode"] = dbHandler.LIST_IS_LOCKED
-                    self.msg["data"] = listName
+                    msg = self.makeMessage("List Is Locked", dbHandler.LIST_IS_LOCKED, listName)
                 elif(result == NoSqlDb.LIST_INSERT_SUCCESS):
-                    self.msg["msg"] = "List Insert Success"
-                    self.msg["typeCode"] = dbHandler.LIST_INSERT_SUCCESS
-                    self.msg["data"] = listName
+                    msg = self.makeMessage("List Insert Success", dbHandler.LIST_INSERT_SUCCESS, listName)
             else:
-                self.msg["msg"] = "List Does Not Exist"
-                self.msg["typeCode"] = dbHandler.LIST_NOT_EXIST
-                self.msg["data"] = listName
+                msg = self.makeMessage("List Does Not Exist", dbHandler.LIST_NOT_EXIST, listName)
         else:
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = listName
-        return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, listName)
+        return msg
 
     # delete a list in the database
     def deleteList(self, listName, dbName):
@@ -295,22 +233,14 @@ class dbHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 result = self.database.deleteList(listName, dbName)
                 if(result == NoSqlDb.LIST_DELETE_SUCCESS):
-                    self.msg["msg"] = "List Delete Success"
-                    self.msg["typeCode"] = dbHandler.LIST_DELETE_SUCCESS
-                    self.msg["data"] = listName
+                    msg = self.makeMessage("List Delete Success", dbHandler.LIST_DELETE_SUCCESS, listName)
                 elif(result == NoSqlDb.LIST_LOCKED):
-                    self.msg["msg"] = "List Is Locked"
-                    self.msg["typeCode"] = dbHandler.LIST_IS_LOCKED
-                    self.msg["data"] = listName
+                    msg = self.makeMessage("List Is Locked", dbHandler.LIST_IS_LOCKED, listName)
             else:
-                self.msg["msg"] = "List Does Not Exist"
-                self.msg["typeCode"] = dbHandler.LIST_NOT_EXIST
-                self.msg["data"] = listName
+                msg = self.makeMessage("List Does Not Exist", dbHandler.LIST_NOT_EXIST, listName)
         else:
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = listName
-        return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, listName)
+        return msg
 
     # remove a value from the given list
     def rmFromList(self, dbName, listName, value):
@@ -321,120 +251,78 @@ class dbHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 result = self.database.rmFromList(dbName, listName, value)
                 if(result == NoSqlDb.LIST_NOT_CONTAIN_VALUE):
-                    self.msg["msg"] = "List Does Not Contain This Value"
-                    self.msg["typeCode"] = dbHandler.LIST_NOT_CONTAIN_VALUE
-                    self.msg["data"] = listName
+                    msg = self.makeMessage("List Does Not Contain This Value", dbHandler.LIST_NOT_CONTAIN_VALUE, listName)
                 elif(result == NoSqlDb.LIST_REMOVE_SUCCESS):
-                    self.msg["msg"] = "List Remove Value Success"
-                    self.msg["typeCode"] = dbHandler.LIST_REMOVE_SUCCESS
-                    self.msg["data"] = listName
+                    msg = self.makeMessage("List Remove Value Success", dbHandler.LIST_REMOVE_SUCCESS, listName)
                 elif(result == NoSqlDb.LIST_LOCKED):
-                    self.msg["msg"] = "List Is Locked"
-                    self.msg["typeCode"] = dbHandler.LIST_IS_LOCKED
-                    self.msg["data"] = listName
+                    msg = self.makeMessage("List Is Locked", dbHandler.LIST_IS_LOCKED, listName)
 
             else:   # if list does not exist
-                self.msg["msg"] = "List Does Not Exist"
-                self.msg["typeCode"] = dbHandler.LIST_NOT_EXIST
-                self.msg["data"] = listName
+                msg = self.makeMessage("List Does Not Exist", dbHandler.LIST_NOT_EXIST, listName)
         else:
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = listName
-        return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, listName)
+        return msg
 
     # search list names using regular expression
     def searchList(self, dbName, expression):
         if(self.isValidType(dbName)):
             searchResult = self.database.searchList(dbName, expression)
-            self.msg["msg"] = "Search List Success"
-            self.msg["typeCode"] = dbHandler.LIST_SEARCH_SUCCESS
-            self.msg["data"] = searchResult
+            msg = self.makeMessage("Search List Success", dbHandler.LIST_SEARCH_SUCCESS, searchResult)
         else:
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = dbName
-        return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, dbName)
+        return msg
 
     # get all list names in the given database
     def searchAllList(self, dbName):
         if(self.isValidType(dbName)):
             searchResult = self.database.searchAllList(dbName)
-            self.msg["msg"] = "Search All List Success"
-            self.msg["typeCode"] = dbHandler.LIST_SEARCH_SUCCESS
-            self.msg["data"] = searchResult
+            msg = self.makeMessage("Search All List Success", dbHandler.LIST_SEARCH_SUCCESS, searchResult)
         else:
-            self.msg["msg"] = "Element Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = dbName
-        return self.msg
+            msg = self.makeMessage("Element Type Error", dbHandler.ELEM_TYPE_ERROR, dbName)
+        return msg
 
     # add a customized database
     def addDatabase(self, dbName):
         if(self.isValidType(dbName)):
             result = self.database.addDb(dbName)
             if(result == NoSqlDb.DB_EXISTED):
-                self.msg["msg"] = "Database Already Exists"
-                self.msg["typeCode"] = dbHandler.DB_EXISTED
-                self.msg["data"] = dbName
+                msg = self.makeMessage("Database Already Exists", dbHandler.DB_EXISTED, dbName)
             elif(result == NoSqlDb.DB_CREATE_SUCCESS):
-                self.msg["msg"] = "Database Create Success"
-                self.msg["typeCode"] = dbHandler.DB_CREATE_SUCCESS
-                self.msg["data"] = dbName
+                msg = self.makeMessage("Database Create Success", dbHandler.DB_CREATE_SUCCESS, dbName)
             elif(result == NoSqlDb.DB_SAVE_LOCK):
-                self.msg["msg"] = "Database Is Locked"
-                self.msg["typeCode"] = dbHandler.DB_SAVE_LOCKED
-                self.msg["data"] = dbName
+                msg = self.makeMessage("Database Is Locked", dbHandler.DB_SAVE_LOCKED, dbName)
         else:
-            self.msg["msg"] = "Database Name Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = dbName
-        return self.msg
+            msg = self.makeMessage("Database Name Type Error", dbHandler.ELEM_TYPE_ERROR, dbName)
+        return msg
 
     # get all database names
     def getAllDatabase(self):
         dbNameSet = self.database.getAllDatabase()
-        self.msg["msg"] = "Database Get Success"
-        self.msg["typeCode"] = dbHandler.DB_GET_SUCCESS
-        self.msg["data"] = dbNameSet
-        return self.msg
+        msg = self.makeMessage("Database Get Success", dbHandler.DB_GET_SUCCESS, dbNameSet)
+        return msg
 
     # delete the given database
     def delDatabase(self, dbName):
         if(self.isValidType(dbName)):
             result = self.database.delDatabase(dbName)
             if(result == NoSqlDb.DB_DELETE_SUCCESS):
-                self.msg["msg"] = "Database Delete Success"
-                self.msg["typeCode"] = dbHandler.DB_DELETE_SUCCESS
-                self.msg["data"] = dbName
+                msg = self.makeMessage("Database Delete Success", dbHandler.DB_DELETE_SUCCESS, dbName)
             elif(result == NoSqlDb.DB_SAVE_LOCK):
-                self.msg["msg"] = "Database Save Locked"
-                self.msg["typeCode"] = dbHandler.DB_SAVE_LOCKED
-                self.msg["data"] = dbName
+                msg = self.makeMessage("Database Save Locked", dbHandler.DB_SAVE_LOCKED, dbName)
             elif(result == NoSqlDb.DB_NOT_EXISTED):
-                self.msg["msg"] = "Database Does Not Exist"
-                self.msg["typeCode"] = dbHandler.DB_NOT_EXIST
-                self.msg["data"] = dbName
+                msg = self.makeMessage("Database Does Not Exist", dbHandler.DB_NOT_EXIST, dbName)
         else:
-            self.msg["msg"] = "Database Name Type Error"
-            self.msg["typeCode"] = dbHandler.ELEM_TYPE_ERROR
-            self.msg["data"] = dbName
-        return self.msg
+            msg = self.makeMessage("Database Name Type Error", dbHandler.ELEM_TYPE_ERROR, dbName)
+        return msg
 
     # save the data into file
     def saveDb(self):
         result = self.database.saveDb()
-
         if(result == NoSqlDb.DB_SAVE_SUCCESS):
-            self.msg["msg"] = "Database Save Success"
-            self.msg["typeCode"] = dbHandler.DB_SAVE_SUCCESS
-            self.msg["data"] = time.time()
+            msg = self.makeMessage("Database Save Success", dbHandler.DB_SAVE_SUCCESS, time.time())
         elif(result == NoSqlDb.DB_SAVE_LOCK):
-            self.msg["msg"] = "Database Save Locked"
-            self.msg["typeCode"] = dbHandler.DB_SAVE_LOCKED
-            self.msg["data"] = time.time()
-        return self.msg
-
+            msg = self.makeMessage("Database Save Locked", dbHandler.DB_SAVE_LOCKED, time.time())
+        return msg
 
 
 if __name__ == "__main__":

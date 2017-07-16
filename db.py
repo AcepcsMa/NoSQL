@@ -320,6 +320,8 @@ class NoSqlDb:
 
     def loadDb(self):
         try:
+            if(os.path.exists("data") is False):
+                os.mkdir("data")
             dbNameSet = os.listdir("data")  # find all dbName in the data directory
             for dbName in dbNameSet:
                 self.dbNameSet.add(dbName)

@@ -38,7 +38,7 @@ class elemHandler:
            and self.isValidType(dbName)): # check the type of elem name and elem value
             if(self.database.isElemExist(dbName, elemName) is False):
                 self.database.createElem(elemName, value, dbName)
-                msg = self.makeMessage("Make Element Success", responseCode.CREATE_ELEM_SUCCESS, elemName)
+                msg = self.makeMessage("Make Element Success", responseCode.ELEM_CREATE_SUCCESS, elemName)
 
             else:   # this elem already exists in the db
                 msg = self.makeMessage("Element Already Exists", responseCode.ELEM_ALREADY_EXIST, elemName)
@@ -57,7 +57,7 @@ class elemHandler:
                and self.isValidType(value)
                and self.isValidType(dbName)):
                 self.database.updateElem(elemName, value, dbName)
-                msg = self.makeMessage("Element Update Success", responseCode.UPDATE_ELEM_SUCCESS, elemName)
+                msg = self.makeMessage("Element Update Success", responseCode.ELEM_UPDATE_SUCCESS, elemName)
             else:
                 msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg
@@ -69,7 +69,7 @@ class elemHandler:
             if (self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
-                msg = self.makeMessage("Element Get Success", responseCode.GET_ELEM_SUCCESS, self.database.getElem(elemName, dbName))
+                msg = self.makeMessage("Element Get Success", responseCode.ELEM_GET_SUCCESS, self.database.getElem(elemName, dbName))
 
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)

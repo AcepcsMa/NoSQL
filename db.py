@@ -27,6 +27,8 @@ class NoSqlDb:
     LIST_DELETE_SUCCESS = 16
     DB_DELETE_SUCCESS = 17
     DB_NOT_EXISTED = 18
+    HASH_CREATE_SUCCESS = 19
+    HASH_EXISTED = 20
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -41,6 +43,11 @@ class NoSqlDb:
         self.listDict = dict()
         self.listLockDict = dict()
 
+        # hash structures
+        self.hashName = dict()
+        self.hashDict = dict()
+        self.hashLockDict = dict()
+
         self.saveLock = False
 
         for dbName in self.dbNameSet:
@@ -51,6 +58,10 @@ class NoSqlDb:
             self.listName[dbName] = set()
             self.listDict[dbName] = dict()
             self.listDict[dbName] = dict()
+
+            self.hashName[dbName] = set()
+            self.hashDict[dbName] = dict()
+            self.hashLockDict[dbName] = dict()
 
         # check log directory
         if(os.path.exists(config["LOG_PATH"]) is False):
@@ -79,6 +90,12 @@ class NoSqlDb:
     def unlockList(self, dbName, listName):
         self.listLockDict[dbName][listName] = False
 
+    def lockHash(self, dbName, hashName):
+        self.hashLockDict[dbName][hashName] = True
+
+    def unlockHash(self, dbName, hashName):
+        self.hashLockDict[dbName][hashName] = False
+
     def isDbExist(self, dbName):
         return dbName in self.dbNameSet
 
@@ -91,6 +108,12 @@ class NoSqlDb:
     def isListExist(self, dbName, listName):
         if(self.isDbExist(dbName) is True):
             return listName in self.listName[dbName]
+        else:
+            return False
+
+    def isHashExist(self, dbName, hashName):
+        if(self.isDbExist(dbName) is True):
+            return hashName in self.hashName[dbName]
         else:
             return False
 
@@ -248,6 +271,19 @@ class NoSqlDb:
         self.logger.info("Search All List Success {0}".format(dbName))
         return list(self.listName[dbName])
 
+    def createHash(self, dbName, hashName, hashValue):
+        if(self.isHashExist(dbName,hashName) is False):
+            self.hashName[dbName].add(hashName)
+            self.lockHash(dbName, hashName)
+            self.hashDict[dbName][hashName] = hashValue
+            self.unlockHash(dbName, hashName)
+            return NoSqlDb.HASH_CREATE_SUCCESS
+        else:
+            return NoSqlDb.HASH_EXISTED
+
+    def getHash(self, dbName, hashName):
+        return self.hashDict[dbName][hashName]
+
     def addDb(self, dbName):
         if(self.saveLock is True):
             self.logger.warning("Database Save Locked {0}".format(dbName))
@@ -310,6 +346,10 @@ class NoSqlDb:
                     listNameFile.write(json.dumps(list(self.listName[dbName])))
                 with open("data" + os.sep + dbName + os.sep + "listValue.txt", "w") as listValueFile:
                     listValueFile.write(json.dumps(self.listDict[dbName]))
+                with open("data" + os.sep + dbName + os.sep + "hashName.txt", "w") as hashNameFile:
+                    hashNameFile.write(json.dumps(list(self.hashName[dbName])))
+                with open("data" + os.sep + dbName + os.sep + "hashValue.txt", "w") as hashValueFile:
+                    hashValueFile.write(json.dumps(self.hashDict[dbName]))
 
             self.saveLock = False
             self.logger.info("Database Save Success")
@@ -337,6 +377,11 @@ class NoSqlDb:
                 self.listLockDict[dbName] = dict()
                 self.listDict[dbName] = dict()
 
+                # init hash structure
+                self.hashName[dbName] = set()
+                self.hashLockDict[dbName] = dict()
+                self.hashDict[dbName] = dict()
+
                 # load element names
                 with open("data"+os.sep+dbName+os.sep+"elemName.txt","r") as elemNameFile:
                     elemNames = json.loads(elemNameFile.read())
@@ -358,6 +403,17 @@ class NoSqlDb:
                 # load list values
                 with open("data" + os.sep + dbName + os.sep + "listValue.txt", "r") as listValueFile:
                     self.listDict[dbName] = json.loads(listValueFile.read())
+
+                # load hash names
+                with open("data"+os.sep+dbName+os.sep+"hashName.txt","r") as hashNameFile:
+                    hashNames = json.loads(hashNameFile.read())
+                    for hashName in hashNames:
+                        self.hashName[dbName].add(hashName)
+                        self.hashLockDict[dbName][hashName] = False
+
+                # load hash values
+                with open("data" + os.sep + dbName + os.sep + "hashValue.txt", "r") as hashValueFile:
+                    self.hashDict[dbName] = json.loads(hashValueFile.read())
 
             self.logger.info("Database Load Success")
 

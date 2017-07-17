@@ -36,7 +36,7 @@ class listHandler:
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is False):
                 self.database.createList(listName, dbName)
-                msg = self.makeMessage("Make List Success", responseCode.CREATE_LIST_SUCCESS, listName)
+                msg = self.makeMessage("Make List Success", responseCode.LIST_CREATE_SUCCESS, listName)
             else:
                 msg = self.makeMessage("List Already Exists", responseCode.LIST_ALREADY_EXIST, listName)
         else:  # the type of elem name or elem value is invalid
@@ -48,7 +48,7 @@ class listHandler:
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is True):
                 listValue = self.database.getList(listName, dbName)
-                msg = self.makeMessage("Get List Success", responseCode.GET_LIST_SUCCESS, listValue)
+                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
             else:
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:

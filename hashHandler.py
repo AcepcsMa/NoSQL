@@ -39,6 +39,8 @@ class hashHandler:
                 msg = self.makeMessage("Hash Create Success", responseCode.HASH_CREATE_SUCCESS, hashName)
             elif(result == NoSqlDb.HASH_EXISTED):
                 msg = self.makeMessage("Hash Already Exists", responseCode.HASH_EXISTED, hashName)
+            else:
+                msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
@@ -49,6 +51,38 @@ class hashHandler:
             if(self.database.isHashExist(dbName, hashName) is True):
                 hashValue = self.database.getHash(dbName, hashName)
                 msg = self.makeMessage("Hash Get Success", responseCode.HASH_GET_SUCCESS, hashValue)
+            else:
+                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        return msg
+
+    def insertHash(self, dbName, hashName, keyName, value):
+        if(self.isValidType(dbName) and self.isValidType(hashName)):
+            if(self.database.isHashExist(dbName, hashName)):
+                result = self.database.insertHash(dbName, hashName, keyName, value)
+                if(result == NoSqlDb.HASH_LOCKED):
+                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
+                elif(result == NoSqlDb.HASH_INSERT_SUCCESS):
+                    msg = self.makeMessage("Hash Insert Success", responseCode.HASH_INSERT_SUCCESS, hashName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        return msg
+
+    def isKeyExist(self, dbName, hashName, keyName):
+        if(self.isValidType(dbName) and self.isValidType(hashName)):
+            if(self.database.isHashExist(dbName, hashName)):
+                result = self.database.isKeyExist(dbName, hashName, keyName)
+                if(result == True):
+                    msg = self.makeMessage("Hash Key Exists", responseCode.HASH_KEY_EXIST, keyName)
+                elif(result == False):
+                    msg = self.makeMessage("Hash Key Does Not Exist", responseCode.HASH_KEY_NOT_EXIST, keyName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
             else:
                 msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         else:

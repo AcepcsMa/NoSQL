@@ -13,32 +13,25 @@ from hashHandler import hashHandler
 
 app = flask.Flask(__name__)
 
-@app.route("/makeElem/<expression>",methods=["GET"])
-def makeElem(expression):
-    if("->" not in expression):
-        msg = {
-            "msg":"Wrong Expression",
-            "typeCode":None,
-            "data":None
-        }
-        return flask.jsonify(msg)
-    else:
-        myHandler = elemHandler(database)
-        dbName = expression.split("->")[0]
-        elemName = expression.split("->")[1]
-        elemValue = expression.split("->")[2]
-        if(elemValue[0] == "\"" and elemValue[-1] == "\""): # distinguish string value and int value
-            elemValue = str(elemValue[1:-1])
-        else:
-            elemValue = int(elemValue)
-        result = myHandler.createElem(elemName, elemValue, dbName)
-        return flask.jsonify(result)
-
-@app.route("/getElem/<element>",methods=["GET"])
-def getElem(element):
+@app.route("/makeElem",methods=["POST"])
+def makeElem():
     myHandler = elemHandler(database)
-    dbName = element.split("->")[0]
-    elemName = element.split("->")[1]
+    try:
+        dbName = flask.request.json["dbName"]
+        elemName = flask.request.json["elemName"]
+        elemValue = flask.request.json["elemValue"]
+    except:
+        dbName = None
+        elemName = None
+        elemValue = None
+    result = myHandler.createElem(elemName, elemValue, dbName)
+    return flask.jsonify(result)
+
+@app.route("/getElem/<expression>",methods=["GET"])
+def getElem(expression):
+    myHandler = elemHandler(database)
+    dbName = expression.split("->")[0]
+    elemName = expression.split("->")[1]
     result = myHandler.getElem(elemName, dbName)
     return flask.jsonify(result)
 
@@ -155,6 +148,27 @@ def getHash(expression):
     dbName = expression.split("->")[0]
     hashName = expression.split("->")[1]
     result = myHandler.getHash(dbName, hashName)
+    return flask.jsonify(result)
+
+@app.route("/insertHash/<string:expression>",methods=["POST"])
+def insertHash(expression):
+    myHandler = hashHandler(database)
+    dbName = expression.split("->")[0]
+    hashName = expression.split("->")[1]
+    print (flask.request.json)
+    try:
+        keyName = flask.request.json["keyName"]
+        value = flask.request.json["value"]
+    except:
+        keyName = None
+        value = None
+    result = myHandler.insertHash(dbName, hashName, keyName, value)
+    return flask.jsonify(result)
+
+@app.route("/isHashKeyExist/<dbName>/<hashName>/<keyName>",methods=["GET"])
+def isHashKeyExist(dbName, hashName, keyName):
+    myHandler = hashHandler(database)
+    result = myHandler.isKeyExist(dbName, hashName, keyName)
     return flask.jsonify(result)
 
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])

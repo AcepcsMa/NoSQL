@@ -3,6 +3,7 @@ __author__ = 'Marco'
 class responseCode:
 
     # return types
+    DB_ERROR = -1
     ELEM_TYPE_ERROR = 0
     ELEM_CREATE_SUCCESS = 1
     ELEM_ALREADY_EXIST = 2
@@ -36,3 +37,7 @@ class responseCode:
     HASH_EXISTED = 30
     HASH_NOT_EXISTED = 31
     HASH_GET_SUCCESS = 32
+    HASH_IS_LOCKED = 33
+    HASH_INSERT_SUCCESS = 34
+    HASH_KEY_EXIST = 35
+    HASH_KEY_NOT_EXIST = 36

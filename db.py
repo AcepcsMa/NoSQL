@@ -29,6 +29,8 @@ class NoSqlDb:
     DB_NOT_EXISTED = 18
     HASH_CREATE_SUCCESS = 19
     HASH_EXISTED = 20
+    HASH_LOCKED = 21
+    HASH_INSERT_SUCCESS = 22
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -283,6 +285,18 @@ class NoSqlDb:
 
     def getHash(self, dbName, hashName):
         return self.hashDict[dbName][hashName]
+
+    def insertHash(self, dbName, hashName, keyName, value):
+        if(self.hashLockDict[dbName][hashName] is True):
+            return NoSqlDb.HASH_LOCKED
+        else:
+            self.lockHash(dbName, hashName)
+            self.hashDict[dbName][hashName][keyName] = value
+            self.unlockHash(dbName, hashName)
+            return NoSqlDb.HASH_INSERT_SUCCESS
+
+    def isKeyExist(self, dbName, hashName, keyName):
+        return keyName in self.hashDict[dbName][hashName].keys()
 
     def addDb(self, dbName):
         if(self.saveLock is True):

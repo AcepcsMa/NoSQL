@@ -112,7 +112,7 @@ class listHandler:
     # search list names using regular expression
     def searchList(self, dbName, expression):
         if(self.isValidType(dbName)):
-            searchResult = self.database.searchList(dbName, expression)
+            searchResult = self.database.searchByRE(dbName, expression, "LIST")
             msg = self.makeMessage("Search List Success", responseCode.LIST_SEARCH_SUCCESS, searchResult)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)

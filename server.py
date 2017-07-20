@@ -133,13 +133,15 @@ def searchAllList(dbName):
     result = myHandler.searchAllList(dbName)
     return flask.jsonify(result)
 
-@app.route("/makeHash/<string:expression>",methods=["POST"])
-def makeHash(expression):
+@app.route("/makeHash",methods=["POST"])
+def makeHash():
     myHandler = hashHandler(database)
-    dbName = expression.split("->")[0]
-    hashName = expression.split("->")[1]
-    hashValue = json.loads(flask.request.form["hashValue"])
-    result = myHandler.createHash(dbName, hashName, hashValue)
+    try:
+        dbName = flask.request.json["dbName"]
+        hashName = flask.request.json["hashName"]
+    except:
+        dbName = hashName = None
+    result = myHandler.createHash(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/getHash/<string:expression>",methods=["GET"])
@@ -155,7 +157,6 @@ def insertHash(expression):
     myHandler = hashHandler(database)
     dbName = expression.split("->")[0]
     hashName = expression.split("->")[1]
-    print (flask.request.json)
     try:
         keyName = flask.request.json["keyName"]
         value = flask.request.json["value"]
@@ -169,6 +170,36 @@ def insertHash(expression):
 def isHashKeyExist(dbName, hashName, keyName):
     myHandler = hashHandler(database)
     result = myHandler.isKeyExist(dbName, hashName, keyName)
+    return flask.jsonify(result)
+
+@app.route("/deleteHash/<dbName>/<hashName>",methods=["GET"])
+def deleteHash(dbName, hashName):
+    myHandler = hashHandler(database)
+    result = myHandler.deleteHash(dbName, hashName)
+    return flask.jsonify(result)
+
+@app.route("/rmFromHash",methods=["POST"])
+def rmFromHash():
+    myHandler = hashHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        hashName = flask.request.json["hashName"]
+        keyName = flask.request.json["keyName"]
+    except:
+        dbName = hashName = keyName = None
+    result = myHandler.rmFromHash(dbName, hashName, keyName)
+    return flask.jsonify(result)
+
+@app.route("/searchHash/<dbName>/<string:expression>",methods=["GET"])
+def searchHash(dbName, expression):
+    myHandler = hashHandler(database)
+    result = myHandler.searchHash(dbName, expression)
+    return flask.jsonify(result)
+
+@app.route("/searchAllHash/<dbName>",methods=["GET"])
+def searchAllHash(dbName):
+    myHandler = hashHandler(database)
+    result = myHandler.searchAllHash(dbName)
     return flask.jsonify(result)
 
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])

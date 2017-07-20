@@ -32,9 +32,9 @@ class hashHandler:
         return message
 
     # create a hash
-    def createHash(self, dbName, hashName, hashValue):
+    def createHash(self, dbName, hashName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
-            result = self.database.createHash(dbName, hashName, hashValue)
+            result = self.database.createHash(dbName, hashName)
             if(result == NoSqlDb.HASH_CREATE_SUCCESS):
                 msg = self.makeMessage("Hash Create Success", responseCode.HASH_CREATE_SUCCESS, hashName)
             elif(result == NoSqlDb.HASH_EXISTED):
@@ -87,4 +87,55 @@ class hashHandler:
                 msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        return msg
+
+    def deleteHash(self, dbName, hashName):
+        if(self.isValidType(dbName) and self.isValidType(hashName)):
+            if(self.database.isHashExist(dbName, hashName)):
+                result = self.database.deleteHash(dbName, hashName)
+                if(result == NoSqlDb.HASH_LOCKED):
+                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
+                elif(result == NoSqlDb.HASH_DELETE_SUCCESS):
+                    msg = self.makeMessage("Hash Delete Success", responseCode.HASH_DELETE_SUCCESS, hashName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        return msg
+
+    def rmFromHash(self, dbName, hashName, keyName):
+        if(self.isValidType(dbName) and self.isValidType(hashName)):
+            if(self.database.isKeyExist(dbName, hashName, keyName) is True):
+                result = self.database.rmFromHash(dbName, hashName, keyName)
+                if(result == NoSqlDb.HASH_LOCKED):
+                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
+                elif(result == NoSqlDb.HASH_REMOVE_SUCCESS):
+                    msg = self.makeMessage("Hash Key Remove Success", responseCode.HASH_REMOVE_SUCCESS, keyName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Hash Key Does Not Exist", responseCode.HASH_KEY_NOT_EXIST, keyName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        return msg
+
+    def searchHash(self, dbName, expression):
+        if(self.isValidType(dbName)):
+            searchResult = self.database.searchByRE(dbName, expression, "HASH")
+            msg = self.makeMessage("Search Hash Success", responseCode.HASH_SEARCH_SUCCESS, searchResult)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg
+
+    def searchAllHash(self, dbName):
+        if(self.isValidType(dbName)):
+            if(self.database.isDbExist(dbName)):
+                searchResult = self.database.searchAllHash(dbName)
+                msg = self.makeMessage("Search Hash Success", responseCode.HASH_SEARCH_SUCCESS, searchResult)
+            else:
+                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
         return msg

@@ -31,6 +31,8 @@ class NoSqlDb:
     HASH_EXISTED = 20
     HASH_LOCKED = 21
     HASH_INSERT_SUCCESS = 22
+    HASH_DELETE_SUCCESS = 23
+    HASH_REMOVE_SUCCESS = 24
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -119,6 +121,31 @@ class NoSqlDb:
         else:
             return False
 
+    def searchByRE(self, dbName, expression, dataType):
+        if(self.isDbExist(dbName) is False):
+            return []
+        searchResult = set()
+        expression = re.sub("\*",".*",expression)   # convert expression to regular expression
+        if(dataType == "ELEM"):
+            names = self.elemName[dbName]
+            logInfo = "Search Element Success {0} {1}"
+        elif(dataType == "LIST"):
+            names = self.listName[dbName]
+            logInfo = "Search LIST Success {0} {1}"
+        elif(dataType == "HASH"):
+            names = self.hashName[dbName]
+            logInfo = "Search Hash Success {0} {1}"
+        else:
+            names = []
+            logInfo = "Search Fail {0} {1}"
+        for name in names:
+            try:
+                searchResult.add(re.findall("({})".format(expression),name)[0])
+            except:
+                continue
+        self.logger.info(logInfo.format(dbName, expression))
+        return list(searchResult)
+
     def createElem(self, elemName, value, dbName):
         self.lockElem(dbName, elemName) # lock this element avoiding r/w implements
         self.elemName[dbName].add(elemName)
@@ -146,20 +173,6 @@ class NoSqlDb:
             elemValue = None
         self.logger.info("Get Element Success {0}->{1}".format(dbName, elemName))
         return elemValue
-
-    def searchElem(self, expression, dbName):
-        if(self.isDbExist(dbName) is False):
-            return []
-        searchResult = set()
-        expression = re.sub("\*",".*",expression)   # convert expression to regular expression
-        for elemName in self.elemName[dbName]:
-            try:
-                searchResult.add(re.findall("({})".format(expression),elemName)[0])
-            except:
-                continue
-
-        self.logger.info("Search Element Success {0} {1}".format(dbName, expression))
-        return list(searchResult)
 
     def searchAllElem(self, dbName):
         if(self.isDbExist(dbName) is False):
@@ -253,31 +266,17 @@ class NoSqlDb:
                 self.logger.info("Remove From List Success {0}->{1}->{2}".format(dbName, listName, value))
                 return NoSqlDb.LIST_REMOVE_SUCCESS
 
-    def searchList(self, dbName, expression):
-        if(self.isDbExist(dbName) is False):
-            return []
-        searchResult = set()
-        expression = re.sub("\*", ".*", expression)  # convert expression to regular expression
-        for listName in self.listName[dbName]:
-            try:
-                searchResult.add(re.findall("({})".format(expression), listName)[0])
-            except:
-                continue
-
-        self.logger.info("Search List Success {0} {1}".format(dbName, expression))
-        return list(searchResult)
-
     def searchAllList(self, dbName):
         if(self.isDbExist(dbName) is False):
             return []
         self.logger.info("Search All List Success {0}".format(dbName))
         return list(self.listName[dbName])
 
-    def createHash(self, dbName, hashName, hashValue):
+    def createHash(self, dbName, hashName):
         if(self.isHashExist(dbName,hashName) is False):
             self.hashName[dbName].add(hashName)
             self.lockHash(dbName, hashName)
-            self.hashDict[dbName][hashName] = hashValue
+            self.hashDict[dbName][hashName] = dict()
             self.unlockHash(dbName, hashName)
             return NoSqlDb.HASH_CREATE_SUCCESS
         else:
@@ -296,7 +295,33 @@ class NoSqlDb:
             return NoSqlDb.HASH_INSERT_SUCCESS
 
     def isKeyExist(self, dbName, hashName, keyName):
-        return keyName in self.hashDict[dbName][hashName].keys()
+        return keyName in list(self.hashDict[dbName][hashName].keys())
+
+    def deleteHash(self, dbName, hashName):
+        if(self.hashLockDict[dbName][hashName] is True):
+            return NoSqlDb.HASH_LOCKED
+        else:
+            self.lockHash(dbName, hashName)
+            self.hashDict[dbName].pop(hashName)
+            self.hashName[dbName].remove(hashName)
+            self.unlockHash(dbName, hashName)
+            self.hashLockDict[dbName].pop(hashName)
+            return NoSqlDb.HASH_DELETE_SUCCESS
+
+    def rmFromHash(self, dbName, hashName, keyName):
+        if(self.hashLockDict[dbName][hashName] is True):
+            return NoSqlDb.HASH_LOCKED
+        else:
+            self.lockHash(dbName, hashName)
+            self.hashDict[dbName][hashName].pop(keyName)
+            self.unlockHash(dbName, hashName)
+            return NoSqlDb.HASH_REMOVE_SUCCESS
+
+    def searchAllHash(self, dbName):
+        if(self.isDbExist(dbName) is False):
+            return []
+        self.logger.info("Search All Hash Success {0}".format(dbName))
+        return list(self.hashName[dbName])
 
     def addDb(self, dbName):
         if(self.saveLock is True):

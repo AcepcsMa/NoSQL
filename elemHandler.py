@@ -77,8 +77,11 @@ class elemHandler:
 
     # search element using regular expression
     def searchElem(self, expression, dbName):
-        searchResult = self.database.searchElem(expression, dbName)
-        msg = self.makeMessage("Element Search Success", responseCode.ELEM_SEARCH_SUCCESS, searchResult)
+        if(self.isValidType(dbName)):
+            searchResult = self.database.searchByRE(dbName, expression, "ELEM")
+            msg = self.makeMessage("Search Element Success", responseCode.ELEM_SEARCH_SUCCESS, searchResult)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
         return msg
 
     # get all element names in the db

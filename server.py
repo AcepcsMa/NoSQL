@@ -190,6 +190,24 @@ def rmFromHash():
     result = myHandler.rmFromHash(dbName, hashName, keyName)
     return flask.jsonify(result)
 
+@app.route("/clearHash/<dbName>/<hashName>",methods=["GET"])
+def clearHash(dbName, hashName):
+    myHandler = hashHandler(database)
+    result = myHandler.clearHash(dbName, hashName)
+    return flask.jsonify(result)
+
+@app.route("/replaceHash",methods=["POST"])
+def replaceHash():
+    myHandler = hashHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        hashName = flask.request.json["hashName"]
+        hashValue = flask.request.json["hashValue"]
+    except:
+        dbName = hashName = hashValue = None
+    result = myHandler.replaceHash(dbName, hashName, hashValue)
+    return flask.jsonify(result)
+
 @app.route("/searchHash/<dbName>/<string:expression>",methods=["GET"])
 def searchHash(dbName, expression):
     myHandler = hashHandler(database)

@@ -33,6 +33,8 @@ class NoSqlDb:
     HASH_INSERT_SUCCESS = 22
     HASH_DELETE_SUCCESS = 23
     HASH_REMOVE_SUCCESS = 24
+    HASH_CLEAR_SUCCESS = 25
+    HASH_REPLACE_SUCCESS = 26
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -316,6 +318,24 @@ class NoSqlDb:
             self.hashDict[dbName][hashName].pop(keyName)
             self.unlockHash(dbName, hashName)
             return NoSqlDb.HASH_REMOVE_SUCCESS
+
+    def clearHash(self, dbName, hashName):
+        if(self.hashLockDict[dbName][hashName] is True):
+            return NoSqlDb.HASH_LOCKED
+        else:
+            self.lockHash(dbName, hashName)
+            self.hashDict[dbName][hashName].clear()
+            self.unlockHash(dbName, hashName)
+            return NoSqlDb.HASH_CLEAR_SUCCESS
+
+    def replaceHash(self, dbName, hashName, hashValue):
+        if(self.hashLockDict[dbName][hashName] is True):
+            return NoSqlDb.HASH_LOCKED
+        else:
+            self.lockHash(dbName, hashName)
+            self.hashDict[dbName][hashName] = hashValue
+            self.unlockHash(dbName, hashName)
+            return NoSqlDb.HASH_REPLACE_SUCCESS
 
     def searchAllHash(self, dbName):
         if(self.isDbExist(dbName) is False):

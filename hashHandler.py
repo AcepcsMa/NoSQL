@@ -17,10 +17,11 @@ class hashHandler:
 
     # check if the type of an elem is INT
     def isInt(self, elem):
-        if("int" in str(type(elem))):
-            return True
-        else:
-            return False
+        return "int" in str(type(elem))
+
+    # check if the type of an elem is DICT
+    def isDict(self, elem):
+        return "dict" in str(type(elem))
 
     # make the response message
     def makeMessage(self, msg, typeCode, data):
@@ -117,6 +118,39 @@ class hashHandler:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
             else:
                 msg = self.makeMessage("Hash Key Does Not Exist", responseCode.HASH_KEY_NOT_EXIST, keyName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        return msg
+
+    def clearHash(self, dbName, hashName):
+        if(self.isValidType(dbName) and self.isValidType(hashName)):
+            if(self.database.isHashExist(dbName, hashName) is True):
+                result = self.database.clearHash(dbName, hashName)
+                if(result == NoSqlDb.HASH_LOCKED):
+                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
+                elif(result == NoSqlDb.HASH_CLEAR_SUCCESS):
+                    msg = self.makeMessage("Hash Clear Success", responseCode.HASH_CLEAR_SUCCESS, hashName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        return msg
+
+    def replaceHash(self, dbName, hashName, hashValue):
+        if(self.isValidType(dbName) and self.isValidType(hashName)
+           and self.isDict(hashValue)):
+            if(self.database.isHashExist(dbName, hashName) is True):
+                result = self.database.replaceHash(dbName, hashName, hashValue)
+                if(result == NoSqlDb.HASH_LOCKED):
+                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
+                elif(result == NoSqlDb.HASH_REPLACE_SUCCESS):
+                    msg = self.makeMessage("Hash Replace Success", responseCode.HASH_REPLACE_SUCCESS, hashName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg

@@ -26,7 +26,7 @@ class listHandler:
         return message
 
     # create a list in the database
-    def createList(self, listName, dbName):
+    def createList(self, dbName, listName):
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is False):
                 self.database.createList(listName, dbName)
@@ -38,7 +38,7 @@ class listHandler:
         return msg
 
     # get the value of a given list
-    def getList(self, listName, dbName):
+    def getList(self, dbName, listName):
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is True):
                 listValue = self.database.getList(listName, dbName)
@@ -50,13 +50,12 @@ class listHandler:
         return msg
 
     # insert a value into the given list
-    def insertList(self, listName, value, dbName):
+    def insertList(self, dbName, listName, listValue):
         if(self.isValidType(listName)
-           and self.isValidType(value)
            and self.isValidType(dbName)):
             # if list exists, execute the insertion
             if(self.database.isListExist(dbName, listName) is True):
-                result = self.database.insertList(listName, value, dbName)
+                result = self.database.insertList(listName, listValue, dbName)
                 if(result == NoSqlDb.LIST_LOCKED):
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
                 elif(result == NoSqlDb.LIST_INSERT_SUCCESS):
@@ -70,7 +69,7 @@ class listHandler:
         return msg
 
     # delete a list in the database
-    def deleteList(self, listName, dbName):
+    def deleteList(self, dbName, listName):
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is True):
                 result = self.database.deleteList(listName, dbName)

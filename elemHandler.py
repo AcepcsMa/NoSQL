@@ -26,12 +26,12 @@ class elemHandler:
         return message
 
     # create an element in the db
-    def createElem(self, elemName, value, dbName):
+    def createElem(self, dbName, elemName, elemValue):
         if(self.isValidType(elemName)
-           and self.isValidType(value)
+           and self.isValidType(elemValue)
            and self.isValidType(dbName)): # check the type of elem name and elem value
             if(self.database.isElemExist(dbName, elemName) is False):
-                self.database.createElem(elemName, value, dbName)
+                self.database.createElem(elemName, elemValue, dbName)
                 msg = self.makeMessage("Make Element Success", responseCode.ELEM_CREATE_SUCCESS, elemName)
 
             else:   # this elem already exists in the db
@@ -42,22 +42,22 @@ class elemHandler:
         return msg
 
     # update the value of an elem in the db
-    def updateElem(self, elemName, value, dbName):
+    def updateElem(self, dbName, elemName, elemValue):
         if(self.database.isElemExist(dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
 
         else:   # find the elem in the db
             if(self.isValidType(elemName)
-               and self.isValidType(value)
+               and self.isValidType(elemValue)
                and self.isValidType(dbName)):
-                self.database.updateElem(elemName, value, dbName)
+                self.database.updateElem(elemName, elemValue, dbName)
                 msg = self.makeMessage("Element Update Success", responseCode.ELEM_UPDATE_SUCCESS, elemName)
             else:
                 msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg
 
     # get the value of existed elem
-    def getElem(self, elemName, dbName):
+    def getElem(self, dbName, elemName):
         if(self.isValidType(elemName)
            and self.isValidType(dbName)):
             if (self.database.isElemExist(dbName, elemName) is False):
@@ -70,7 +70,7 @@ class elemHandler:
         return msg
 
     # search element using regular expression
-    def searchElem(self, expression, dbName):
+    def searchElem(self, dbName, expression):
         if(self.isValidType(dbName)):
             searchResult = self.database.searchByRE(dbName, expression, "ELEM")
             msg = self.makeMessage("Search Element Success", responseCode.ELEM_SEARCH_SUCCESS, searchResult)
@@ -84,7 +84,7 @@ class elemHandler:
         return msg
 
     # increase the value of an element
-    def increaseElem(self, elemName, dbName):
+    def increaseElem(self, dbName, elemName):
         if(self.isValidType(elemName) and self.isValidType(dbName)):
             if(self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
@@ -106,7 +106,7 @@ class elemHandler:
         return msg
 
     # decrease the value of an element
-    def decreaseElem(self, elemName, dbName):
+    def decreaseElem(self, dbName, elemName):
         if(self.isValidType(elemName) and self.isValidType(dbName)):
             if(self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
@@ -128,7 +128,7 @@ class elemHandler:
         return msg
 
     # delete an element in the database
-    def deleteElem(self, elemName, dbName):
+    def deleteElem(self, dbName, elemName):
         if(self.isValidType(elemName) and self.isValidType(dbName)):
             if (self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)

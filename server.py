@@ -21,24 +21,32 @@ def makeElem():
         elemName = flask.request.json["elemName"]
         elemValue = flask.request.json["elemValue"]
     except:
-        dbName = None
-        elemName = None
-        elemValue = None
-    result = myHandler.createElem(elemName, elemValue, dbName)
+        dbName = elemName = elemValue = None
+    result = myHandler.createElem(dbName, elemName, elemValue)
     return flask.jsonify(result)
 
-@app.route("/getElem/<expression>",methods=["GET"])
-def getElem(expression):
+@app.route("/getElem/<string:dbName>/<string:elemName>",methods=["GET"])
+def getElem(dbName, elemName):
     myHandler = elemHandler(database)
-    dbName = expression.split("->")[0]
-    elemName = expression.split("->")[1]
-    result = myHandler.getElem(elemName, dbName)
+    result = myHandler.getElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/searchElem/<dbName>/<string:expression>",methods=["GET"])
+@app.route("/updateElem",methods=["POST"])
+def updateElem():
+    myHandler = elemHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        elemName = flask.request.json["elemName"]
+        elemValue = flask.request.json["elemValue"]
+    except:
+        dbName = elemName = elemValue = None
+    result = myHandler.updateElem(dbName, elemName, elemValue)
+    return flask.jsonify(result)
+
+@app.route("/searchElem/<string:dbName>/<string:expression>",methods=["GET"])
 def searchElem(dbName,expression):
     myHandler = elemHandler(database)
-    result = myHandler.searchElem(expression, dbName)
+    result = myHandler.searchElem(dbName, expression)
     return flask.jsonify(result)
 
 @app.route("/getAllElem/<dbName>",methods=["GET"])
@@ -47,78 +55,64 @@ def searchAllElem(dbName):
     result = myHandler.searchAllElem(dbName)
     return flask.jsonify(result)
 
-@app.route("/increaseElem/<element>",methods=["GET"])
-def increaseElem(element):
+@app.route("/increaseElem/<string:dbName>/<string:elemName>",methods=["GET"])
+def increaseElem(dbName, elemName):
     myHandler = elemHandler(database)
-    dbName = element.split("->")[0]
-    elemName = element.split("->")[1]
-    result = myHandler.increaseElem(elemName, dbName)
+    result = myHandler.increaseElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/decreaseElem/<element>",methods=["GET"])
-def decreaseElem(element):
+@app.route("/decreaseElem/<string:dbName>/<string:elemName>",methods=["GET"])
+def decreaseElem(dbName, elemName):
     myHandler = elemHandler(database)
-    dbName = element.split("->")[0]
-    elemName = element.split("->")[1]
-    result = myHandler.decreaseElem(elemName, dbName)
+    result = myHandler.decreaseElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/deleteElem/<string:element>",methods=["GET"])
-def deleteElem(element):
+@app.route("/deleteElem/<string:dbName>/<string:elemName>",methods=["GET"])
+def deleteElem(dbName, elemName):
     myHandler = elemHandler(database)
-    dbName = element.split("->")[0]
-    elemName = element.split("->")[1]
-    result = myHandler.deleteElem(elemName, dbName)
+    result = myHandler.deleteElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/makeList/<string:expression>",methods=["GET"])
-def makeList(expression):
+@app.route("/makeList/<string:dbName>/<string:listName>",methods=["GET"])
+def makeList(dbName, listName):
     myHandler = listHandler(database)
-    dbName = expression.split("->")[0]
-    listName = expression.split("->")[1]
-    result = myHandler.createList(listName, dbName)
+    result = myHandler.createList(dbName, listName)
     return flask.jsonify(result)
 
-@app.route("/getList/<string:expression>",methods=["GET"])
-def getList(expression):
+@app.route("/getList/<string:dbName>/<string:listName>",methods=["GET"])
+def getList(dbName, listName):
     myHandler = listHandler(database)
-    dbName = expression.split("->")[0]
-    listName = expression.split("->")[1]
-    result = myHandler.getList(listName, dbName)
+    result = myHandler.getList(dbName, listName)
     return flask.jsonify(result)
 
-@app.route("/insertList/<string:expression>",methods=["GET"])
-def insertList(expression):
+@app.route("/insertList",methods=["POST"])
+def insertList():
     myHandler = listHandler(database)
-    dbName = expression.split("->")[0]
-    listName = expression.split("->")[1]
-    value = expression.split("->")[2]
-    if (value[0] == "\"" and value[-1] == "\""):  # distinguish string value and int value
-        value = str(value[1:-1])
-    else:
-        value = int(value)
-    result = myHandler.insertList(listName, value, dbName)
+    try:
+        dbName = flask.request.json["dbName"]
+        listName = flask.request.json["listName"]
+        listValue = flask.request.json["listValue"]
+    except:
+        dbName = listName = listValue = None
+    result = myHandler.insertList(dbName, listName, listValue)
     return flask.jsonify(result)
 
-@app.route("/deleteList/<string:expression>",methods=["GET"])
-def deleteList(expression):
+@app.route("/deleteList/<string:dbName>/<string:listName>",methods=["GET"])
+def deleteList(dbName, listName):
     myHandler = listHandler(database)
-    dbName = expression.split("->")[0]
-    listName = expression.split("->")[1]
-    result = myHandler.deleteList(listName, dbName)
+    result = myHandler.deleteList(dbName, listName)
     return flask.jsonify(result)
 
-@app.route("/rmFromList/<string:expression>",methods=["GET"])
+@app.route("/rmFromList",methods=["POST"])
 def rmFromList(expression):
     myHandler = listHandler(database)
-    dbName = expression.split("->")[0]
-    listName = expression.split("->")[1]
-    value = expression.split("->")[2]
-    if (value[0] == "\"" and value[-1] == "\""):  # distinguish string value and int value
-        value = str(value[1:-1])
-    else:
-        value = int(value)
-    result = myHandler.rmFromList(dbName, listName, value)
+    try:
+        dbName = flask.request.json["dbName"]
+        listName = flask.request.json["listName"]
+        listValue = flask.request.json["listValue"]
+    except:
+        dbName = listName = listValue = None
+    result = myHandler.rmFromList(dbName, listName, listValue)
     return flask.jsonify(result)
 
 @app.route("/clearList/<dbName>/<listName>",methods=["GET"])
@@ -164,29 +158,26 @@ def makeHash():
     result = myHandler.createHash(dbName, hashName)
     return flask.jsonify(result)
 
-@app.route("/getHash/<string:expression>",methods=["GET"])
-def getHash(expression):
+@app.route("/getHash/<string:dbName>/<string:hashName>",methods=["GET"])
+def getHash(dbName, hashName):
     myHandler = hashHandler(database)
-    dbName = expression.split("->")[0]
-    hashName = expression.split("->")[1]
     result = myHandler.getHash(dbName, hashName)
     return flask.jsonify(result)
 
-@app.route("/insertHash/<string:expression>",methods=["POST"])
-def insertHash(expression):
+@app.route("/insertHash",methods=["POST"])
+def insertHash():
     myHandler = hashHandler(database)
-    dbName = expression.split("->")[0]
-    hashName = expression.split("->")[1]
     try:
+        dbName = flask.request.json["dbName"]
+        hashName = flask.request.json["hashName"]
         keyName = flask.request.json["keyName"]
         value = flask.request.json["value"]
     except:
-        keyName = None
-        value = None
+        dbName = hashName = keyName = value = None
     result = myHandler.insertHash(dbName, hashName, keyName, value)
     return flask.jsonify(result)
 
-@app.route("/isHashKeyExist/<dbName>/<hashName>/<keyName>",methods=["GET"])
+@app.route("/isHashKeyExist/<string:dbName>/<string:hashName>/<string:keyName>",methods=["GET"])
 def isHashKeyExist(dbName, hashName, keyName):
     myHandler = hashHandler(database)
     result = myHandler.isKeyExist(dbName, hashName, keyName)
@@ -210,7 +201,7 @@ def rmFromHash():
     result = myHandler.rmFromHash(dbName, hashName, keyName)
     return flask.jsonify(result)
 
-@app.route("/clearHash/<dbName>/<hashName>",methods=["GET"])
+@app.route("/clearHash/<string:dbName>/<string:hashName>",methods=["GET"])
 def clearHash(dbName, hashName):
     myHandler = hashHandler(database)
     result = myHandler.clearHash(dbName, hashName)

@@ -58,6 +58,7 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
+    # insert a key-value data into the given hash
     def insertHash(self, dbName, hashName, keyName, value):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName)):
@@ -74,6 +75,7 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
+    # check if a key exists in the given hash
     def isKeyExist(self, dbName, hashName, keyName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName)):
@@ -90,6 +92,7 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
+    # delete the given hash
     def deleteHash(self, dbName, hashName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName)):
@@ -106,6 +109,7 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
+    # remove a key-value data from the given hash
     def rmFromHash(self, dbName, hashName, keyName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isKeyExist(dbName, hashName, keyName) is True):
@@ -122,6 +126,7 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
+    # clear the entire hash
     def clearHash(self, dbName, hashName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName) is True):
@@ -138,6 +143,7 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
+    # replace the existed hash with a new value
     def replaceHash(self, dbName, hashName, hashValue):
         if(self.isValidType(dbName) and self.isValidType(hashName)
            and self.isDict(hashValue)):
@@ -155,6 +161,7 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
+    # merge two hashs
     def mergeHashs(self, dbName, hashName1, hashName2, resultHashName=None, mergeMode=0):
         if (resultHashName is not None):
             if (self.database.isHashExist(dbName, resultHashName) is True):
@@ -175,6 +182,7 @@ class hashHandler:
                                    "{} or {}".format(hashName1, hashName2))
         return msg
 
+    # search hash names using regular expression
     def searchHash(self, dbName, expression):
         if(self.isValidType(dbName)):
             searchResult = self.database.searchByRE(dbName, expression, "HASH")
@@ -183,6 +191,7 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
         return msg
 
+    # return all hash names in the given database
     def searchAllHash(self, dbName):
         if(self.isValidType(dbName)):
             if(self.database.isDbExist(dbName)):

@@ -155,6 +155,26 @@ class hashHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
+    def mergeHashs(self, dbName, hashName1, hashName2, resultHashName=None, mergeMode=0):
+        if (resultHashName is not None):
+            if (self.database.isHashExist(dbName, resultHashName) is True):
+                msg = self.makeMessage("Merge Result Exists", responseCode.MERGE_RESULT_EXIST, resultHashName)
+                return msg
+
+        if (self.database.isHashExist(dbName, hashName1)
+            and self.database.isHashExist(dbName, hashName2)):
+            result = self.database.mergeHashs(dbName, hashName1, hashName2, resultHashName, mergeMode)
+            if (result == NoSqlDb.HASH_LOCKED):
+                msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, resultHashName)
+            elif (result == NoSqlDb.HASH_MERGE_SUCCESS):
+                msg = self.makeMessage("Hash Merge Success", responseCode.HASH_MERGE_SUCCESS, resultHashName)
+            else:
+                msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+        else:
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED,
+                                   "{} or {}".format(hashName1, hashName2))
+        return msg
+
     def searchHash(self, dbName, expression):
         if(self.isValidType(dbName)):
             searchResult = self.database.searchByRE(dbName, expression, "HASH")

@@ -121,6 +121,26 @@ def rmFromList(expression):
     result = myHandler.rmFromList(dbName, listName, value)
     return flask.jsonify(result)
 
+@app.route("/clearList/<dbName>/<listName>",methods=["GET"])
+def clearList(dbName, listName):
+    myHandler = listHandler(database)
+    result = myHandler.clearList(dbName, listName)
+    return flask.jsonify(result)
+
+@app.route("/mergeLists",methods=["POST"])
+def mergeLists():
+    myHandler = listHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        listName1 = flask.request.json["list1"]
+        listName2 = flask.request.json["list2"]
+        resultListName = flask.request.json["resultList"]
+        resultListName = None if len(resultListName) == 0 else resultListName
+    except:
+        dbName = listName1 = listName2 = resultListName = None
+    result = myHandler.mergeLists(dbName, listName1, listName2,resultListName)
+    return flask.jsonify(result)
+
 @app.route("/searchList/<string:dbName>/<string:expression>",methods=["GET"])
 def searchList(dbName, expression):
     myHandler = listHandler(database)
@@ -206,6 +226,21 @@ def replaceHash():
     except:
         dbName = hashName = hashValue = None
     result = myHandler.replaceHash(dbName, hashName, hashValue)
+    return flask.jsonify(result)
+
+@app.route("/mergeHashs",methods=["POST"])
+def mergeHashs():
+    myHandler = hashHandler(database)
+    try:
+        mergeMode = flask.request.json["mode"]
+        dbName = flask.request.json["dbName"]
+        hashName1 = flask.request.json["hash1"]
+        hashName2 = flask.request.json["hash2"]
+        resultHashName = flask.request.json["resultHash"]
+        resultHashName = None if len(resultHashName) == 0 else resultHashName
+    except:
+        mergeMode = dbName = hashName1 = hashName2 = resultHashName = None
+    result = myHandler.mergeHashs(dbName, hashName1, hashName2, resultHashName, mergeMode)
     return flask.jsonify(result)
 
 @app.route("/searchHash/<dbName>/<string:expression>",methods=["GET"])

@@ -35,6 +35,9 @@ class NoSqlDb:
     HASH_REMOVE_SUCCESS = 24
     HASH_CLEAR_SUCCESS = 25
     HASH_REPLACE_SUCCESS = 26
+    LIST_CLEAR_SUCCESS = 27
+    LIST_MERGE_SUCCESS = 28
+    HASH_MERGE_SUCCESS = 29
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -274,6 +277,31 @@ class NoSqlDb:
         self.logger.info("Search All List Success {0}".format(dbName))
         return list(self.listName[dbName])
 
+    def clearList(self, dbName, listName):
+        if(self.listLockDict[dbName][listName] is True):
+            self.logger.warning("Clear List Locked {0}->{1}")
+            return NoSqlDb.LIST_LOCKED
+        else:
+            self.lockList(dbName, listName)
+            self.listDict[dbName][listName] = []
+            self.unlockList(dbName, listName)
+            return NoSqlDb.LIST_CLEAR_SUCCESS
+
+    def mergeLists(self, dbName, listName1, listName2, resultListName=None):
+        if(resultListName is not None):
+            self.createList(resultListName, dbName)
+            self.lockList(dbName, resultListName)
+            self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName1])
+            self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName2])
+            self.unlockList(dbName, resultListName)
+        else:
+            if(self.listLockDict[dbName][listName1] is False):
+                self.lockList(dbName, listName1)
+                self.listDict[dbName][listName1].extend(self.listDict[dbName][listName2])
+            else:
+                return NoSqlDb.LIST_LOCKED
+        return NoSqlDb.LIST_MERGE_SUCCESS
+
     def createHash(self, dbName, hashName):
         if(self.isHashExist(dbName,hashName) is False):
             self.hashName[dbName].add(hashName)
@@ -336,6 +364,37 @@ class NoSqlDb:
             self.hashDict[dbName][hashName] = hashValue
             self.unlockHash(dbName, hashName)
             return NoSqlDb.HASH_REPLACE_SUCCESS
+
+    def mergeHashs(self, dbName, hashName1, hashName2, resultHashName=None, mergeMode=0):
+        if (mergeMode == 0):
+            baseDictName = hashName1
+            otherDictName = hashName2
+        else:
+            baseDictName = hashName2
+            otherDictName = hashName1
+
+        if (resultHashName is not None):
+            self.createHash(dbName, resultHashName)
+            self.lockHash(dbName, resultHashName)
+            baseKeys = self.hashDict[dbName][baseDictName].keys()
+            otherKeys = self.hashDict[dbName][otherDictName].keys()
+            self.hashDict[dbName][resultHashName] = self.hashDict[dbName][baseDictName].copy()
+            for key in otherKeys:
+                if(key not in baseKeys):
+                    self.hashDict[dbName][resultHashName][key] = self.hashDict[dbName][otherDictName][key]
+            self.unlockHash(dbName, resultHashName)
+
+        else:
+            if (self.hashLockDict[dbName][baseDictName] is False):
+                self.lockHash(dbName, baseDictName)
+                baseKeys = self.hashDict[dbName][baseDictName].keys()
+                otherKeys = self.hashDict[dbName][otherDictName].keys()
+                for key in otherKeys:
+                    if(key not in baseKeys):
+                        self.hashDict[dbName][baseDictName][key] = self.hashDict[dbName][otherDictName][key]
+            else:
+                return NoSqlDb.HASH_LOCKED
+        return NoSqlDb.HASH_MERGE_SUCCESS
 
     def searchAllHash(self, dbName):
         if(self.isDbExist(dbName) is False):

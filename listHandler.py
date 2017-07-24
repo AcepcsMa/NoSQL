@@ -10,17 +10,11 @@ class listHandler:
 
     # check if the type of elem is valid (string or int)
     def isValidType(self, elem):
-        if('str' in str(type(elem)) or 'int' in str(type(elem))):
-            return True
-        else:
-            return False
+        return 'str' in str(type(elem)) or 'int' in str(type(elem))
 
     # check if the type of an elem is INT
     def isInt(self, elem):
-        if("int" in str(type(elem))):
-            return True
-        else:
-            return False
+        return "int" in str(type(elem))
 
     # make the response message
     def makeMessage(self, msg, typeCode, data):
@@ -67,6 +61,8 @@ class listHandler:
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
                 elif(result == NoSqlDb.LIST_INSERT_SUCCESS):
                     msg = self.makeMessage("List Insert Success", responseCode.LIST_INSERT_SUCCESS, listName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
             else:
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
@@ -82,6 +78,8 @@ class listHandler:
                     msg = self.makeMessage("List Delete Success", responseCode.LIST_DELETE_SUCCESS, listName)
                 elif(result == NoSqlDb.LIST_LOCKED):
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
             else:
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
@@ -102,11 +100,50 @@ class listHandler:
                     msg = self.makeMessage("List Remove Value Success", responseCode.LIST_REMOVE_SUCCESS, listName)
                 elif(result == NoSqlDb.LIST_LOCKED):
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
 
             else:   # if list does not exist
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+        return msg
+
+    # clear the given list
+    def clearList(self, dbName, listName):
+        if(self.isValidType(dbName) and self.isValidType(listName)):
+            if(self.database.isListExist(dbName, listName) is True):
+                result = self.database.clearList(dbName, listName)
+                if(result == NoSqlDb.LIST_LOCKED):
+                    msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
+                elif(result == NoSqlDb.LIST_CLEAR_SUCCESS):
+                    msg = self.makeMessage("List Clear Success", responseCode.LIST_CLEAR_SUCCESS, listName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+        return msg
+
+    # merge two lists
+    def mergeLists(self, dbName, listName1, listName2, resultListName=None):
+        if(resultListName is not None):
+            if(self.database.isListExist(dbName, resultListName) is True):
+                msg = self.makeMessage("Merge Result Exists", responseCode.MERGE_RESULT_EXIST, resultListName)
+                return msg
+
+        if(self.database.isListExist(dbName, listName1)
+           and self.database.isListExist(dbName, listName2)):
+            result = self.database.mergeLists(dbName, listName1, listName2, resultListName)
+            if(result == NoSqlDb.LIST_LOCKED):
+                msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, resultListName)
+            elif(result == NoSqlDb.LIST_MERGE_SUCCESS):
+                msg = self.makeMessage("List Merge Success", responseCode.LIST_MERGE_SUCCESS, resultListName)
+            else:
+                msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+        else:
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, "{} or {}".format(listName1, listName2))
         return msg
 
     # search list names using regular expression

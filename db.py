@@ -5,6 +5,7 @@ import re
 import os
 import json
 import logging
+import time
 
 class NoSqlDb:
 
@@ -38,6 +39,8 @@ class NoSqlDb:
     LIST_CLEAR_SUCCESS = 27
     LIST_MERGE_SUCCESS = 28
     HASH_MERGE_SUCCESS = 29
+    ELEM_TTL_SET_SUCCESS = 30
+    ELEM_TTL_CLEAR_SUCCESS = 31
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -59,6 +62,9 @@ class NoSqlDb:
 
         self.saveLock = False
 
+        # TTL structure
+        self.elemTTL = dict()
+
         for dbName in self.dbNameSet:
             self.elemName[dbName] = set()
             self.elemDict[dbName] = dict()
@@ -71,6 +77,8 @@ class NoSqlDb:
             self.hashName[dbName] = set()
             self.hashDict[dbName] = dict()
             self.hashLockDict[dbName] = dict()
+
+            self.elemTTL[dbName] = dict()
 
         # check log directory
         if(os.path.exists(config["LOG_PATH"]) is False):
@@ -216,6 +224,43 @@ class NoSqlDb:
             self.elemDict[dbName].pop(elemName)
             self.logger.info("Delete Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_DELETE_SUCCESS
+
+    def setElemTTL(self, dbName, elemName, ttl):
+        if(self.elemLockDict[dbName][elemName] is True):
+            self.logger.warning("Element Locked {0}->{1}".format(dbName, elemName))
+            return NoSqlDb.ELEM_LOCKED
+        else:
+            self.lockElem(dbName, elemName)
+            self.elemTTL[dbName][elemName] = {"createAt":int(time.time()),
+                                              "ttl":int(ttl),
+                                              "status":True}
+            self.unlockElem(dbName, elemName)
+            return NoSqlDb.ELEM_TTL_SET_SUCCESS
+
+    def clearElemTTL(self, dbName, elemName):
+        if (self.elemLockDict[dbName][elemName] is True):
+            self.logger.warning("Element Locked {0}->{1}".format(dbName, elemName))
+            return NoSqlDb.ELEM_LOCKED
+        else:
+            self.lockElem(dbName, elemName)
+            self.elemTTL[dbName].pop(elemName)
+            self.unlockElem(dbName, elemName)
+            return NoSqlDb.ELEM_TTL_CLEAR_SUCCESS
+
+    def isElemExpired(self, dbName, elemName):
+        curTime = int(time.time())
+        if(elemName not in self.elemTTL[dbName].keys()):
+            return False
+        else:
+            if(self.elemTTL[dbName][elemName]["status"] is False):
+                return True
+            createAt = self.elemTTL[dbName][elemName]["createAt"]
+            ttl = self.elemTTL[dbName][elemName]["ttl"]
+            if(curTime - createAt >= ttl):
+                self.elemTTL[dbName][elemName]["status"] = False
+                return True
+            else:
+                return False
 
     def createList(self, listName, dbName):
         self.lockList(dbName, listName)
@@ -460,6 +505,8 @@ class NoSqlDb:
                     elemNameFile.write(json.dumps(list(self.elemName[dbName])))
                 with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "w") as elemValueFile:
                     elemValueFile.write(json.dumps(self.elemDict[dbName]))
+                with open("data" + os.sep + dbName + os.sep + "elemTTL.txt", "w") as elemTTLFile:
+                    elemTTLFile.write(json.dumps(self.elemTTL[dbName]))
                 with open("data" + os.sep + dbName + os.sep + "listName.txt", "w") as listNameFile:
                     listNameFile.write(json.dumps(list(self.listName[dbName])))
                 with open("data" + os.sep + dbName + os.sep + "listValue.txt", "w") as listValueFile:
@@ -510,6 +557,10 @@ class NoSqlDb:
                 # load element values
                 with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "r") as elemValueFile:
                     self.elemDict[dbName] = json.loads(elemValueFile.read())
+
+                # load element TTL
+                with open("data" + os.sep + dbName + os.sep + "elemTTl.txt", "r") as elemTTLFile:
+                    self.elemTTL[dbName] = json.loads(elemTTLFile.read())
 
                 # load list names
                 with open("data"+os.sep+dbName+os.sep+"listName.txt","r") as listNameFile:

@@ -73,6 +73,18 @@ def deleteElem(dbName, elemName):
     result = myHandler.deleteElem(dbName, elemName)
     return flask.jsonify(result)
 
+@app.route("/setElemTTL/<string:dbName>/<string:elemName>/<int:ttl>",methods=["GET"])
+def setElemTTL(dbName, elemName, ttl):
+    myHandler = elemHandler(database)
+    result = myHandler.setTTL(dbName, elemName, ttl)
+    return flask.jsonify(result)
+
+@app.route("/clearElemTTL/<string:dbName>/<string:elemName>",methods=["GET"])
+def clearElemTTL(dbName, elemName):
+    myHandler = elemHandler(database)
+    result = myHandler.clearTTL(dbName, elemName)
+    return flask.jsonify(result)
+
 @app.route("/makeList/<string:dbName>/<string:listName>",methods=["GET"])
 def makeList(dbName, listName):
     myHandler = listHandler(database)

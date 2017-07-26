@@ -41,6 +41,10 @@ class NoSqlDb:
     HASH_MERGE_SUCCESS = 29
     ELEM_TTL_SET_SUCCESS = 30
     ELEM_TTL_CLEAR_SUCCESS = 31
+    LIST_TTL_SET_SUCCESS = 32
+    LIST_TTL_CLEAR_SUCCESS = 33
+    HASH_TTL_SET_SUCCESS = 34
+    HASH_TTL_CLEAR_SUCCESS = 35
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -64,6 +68,8 @@ class NoSqlDb:
 
         # TTL structure
         self.elemTTL = dict()
+        self.listTTL = dict()
+        self.hashTTL = dict()
 
         for dbName in self.dbNameSet:
             self.elemName[dbName] = set()
@@ -79,6 +85,8 @@ class NoSqlDb:
             self.hashLockDict[dbName] = dict()
 
             self.elemTTL[dbName] = dict()
+            self.listTTL[dbName] = dict()
+            self.hashTTL[dbName] = dict()
 
         # check log directory
         if(os.path.exists(config["LOG_PATH"]) is False):
@@ -220,8 +228,14 @@ class NoSqlDb:
             self.logger.warning("Delete Element Locked {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_LOCKED
         else:
+            self.lockElem(dbName, elemName)
             self.elemName[dbName].remove(elemName)
             self.elemDict[dbName].pop(elemName)
+            try:
+                self.elemTTL[dbName].pop(elemName)
+            except:
+                pass
+            self.elemLockDict[dbName].pop(elemName)
             self.logger.info("Delete Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_DELETE_SUCCESS
 
@@ -243,7 +257,10 @@ class NoSqlDb:
             return NoSqlDb.ELEM_LOCKED
         else:
             self.lockElem(dbName, elemName)
-            self.elemTTL[dbName].pop(elemName)
+            try:
+                self.elemTTL[dbName].pop(elemName)
+            except:
+                pass
             self.unlockElem(dbName, elemName)
             return NoSqlDb.ELEM_TTL_CLEAR_SUCCESS
 
@@ -297,6 +314,10 @@ class NoSqlDb:
             self.lockList(dbName, listName)
             self.listName[dbName].remove(listName)
             self.listDict[dbName].pop(listName)
+            try:
+                self.listTTL[dbName].pop(listName)
+            except:
+                pass
             self.unlockList(dbName, listName)
             self.listLockDict[dbName].pop(listName)
             self.logger.info("Delete List Success {0}->{1}".format(dbName, listName))
@@ -347,6 +368,46 @@ class NoSqlDb:
                 return NoSqlDb.LIST_LOCKED
         return NoSqlDb.LIST_MERGE_SUCCESS
 
+    def setListTTL(self, dbName, listName, ttl):
+        if(self.listLockDict[dbName][listName] is True):
+            self.logger.warning("List Locked {0}->{1}".format(dbName, listName))
+            return NoSqlDb.LIST_LOCKED
+        else:
+            self.lockList(dbName, listName)
+            self.listTTL[dbName][listName] = {"createAt":int(time.time()),
+                                              "ttl":int(ttl),
+                                              "status":True}
+            self.unlockList(dbName, listName)
+            return NoSqlDb.LIST_TTL_SET_SUCCESS
+
+    def isListExpired(self, dbName, listName):
+        curTime = int(time.time())
+        if(listName not in self.listTTL[dbName].keys()):
+            return False
+        else:
+            if(self.listTTL[dbName][listName]["status"] is False):
+                return True
+            createAt = self.listTTL[dbName][listName]["createAt"]
+            ttl = self.listTTL[dbName][listName]["ttl"]
+            if(curTime - createAt >= ttl):
+                self.listTTL[dbName][listName]["status"] = False
+                return True
+            else:
+                return False
+
+    def clearListTTL(self, dbName, listName):
+        if (self.listLockDict[dbName][listName] is True):
+            self.logger.warning("List Locked {0}->{1}".format(dbName, listName))
+            return NoSqlDb.LIST_LOCKED
+        else:
+            self.lockList(dbName, listName)
+            try:
+                self.listTTL[dbName].pop(listName)
+            except:
+                pass
+            self.unlockList(dbName, listName)
+            return NoSqlDb.LIST_TTL_CLEAR_SUCCESS
+
     def createHash(self, dbName, hashName):
         if(self.isHashExist(dbName,hashName) is False):
             self.hashName[dbName].add(hashName)
@@ -379,6 +440,10 @@ class NoSqlDb:
             self.lockHash(dbName, hashName)
             self.hashDict[dbName].pop(hashName)
             self.hashName[dbName].remove(hashName)
+            try:
+                self.hashTTL[dbName].pop(hashName)
+            except:
+                pass
             self.unlockHash(dbName, hashName)
             self.hashLockDict[dbName].pop(hashName)
             return NoSqlDb.HASH_DELETE_SUCCESS
@@ -447,6 +512,46 @@ class NoSqlDb:
         self.logger.info("Search All Hash Success {0}".format(dbName))
         return list(self.hashName[dbName])
 
+    def setHashTTL(self, dbName, hashName, ttl):
+        if(self.hashLockDict[dbName][hashName] is True):
+            self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
+            return NoSqlDb.HASH_LOCKED
+        else:
+            self.lockHash(dbName, hashName)
+            self.hashTTL[dbName][hashName] = {"createAt":int(time.time()),
+                                              "ttl":int(ttl),
+                                              "status":True}
+            self.unlockHash(dbName, hashName)
+            return NoSqlDb.HASH_TTL_SET_SUCCESS
+
+    def isHashExpired(self, dbName, hashName):
+        curTime = int(time.time())
+        if(hashName not in self.hashTTL[dbName].keys()):
+            return False
+        else:
+            if(self.hashTTL[dbName][hashName]["status"] is False):
+                return True
+            createAt = self.hashTTL[dbName][hashName]["createAt"]
+            ttl = self.hashTTL[dbName][hashName]["ttl"]
+            if(curTime - createAt >= ttl):
+                self.hashTTL[dbName][hashName]["status"] = False
+                return True
+            else:
+                return False
+
+    def clearHashTTL(self, dbName, hashName):
+        if (self.hashLockDict[dbName][hashName] is True):
+            self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
+            return NoSqlDb.HASH_LOCKED
+        else:
+            self.lockHash(dbName, hashName)
+            try:
+                self.hashTTL[dbName].pop(hashName)
+            except:
+                pass
+            self.unlockHash(dbName, hashName)
+            return NoSqlDb.HASH_TTL_CLEAR_SUCCESS
+
     def addDb(self, dbName):
         if(self.saveLock is True):
             self.logger.warning("Database Save Locked {0}".format(dbName))
@@ -511,10 +616,14 @@ class NoSqlDb:
                     listNameFile.write(json.dumps(list(self.listName[dbName])))
                 with open("data" + os.sep + dbName + os.sep + "listValue.txt", "w") as listValueFile:
                     listValueFile.write(json.dumps(self.listDict[dbName]))
+                with open("data" + os.sep + dbName + os.sep + "listTTL.txt", "w") as listTTLFile:
+                    listTTLFile.write(json.dumps(self.listTTL[dbName]))
                 with open("data" + os.sep + dbName + os.sep + "hashName.txt", "w") as hashNameFile:
                     hashNameFile.write(json.dumps(list(self.hashName[dbName])))
                 with open("data" + os.sep + dbName + os.sep + "hashValue.txt", "w") as hashValueFile:
                     hashValueFile.write(json.dumps(self.hashDict[dbName]))
+                with open("data" + os.sep + dbName + os.sep + "hashTTL.txt", "w") as hashTTLFile:
+                    hashTTLFile.write(json.dumps(self.hashTTL[dbName]))
 
             self.saveLock = False
             self.logger.info("Database Save Success")
@@ -559,7 +668,7 @@ class NoSqlDb:
                     self.elemDict[dbName] = json.loads(elemValueFile.read())
 
                 # load element TTL
-                with open("data" + os.sep + dbName + os.sep + "elemTTl.txt", "r") as elemTTLFile:
+                with open("data" + os.sep + dbName + os.sep + "elemTTL.txt", "r") as elemTTLFile:
                     self.elemTTL[dbName] = json.loads(elemTTLFile.read())
 
                 # load list names
@@ -573,6 +682,10 @@ class NoSqlDb:
                 with open("data" + os.sep + dbName + os.sep + "listValue.txt", "r") as listValueFile:
                     self.listDict[dbName] = json.loads(listValueFile.read())
 
+                # load list TTL
+                with open("data" + os.sep + dbName + os.sep + "listTTL.txt", "r") as listTTLFile:
+                    self.listTTL[dbName] = json.loads(listTTLFile.read())
+
                 # load hash names
                 with open("data"+os.sep+dbName+os.sep+"hashName.txt","r") as hashNameFile:
                     hashNames = json.loads(hashNameFile.read())
@@ -584,6 +697,9 @@ class NoSqlDb:
                 with open("data" + os.sep + dbName + os.sep + "hashValue.txt", "r") as hashValueFile:
                     self.hashDict[dbName] = json.loads(hashValueFile.read())
 
+                # load hash TTL
+                with open("data" + os.sep + dbName + os.sep + "hashTTL.txt", "r") as hashTTLFile:
+                    self.hashTTL[dbName] = json.loads(hashTTLFile.read())
             self.logger.info("Database Load Success")
 
         except Exception as e:

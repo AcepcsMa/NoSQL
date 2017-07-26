@@ -144,16 +144,13 @@ class elemHandler:
             if (self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
-                if(self.database.isElemExpired(dbName, elemName) is False):
-                    result = self.database.deleteElem(elemName, dbName)
-                    if(result == NoSqlDb.ELEM_LOCKED):
-                        msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                    elif(result == NoSqlDb.ELEM_DELETE_SUCCESS):
-                        msg = self.makeMessage("Element Delete Success", responseCode.ELEM_DELETE_SUCCESS, elemName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                result = self.database.deleteElem(elemName, dbName)
+                if(result == NoSqlDb.ELEM_LOCKED):
+                    msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
+                elif(result == NoSqlDb.ELEM_DELETE_SUCCESS):
+                    msg = self.makeMessage("Element Delete Success", responseCode.ELEM_DELETE_SUCCESS, elemName)
                 else:
-                    msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg

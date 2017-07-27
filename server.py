@@ -1,11 +1,11 @@
 __author__ = 'Ma Haoxiang'
 
 # import
-import json
 import flask
 import db
 from configParser import configParser
 import timer
+import ttlTimer
 from dbHandler import dbHandler
 from elemHandler import elemHandler
 from listHandler import listHandler
@@ -314,9 +314,12 @@ if __name__ == '__main__':
     # init the database
     database = db.NoSqlDb(serverConfig)
 
-    #init the save timer
-    saveTimer = timer.timer(database,serverConfig["SAVE_INTERVAL"])
+    # init the save timer
+    saveTimer = timer.timer(database, serverConfig["SAVE_INTERVAL"])
     saveTimer.start()
 
+    # init the ttl timer
+    TTLTimer = ttlTimer.ttlTimer(database, serverConfig["TTL_CHECK_INTERVAL"])
+
     # run the server
-    app.run(host=serverConfig["HOST"],port=serverConfig["PORT"],debug=serverConfig["DEBUG"])
+    app.run(host=serverConfig["HOST"], port=serverConfig["PORT"], debug=serverConfig["DEBUG"])

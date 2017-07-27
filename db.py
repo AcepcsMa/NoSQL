@@ -260,7 +260,7 @@ class NoSqlDb:
             try:
                 self.elemTTL[dbName].pop(elemName)
             except:
-                pass
+                pass 
             self.unlockElem(dbName, elemName)
             return NoSqlDb.ELEM_TTL_CLEAR_SUCCESS
 

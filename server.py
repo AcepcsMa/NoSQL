@@ -10,6 +10,7 @@ from dbHandler import dbHandler
 from elemHandler import elemHandler
 from listHandler import listHandler
 from hashHandler import hashHandler
+from setHandler import setHandler
 
 app = flask.Flask(__name__)
 
@@ -282,6 +283,18 @@ def clearHashTTL(dbName, hashName):
     result = myHandler.clearTTL(dbName, hashName)
     return flask.jsonify(result)
 
+@app.route("/makeSet/<string:dbName>/<string:setName>",methods=["GET"])
+def makeSet(dbName, setName):
+    myHandler = setHandler(database)
+    result = myHandler.createSet(dbName, setName)
+    return flask.jsonify(result)
+
+@app.route("/getSet/<string:dbName>/<string:setName>",methods=["GET"])
+def getSet(dbName, setName):
+    myHandler = setHandler(database)
+    result = myHandler.getSet(dbName, setName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)
@@ -323,3 +336,4 @@ if __name__ == '__main__':
 
     # run the server
     app.run(host=serverConfig["HOST"], port=serverConfig["PORT"], debug=serverConfig["DEBUG"])
+

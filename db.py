@@ -45,6 +45,7 @@ class NoSqlDb:
     LIST_TTL_CLEAR_SUCCESS = 33
     HASH_TTL_SET_SUCCESS = 34
     HASH_TTL_CLEAR_SUCCESS = 35
+    SET_CREATE_SUCCESS = 36
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -63,6 +64,11 @@ class NoSqlDb:
         self.hashName = dict()
         self.hashDict = dict()
         self.hashLockDict = dict()
+
+        # set structures
+        self.setName = dict()
+        self.setDict = dict()
+        self.setLockDict = dict()
 
         self.saveLock = False
 
@@ -83,6 +89,10 @@ class NoSqlDb:
             self.hashName[dbName] = set()
             self.hashDict[dbName] = dict()
             self.hashLockDict[dbName] = dict()
+
+            self.setName[dbName] = set()
+            self.setDict[dbName] = dict()
+            self.setLockDict[dbName] = dict()
 
             self.elemTTL[dbName] = dict()
             self.listTTL[dbName] = dict()
@@ -121,6 +131,12 @@ class NoSqlDb:
     def unlockHash(self, dbName, hashName):
         self.hashLockDict[dbName][hashName] = False
 
+    def lockSet(self, dbName, setName):
+        self.setLockDict[dbName][setName] = True
+
+    def unlockSet(self, dbName, setName):
+        self.setLockDict[dbName][setName] = False
+
     def isDbExist(self, dbName):
         return dbName in self.dbNameSet
 
@@ -139,6 +155,12 @@ class NoSqlDb:
     def isHashExist(self, dbName, hashName):
         if(self.isDbExist(dbName) is True):
             return hashName in self.hashName[dbName]
+        else:
+            return False
+
+    def isSetExist(self, dbName, setName):
+        if(self.isDbExist(dbName) is True):
+            return setName in self.setName[dbName]
         else:
             return False
 
@@ -260,7 +282,7 @@ class NoSqlDb:
             try:
                 self.elemTTL[dbName].pop(elemName)
             except:
-                pass 
+                pass
             self.unlockElem(dbName, elemName)
             return NoSqlDb.ELEM_TTL_CLEAR_SUCCESS
 
@@ -552,6 +574,17 @@ class NoSqlDb:
             self.unlockHash(dbName, hashName)
             return NoSqlDb.HASH_TTL_CLEAR_SUCCESS
 
+    def createSet(self, dbName, setName):
+        self.lockSet(dbName, setName)
+        self.setName[dbName].add(setName)
+        self.setDict[dbName][setName] = set()
+        self.unlockSet(dbName, setName)
+        self.logger.info("Set Create Success {0}->{1}".format(dbName, setName))
+        return NoSqlDb.SET_CREATE_SUCCESS
+
+    def getSet(self, dbName, setName):
+        return list(self.setDict[dbName][setName])
+
     def addDb(self, dbName):
         if(self.saveLock is True):
             self.logger.warning("Database Save Locked {0}".format(dbName))
@@ -624,6 +657,13 @@ class NoSqlDb:
                     hashValueFile.write(json.dumps(self.hashDict[dbName]))
                 with open("data" + os.sep + dbName + os.sep + "hashTTL.txt", "w") as hashTTLFile:
                     hashTTLFile.write(json.dumps(self.hashTTL[dbName]))
+                with open("data" + os.sep + dbName + os.sep + "setName.txt", "w") as setNameFile:
+                    setNameFile.write(json.dumps(list(self.setName[dbName])))
+                with open("data" + os.sep + dbName + os.sep + "setValue.txt", "w") as setValueFile:
+                    setValue = self.setDict[dbName].copy()
+                    for key in setValue.keys():
+                        setValue[key] = list(setValue[key])
+                    setValueFile.write(json.dumps(setValue))
 
             self.saveLock = False
             self.logger.info("Database Save Success")
@@ -656,17 +696,20 @@ class NoSqlDb:
                 self.hashLockDict[dbName] = dict()
                 self.hashDict[dbName] = dict()
 
+                # init set structure
+                self.setName[dbName] = set()
+                self.setLockDict[dbName] = dict()
+                self.setDict[dbName] = dict()
+
                 # load element names
                 with open("data"+os.sep+dbName+os.sep+"elemName.txt","r") as elemNameFile:
                     elemNames = json.loads(elemNameFile.read())
                     for elemName in elemNames:
                         self.elemName[dbName].add(elemName)
                         self.elemLockDict[dbName][elemName] = False
-
                 # load element values
                 with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "r") as elemValueFile:
                     self.elemDict[dbName] = json.loads(elemValueFile.read())
-
                 # load element TTL
                 with open("data" + os.sep + dbName + os.sep + "elemTTL.txt", "r") as elemTTLFile:
                     self.elemTTL[dbName] = json.loads(elemTTLFile.read())
@@ -677,11 +720,9 @@ class NoSqlDb:
                     for listName in listNames:
                         self.listName[dbName].add(listName)
                         self.listLockDict[dbName][listName] = False
-
                 # load list values
                 with open("data" + os.sep + dbName + os.sep + "listValue.txt", "r") as listValueFile:
                     self.listDict[dbName] = json.loads(listValueFile.read())
-
                 # load list TTL
                 with open("data" + os.sep + dbName + os.sep + "listTTL.txt", "r") as listTTLFile:
                     self.listTTL[dbName] = json.loads(listTTLFile.read())
@@ -692,14 +733,26 @@ class NoSqlDb:
                     for hashName in hashNames:
                         self.hashName[dbName].add(hashName)
                         self.hashLockDict[dbName][hashName] = False
-
                 # load hash values
                 with open("data" + os.sep + dbName + os.sep + "hashValue.txt", "r") as hashValueFile:
                     self.hashDict[dbName] = json.loads(hashValueFile.read())
-
                 # load hash TTL
                 with open("data" + os.sep + dbName + os.sep + "hashTTL.txt", "r") as hashTTLFile:
                     self.hashTTL[dbName] = json.loads(hashTTLFile.read())
+
+                # load set names
+                with open("data" + os.sep + dbName + os.sep + "setName.txt", "r") as setNameFile:
+                    setNames = json.loads(setNameFile.read())
+                    for setName in setNames:
+                        self.setName[dbName].add(setName)
+                        self.setLockDict[dbName][setName] = False
+                # load set values
+                with open("data" + os.sep + dbName + os.sep + "setValue.txt", "r") as setValueFile:
+                    setValue = json.loads(setValueFile.read())
+                    for key in setValue.keys():
+                        setValue[key] = set(setValue[key])
+                    self.setDict[dbName] = setValue
+
             self.logger.info("Database Load Success")
 
         except Exception as e:

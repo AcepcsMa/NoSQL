@@ -295,6 +295,30 @@ def getSet(dbName, setName):
     result = myHandler.getSet(dbName, setName)
     return flask.jsonify(result)
 
+@app.route("/insertSet",methods=["POST"])
+def insertSet():
+    myHandler = setHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        setName = flask.request.json["setName"]
+        setValue = flask.request.json["setValue"]
+    except:
+        dbName = setName = setValue = None
+    result = myHandler.insertSet(dbName, setName, setValue)
+    return flask.jsonify(result)
+
+@app.route("/rmFromSet",methods=["POST"])
+def rmFromSet():
+    myHandler = setHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        setName = flask.request.json["setName"]
+        setValue = flask.request.json["setValue"]
+    except:
+        dbName = setName = setValue = None
+    result = myHandler.rmFromSet(dbName, setName, setValue)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)
@@ -336,4 +360,3 @@ if __name__ == '__main__':
 
     # run the server
     app.run(host=serverConfig["HOST"], port=serverConfig["PORT"], debug=serverConfig["DEBUG"])
-

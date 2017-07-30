@@ -50,3 +50,41 @@ class setHandler:
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
         return msg
+
+    # insert a value into the given set
+    def insertSet(self, dbName, setName, setValue):
+        if(self.isValidType(dbName) and self.isValidType(setName)):
+            if(self.database.isSetExist(dbName, setName)):
+                result = self.database.insertSet(dbName, setName, setValue)
+                if(result == NoSqlDb.SET_LOCKED):
+                    msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
+                elif(result == NoSqlDb.SET_VALUE_ALREADY_EXIST):
+                    msg = self.makeMessage("Set Value Already Exists", responseCode.SET_VALUE_ALREADY_EXIST, setValue)
+                elif(result == NoSqlDb.SET_INSERT_SUCCESS):
+                    msg = self.makeMessage("Set Insert Success", responseCode.SET_INSERT_SUCCESS, setName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+        return msg
+
+    # remove the given value from a set
+    def rmFromSet(self, dbName, setName, setValue):
+        if(self.isValidType(dbName) and self.isValidType(setName)):
+            if(self.database.isSetExist(dbName, setName)):
+                result = self.database.rmFromSet(dbName, setName, setValue)
+                if(result == NoSqlDb.SET_LOCKED):
+                    msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
+                elif(result == NoSqlDb.SET_VALUE_NOT_EXISTED):
+                    msg = self.makeMessage("Set Value Does Not Exist", responseCode.SET_VALUE_NOT_EXIST, setValue)
+                elif(result == NoSqlDb.SET_REMOVE_SUCCESS):
+                    msg = self.makeMessage("Set Remove Success", responseCode.SET_REMOVE_SUCCESS, setValue)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+        return msg

@@ -46,6 +46,11 @@ class NoSqlDb:
     HASH_TTL_SET_SUCCESS = 34
     HASH_TTL_CLEAR_SUCCESS = 35
     SET_CREATE_SUCCESS = 36
+    SET_LOCKED = 37
+    SET_VALUE_ALREADY_EXIST = 38
+    SET_INSERT_SUCCESS = 39
+    SET_VALUE_NOT_EXISTED = 40
+    SET_REMOVE_SUCCESS = 41
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -584,6 +589,34 @@ class NoSqlDb:
 
     def getSet(self, dbName, setName):
         return list(self.setDict[dbName][setName])
+
+    def insertSet(self, dbName, setName, setValue):
+        if(self.setLockDict[dbName][setName] is True):
+            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+            return NoSqlDb.SET_LOCKED
+        else:
+            if(setValue not in self.setDict[dbName][setName]):
+                self.lockSet(dbName, setName)
+                self.setDict[dbName][setName].add(setValue)
+                self.unlockSet(dbName, setName)
+                self.logger.info("Set Insert Success {0}->{1}->{2}".format(dbName, setName, setValue))
+                return NoSqlDb.SET_INSERT_SUCCESS
+            else:
+                return NoSqlDb.SET_VALUE_ALREADY_EXIST
+
+    def rmFromSet(self, dbName, setName, setValue):
+        if(self.setLockDict[dbName][setName] is True):
+            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+            return NoSqlDb.SET_LOCKED
+        else:
+            if(setValue in self.setDict[dbName][setName]):
+                self.lockSet(dbName, setName)
+                self.setDict[dbName][setName].discard(setValue)
+                self.unlockSet(dbName, setName)
+                self.logger.info("Set Remove Success {0}->{1}->{2}".format(dbName, setName, setValue))
+                return NoSqlDb.SET_REMOVE_SUCCESS
+            else:
+                return NoSqlDb.SET_VALUE_NOT_EXISTED
 
     def addDb(self, dbName):
         if(self.saveLock is True):

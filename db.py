@@ -51,6 +51,8 @@ class NoSqlDb:
     SET_INSERT_SUCCESS = 39
     SET_VALUE_NOT_EXISTED = 40
     SET_REMOVE_SUCCESS = 41
+    SET_CLEAR_SUCCESS = 42
+    SET_DELETE_SUCCESS = 43
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -617,6 +619,30 @@ class NoSqlDb:
                 return NoSqlDb.SET_REMOVE_SUCCESS
             else:
                 return NoSqlDb.SET_VALUE_NOT_EXISTED
+
+    def clearSet(self, dbName, setName):
+        if(self.setLockDict[dbName][setName] is True):
+            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+            return NoSqlDb.SET_LOCKED
+        else:
+            self.lockSet(dbName, setName)
+            self.setDict[dbName][setName].clear()
+            self.unlockSet(dbName, setName)
+            self.logger.info("Set Clear Success {0}->{1}".format(dbName, setName))
+            return NoSqlDb.SET_CLEAR_SUCCESS
+
+    def deleteSet(self, dbName, setName):
+        if (self.setLockDict[dbName][setName] is True):
+            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+            return NoSqlDb.SET_LOCKED
+        else:
+            self.lockSet(dbName, setName)
+            self.setName[dbName].discard(setName)
+            self.setDict[dbName].pop(setName)
+            self.unlockSet(dbName, setName)
+            self.setLockDict[dbName].pop(setName)
+            self.logger.info("Set Delete Success {0}->{1}".format(dbName, setName))
+            return NoSqlDb.SET_DELETE_SUCCESS
 
     def addDb(self, dbName):
         if(self.saveLock is True):

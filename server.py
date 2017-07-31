@@ -319,6 +319,18 @@ def rmFromSet():
     result = myHandler.rmFromSet(dbName, setName, setValue)
     return flask.jsonify(result)
 
+@app.route("/clearSet/<string:dbName>/<string:setName>",methods=["GET"])
+def clearSet(dbName, setName):
+    myHandler = setHandler(database)
+    result = myHandler.clearSet(dbName, setName)
+    return flask.jsonify(result)
+
+@app.route("/deleteSet/<string:dbName>/<string:setName>",methods=["GET"])
+def deleteSet(dbName, setName):
+    myHandler = setHandler(database)
+    result = myHandler.deleteSet(dbName, setName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

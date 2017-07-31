@@ -88,3 +88,36 @@ class setHandler:
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
         return msg
+
+    # clear the given set
+    def clearSet(self, dbName, setName):
+        if(self.isValidType(dbName) and self.isValidType(setName)):
+            if(self.database.isSetExist(dbName, setName)):
+                result = self.database.clearSet(dbName, setName)
+                if(result == NoSqlDb.SET_LOCKED):
+                    msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
+                elif(result == NoSqlDb.SET_CLEAR_SUCCESS):
+                    msg = self.makeMessage("Set Clear Success", responseCode.SET_CLEAR_SUCCESS, setName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+        return msg
+
+    def deleteSet(self, dbName, setName):
+        if (self.isValidType(dbName) and self.isValidType(setName)):
+            if (self.database.isSetExist(dbName, setName)):
+                result = self.database.deleteSet(dbName, setName)
+                if (result == NoSqlDb.SET_LOCKED):
+                    msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
+                elif (result == NoSqlDb.SET_DELETE_SUCCESS):
+                    msg = self.makeMessage("Set Delete Success", responseCode.SET_CLEAR_SUCCESS, setName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+        return msg

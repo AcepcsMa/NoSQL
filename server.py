@@ -331,6 +331,18 @@ def deleteSet(dbName, setName):
     result = myHandler.deleteSet(dbName, setName)
     return flask.jsonify(result)
 
+@app.route("/searchSet/<string:dbName>/<string:expression>",methods=["GET"])
+def searchSet(dbName, expression):
+    myHandler = setHandler(database)
+    result = myHandler.searchSet(dbName, expression)
+    return flask.jsonify(result)
+
+@app.route("/searchAllSet/<string:dbName>",methods=["GET"])
+def searchAllSet(dbName):
+    myHandler = setHandler(database)
+    result = myHandler.searchAllSet(dbName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

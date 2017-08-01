@@ -200,6 +200,9 @@ class NoSqlDb:
         elif(dataType == "HASH"):
             names = self.hashName[dbName]
             logInfo = "Search Hash Success {0} {1}"
+        elif(dataType == "SET"):
+            names = self.setName[dbName]
+            logInfo = "Search Set Success {0} {1}"
         else:
             names = []
             logInfo = "Search Fail {0} {1}"
@@ -686,6 +689,12 @@ class NoSqlDb:
             self.setLockDict[dbName].pop(setName)
             self.logger.info("Set Delete Success {0}->{1}".format(dbName, setName))
             return NoSqlDb.SET_DELETE_SUCCESS
+
+    def searchAllSet(self, dbName):
+        if(self.isDbExist(dbName) is False):
+            return []
+        self.logger.info("Search All Set Success {0}".format(dbName))
+        return list(self.setName[dbName])
 
     @saveTrigger
     def addDb(self, dbName):

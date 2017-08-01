@@ -121,3 +121,24 @@ class setHandler:
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
         return msg
+
+    # search set names using regular expression
+    def searchSet(self, dbName, expression):
+        if (self.isValidType(dbName)):
+            searchResult = self.database.searchByRE(dbName, expression, "SET")
+            msg = self.makeMessage("Search Set Success", responseCode.SET_SEARCH_SUCCESS, searchResult)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg
+
+    # return all set names in the given database
+    def searchAllSet(self, dbName):
+        if (self.isValidType(dbName)):
+            if (self.database.isDbExist(dbName)):
+                searchResult = self.database.searchAllSet(dbName)
+                msg = self.makeMessage("Search Set Success", responseCode.SET_SEARCH_SUCCESS, searchResult)
+            else:
+                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg

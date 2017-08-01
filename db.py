@@ -7,6 +7,19 @@ import json
 import logging
 import time
 
+# a decorator for save trigger
+def saveTrigger(func):
+    def trigger(*args, **kwargs):
+        func(*args, **kwargs)
+        self = args[0]
+        self.opCount += 1
+        if(self.opCount == self.saveTrigger):
+            self.opCount = 0
+            self.saveDb()
+            self.logger.info("Auto Save Triggers")
+        return func(*args)
+    return trigger
+
 class NoSqlDb:
 
     ELEM_LOCKED = 0
@@ -56,6 +69,8 @@ class NoSqlDb:
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
+        self.saveTrigger = config["SAVE_TRIGGER"]
+        self.opCount = 0
 
         # element structures
         self.elemName = dict()
@@ -196,6 +211,7 @@ class NoSqlDb:
         self.logger.info(logInfo.format(dbName, expression))
         return list(searchResult)
 
+    @saveTrigger
     def createElem(self, elemName, value, dbName):
         self.lockElem(dbName, elemName) # lock this element avoiding r/w implements
         self.elemName[dbName].add(elemName)
@@ -230,6 +246,7 @@ class NoSqlDb:
         self.logger.info("Search All Elements in {0}".format(dbName))
         return list(self.elemName[dbName])
 
+    @saveTrigger
     def increaseElem(self, elemName, dbName):
         if(self.elemLockDict[dbName][elemName] is True): # element is locked
             self.logger.warning("Increase Element Locked {0}->{1}".format(dbName, elemName))
@@ -241,6 +258,7 @@ class NoSqlDb:
             self.logger.info("Increase Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_INCREASE_SUCCESS
 
+    @saveTrigger
     def decreaseElem(self, elemName, dbName):
         if(self.elemLockDict[dbName][elemName] is True): # element is locked
             self.logger.warning("Decrease Element Locked {0}->{1}".format(dbName, elemName))
@@ -252,6 +270,7 @@ class NoSqlDb:
             self.logger.info("Decrease Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_DECREASE_SUCCESS
 
+    @saveTrigger
     def deleteElem(self, elemName, dbName):
         if (self.elemLockDict[dbName][elemName] is True):  # element is locked
             self.logger.warning("Delete Element Locked {0}->{1}".format(dbName, elemName))
@@ -268,6 +287,7 @@ class NoSqlDb:
             self.logger.info("Delete Element Success {0}->{1}".format(dbName, elemName))
             return NoSqlDb.ELEM_DELETE_SUCCESS
 
+    @saveTrigger
     def setElemTTL(self, dbName, elemName, ttl):
         if(self.elemLockDict[dbName][elemName] is True):
             self.logger.warning("Element Locked {0}->{1}".format(dbName, elemName))
@@ -280,6 +300,7 @@ class NoSqlDb:
             self.unlockElem(dbName, elemName)
             return NoSqlDb.ELEM_TTL_SET_SUCCESS
 
+    @saveTrigger
     def clearElemTTL(self, dbName, elemName):
         if (self.elemLockDict[dbName][elemName] is True):
             self.logger.warning("Element Locked {0}->{1}".format(dbName, elemName))
@@ -308,6 +329,7 @@ class NoSqlDb:
             else:
                 return False
 
+    @saveTrigger
     def createList(self, listName, dbName):
         self.lockList(dbName, listName)
         self.listName[dbName].add(listName)
@@ -324,6 +346,7 @@ class NoSqlDb:
         self.logger.info("Get List Success {0}->{1}".format(dbName, listName))
         return listValue
 
+    @saveTrigger
     def insertList(self, listName, value, dbName):
         if(self.listLockDict[dbName][listName] is True):
             self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
@@ -335,6 +358,7 @@ class NoSqlDb:
             self.logger.info("Insert List Success {0}->{1}->{2}".format(dbName, listName, value))
             return NoSqlDb.LIST_INSERT_SUCCESS
 
+    @saveTrigger
     def deleteList(self, listName, dbName):
         if(self.listLockDict[dbName][listName] is True):
             self.logger.warning("Delete List Locked {0}->{1}".format(dbName, listName))
@@ -352,6 +376,7 @@ class NoSqlDb:
             self.logger.info("Delete List Success {0}->{1}".format(dbName, listName))
             return NoSqlDb.LIST_DELETE_SUCCESS
 
+    @saveTrigger
     def rmFromList(self, dbName, listName, value):
         if (self.listLockDict[dbName][listName] is True):
             self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
@@ -372,6 +397,7 @@ class NoSqlDb:
         self.logger.info("Search All List Success {0}".format(dbName))
         return list(self.listName[dbName])
 
+    @saveTrigger
     def clearList(self, dbName, listName):
         if(self.listLockDict[dbName][listName] is True):
             self.logger.warning("Clear List Locked {0}->{1}")
@@ -382,6 +408,7 @@ class NoSqlDb:
             self.unlockList(dbName, listName)
             return NoSqlDb.LIST_CLEAR_SUCCESS
 
+    @saveTrigger
     def mergeLists(self, dbName, listName1, listName2, resultListName=None):
         if(resultListName is not None):
             self.createList(resultListName, dbName)
@@ -397,6 +424,7 @@ class NoSqlDb:
                 return NoSqlDb.LIST_LOCKED
         return NoSqlDb.LIST_MERGE_SUCCESS
 
+    @saveTrigger
     def setListTTL(self, dbName, listName, ttl):
         if(self.listLockDict[dbName][listName] is True):
             self.logger.warning("List Locked {0}->{1}".format(dbName, listName))
@@ -424,6 +452,7 @@ class NoSqlDb:
             else:
                 return False
 
+    @saveTrigger
     def clearListTTL(self, dbName, listName):
         if (self.listLockDict[dbName][listName] is True):
             self.logger.warning("List Locked {0}->{1}".format(dbName, listName))
@@ -437,6 +466,7 @@ class NoSqlDb:
             self.unlockList(dbName, listName)
             return NoSqlDb.LIST_TTL_CLEAR_SUCCESS
 
+    @saveTrigger
     def createHash(self, dbName, hashName):
         if(self.isHashExist(dbName,hashName) is False):
             self.hashName[dbName].add(hashName)
@@ -450,6 +480,7 @@ class NoSqlDb:
     def getHash(self, dbName, hashName):
         return self.hashDict[dbName][hashName]
 
+    @saveTrigger
     def insertHash(self, dbName, hashName, keyName, value):
         if(self.hashLockDict[dbName][hashName] is True):
             return NoSqlDb.HASH_LOCKED
@@ -462,6 +493,7 @@ class NoSqlDb:
     def isKeyExist(self, dbName, hashName, keyName):
         return keyName in list(self.hashDict[dbName][hashName].keys())
 
+    @saveTrigger
     def deleteHash(self, dbName, hashName):
         if(self.hashLockDict[dbName][hashName] is True):
             return NoSqlDb.HASH_LOCKED
@@ -477,6 +509,7 @@ class NoSqlDb:
             self.hashLockDict[dbName].pop(hashName)
             return NoSqlDb.HASH_DELETE_SUCCESS
 
+    @saveTrigger
     def rmFromHash(self, dbName, hashName, keyName):
         if(self.hashLockDict[dbName][hashName] is True):
             return NoSqlDb.HASH_LOCKED
@@ -486,6 +519,7 @@ class NoSqlDb:
             self.unlockHash(dbName, hashName)
             return NoSqlDb.HASH_REMOVE_SUCCESS
 
+    @saveTrigger
     def clearHash(self, dbName, hashName):
         if(self.hashLockDict[dbName][hashName] is True):
             return NoSqlDb.HASH_LOCKED
@@ -495,6 +529,7 @@ class NoSqlDb:
             self.unlockHash(dbName, hashName)
             return NoSqlDb.HASH_CLEAR_SUCCESS
 
+    @saveTrigger
     def replaceHash(self, dbName, hashName, hashValue):
         if(self.hashLockDict[dbName][hashName] is True):
             return NoSqlDb.HASH_LOCKED
@@ -504,6 +539,7 @@ class NoSqlDb:
             self.unlockHash(dbName, hashName)
             return NoSqlDb.HASH_REPLACE_SUCCESS
 
+    @saveTrigger
     def mergeHashs(self, dbName, hashName1, hashName2, resultHashName=None, mergeMode=0):
         if (mergeMode == 0):
             baseDictName = hashName1
@@ -541,6 +577,7 @@ class NoSqlDb:
         self.logger.info("Search All Hash Success {0}".format(dbName))
         return list(self.hashName[dbName])
 
+    @saveTrigger
     def setHashTTL(self, dbName, hashName, ttl):
         if(self.hashLockDict[dbName][hashName] is True):
             self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
@@ -568,6 +605,7 @@ class NoSqlDb:
             else:
                 return False
 
+    @saveTrigger
     def clearHashTTL(self, dbName, hashName):
         if (self.hashLockDict[dbName][hashName] is True):
             self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
@@ -581,6 +619,7 @@ class NoSqlDb:
             self.unlockHash(dbName, hashName)
             return NoSqlDb.HASH_TTL_CLEAR_SUCCESS
 
+    @saveTrigger
     def createSet(self, dbName, setName):
         self.lockSet(dbName, setName)
         self.setName[dbName].add(setName)
@@ -592,6 +631,7 @@ class NoSqlDb:
     def getSet(self, dbName, setName):
         return list(self.setDict[dbName][setName])
 
+    @saveTrigger
     def insertSet(self, dbName, setName, setValue):
         if(self.setLockDict[dbName][setName] is True):
             self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
@@ -606,6 +646,7 @@ class NoSqlDb:
             else:
                 return NoSqlDb.SET_VALUE_ALREADY_EXIST
 
+    @saveTrigger
     def rmFromSet(self, dbName, setName, setValue):
         if(self.setLockDict[dbName][setName] is True):
             self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
@@ -620,6 +661,7 @@ class NoSqlDb:
             else:
                 return NoSqlDb.SET_VALUE_NOT_EXISTED
 
+    @saveTrigger
     def clearSet(self, dbName, setName):
         if(self.setLockDict[dbName][setName] is True):
             self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
@@ -631,6 +673,7 @@ class NoSqlDb:
             self.logger.info("Set Clear Success {0}->{1}".format(dbName, setName))
             return NoSqlDb.SET_CLEAR_SUCCESS
 
+    @saveTrigger
     def deleteSet(self, dbName, setName):
         if (self.setLockDict[dbName][setName] is True):
             self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
@@ -644,6 +687,7 @@ class NoSqlDb:
             self.logger.info("Set Delete Success {0}->{1}".format(dbName, setName))
             return NoSqlDb.SET_DELETE_SUCCESS
 
+    @saveTrigger
     def addDb(self, dbName):
         if(self.saveLock is True):
             self.logger.warning("Database Save Locked {0}".format(dbName))
@@ -667,6 +711,7 @@ class NoSqlDb:
         self.logger.info("Get All Database Names Success")
         return list(self.dbNameSet)
 
+    @saveTrigger
     def delDatabase(self, dbName):
         if(self.isDbExist(dbName) is True):
             if(self.saveLock is False):
@@ -726,6 +771,7 @@ class NoSqlDb:
 
             self.saveLock = False
             self.logger.info("Database Save Success")
+            self.opCount = 0    # once save process is done, reload the op count
             return NoSqlDb.DB_SAVE_SUCCESS
 
         else:

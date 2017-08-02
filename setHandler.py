@@ -161,3 +161,24 @@ class setHandler:
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
         return msg
+
+    def intersectSet(self, dbName, setName1, setName2):
+        if (self.isValidType(dbName)
+            and self.isValidType(setName1)
+            and self.isValidType(setName2)):
+            if (self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
+                intersectResult = []
+                result = self.database.intersectSet(dbName, setName1, setName2, intersectResult)
+                if (result == NoSqlDb.SET_LOCKED):
+                    msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED,
+                                           "{0} or {1}".format(setName1, setName2))
+                elif (result == NoSqlDb.SET_INTERSECT_SUCCESS):
+                    msg = self.makeMessage("Set Intersect Success", responseCode.SET_INTERSECT_SUCCESS, intersectResult[0])
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST,
+                                       "{0} or {1}".format(setName1, setName2))
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg

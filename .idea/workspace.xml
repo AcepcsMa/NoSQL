@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.py" afterPath="$PROJECT_DIR$/db.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/response.py" afterPath="$PROJECT_DIR$/response.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.py" afterPath="$PROJECT_DIR$/server.py" />
@@ -20,11 +19,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.5027668">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="db.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="db.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/db.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="366">
-                  <caret line="708" column="106" lean-forward="false" selection-start-line="708" selection-start-column="106" selection-end-line="708" selection-end-column="106" />
+                <state relative-caret-position="450">
+                  <caret line="726" column="48" lean-forward="true" selection-start-line="726" selection-start-column="48" selection-end-line="726" selection-end-column="48" />
                   <folding>
                     <element signature="e#37#46#0" expanded="true" />
                   </folding>
@@ -32,11 +31,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="setHandler.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="setHandler.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/setHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="419">
-                  <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+                <state relative-caret-position="360">
+                  <caret line="163" column="0" lean-forward="true" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
                   <folding>
                     <element signature="e#31#64#0" expanded="true" />
                   </folding>
@@ -59,8 +58,8 @@
           <file leaf-file-name="response.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/response.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="700">
-                  <caret line="72" column="26" lean-forward="false" selection-start-line="72" selection-start-column="26" selection-end-line="72" selection-end-column="26" />
+                <state relative-caret-position="717">
+                  <caret line="73" column="30" lean-forward="false" selection-start-line="73" selection-start-column="30" selection-end-line="73" selection-end-column="30" />
                   <folding />
                 </state>
               </provider>
@@ -73,8 +72,8 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="456">
-                  <caret line="356" column="0" lean-forward="false" selection-start-line="356" selection-start-column="0" selection-end-line="356" selection-end-column="0" />
+                <state relative-caret-position="230">
+                  <caret line="355" column="32" lean-forward="true" selection-start-line="355" selection-start-column="32" selection-end-line="355" selection-end-column="32" />
                   <folding>
                     <element signature="e#37#49#0" expanded="true" />
                   </folding>
@@ -150,10 +149,10 @@
         <option value="$PROJECT_DIR$/hashHandler.py" />
         <option value="$PROJECT_DIR$/ttlTimer.py" />
         <option value="$PROJECT_DIR$/server.conf" />
+        <option value="$PROJECT_DIR$/db.py" />
         <option value="$PROJECT_DIR$/response.py" />
         <option value="$PROJECT_DIR$/setHandler.py" />
         <option value="$PROJECT_DIR$/server.py" />
-        <option value="$PROJECT_DIR$/db.py" />
       </list>
     </option>
   </component>
@@ -746,22 +745,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.1/python_stubs/1437855905/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="4364" column="22" lean-forward="false" selection-start-line="4364" selection-start-column="22" selection-end-line="4364" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/response.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="700">
-          <caret line="72" column="26" lean-forward="false" selection-start-line="72" selection-start-column="26" selection-end-line="72" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/http/server.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
@@ -775,16 +758,6 @@
         <state relative-caret-position="159">
           <caret line="237" column="29" lean-forward="true" selection-start-line="237" selection-start-column="29" selection-end-line="237" selection-end-column="29" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/setHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="419">
-          <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-          <folding>
-            <element signature="e#31#64#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -804,22 +777,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.py">
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.1/python_stubs/1437855905/builtins.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="356" column="0" lean-forward="false" selection-start-line="356" selection-start-column="0" selection-end-line="356" selection-end-column="0" />
-          <folding>
-            <element signature="e#37#49#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="276">
+          <caret line="4311" column="8" lean-forward="false" selection-start-line="4311" selection-start-column="8" selection-end-line="4311" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/db.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="708" column="106" lean-forward="false" selection-start-line="708" selection-start-column="106" selection-end-line="708" selection-end-column="106" />
+        <state relative-caret-position="450">
+          <caret line="726" column="48" lean-forward="true" selection-start-line="726" selection-start-column="48" selection-end-line="726" selection-end-column="48" />
           <folding>
             <element signature="e#37#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/response.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="717">
+          <caret line="73" column="30" lean-forward="false" selection-start-line="73" selection-start-column="30" selection-end-line="73" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/setHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="163" column="0" lean-forward="true" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+          <folding>
+            <element signature="e#31#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="355" column="32" lean-forward="true" selection-start-line="355" selection-start-column="32" selection-end-line="355" selection-end-column="32" />
+          <folding>
+            <element signature="e#37#49#0" expanded="true" />
           </folding>
         </state>
       </provider>

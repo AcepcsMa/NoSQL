@@ -67,6 +67,7 @@ class NoSqlDb:
     SET_CLEAR_SUCCESS = 42
     SET_DELETE_SUCCESS = 43
     SET_UNION_SUCCESS = 44
+    SET_INTERSECT_SUCCESS = 45
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -706,10 +707,24 @@ class NoSqlDb:
         else:
             self.lockSet(dbName, setName1)
             self.lockSet(dbName, setName2)
-            unionResult.append(self.setDict[dbName][setName1].union(list(self.setDict[dbName][setName2])))
+            unionResult.append(list(self.setDict[dbName][setName1].union(self.setDict[dbName][setName2])))
             self.unlockSet(dbName, setName1)
             self.unlockSet(dbName, setName2)
             return NoSqlDb.SET_UNION_SUCCESS
+
+    @saveTrigger
+    def intersectSet(self, dbName, setName1, setName2, intersectResult):
+        if (self.setLockDict[dbName][setName1] is True
+            or self.setLockDict[dbName][setName2] is True):
+            self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
+            return NoSqlDb.SET_LOCKED
+        else:
+            self.lockSet(dbName, setName1)
+            self.lockSet(dbName, setName2)
+            intersectResult.append(list(self.setDict[dbName][setName1].intersection(self.setDict[dbName][setName2])))
+            self.unlockSet(dbName, setName1)
+            self.unlockSet(dbName, setName2)
+            return NoSqlDb.SET_INTERSECT_SUCCESS
 
     @saveTrigger
     def addDb(self, dbName):

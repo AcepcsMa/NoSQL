@@ -343,6 +343,18 @@ def searchAllSet(dbName):
     result = myHandler.searchAllSet(dbName)
     return flask.jsonify(result)
 
+@app.route("/unionSet",methods=["POST"])
+def unionSet():
+    myHandler = setHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        setName1 = flask.request.json["setName1"]
+        setName2 = flask.request.json["setName2"]
+    except:
+        dbName = setName1 = setName2 = None
+    result = myHandler.unionSet(dbName, setName1, setName2)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

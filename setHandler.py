@@ -142,3 +142,22 @@ class setHandler:
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
         return msg
+
+    def unionSet(self, dbName, setName1, setName2):
+        if(self.isValidType(dbName)
+           and self.isValidType(setName1)
+           and self.isValidType(setName2)):
+            if(self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
+                unionResult = []
+                result = self.database.unionSet(dbName, setName1, setName2, unionResult)
+                if(result == NoSqlDb.SET_LOCKED):
+                    msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, "{0} or {1}".format(setName1, setName2))
+                elif(result == NoSqlDb.SET_UNION_SUCCESS):
+                    msg = self.makeMessage("Set Union Success", responseCode.SET_UNION_SUCCESS, unionResult[0])
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, "{0} or {1}".format(setName1, setName2))
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg

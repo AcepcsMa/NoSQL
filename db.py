@@ -10,14 +10,14 @@ import time
 # a decorator for save trigger
 def saveTrigger(func):
     def trigger(*args, **kwargs):
-        func(*args, **kwargs)
+        result = func(*args, **kwargs)
         self = args[0]
         self.opCount += 1
         if(self.opCount == self.saveTrigger):
             self.opCount = 0
             self.saveDb()
             self.logger.info("Auto Save Triggers")
-        return func(*args)
+        return result
     return trigger
 
 class NoSqlDb:
@@ -66,6 +66,7 @@ class NoSqlDb:
     SET_REMOVE_SUCCESS = 41
     SET_CLEAR_SUCCESS = 42
     SET_DELETE_SUCCESS = 43
+    SET_UNION_SUCCESS = 44
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -695,6 +696,20 @@ class NoSqlDb:
             return []
         self.logger.info("Search All Set Success {0}".format(dbName))
         return list(self.setName[dbName])
+
+    @saveTrigger
+    def unionSet(self, dbName, setName1, setName2, unionResult):
+        if(self.setLockDict[dbName][setName1] is True
+           or self.setLockDict[dbName][setName2] is True):
+            self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
+            return NoSqlDb.SET_LOCKED
+        else:
+            self.lockSet(dbName, setName1)
+            self.lockSet(dbName, setName2)
+            unionResult.append(self.setDict[dbName][setName1].union(list(self.setDict[dbName][setName2])))
+            self.unlockSet(dbName, setName1)
+            self.unlockSet(dbName, setName2)
+            return NoSqlDb.SET_UNION_SUCCESS
 
     @saveTrigger
     def addDb(self, dbName):

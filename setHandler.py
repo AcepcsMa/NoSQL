@@ -15,6 +15,10 @@ class setHandler:
         else:
             return False
 
+    # check if the type of an elem is SET
+    def isSet(self, elem):
+        return "set" in str(type(elem))
+
     # make the response message
     def makeMessage(self, msg, typeCode, data):
         message = {
@@ -181,4 +185,43 @@ class setHandler:
                                        "{0} or {1}".format(setName1, setName2))
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg
+
+    def diffSet(self, dbName, setName1, setName2):
+        if (self.isValidType(dbName)
+            and self.isValidType(setName1)
+            and self.isValidType(setName2)):
+            if (self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
+                diffResult = []
+                result = self.database.diffSet(dbName, setName1, setName2, diffResult)
+                if (result == NoSqlDb.SET_LOCKED):
+                    msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED,
+                                           "{0} or {1}".format(setName1, setName2))
+                elif (result == NoSqlDb.SET_DIFF_SUCCESS):
+                    msg = self.makeMessage("Set Diff Success", responseCode.SET_DIFF_SUCCESS, diffResult[0])
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST,
+                                       "{0} or {1}".format(setName1, setName2))
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg
+
+    # replace the existed set with a new set
+    def replaceSet(self, dbName, setName, setValue):
+        if (self.isValidType(dbName) and self.isValidType(setName)
+            and self.isSet(setValue)):
+            if (self.database.isSetExist(dbName, setName) is True):
+                result = self.database.replaceSet(dbName, setName, setValue)
+                if (result == NoSqlDb.SET_LOCKED):
+                    msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
+                elif (result == NoSqlDb.SET_REPLACE_SUCCESS):
+                    msg = self.makeMessage("Set Replace Success", responseCode.SET_REPLACE_SUCCESS, setName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+            else:
+                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
         return msg

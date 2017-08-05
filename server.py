@@ -367,6 +367,30 @@ def intersectSet():
     result = myHandler.intersectSet(dbName, setName1, setName2)
     return flask.jsonify(result)
 
+@app.route("/diffSet",methods=["POST"])
+def diffSet():
+    myHandler = setHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        setName1 = flask.request.json["setName1"]
+        setName2 = flask.request.json["setName2"]
+    except:
+        dbName = setName1 = setName2 = None
+    result = myHandler.diffSet(dbName, setName1, setName2)
+    return flask.jsonify(result)
+
+@app.route("/replaceSet",methods=["POST"])
+def replaceSet():
+    myHandler = setHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        setName = flask.request.json["setName"]
+        setValue = set(flask.request.json["setValue"])
+    except:
+        dbName = setName = setValue = None
+    result = myHandler.replaceSet(dbName, setName, setValue)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)
@@ -397,14 +421,16 @@ if __name__ == '__main__':
     serverConfig = confParser.getServerConfig("server.conf")
 
     # init the database
+    databaseList = []
     database = db.NoSqlDb(serverConfig)
+    databaseList.append(database)
 
     # init the save timer
-    saveTimer = timer.timer(database, serverConfig["SAVE_INTERVAL"])
+    saveTimer = timer.timer(databaseList, serverConfig["SAVE_INTERVAL"])
     saveTimer.start()
 
     # init the ttl timer
-    TTLTimer = ttlTimer.ttlTimer(database, serverConfig["TTL_CHECK_INTERVAL"])
+    TTLTimer = ttlTimer.ttlTimer(databaseList, serverConfig["TTL_CHECK_INTERVAL"])
 
     # run the server
     app.run(host=serverConfig["HOST"], port=serverConfig["PORT"], debug=serverConfig["DEBUG"])

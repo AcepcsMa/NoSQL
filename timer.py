@@ -10,7 +10,7 @@ class timer(threading.Thread):
     def __init__(self, database, saveInterval=60):
         super(timer,self).__init__()
         self.saveInterval = saveInterval
-        self.database = database
+        self.database = database[0]
 
     def setInterval(self, interval):
         self.saveInterval = interval

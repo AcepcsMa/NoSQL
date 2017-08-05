@@ -9,7 +9,7 @@ class ttlTimer(threading.Thread):
     def __init__(self, database, checkInterval=5):
         super(ttlTimer,self).__init__()
         self.checkInterval = checkInterval
-        self.database = database
+        self.database = database[0]
         self.checkLock = False
 
     def setInterval(self, interval):

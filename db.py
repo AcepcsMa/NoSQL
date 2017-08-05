@@ -68,6 +68,8 @@ class NoSqlDb:
     SET_DELETE_SUCCESS = 43
     SET_UNION_SUCCESS = 44
     SET_INTERSECT_SUCCESS = 45
+    SET_DIFF_SUCCESS = 46
+    SET_REPLACE_SUCCESS = 47
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -725,6 +727,30 @@ class NoSqlDb:
             self.unlockSet(dbName, setName1)
             self.unlockSet(dbName, setName2)
             return NoSqlDb.SET_INTERSECT_SUCCESS
+
+    @saveTrigger
+    def diffSet(self, dbName, setName1, setName2, diffResult):
+        if (self.setLockDict[dbName][setName1] is True
+            or self.setLockDict[dbName][setName2] is True):
+            self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
+            return NoSqlDb.SET_LOCKED
+        else:
+            self.lockSet(dbName, setName1)
+            self.lockSet(dbName, setName2)
+            diffResult.append(list(self.setDict[dbName][setName1].difference(self.setDict[dbName][setName2])))
+            self.unlockSet(dbName, setName1)
+            self.unlockSet(dbName, setName2)
+            return NoSqlDb.SET_DIFF_SUCCESS
+
+    @saveTrigger
+    def replaceSet(self, dbName, setName, setValue):
+        if (self.setLockDict[dbName][setName] is True):
+            return NoSqlDb.SET_LOCKED
+        else:
+            self.lockSet(dbName, setName)
+            self.setDict[dbName][setName] = setValue
+            self.unlockSet(dbName, setName)
+            return NoSqlDb.SET_REPLACE_SUCCESS
 
     @saveTrigger
     def addDb(self, dbName):

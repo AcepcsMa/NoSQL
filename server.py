@@ -391,6 +391,18 @@ def replaceSet():
     result = myHandler.replaceSet(dbName, setName, setValue)
     return flask.jsonify(result)
 
+@app.route("/setSetTTL/<string:dbName>/<string:setName>/<int:ttl>",methods=["GET"])
+def setSetTTL(dbName, setName, ttl):
+    myHandler = setHandler(database)
+    result = myHandler.setTTL(dbName, setName, ttl)
+    return flask.jsonify(result)
+
+@app.route("/clearSetTTL/<string:dbName>/<string:setName>",methods=["GET"])
+def clearSetTTL(dbName, setName):
+    myHandler = setHandler(database)
+    result = myHandler.clearTTL(dbName, setName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

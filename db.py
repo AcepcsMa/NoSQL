@@ -70,6 +70,8 @@ class NoSqlDb:
     SET_INTERSECT_SUCCESS = 45
     SET_DIFF_SUCCESS = 46
     SET_REPLACE_SUCCESS = 47
+    SET_TTL_SET_SUCCESS = 48
+    SET_TTL_CLEAR_SUCCESS = 49
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -102,6 +104,7 @@ class NoSqlDb:
         self.elemTTL = dict()
         self.listTTL = dict()
         self.hashTTL = dict()
+        self.setTTL = dict()
 
         for dbName in self.dbNameSet:
             self.elemName[dbName] = set()
@@ -123,6 +126,7 @@ class NoSqlDb:
             self.elemTTL[dbName] = dict()
             self.listTTL[dbName] = dict()
             self.hashTTL[dbName] = dict()
+            self.setTTL[dbName] = dict()
 
         # check log directory
         if(os.path.exists(config["LOG_PATH"]) is False):
@@ -753,6 +757,48 @@ class NoSqlDb:
             return NoSqlDb.SET_REPLACE_SUCCESS
 
     @saveTrigger
+    def setSetTTL(self, dbName, setName, ttl):
+        if (self.setLockDict[dbName][setName] is True):
+            self.logger.warning("Set Locked {0}->{1}".format(dbName, setName))
+            return NoSqlDb.SET_LOCKED
+        else:
+            self.lockSet(dbName, setName)
+            self.setTTL[dbName][setName] = {"createAt": int(time.time()),
+                                              "ttl": int(ttl),
+                                              "status": True}
+            self.unlockSet(dbName, setName)
+            return NoSqlDb.SET_TTL_SET_SUCCESS
+
+    def isSetExpired(self, dbName, setName):
+        curTime = int(time.time())
+        if(setName not in self.setTTL[dbName].keys()):
+            return False
+        else:
+            if(self.setTTL[dbName][setName]["status"] is False):
+                return True
+            createAt = self.setTTL[dbName][setName]["createAt"]
+            ttl = self.setTTL[dbName][setName]["ttl"]
+            if(curTime - createAt >= ttl):
+                self.setTTL[dbName][setName]["status"] = False
+                return True
+            else:
+                return False
+
+    @saveTrigger
+    def clearSetTTL(self, dbName, setName):
+        if (self.setLockDict[dbName][setName] is True):
+            self.logger.warning("Set Locked {0}->{1}".format(dbName, setName))
+            return NoSqlDb.SET_LOCKED
+        else:
+            self.lockSet(dbName, setName)
+            try:
+                self.setTTL[dbName].pop(setName)
+            except:
+                pass
+            self.unlockSet(dbName, setName)
+            return NoSqlDb.SET_TTL_CLEAR_SUCCESS
+
+    @saveTrigger
     def addDb(self, dbName):
         if(self.saveLock is True):
             self.logger.warning("Database Save Locked {0}".format(dbName))
@@ -833,6 +879,8 @@ class NoSqlDb:
                     for key in setValue.keys():
                         setValue[key] = list(setValue[key])
                     setValueFile.write(json.dumps(setValue))
+                with open("data" + os.sep + dbName + os.sep + "setTTL.txt", "w") as setTTLFile:
+                    setTTLFile.write(json.dumps(self.setTTL[dbName]))
 
             self.saveLock = False
             self.logger.info("Database Save Success")
@@ -922,6 +970,9 @@ class NoSqlDb:
                     for key in setValue.keys():
                         setValue[key] = set(setValue[key])
                     self.setDict[dbName] = setValue
+                # load set TTL
+                with open("data" + os.sep + dbName + os.sep + "setTTL.txt", "r") as setTTLFile:
+                    self.setTTL[dbName] = json.loads(setTTLFile.read())
 
             self.logger.info("Database Load Success")
 

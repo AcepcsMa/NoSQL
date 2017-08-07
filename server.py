@@ -6,6 +6,7 @@ import db
 from configParser import configParser
 import timer
 import ttlTimer
+from response import responseCode
 from dbHandler import dbHandler
 from elemHandler import elemHandler
 from listHandler import listHandler
@@ -402,6 +403,27 @@ def clearSetTTL(dbName, setName):
     myHandler = setHandler(database)
     result = myHandler.clearTTL(dbName, setName)
     return flask.jsonify(result)
+
+@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",methods=["GET"])
+def showTTL(dbName, dataType, keyName):
+    if(dataType == "ELEM"):
+        myHandler = elemHandler(database)
+    elif(dataType == "LIST"):
+        myHandler = listHandler(database)
+    elif(dataType == "HASH"):
+        myHandler = hashHandler(database)
+    elif(dataType == "SET"):
+        myHandler = setHandler(database)
+    else:
+        myHandler = None
+    try:
+        result = myHandler.showTTL(dbName, keyName)
+        return flask.jsonify(result)
+    except:
+        msg = {"msg":"Data Type Error",
+               "typeCode":responseCode.DATA_TYPE_ERROR,
+               "data":dataType}
+        return flask.jsonify(msg)
 
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):

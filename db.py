@@ -72,6 +72,8 @@ class NoSqlDb:
     SET_REPLACE_SUCCESS = 47
     SET_TTL_SET_SUCCESS = 48
     SET_TTL_CLEAR_SUCCESS = 49
+    TTL_EXPIRED = 50
+    TTL_NO_RECORD = 51
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -221,6 +223,33 @@ class NoSqlDb:
                 continue
         self.logger.info(logInfo.format(dbName, expression))
         return list(searchResult)
+
+    def showTTL(self, dbName, keyName, dataType):
+        if(dataType == "ELEM"):
+            ttlDict = self.elemTTL[dbName]
+        elif(dataType == "LIST"):
+            ttlDict = self.listTTL[dbName]
+        elif(dataType == "HASH"):
+            ttlDict = self.hashTTL[dbName]
+        elif(dataType == "SET"):
+            ttlDict = self.setTTL[dbName]
+        else:
+            ttlDict = None
+
+        if(keyName in ttlDict.keys()):
+            if(ttlDict[keyName]["status"] == False):
+                return NoSqlDb.TTL_EXPIRED
+            else:
+                curTime = int(time.time())
+                ttl = ttlDict[keyName]["ttl"]
+                restTime = ttl - (curTime-ttlDict[keyName]["createAt"])
+                if(restTime <= 0):
+                    ttlDict[keyName]["status"] = False
+                    return NoSqlDb.TTL_EXPIRED
+                else:
+                    return restTime
+        else:
+            return NoSqlDb.TTL_NO_RECORD
 
     @saveTrigger
     def createElem(self, elemName, value, dbName):

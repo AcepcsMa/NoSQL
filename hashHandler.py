@@ -259,3 +259,19 @@ class hashHandler:
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
+
+    def showTTL(self, dbName, keyName):
+        if(self.isValidType(dbName) and self.isValidType(keyName)):
+            if(self.database.isDbExist(dbName)):
+                result = self.database.showTTL(dbName, keyName, "HASH")
+                if(result == NoSqlDb.TTL_NO_RECORD):
+                    msg = self.makeMessage("TTL No Record", responseCode.TTL_NO_RECORD, keyName)
+                elif(result == NoSqlDb.TTL_EXPIRED):
+                    msg = self.makeMessage("Hash TTL Expired", responseCode.SET_EXPIRED, keyName)
+                else:
+                    msg = self.makeMessage("TTL Show Success", responseCode.TTL_SHOW_SUCCESS, result)
+            else:
+                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg

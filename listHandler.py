@@ -2,7 +2,6 @@ __author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
-# from db import NoSqlDb
 
 class listHandler:
     def __init__(self, database):
@@ -41,7 +40,7 @@ class listHandler:
     def getList(self, dbName, listName):
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is True):
-                if(self.database.isListExpired(dbName, listName) is False):
+                if(self.database.isExpired(dbName, listName, "LIST") is False):
                     listValue = self.database.getList(listName, dbName)
                     msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
                 else:
@@ -58,7 +57,7 @@ class listHandler:
            and self.isValidType(dbName)):
             # if list exists, execute the insertion
             if(self.database.isListExist(dbName, listName) is True):
-                if(self.database.isListExpired(dbName, listName) is False):
+                if(self.database.isExpired(dbName, listName, "LIST") is False):
                     result = self.database.insertList(listName, listValue, dbName)
                     if(result == responseCode.LIST_IS_LOCKED):
                         msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
@@ -98,7 +97,7 @@ class listHandler:
            and self.isValidType(value)):
             # if list exists, execute the removal
             if(self.database.isListExist(dbName, listName) is True):
-                if(self.database.isListExpired(dbName, listName) is False):
+                if(self.database.isExpired(dbName, listName, "LIST") is False):
                     result = self.database.rmFromList(dbName, listName, value)
                     if(result == responseCode.LIST_NOT_CONTAIN_VALUE):
                         msg = self.makeMessage("List Does Not Contain This Value", responseCode.LIST_NOT_CONTAIN_VALUE, listName)
@@ -120,7 +119,7 @@ class listHandler:
     def clearList(self, dbName, listName):
         if(self.isValidType(dbName) and self.isValidType(listName)):
             if(self.database.isListExist(dbName, listName) is True):
-                if(self.database.isListExpired(dbName, listName) is False):
+                if(self.database.isExpired(dbName, listName, "LIST") is False):
                     result = self.database.clearList(dbName, listName)
                     if(result == responseCode.LIST_IS_LOCKED):
                         msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)

@@ -2,7 +2,6 @@ __author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
-# from db import NoSqlDb
 
 class elemHandler:
     def __init__(self, database):
@@ -46,7 +45,7 @@ class elemHandler:
         if(self.database.isElemExist(dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
 
-        elif(self.database.isElemExpired(dbName, elemName) is True):
+        elif(self.database.isExpired(dbName, elemName, "ELEM") is True):
             msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
 
         else:   # find the elem in the db
@@ -69,7 +68,7 @@ class elemHandler:
             if (self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
-                if(self.database.isElemExpired(dbName, elemName) is False):
+                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
                     msg = self.makeMessage("Element Get Success", responseCode.ELEM_GET_SUCCESS, self.database.getElem(elemName, dbName))
                 else:
                     msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
@@ -97,7 +96,7 @@ class elemHandler:
             if(self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
-                if(self.database.isElemExpired(dbName, elemName) is False):
+                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
                     if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                         result = self.database.increaseElem(elemName, dbName)
                         if(result == responseCode.ELEM_INCR_SUCCESS):
@@ -122,7 +121,7 @@ class elemHandler:
             if(self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
-                if(self.database.isElemExpired(dbName, elemName) is False):
+                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
                     if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                         result = self.database.decreaseElem(elemName, dbName)
                         if(result == responseCode.ELEM_DECR_SUCCESS):

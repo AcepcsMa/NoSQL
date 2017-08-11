@@ -2,7 +2,6 @@ __author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
-# from db import NoSqlDb
 
 class setHandler:
     def __init__(self, database):
@@ -47,7 +46,7 @@ class setHandler:
     def getSet(self, dbName, setName):
         if(self.isValidType(dbName) and self.isValidType(setName)):
             if(self.database.isSetExist(dbName, setName) is True):
-                if(self.database.isSetExpired(dbName, setName) is False):
+                if(self.database.isExpired(dbName, setName, "SET") is False):
                     setValue = self.database.getSet(dbName, setName)
                     msg = self.makeMessage("Set Get Success", responseCode.SET_GET_SUCCESS, setValue)
                 else:
@@ -62,7 +61,7 @@ class setHandler:
     def insertSet(self, dbName, setName, setValue):
         if(self.isValidType(dbName) and self.isValidType(setName)):
             if(self.database.isSetExist(dbName, setName)):
-                if(self.database.isSetExpired(dbName, setName) is False):
+                if(self.database.isExpired(dbName, setName, "SET") is False):
                     result = self.database.insertSet(dbName, setName, setValue)
                     if(result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
@@ -84,7 +83,7 @@ class setHandler:
     def rmFromSet(self, dbName, setName, setValue):
         if(self.isValidType(dbName) and self.isValidType(setName)):
             if(self.database.isSetExist(dbName, setName)):
-                if(self.database.isSetExpired(dbName, setName) is False):
+                if(self.database.isExpired(dbName, setName, "SET") is False):
                     result = self.database.rmFromSet(dbName, setName, setValue)
                     if(result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
@@ -106,7 +105,7 @@ class setHandler:
     def clearSet(self, dbName, setName):
         if(self.isValidType(dbName) and self.isValidType(setName)):
             if(self.database.isSetExist(dbName, setName)):
-                if(self.database.isSetExpired(dbName, setName) is False):
+                if(self.database.isExpired(dbName, setName, "SET") is False):
                     result = self.database.clearSet(dbName, setName)
                     if(result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
@@ -126,7 +125,7 @@ class setHandler:
     def deleteSet(self, dbName, setName):
         if (self.isValidType(dbName) and self.isValidType(setName)):
             if (self.database.isSetExist(dbName, setName)):
-                if(self.database.isSetExpired(dbName, setName) is False):
+                if(self.database.isExpired(dbName, setName, "SET") is False):
                     result = self.database.deleteSet(dbName, setName)
                     if (result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
@@ -241,7 +240,7 @@ class setHandler:
         if (self.isValidType(dbName) and self.isValidType(setName)
             and self.isSet(setValue)):
             if (self.database.isSetExist(dbName, setName) is True):
-                if(self.database.isSetExpired(dbName, setName) is False):
+                if(self.database.isExpired(dbName, setName, "SET") is False):
                     result = self.database.replaceSet(dbName, setName, setValue)
                     if (result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)

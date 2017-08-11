@@ -2,7 +2,6 @@ __author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
-# from db import NoSqlDb
 
 class hashHandler:
     def __init__(self, database):
@@ -50,7 +49,7 @@ class hashHandler:
     def getHash(self, dbName, hashName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName) is True):
-                if(self.database.isHashExpired(dbName, hashName) is False):
+                if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     hashValue = self.database.getHash(dbName, hashName)
                     msg = self.makeMessage("Hash Get Success", responseCode.HASH_GET_SUCCESS, hashValue)
                 else:
@@ -65,7 +64,7 @@ class hashHandler:
     def insertHash(self, dbName, hashName, keyName, value):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName) is True):
-                if(self.database.isHashExpired(dbName, hashName) is False):
+                if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.insertHash(dbName, hashName, keyName, value)
                     if(result == responseCode.HASH_IS_LOCKED):
                         msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
@@ -85,7 +84,7 @@ class hashHandler:
     def isKeyExist(self, dbName, hashName, keyName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName)):
-                if(self.database.isHashExpired(dbName, hashName) is False):
+                if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.isKeyExist(dbName, hashName, keyName)
                     if(result == True):
                         msg = self.makeMessage("Hash Key Exists", responseCode.HASH_KEY_EXIST, keyName)
@@ -122,7 +121,7 @@ class hashHandler:
     def rmFromHash(self, dbName, hashName, keyName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isKeyExist(dbName, hashName, keyName) is True):
-                if(self.database.isHashExpired(dbName, hashName) is False):
+                if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.rmFromHash(dbName, hashName, keyName)
                     if(result == responseCode.HASH_IS_LOCKED):
                         msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
@@ -142,7 +141,7 @@ class hashHandler:
     def clearHash(self, dbName, hashName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName) is True):
-                if(self.database.isHashExpired(dbName, hashName) is False):
+                if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.clearHash(dbName, hashName)
                     if(result == responseCode.HASH_IS_LOCKED):
                         msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
@@ -163,7 +162,7 @@ class hashHandler:
         if(self.isValidType(dbName) and self.isValidType(hashName)
            and self.isDict(hashValue)):
             if(self.database.isHashExist(dbName, hashName) is True):
-                if(self.database.isHashExpired(dbName, hashName) is False):
+                if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.replaceHash(dbName, hashName, hashValue)
                     if(result == responseCode.HASH_IS_LOCKED):
                         msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)

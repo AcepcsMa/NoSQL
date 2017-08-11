@@ -2,7 +2,6 @@ __author__ = 'Ma Haoxiang'
 
 # import
 import time
-# from db import NoSqlDb
 from response import responseCode
 
 class dbHandler:

@@ -1,4 +1,4 @@
-__author__ = 'Marco'
+__author__ = 'Ma Haoxiang'
 
 class responseCode:
 
@@ -79,4 +79,6 @@ class responseCode:
     SET_TTL_CLEAR_SUCCESS = 72
     TTL_NO_RECORD = 73
     TTL_SHOW_SUCCESS = 74
-    DATA_TYPE_ERROR = 75
+    TTL_EXPIRED = 75
+    DATA_TYPE_ERROR = 76
+    SET_DELETE_SUCCESS = 77

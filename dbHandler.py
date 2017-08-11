@@ -2,7 +2,7 @@ __author__ = 'Ma Haoxiang'
 
 # import
 import time
-from db import NoSqlDb
+# from db import NoSqlDb
 from response import responseCode
 
 class dbHandler:
@@ -36,12 +36,14 @@ class dbHandler:
     def addDatabase(self, dbName):
         if(self.isValidType(dbName)):
             result = self.database.addDb(dbName)
-            if(result == NoSqlDb.DB_EXISTED):
+            if(result == responseCode.DB_EXISTED):
                 msg = self.makeMessage("Database Already Exists", responseCode.DB_EXISTED, dbName)
-            elif(result == NoSqlDb.DB_CREATE_SUCCESS):
+            elif(result == responseCode.DB_CREATE_SUCCESS):
                 msg = self.makeMessage("Database Create Success", responseCode.DB_CREATE_SUCCESS, dbName)
-            elif(result == NoSqlDb.DB_SAVE_LOCK):
+            elif(result == responseCode.DB_SAVE_LOCKED):
                 msg = self.makeMessage("Database Is Locked", responseCode.DB_SAVE_LOCKED, dbName)
+            else:
+                msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:
             msg = self.makeMessage("Database Name Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
         return msg
@@ -56,12 +58,14 @@ class dbHandler:
     def delDatabase(self, dbName):
         if(self.isValidType(dbName)):
             result = self.database.delDatabase(dbName)
-            if(result == NoSqlDb.DB_DELETE_SUCCESS):
+            if(result == responseCode.DB_DELETE_SUCCESS):
                 msg = self.makeMessage("Database Delete Success", responseCode.DB_DELETE_SUCCESS, dbName)
-            elif(result == NoSqlDb.DB_SAVE_LOCK):
+            elif(result == responseCode.DB_SAVE_LOCKED):
                 msg = self.makeMessage("Database Save Locked", responseCode.DB_SAVE_LOCKED, dbName)
-            elif(result == NoSqlDb.DB_NOT_EXISTED):
+            elif(result == responseCode.DB_NOT_EXIST):
                 msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+            else:
+                msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:
             msg = self.makeMessage("Database Name Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
         return msg
@@ -69,10 +73,12 @@ class dbHandler:
     # save the data into file
     def saveDb(self):
         result = self.database.saveDb()
-        if(result == NoSqlDb.DB_SAVE_SUCCESS):
+        if(result == responseCode.DB_SAVE_SUCCESS):
             msg = self.makeMessage("Database Save Success", responseCode.DB_SAVE_SUCCESS, time.time())
-        elif(result == NoSqlDb.DB_SAVE_LOCK):
+        elif(result == responseCode.DB_SAVE_LOCKED):
             msg = self.makeMessage("Database Save Locked", responseCode.DB_SAVE_LOCKED, time.time())
+        else:
+            msg = self.makeMessage("Database Error", responseCode.DB_ERROR,"");
         return msg
 
 

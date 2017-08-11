@@ -3,11 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.py" afterPath="$PROJECT_DIR$/db.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbHandler.py" afterPath="$PROJECT_DIR$/dbHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/elemHandler.py" afterPath="$PROJECT_DIR$/elemHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hashHandler.py" afterPath="$PROJECT_DIR$/hashHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/listHandler.py" afterPath="$PROJECT_DIR$/listHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/response.py" afterPath="$PROJECT_DIR$/response.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.py" afterPath="$PROJECT_DIR$/server.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setHandler.py" afterPath="$PROJECT_DIR$/setHandler.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,14 +19,14 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5027668">
+    <splitter split-orientation="horizontal" split-proportion="0.54866564">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="db.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/db.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="469">
-                  <caret line="242" column="42" lean-forward="false" selection-start-line="242" selection-start-column="42" selection-end-line="242" selection-end-column="42" />
+                <state relative-caret-position="0">
+                  <caret line="0" column="17" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
                   <folding>
                     <element signature="e#37#46#0" expanded="true" />
                   </folding>
@@ -34,14 +34,12 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="setHandler.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/setHandler.py">
+          <file leaf-file-name="elemHandler.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/elemHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="267">
-                  <caret line="22" column="8" lean-forward="false" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
-                  <folding>
-                    <element signature="e#31#64#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="17">
+                  <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -49,11 +47,9 @@
           <file leaf-file-name="hashHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/hashHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="717">
-                  <caret line="277" column="0" lean-forward="false" selection-start-line="277" selection-start-column="0" selection-end-line="277" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#31#64#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="17">
+                  <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -61,18 +57,18 @@
           <file leaf-file-name="listHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/listHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="122">
-                  <caret line="196" column="0" lean-forward="false" selection-start-line="196" selection-start-column="0" selection-end-line="196" selection-end-column="0" />
+                <state relative-caret-position="17">
+                  <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="elemHandler.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/elemHandler.py">
+          <file leaf-file-name="setHandler.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/setHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="581">
-                  <caret line="198" column="51" lean-forward="false" selection-start-line="198" selection-start-column="51" selection-end-line="198" selection-end-column="51" />
+                <state relative-caret-position="17">
+                  <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -81,8 +77,8 @@
           <file leaf-file-name="response.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/response.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="700">
-                  <caret line="81" column="24" lean-forward="false" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
+                <state relative-caret-position="17">
+                  <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -92,11 +88,11 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="server.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="376">
-                  <caret line="424" column="31" lean-forward="true" selection-start-line="424" selection-start-column="31" selection-end-line="424" selection-end-column="31" />
+                <state relative-caret-position="7089">
+                  <caret line="417" column="24" lean-forward="true" selection-start-line="417" selection-start-column="24" selection-end-line="417" selection-end-column="24" />
                   <folding>
                     <element signature="e#37#49#0" expanded="true" />
                   </folding>
@@ -107,7 +103,7 @@
           <file leaf-file-name="timer.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/timer.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
+                <state relative-caret-position="272">
                   <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
                   <folding>
                     <element signature="e#37#48#0" expanded="true" />
@@ -119,18 +115,18 @@
           <file leaf-file-name="server.conf" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/server.conf">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="136">
-                  <caret line="8" column="1" lean-forward="false" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+                <state relative-caret-position="102">
+                  <caret line="6" column="28" lean-forward="true" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ttlTimer.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="ttlTimer.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/ttlTimer.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="170">
-                  <caret line="11" column="34" lean-forward="false" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
+                <state relative-caret-position="34">
+                  <caret line="2" column="8" lean-forward="true" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
                   <folding>
                     <element signature="e#37#48#0" expanded="true" />
                   </folding>
@@ -152,11 +148,13 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>msg[</find>
-      <find>NoSqlDb</find>
       <find>myDb</find>
       <find>self.dbLogger.</find>
       <find>logger.</find>
       <find>replaceHash</find>
+      <find>ELEM_UNLOCKED</find>
+      <find>NoSqlDb</find>
+      <find>TTL_EXPIRED</find>
     </findStrings>
     <replaceStrings>
       <replace>self.msg[</replace>
@@ -180,13 +178,14 @@
         <option value="$PROJECT_DIR$/timer.py" />
         <option value="$PROJECT_DIR$/server.conf" />
         <option value="$PROJECT_DIR$/ttlTimer.py" />
+        <option value="$PROJECT_DIR$/server.py" />
+        <option value="$PROJECT_DIR$/dbHandler.py" />
+        <option value="$PROJECT_DIR$/db.py" />
         <option value="$PROJECT_DIR$/setHandler.py" />
+        <option value="$PROJECT_DIR$/response.py" />
+        <option value="$PROJECT_DIR$/elemHandler.py" />
         <option value="$PROJECT_DIR$/hashHandler.py" />
         <option value="$PROJECT_DIR$/listHandler.py" />
-        <option value="$PROJECT_DIR$/elemHandler.py" />
-        <option value="$PROJECT_DIR$/response.py" />
-        <option value="$PROJECT_DIR$/db.py" />
-        <option value="$PROJECT_DIR$/server.py" />
       </list>
     </option>
   </component>
@@ -466,21 +465,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="4" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/hashHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3485">
-          <caret line="206" column="4" lean-forward="false" selection-start-line="206" selection-start-column="4" selection-end-line="225" selection-end-column="18" />
-          <folding>
-            <element signature="e#31#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/response.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1207">
@@ -493,9 +482,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2210">
           <caret line="131" column="18" lean-forward="false" selection-start-line="131" selection-start-column="18" selection-end-line="131" selection-end-column="18" />
-          <folding>
-            <element signature="e#31#64#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -753,34 +740,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/timer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding>
-            <element signature="e#37#48#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="1" lean-forward="false" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ttlTimer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="11" column="34" lean-forward="false" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
-          <folding>
-            <element signature="e#37#48#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -789,66 +748,100 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hashHandler.py">
+    <entry file="file://$PROJECT_DIR$/dbHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="717">
-          <caret line="277" column="0" lean-forward="false" selection-start-line="277" selection-start-column="0" selection-end-line="277" selection-end-column="0" />
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding>
-            <element signature="e#31#64#0" expanded="true" />
+            <element signature="e#37#48#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/listHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="196" column="0" lean-forward="false" selection-start-line="196" selection-start-column="0" selection-end-line="196" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/elemHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="581">
-          <caret line="198" column="51" lean-forward="false" selection-start-line="198" selection-start-column="51" selection-end-line="198" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/response.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="700">
-          <caret line="81" column="24" lean-forward="false" selection-start-line="81" selection-start-column="24" selection-end-line="81" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/db.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="242" column="42" lean-forward="false" selection-start-line="242" selection-start-column="42" selection-end-line="242" selection-end-column="42" />
+        <state relative-caret-position="0">
+          <caret line="0" column="17" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding>
             <element signature="e#37#46#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/elemHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hashHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/listHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="28" lean-forward="true" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/response.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/setHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="22" column="8" lean-forward="false" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
-          <folding>
-            <element signature="e#31#64#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="424" column="31" lean-forward="true" selection-start-line="424" selection-start-column="31" selection-end-line="424" selection-end-column="31" />
+        <state relative-caret-position="7089">
+          <caret line="417" column="24" lean-forward="true" selection-start-line="417" selection-start-column="24" selection-end-line="417" selection-end-column="24" />
           <folding>
             <element signature="e#37#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/timer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding>
+            <element signature="e#37#48#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ttlTimer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="8" lean-forward="true" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+          <folding>
+            <element signature="e#37#48#0" expanded="true" />
           </folding>
         </state>
       </provider>

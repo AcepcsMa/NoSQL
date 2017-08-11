@@ -1,8 +1,8 @@
-__author__ = 'Marco'
+__author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
-from db import NoSqlDb
+# from db import NoSqlDb
 
 class listHandler:
     def __init__(self, database):
@@ -60,9 +60,9 @@ class listHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 if(self.database.isListExpired(dbName, listName) is False):
                     result = self.database.insertList(listName, listValue, dbName)
-                    if(result == NoSqlDb.LIST_LOCKED):
+                    if(result == responseCode.LIST_IS_LOCKED):
                         msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                    elif(result == NoSqlDb.LIST_INSERT_SUCCESS):
+                    elif(result == responseCode.LIST_INSERT_SUCCESS):
                         msg = self.makeMessage("List Insert Success", responseCode.LIST_INSERT_SUCCESS, listName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -79,9 +79,9 @@ class listHandler:
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is True):
                 result = self.database.deleteList(listName, dbName)
-                if(result == NoSqlDb.LIST_DELETE_SUCCESS):
+                if(result == responseCode.LIST_DELETE_SUCCESS):
                     msg = self.makeMessage("List Delete Success", responseCode.LIST_DELETE_SUCCESS, listName)
-                elif(result == NoSqlDb.LIST_LOCKED):
+                elif(result == responseCode.LIST_IS_LOCKED):
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -100,11 +100,11 @@ class listHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 if(self.database.isListExpired(dbName, listName) is False):
                     result = self.database.rmFromList(dbName, listName, value)
-                    if(result == NoSqlDb.LIST_NOT_CONTAIN_VALUE):
+                    if(result == responseCode.LIST_NOT_CONTAIN_VALUE):
                         msg = self.makeMessage("List Does Not Contain This Value", responseCode.LIST_NOT_CONTAIN_VALUE, listName)
-                    elif(result == NoSqlDb.LIST_REMOVE_SUCCESS):
+                    elif(result == responseCode.LIST_REMOVE_SUCCESS):
                         msg = self.makeMessage("List Remove Value Success", responseCode.LIST_REMOVE_SUCCESS, listName)
-                    elif(result == NoSqlDb.LIST_LOCKED):
+                    elif(result == responseCode.LIST_IS_LOCKED):
                         msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -122,9 +122,9 @@ class listHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 if(self.database.isListExpired(dbName, listName) is False):
                     result = self.database.clearList(dbName, listName)
-                    if(result == NoSqlDb.LIST_LOCKED):
+                    if(result == responseCode.LIST_IS_LOCKED):
                         msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                    elif(result == NoSqlDb.LIST_CLEAR_SUCCESS):
+                    elif(result == responseCode.LIST_CLEAR_SUCCESS):
                         msg = self.makeMessage("List Clear Success", responseCode.LIST_CLEAR_SUCCESS, listName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -148,9 +148,9 @@ class listHandler:
             if(self.database.isListExpired(dbName, listName1) is False
                and self.database.isListExpired(dbName, listName2) is False):
                 result = self.database.mergeLists(dbName, listName1, listName2, resultListName)
-                if(result == NoSqlDb.LIST_LOCKED):
+                if(result == responseCode.LIST_IS_LOCKED):
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, resultListName)
-                elif(result == NoSqlDb.LIST_MERGE_SUCCESS):
+                elif(result == responseCode.LIST_MERGE_SUCCESS):
                     msg = self.makeMessage("List Merge Success", responseCode.LIST_MERGE_SUCCESS, resultListName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -185,9 +185,9 @@ class listHandler:
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
             else:
                 result = self.database.setListTTL(dbName, listName, ttl)
-                if (result == NoSqlDb.LIST_LOCKED):
+                if (result == responseCode.LIST_IS_LOCKED):
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                elif (result == NoSqlDb.LIST_TTL_SET_SUCCESS):
+                elif (result == responseCode.LIST_TTL_SET_SUCCESS):
                     msg = self.makeMessage("List TTL Set Success", responseCode.LIST_TTL_SET_SUCCESS, listName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -202,9 +202,9 @@ class listHandler:
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
             else:
                 result = self.database.clearListTTL(dbName, listName)
-                if (result == NoSqlDb.LIST_LOCKED):
+                if (result == responseCode.LIST_IS_LOCKED):
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                elif (result == NoSqlDb.LIST_TTL_CLEAR_SUCCESS):
+                elif (result == responseCode.LIST_TTL_CLEAR_SUCCESS):
                     msg = self.makeMessage("List TTL Clear Success", responseCode.ELEM_TTL_CLEAR_SUCCESS,
                                            listName)
                 else:
@@ -217,10 +217,10 @@ class listHandler:
         if(self.isValidType(dbName) and self.isValidType(keyName)):
             if(self.database.isDbExist(dbName)):
                 result = self.database.showTTL(dbName, keyName, "LIST")
-                if(result == NoSqlDb.TTL_NO_RECORD):
+                if(result == responseCode.TTL_NO_RECORD):
                     msg = self.makeMessage("TTL No Record", responseCode.TTL_NO_RECORD, keyName)
-                elif(result == NoSqlDb.TTL_EXPIRED):
-                    msg = self.makeMessage("List TTL Expired", responseCode.SET_EXPIRED, keyName)
+                elif(result == responseCode.TTL_EXPIRED):
+                    msg = self.makeMessage("List TTL Expired", responseCode.LIST_EXPIRED, keyName)
                 else:
                     msg = self.makeMessage("TTL Show Success", responseCode.TTL_SHOW_SUCCESS, result)
             else:

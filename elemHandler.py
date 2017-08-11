@@ -1,8 +1,8 @@
-__author__ = 'Marco'
+__author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
-from db import NoSqlDb
+# from db import NoSqlDb
 
 class elemHandler:
     def __init__(self, database):
@@ -50,11 +50,14 @@ class elemHandler:
             msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
 
         else:   # find the elem in the db
-            if(self.isValidType(elemName)
-               and self.isValidType(elemValue)
-               and self.isValidType(dbName)):
-                self.database.updateElem(elemName, elemValue, dbName)
-                msg = self.makeMessage("Element Update Success", responseCode.ELEM_UPDATE_SUCCESS, elemName)
+            if(self.isValidType(elemName) and self.isValidType(elemValue) and self.isValidType(dbName)):
+                result = self.database.updateElem(elemName, elemValue, dbName)
+                if(result == responseCode.ELEM_IS_LOCKED):
+                    msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
+                elif(result == responseCode.ELEM_UPDATE_SUCCESS):
+                    msg = self.makeMessage("Element Update Success", responseCode.ELEM_UPDATE_SUCCESS, elemName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
             else:
                 msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg
@@ -97,10 +100,10 @@ class elemHandler:
                 if(self.database.isElemExpired(dbName, elemName) is False):
                     if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                         result = self.database.increaseElem(elemName, dbName)
-                        if(result == NoSqlDb.ELEM_INCREASE_SUCCESS):
+                        if(result == responseCode.ELEM_INCR_SUCCESS):
                             data = self.database.getElem(elemName, dbName)
                             msg = self.makeMessage("Element Increase Success", responseCode.ELEM_INCR_SUCCESS, data)
-                        elif(result == NoSqlDb.ELEM_LOCKED):
+                        elif(result == responseCode.ELEM_IS_LOCKED):
                             data = self.database.getElem(elemName, dbName)
                             msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, data)
                         else:
@@ -122,10 +125,10 @@ class elemHandler:
                 if(self.database.isElemExpired(dbName, elemName) is False):
                     if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                         result = self.database.decreaseElem(elemName, dbName)
-                        if(result == NoSqlDb.ELEM_DECREASE_SUCCESS):
+                        if(result == responseCode.ELEM_DECR_SUCCESS):
                             data = self.database.getElem(elemName, dbName)
                             msg = self.makeMessage("Element Decrease Success", responseCode.ELEM_DECR_SUCCESS, data)
-                        elif(result == NoSqlDb.ELEM_LOCKED):
+                        elif(result == responseCode.ELEM_IS_LOCKED):
                             data = self.database.getElem(elemName, dbName)
                             msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, data)
                         else:
@@ -145,9 +148,9 @@ class elemHandler:
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
                 result = self.database.deleteElem(elemName, dbName)
-                if(result == NoSqlDb.ELEM_LOCKED):
+                if(result == responseCode.ELEM_IS_LOCKED):
                     msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                elif(result == NoSqlDb.ELEM_DELETE_SUCCESS):
+                elif(result == responseCode.ELEM_DELETE_SUCCESS):
                     msg = self.makeMessage("Element Delete Success", responseCode.ELEM_DELETE_SUCCESS, elemName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -162,9 +165,9 @@ class elemHandler:
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
                 result = self.database.setElemTTL(dbName, elemName, ttl)
-                if(result == NoSqlDb.ELEM_LOCKED):
+                if(result == responseCode.ELEM_IS_LOCKED):
                     msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                elif(result == NoSqlDb.ELEM_TTL_SET_SUCCESS):
+                elif(result == responseCode.ELEM_TTL_SET_SUCCESS):
                     msg = self.makeMessage("Element TTL Set Success", responseCode.ELEM_TTL_SET_SUCCESS, elemName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -179,10 +182,10 @@ class elemHandler:
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
                 result = self.database.clearElemTTL(dbName, elemName)
-                if(result == NoSqlDb.ELEM_LOCKED):
+                if(result == responseCode.ELEM_IS_LOCKED):
                     msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                elif(result == NoSqlDb.ELEM_TTL_CLEAR_SUCCESS):
-                    msg = self.makeMessage("Elemet TTL Clear Success", responseCode.ELEM_TTL_CLEAR_SUCCESS, elemName)
+                elif(result == responseCode.ELEM_TTL_CLEAR_SUCCESS):
+                    msg = self.makeMessage("Element TTL Clear Success", responseCode.ELEM_TTL_CLEAR_SUCCESS, elemName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:
@@ -193,10 +196,10 @@ class elemHandler:
         if(self.isValidType(dbName) and self.isValidType(keyName)):
             if(self.database.isDbExist(dbName)):
                 result = self.database.showTTL(dbName, keyName, "ELEM")
-                if(result == NoSqlDb.TTL_NO_RECORD):
+                if(result == responseCode.TTL_NO_RECORD):
                     msg = self.makeMessage("TTL No Record", responseCode.TTL_NO_RECORD, keyName)
-                elif(result == NoSqlDb.TTL_EXPIRED):
-                    msg = self.makeMessage("Element TTL Expired", responseCode.SET_EXPIRED, keyName)
+                elif(result == responseCode.TTL_EXPIRED):
+                    msg = self.makeMessage("Element TTL Expired", responseCode.ELEM_EXPIRED, keyName)
                 else:
                     msg = self.makeMessage("TTL Show Success", responseCode.TTL_SHOW_SUCCESS, result)
             else:

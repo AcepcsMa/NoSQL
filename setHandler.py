@@ -1,8 +1,8 @@
-__author__ = 'Marco'
+__author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
-from db import NoSqlDb
+# from db import NoSqlDb
 
 class setHandler:
     def __init__(self, database):
@@ -33,7 +33,7 @@ class setHandler:
         if(self.isValidType(dbName) and self.isValidType(setName)):
             if(self.database.isSetExist(dbName, setName) is False):
                 result = self.database.createSet(dbName, setName)
-                if(result == NoSqlDb.SET_CREATE_SUCCESS):
+                if(result == responseCode.SET_CREATE_SUCCESS):
                     msg = self.makeMessage("Set Create Success", responseCode.SET_CREATE_SUCCESS, setName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -64,11 +64,11 @@ class setHandler:
             if(self.database.isSetExist(dbName, setName)):
                 if(self.database.isSetExpired(dbName, setName) is False):
                     result = self.database.insertSet(dbName, setName, setValue)
-                    if(result == NoSqlDb.SET_LOCKED):
+                    if(result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
-                    elif(result == NoSqlDb.SET_VALUE_ALREADY_EXIST):
+                    elif(result == responseCode.SET_VALUE_ALREADY_EXIST):
                         msg = self.makeMessage("Set Value Already Exists", responseCode.SET_VALUE_ALREADY_EXIST, setValue)
-                    elif(result == NoSqlDb.SET_INSERT_SUCCESS):
+                    elif(result == responseCode.SET_INSERT_SUCCESS):
                         msg = self.makeMessage("Set Insert Success", responseCode.SET_INSERT_SUCCESS, setName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -86,11 +86,11 @@ class setHandler:
             if(self.database.isSetExist(dbName, setName)):
                 if(self.database.isSetExpired(dbName, setName) is False):
                     result = self.database.rmFromSet(dbName, setName, setValue)
-                    if(result == NoSqlDb.SET_LOCKED):
+                    if(result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
-                    elif(result == NoSqlDb.SET_VALUE_NOT_EXISTED):
+                    elif(result == responseCode.SET_VALUE_NOT_EXIST):
                         msg = self.makeMessage("Set Value Does Not Exist", responseCode.SET_VALUE_NOT_EXIST, setValue)
-                    elif(result == NoSqlDb.SET_REMOVE_SUCCESS):
+                    elif(result == responseCode.SET_REMOVE_SUCCESS):
                         msg = self.makeMessage("Set Remove Success", responseCode.SET_REMOVE_SUCCESS, setValue)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -108,9 +108,9 @@ class setHandler:
             if(self.database.isSetExist(dbName, setName)):
                 if(self.database.isSetExpired(dbName, setName) is False):
                     result = self.database.clearSet(dbName, setName)
-                    if(result == NoSqlDb.SET_LOCKED):
+                    if(result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
-                    elif(result == NoSqlDb.SET_CLEAR_SUCCESS):
+                    elif(result == responseCode.SET_CLEAR_SUCCESS):
                         msg = self.makeMessage("Set Clear Success", responseCode.SET_CLEAR_SUCCESS, setName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -128,10 +128,10 @@ class setHandler:
             if (self.database.isSetExist(dbName, setName)):
                 if(self.database.isSetExpired(dbName, setName) is False):
                     result = self.database.deleteSet(dbName, setName)
-                    if (result == NoSqlDb.SET_LOCKED):
+                    if (result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
-                    elif (result == NoSqlDb.SET_DELETE_SUCCESS):
-                        msg = self.makeMessage("Set Delete Success", responseCode.SET_CLEAR_SUCCESS, setName)
+                    elif (result == responseCode.SET_DELETE_SUCCESS):
+                        msg = self.makeMessage("Set Delete Success", responseCode.SET_DELETE_SUCCESS, setName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
                 else:
@@ -172,9 +172,9 @@ class setHandler:
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
                     unionResult = []
                     result = self.database.unionSet(dbName, setName1, setName2, unionResult)
-                    if(result == NoSqlDb.SET_LOCKED):
+                    if(result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, "{0} or {1}".format(setName1, setName2))
-                    elif(result == NoSqlDb.SET_UNION_SUCCESS):
+                    elif(result == responseCode.SET_UNION_SUCCESS):
                         msg = self.makeMessage("Set Union Success", responseCode.SET_UNION_SUCCESS, unionResult[0])
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -195,10 +195,10 @@ class setHandler:
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
                     intersectResult = []
                     result = self.database.intersectSet(dbName, setName1, setName2, intersectResult)
-                    if (result == NoSqlDb.SET_LOCKED):
+                    if (result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED,
                                                "{0} or {1}".format(setName1, setName2))
-                    elif (result == NoSqlDb.SET_INTERSECT_SUCCESS):
+                    elif (result == responseCode.SET_INTERSECT_SUCCESS):
                         msg = self.makeMessage("Set Intersect Success", responseCode.SET_INTERSECT_SUCCESS, intersectResult[0])
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -220,10 +220,10 @@ class setHandler:
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
                     diffResult = []
                     result = self.database.diffSet(dbName, setName1, setName2, diffResult)
-                    if (result == NoSqlDb.SET_LOCKED):
+                    if(result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED,
                                                "{0} or {1}".format(setName1, setName2))
-                    elif (result == NoSqlDb.SET_DIFF_SUCCESS):
+                    elif(result == responseCode.SET_DIFF_SUCCESS):
                         msg = self.makeMessage("Set Diff Success", responseCode.SET_DIFF_SUCCESS, diffResult[0])
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -243,9 +243,9 @@ class setHandler:
             if (self.database.isSetExist(dbName, setName) is True):
                 if(self.database.isSetExpired(dbName, setName) is False):
                     result = self.database.replaceSet(dbName, setName, setValue)
-                    if (result == NoSqlDb.SET_LOCKED):
+                    if (result == responseCode.SET_IS_LOCKED):
                         msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
-                    elif (result == NoSqlDb.SET_REPLACE_SUCCESS):
+                    elif (result == responseCode.SET_REPLACE_SUCCESS):
                         msg = self.makeMessage("Set Replace Success", responseCode.SET_REPLACE_SUCCESS, setName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -264,9 +264,9 @@ class setHandler:
                 msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
             else:
                 result = self.database.setSetTTL(dbName, setName, ttl)
-                if (result == NoSqlDb.SET_LOCKED):
+                if (result == responseCode.SET_IS_LOCKED):
                     msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
-                elif (result == NoSqlDb.SET_TTL_SET_SUCCESS):
+                elif (result == responseCode.SET_TTL_SET_SUCCESS):
                     msg = self.makeMessage("Set TTL Set Success", responseCode.SET_TTL_SET_SUCCESS, setName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -281,9 +281,9 @@ class setHandler:
                 msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
             else:
                 result = self.database.clearSetTTL(dbName, setName)
-                if (result == NoSqlDb.SET_LOCKED):
+                if (result == responseCode.SET_IS_LOCKED):
                     msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, setName)
-                elif (result == NoSqlDb.SET_TTL_CLEAR_SUCCESS):
+                elif (result == responseCode.SET_TTL_CLEAR_SUCCESS):
                     msg = self.makeMessage("Set TTL Clear Success", responseCode.SET_TTL_CLEAR_SUCCESS,
                                            setName)
                 else:
@@ -296,9 +296,9 @@ class setHandler:
         if(self.isValidType(dbName) and self.isValidType(keyName)):
             if(self.database.isDbExist(dbName)):
                 result = self.database.showTTL(dbName, keyName, "SET")
-                if(result == NoSqlDb.TTL_NO_RECORD):
+                if(result == responseCode.TTL_NO_RECORD):
                     msg = self.makeMessage("TTL No Record", responseCode.TTL_NO_RECORD, keyName)
-                elif(result == NoSqlDb.TTL_EXPIRED):
+                elif(result == responseCode.TTL_EXPIRED):
                     msg = self.makeMessage("Set TTL Expired", responseCode.SET_EXPIRED, keyName)
                 else:
                     msg = self.makeMessage("TTL Show Success", responseCode.TTL_SHOW_SUCCESS, result)

@@ -1,8 +1,8 @@
-__author__ = 'Marco'
+__author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
-from db import NoSqlDb
+# from db import NoSqlDb
 
 class hashHandler:
     def __init__(self, database):
@@ -36,9 +36,9 @@ class hashHandler:
     def createHash(self, dbName, hashName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             result = self.database.createHash(dbName, hashName)
-            if(result == NoSqlDb.HASH_CREATE_SUCCESS):
+            if(result == responseCode.HASH_CREATE_SUCCESS):
                 msg = self.makeMessage("Hash Create Success", responseCode.HASH_CREATE_SUCCESS, hashName)
-            elif(result == NoSqlDb.HASH_EXISTED):
+            elif(result == responseCode.HASH_EXISTED):
                 msg = self.makeMessage("Hash Already Exists", responseCode.HASH_EXISTED, hashName)
             else:
                 msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -67,9 +67,9 @@ class hashHandler:
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isHashExpired(dbName, hashName) is False):
                     result = self.database.insertHash(dbName, hashName, keyName, value)
-                    if(result == NoSqlDb.HASH_LOCKED):
+                    if(result == responseCode.HASH_IS_LOCKED):
                         msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                    elif(result == NoSqlDb.HASH_INSERT_SUCCESS):
+                    elif(result == responseCode.HASH_INSERT_SUCCESS):
                         msg = self.makeMessage("Hash Insert Success", responseCode.HASH_INSERT_SUCCESS, hashName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -106,9 +106,9 @@ class hashHandler:
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName)):
                 result = self.database.deleteHash(dbName, hashName)
-                if(result == NoSqlDb.HASH_LOCKED):
+                if(result == responseCode.HASH_IS_LOCKED):
                     msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                elif(result == NoSqlDb.HASH_DELETE_SUCCESS):
+                elif(result == responseCode.HASH_DELETE_SUCCESS):
                     msg = self.makeMessage("Hash Delete Success", responseCode.HASH_DELETE_SUCCESS, hashName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -124,9 +124,9 @@ class hashHandler:
             if(self.database.isKeyExist(dbName, hashName, keyName) is True):
                 if(self.database.isHashExpired(dbName, hashName) is False):
                     result = self.database.rmFromHash(dbName, hashName, keyName)
-                    if(result == NoSqlDb.HASH_LOCKED):
+                    if(result == responseCode.HASH_IS_LOCKED):
                         msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                    elif(result == NoSqlDb.HASH_REMOVE_SUCCESS):
+                    elif(result == responseCode.HASH_REMOVE_SUCCESS):
                         msg = self.makeMessage("Hash Key Remove Success", responseCode.HASH_REMOVE_SUCCESS, keyName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -144,9 +144,9 @@ class hashHandler:
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isHashExpired(dbName, hashName) is False):
                     result = self.database.clearHash(dbName, hashName)
-                    if(result == NoSqlDb.HASH_LOCKED):
+                    if(result == responseCode.HASH_IS_LOCKED):
                         msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                    elif(result == NoSqlDb.HASH_CLEAR_SUCCESS):
+                    elif(result == responseCode.HASH_CLEAR_SUCCESS):
                         msg = self.makeMessage("Hash Clear Success", responseCode.HASH_CLEAR_SUCCESS, hashName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -165,9 +165,9 @@ class hashHandler:
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isHashExpired(dbName, hashName) is False):
                     result = self.database.replaceHash(dbName, hashName, hashValue)
-                    if(result == NoSqlDb.HASH_LOCKED):
+                    if(result == responseCode.HASH_IS_LOCKED):
                         msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                    elif(result == NoSqlDb.HASH_REPLACE_SUCCESS):
+                    elif(result == responseCode.HASH_REPLACE_SUCCESS):
                         msg = self.makeMessage("Hash Replace Success", responseCode.HASH_REPLACE_SUCCESS, hashName)
                     else:
                         msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -191,9 +191,9 @@ class hashHandler:
             if(self.database.isHashExpired(dbName, hashName1) is False
                and self.database.isHashExpired(dbName, hashName2) is False):
                 result = self.database.mergeHashs(dbName, hashName1, hashName2, resultHashName, mergeMode)
-                if (result == NoSqlDb.HASH_LOCKED):
+                if (result == responseCode.HASH_IS_LOCKED):
                     msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, resultHashName)
-                elif (result == NoSqlDb.HASH_MERGE_SUCCESS):
+                elif (result == responseCode.HASH_MERGE_SUCCESS):
                     msg = self.makeMessage("Hash Merge Success", responseCode.HASH_MERGE_SUCCESS, resultHashName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -232,9 +232,9 @@ class hashHandler:
                 msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
             else:
                 result = self.database.setHashTTL(dbName, hashName, ttl)
-                if (result == NoSqlDb.HASH_LOCKED):
+                if (result == responseCode.HASH_IS_LOCKED):
                     msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                elif (result == NoSqlDb.HASH_TTL_SET_SUCCESS):
+                elif (result == responseCode.HASH_TTL_SET_SUCCESS):
                     msg = self.makeMessage("Hash TTL Set Success", responseCode.HASH_TTL_SET_SUCCESS, hashName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
@@ -249,9 +249,9 @@ class hashHandler:
                 msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
             else:
                 result = self.database.clearHashTTL(dbName, hashName)
-                if (result == NoSqlDb.HASH_LOCKED):
+                if (result == responseCode.HASH_IS_LOCKED):
                     msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                elif (result == NoSqlDb.HASH_TTL_CLEAR_SUCCESS):
+                elif (result == responseCode.HASH_TTL_CLEAR_SUCCESS):
                     msg = self.makeMessage("Hash TTL Clear Success", responseCode.HASH_TTL_CLEAR_SUCCESS,
                                            hashName)
                 else:
@@ -264,10 +264,10 @@ class hashHandler:
         if(self.isValidType(dbName) and self.isValidType(keyName)):
             if(self.database.isDbExist(dbName)):
                 result = self.database.showTTL(dbName, keyName, "HASH")
-                if(result == NoSqlDb.TTL_NO_RECORD):
+                if(result == responseCode.TTL_NO_RECORD):
                     msg = self.makeMessage("TTL No Record", responseCode.TTL_NO_RECORD, keyName)
-                elif(result == NoSqlDb.TTL_EXPIRED):
-                    msg = self.makeMessage("Hash TTL Expired", responseCode.SET_EXPIRED, keyName)
+                elif(result == responseCode.TTL_EXPIRED):
+                    msg = self.makeMessage("Hash TTL Expired", responseCode.HASH_EXPIRED, keyName)
                 else:
                     msg = self.makeMessage("TTL Show Success", responseCode.TTL_SHOW_SUCCESS, result)
             else:

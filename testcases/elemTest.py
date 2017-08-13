@@ -155,15 +155,37 @@ class elemTest:
         response = requests.post(errorUrl, json=params)
         self.writeLog(errorUrl, json.dumps(params), response.content.decode())
 
+    # test search element function
+    def searchElemTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/searchElem/{0}/{1}"
+
+        # create 5 elements: elem1, abc, abcde, e1, c*
+        elemNames = ["elem1","abc","abcde","e1","*c*"]
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeElem"
+        for elemName in elemNames:
+            params = {
+                "dbName": "db0",
+                "elemName": elemName,
+                "elemValue": 1
+            }
+            response = requests.post(createUrl, json=params)
+
+        # case1 search by expression "e*"
+        tempUrl = url.format("db0","e*")
+        response = requests.get(tempUrl)
+        self.writeLog(tempUrl, "", response.content.decode())
 
 if __name__ == "__main__":
     test = elemTest()
 
     # testing CREATE function
-    test.createElemTest()
+    #test.createElemTest()
 
     # testing GET function
     #test.getElemTest()
 
     # testing UPDATE function
-    test.updateElemTest()
+    #test.updateElemTest()
+
+    # testing SEARCH function
+    test.searchElemTest()

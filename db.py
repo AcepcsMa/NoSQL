@@ -166,7 +166,8 @@ class NoSqlDb:
             logInfo = "Search Fail {0} {1}"
         for name in names:
             try:
-                searchResult.add(re.findall("({})".format(expression),name)[0])
+                if(len(re.findall("({})".format(expression),name)) > 0):
+                    searchResult.add(name)
             except:
                 continue
         self.logger.info(logInfo.format(dbName, expression))

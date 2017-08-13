@@ -41,7 +41,6 @@ class elemTest:
             "elemName" : "elem1",
             "elemValue" : 1
         }
-
         response = requests.post(url, json=params)
         self.writeLog(url, json.dumps(params), response.content.decode())
 
@@ -106,8 +105,65 @@ class elemTest:
         response = requests.get(errorUrl)
         self.writeLog(errorUrl, "", response.content.decode())
 
+    # test update element function
+    def updateElemTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/updateElem"
+
+        # case1 update an existed element
+        params = {
+            "dbName" : "db0",
+            "elemName" : "elem1",
+            "elemValue" : 2
+        }
+        response = requests.post(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
+
+        # case2 update a non-existed element
+        params = {
+            "dbName" : "db0",
+            "elemName" : "elem2",
+            "elemValue" : 2
+        }
+        response = requests.post(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
+
+        # case3 unknown database name
+        params = {
+            "dbName" : "db999",
+            "elemName" : "elem1",
+            "elemValue" : 1
+        }
+        response = requests.post(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
+
+        # case4 error value type
+        params = {
+            "dbName" : "db0",
+            "elemName" : "elem1",
+            "elemValue" : [1,2,3]
+        }
+        response = requests.post(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
+
+        # case5 error url
+        params = {
+            "dbName" : "db0",
+            "elemName" : "elem1",
+            "elemValue" : 1
+        }
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/updateelem"
+        response = requests.post(errorUrl, json=params)
+        self.writeLog(errorUrl, json.dumps(params), response.content.decode())
+
 
 if __name__ == "__main__":
     test = elemTest()
+
+    # testing CREATE function
     test.createElemTest()
-    test.getElemTest()
+
+    # testing GET function
+    #test.getElemTest()
+
+    # testing UPDATE function
+    test.updateElemTest()

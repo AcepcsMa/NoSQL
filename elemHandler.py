@@ -29,9 +29,13 @@ class elemHandler:
         if(self.isValidType(elemName) and self.isValidType(elemValue) and self.isValidType(dbName)): # check the type of elem name and elem value
             if(self.database.isDbExist(dbName)):
                 if(self.database.isElemExist(dbName, elemName) is False):
-                    self.database.createElem(elemName, elemValue, dbName)
-                    msg = self.makeMessage("Make Element Success", responseCode.ELEM_CREATE_SUCCESS, elemName)
-
+                    result = self.database.createElem(dbName, elemName, elemValue)
+                    if(result == responseCode.KEY_NAME_INVALID):
+                        msg = self.makeMessage("Elem Name Is Invalid", responseCode.KEY_NAME_INVALID, elemName)
+                    elif(result == responseCode.ELEM_CREATE_SUCCESS):
+                        msg = self.makeMessage("Make Element Success", responseCode.ELEM_CREATE_SUCCESS, elemName)
+                    else:
+                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
                 else:   # this elem already exists in the db
                     msg = self.makeMessage("Element Already Exists", responseCode.ELEM_ALREADY_EXIST, elemName)
             else:

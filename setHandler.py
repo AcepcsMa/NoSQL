@@ -34,6 +34,8 @@ class setHandler:
                 result = self.database.createSet(dbName, setName)
                 if(result == responseCode.SET_CREATE_SUCCESS):
                     msg = self.makeMessage("Set Create Success", responseCode.SET_CREATE_SUCCESS, setName)
+                elif(result == responseCode.KEY_NAME_INVALID):
+                    msg = self.makeMessage("Set Name Is Invalid", responseCode.KEY_NAME_INVALID, setName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
             else:

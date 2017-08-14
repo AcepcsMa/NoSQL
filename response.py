@@ -82,3 +82,4 @@ class responseCode:
     TTL_EXPIRED = 75
     DATA_TYPE_ERROR = 76
     SET_DELETE_SUCCESS = 77
+    KEY_NAME_INVALID = 78

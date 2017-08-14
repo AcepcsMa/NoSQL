@@ -39,6 +39,8 @@ class hashHandler:
                 msg = self.makeMessage("Hash Create Success", responseCode.HASH_CREATE_SUCCESS, hashName)
             elif(result == responseCode.HASH_EXISTED):
                 msg = self.makeMessage("Hash Already Exists", responseCode.HASH_EXISTED, hashName)
+            elif(result == responseCode.KEY_NAME_INVALID):
+                msg = self.makeMessage("Hash Name Is Invalid", responseCode.KEY_NAME_INVALID, hashName)
             else:
                 msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:

@@ -22,6 +22,21 @@ def saveTrigger(func):
         return result
     return trigger
 
+# a decorator checking key name validity
+def keyNameValidity(func):
+    def checkValidity(*args, **kwargs):
+        lowercase = [chr(i) for i in range(97,123)]
+        uppercase = [chr(i) for i in range(65,91)]
+        underline = ["_"]
+        keyName = args[2]
+        if(keyName[0] not in lowercase and keyName[0] not in uppercase
+             and keyName[0] not in underline):
+            return responseCode.KEY_NAME_INVALID
+        else:
+            result = func(*args, **kwargs)
+            return result
+    return checkValidity
+
 class NoSqlDb:
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -226,8 +241,9 @@ class NoSqlDb:
             else:
                 return False
 
+    @keyNameValidity
     @saveTrigger
-    def createElem(self, elemName, value, dbName):
+    def createElem(self, dbName, elemName, value):
         self.lockElem(dbName, elemName) # lock this element avoiding r/w implements
         self.elemName[dbName].add(elemName)
         self.elemDict[dbName][elemName] = value
@@ -329,8 +345,9 @@ class NoSqlDb:
             self.unlockElem(dbName, elemName)
             return responseCode.ELEM_TTL_CLEAR_SUCCESS
 
+    @keyNameValidity
     @saveTrigger
-    def createList(self, listName, dbName):
+    def createList(self, dbName, listName):
         self.lockList(dbName, listName)
         self.listName[dbName].add(listName)
         self.listDict[dbName][listName] = list()
@@ -451,6 +468,7 @@ class NoSqlDb:
             self.unlockList(dbName, listName)
             return responseCode.LIST_TTL_CLEAR_SUCCESS
 
+    @keyNameValidity
     @saveTrigger
     def createHash(self, dbName, hashName):
         if(self.isHashExist(dbName,hashName) is False):
@@ -589,6 +607,7 @@ class NoSqlDb:
             self.unlockHash(dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
 
+    @keyNameValidity
     @saveTrigger
     def createSet(self, dbName, setName):
         self.lockSet(dbName, setName)

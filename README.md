@@ -15,8 +15,15 @@ Create some common data structures and realize related interfaces, offering publ
 3. Develop a stable client program and server program for use.
 
 # To Do List
-+ Build SET & ZSET structures and realize related interfaces.
-+ Write test cases, test interfaces for *ELEM*,*HASH*,*LIST*.
++ Build data structures and realize related interfaces of
+	+ ~~*SET*~~
+	+ *ZSET*
++ Write test cases for 
+	+ *ELEM*
+	+ *HASH*,
+	+ *LIST*,
+	+ *SET*,
+	+ *ZSET*.
 + Develop client program for display.
 + Add Security and authentication module.
 + Develop advanced data structures(e.g. graph).

@@ -1,0 +1,72 @@
+DATE: 2017/08/14 20:39:58
+URL: http://localhost:3080/searchElem/db0/e*
+PARAMS: 
+RESPONSE: {
+  "data": [
+    "elem1", 
+    "abcde", 
+    "e1"
+  ], 
+  "msg": "Search Element Success", 
+  "typeCode": 8
+}
+
+DATE: 2017/08/14 20:39:58
+URL: http://localhost:3080/searchElem/db0/elem*
+PARAMS: 
+RESPONSE: {
+  "data": [
+    "elem1"
+  ], 
+  "msg": "Search Element Success", 
+  "typeCode": 8
+}
+
+DATE: 2017/08/14 20:39:58
+URL: http://localhost:3080/searchElem/db0/abc*
+PARAMS: 
+RESPONSE: {
+  "data": [
+    "abc", 
+    "abcde"
+  ], 
+  "msg": "Search Element Success", 
+  "typeCode": 8
+}
+
+DATE: 2017/08/14 20:39:58
+URL: http://localhost:3080/searchElem/db0/c*
+PARAMS: 
+RESPONSE: {
+  "data": [
+    "abc", 
+    "abcde", 
+    "c*"
+  ], 
+  "msg": "Search Element Success", 
+  "typeCode": 8
+}
+
+DATE: 2017/08/14 20:39:58
+URL: http://localhost:3080/searchElem/db0/*
+PARAMS: 
+RESPONSE: {
+  "data": [
+    "elem1", 
+    "abcde", 
+    "abc", 
+    "e1", 
+    "c*"
+  ], 
+  "msg": "Search Element Success", 
+  "typeCode": 8
+}
+
+DATE: 2017/08/14 20:39:58
+URL: http://localhost:3080/searchelem/{0}/{1}
+PARAMS: 
+RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>
+

@@ -84,6 +84,15 @@ class elemTest:
         response = requests.post(url, json=params)
         self.writeLog(url, json.dumps(params), response.content.decode())
 
+        # case7 invalid element name
+        params = {
+            "dbName": "db0",
+            "elemName": "!*@&abc",
+            "elemValue": 123
+        }
+        response = requests.post(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
+
     # test get element function
     def getElemTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/getElem/{0}/{1}"
@@ -160,7 +169,7 @@ class elemTest:
         url = "http://" + self.host + ":" + str(self.port) + "/searchElem/{0}/{1}"
 
         # create 5 elements: elem1, abc, abcde, e1, c*
-        elemNames = ["elem1","abc","abcde","e1","*c*"]
+        elemNames = ["elem1","abc","abcde","e1","c*"]
         createUrl = "http://" + self.host + ":" + str(self.port) + "/makeElem"
         for elemName in elemNames:
             params = {
@@ -174,6 +183,32 @@ class elemTest:
         tempUrl = url.format("db0","e*")
         response = requests.get(tempUrl)
         self.writeLog(tempUrl, "", response.content.decode())
+
+        # case2 search by expression "elem*"
+        tempUrl = url.format("db0", "elem*")
+        response = requests.get(tempUrl)
+        self.writeLog(tempUrl, "", response.content.decode())
+
+        # case3 search by expression "abc*"
+        tempUrl = url.format("db0", "abc*")
+        response = requests.get(tempUrl)
+        self.writeLog(tempUrl, "", response.content.decode())
+
+        # case4 search by expression "c*"
+        tempUrl = url.format("db0", "c*")
+        response = requests.get(tempUrl)
+        self.writeLog(tempUrl, "", response.content.decode())
+
+        # case5 search by expression "*"
+        tempUrl = url.format("db0", "*")
+        response = requests.get(tempUrl)
+        self.writeLog(tempUrl, "", response.content.decode())
+
+        # case6 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/searchelem/{0}/{1}"
+        response = requests.get(errorUrl)
+        self.writeLog(errorUrl, "", response.content.decode())
+
 
 if __name__ == "__main__":
     test = elemTest()

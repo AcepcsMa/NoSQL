@@ -1,69 +1,41 @@
-DATE: 2017/08/14 20:39:58
-URL: http://localhost:3080/searchElem/db0/e*
+DATE: 2017/08/16 22:45:51
+URL: http://localhost:3080/decreaseElem/db0/decElem
 PARAMS: 
 RESPONSE: {
-  "data": [
-    "elem1", 
-    "abcde", 
-    "e1"
-  ], 
-  "msg": "Search Element Success", 
-  "typeCode": 8
+  "data": 0, 
+  "msg": "Element Decrease Success", 
+  "typeCode": 7
 }
 
-DATE: 2017/08/14 20:39:58
-URL: http://localhost:3080/searchElem/db0/elem*
+DATE: 2017/08/16 22:45:51
+URL: http://localhost:3080/decreaseElem/db0/dElem
 PARAMS: 
 RESPONSE: {
-  "data": [
-    "elem1"
-  ], 
-  "msg": "Search Element Success", 
-  "typeCode": 8
+  "data": "dElem", 
+  "msg": "Element Does Not Exist", 
+  "typeCode": 3
 }
 
-DATE: 2017/08/14 20:39:58
-URL: http://localhost:3080/searchElem/db0/abc*
+DATE: 2017/08/16 22:45:51
+URL: http://localhost:3080/decreaseElem/db88/decElem
 PARAMS: 
 RESPONSE: {
-  "data": [
-    "abc", 
-    "abcde"
-  ], 
-  "msg": "Search Element Success", 
-  "typeCode": 8
+  "data": "decElem", 
+  "msg": "Element Does Not Exist", 
+  "typeCode": 3
 }
 
-DATE: 2017/08/14 20:39:58
-URL: http://localhost:3080/searchElem/db0/c*
+DATE: 2017/08/16 22:45:51
+URL: http://localhost:3080/decreaseElem/db0/decELem1
 PARAMS: 
 RESPONSE: {
-  "data": [
-    "abc", 
-    "abcde", 
-    "c*"
-  ], 
-  "msg": "Search Element Success", 
-  "typeCode": 8
+  "data": "decElem1", 
+  "msg": "Element Type Error", 
+  "typeCode": 0
 }
 
-DATE: 2017/08/14 20:39:58
-URL: http://localhost:3080/searchElem/db0/*
-PARAMS: 
-RESPONSE: {
-  "data": [
-    "elem1", 
-    "abcde", 
-    "abc", 
-    "e1", 
-    "c*"
-  ], 
-  "msg": "Search Element Success", 
-  "typeCode": 8
-}
-
-DATE: 2017/08/14 20:39:58
-URL: http://localhost:3080/searchelem/{0}/{1}
+DATE: 2017/08/16 22:45:51
+URL: http://localhost:3080/decreaseelem/db0/decElem
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

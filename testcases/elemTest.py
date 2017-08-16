@@ -209,6 +209,81 @@ class elemTest:
         response = requests.get(errorUrl)
         self.writeLog(errorUrl, "", response.content.decode())
 
+    # test increase element function
+    def increaseElemTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/increaseElem/{0}/{1}"
+
+        # case1 create an elem and increase it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeElem"
+        params = {
+            "dbName": "db0",
+            "elemName": "incElem",
+            "elemValue": 1
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0","incElem"))
+        self.writeLog(url.format("db0","incElem"),"",response.content.decode())
+
+        # case2 unknown element name
+        response = requests.get(url.format("db0", "iElem"))
+        self.writeLog(url.format("db0","iElem"),"",response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db100", "incElem"))
+        self.writeLog(url.format("db100","incElem"),"",response.content.decode())
+
+        # case4 error element value type (string)
+        params = {
+            "dbName": "db0",
+            "elemName": "incElem1",
+            "elemValue": "lol"
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0", "incElem1"))
+        self.writeLog(url.format("db0","incElem1"),"",response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/increaseelem/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "incElem"))
+        self.writeLog(errorUrl.format("db0","incElem"),"",response.content.decode())
+
+    # test decrease element function
+    def decreaseElemTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/decreaseElem/{0}/{1}"
+
+        # case1 create an elem and decrease it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeElem"
+        params = {
+            "dbName": "db0",
+            "elemName": "decElem",
+            "elemValue": 1
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0","decElem"))
+        self.writeLog(url.format("db0","decElem"),"",response.content.decode())
+
+        # case2 unknown element name
+        response = requests.get(url.format("db0", "dElem"))
+        self.writeLog(url.format("db0","dElem"),"",response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db88", "decElem"))
+        self.writeLog(url.format("db88","decElem"),"",response.content.decode())
+
+        # case4 error element value type (string)
+        params = {
+            "dbName": "db0",
+            "elemName": "decElem1",
+            "elemValue": "abc"
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0", "decElem1"))
+        self.writeLog(url.format("db0","decELem1"),"",response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/decreaseelem/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "decElem"))
+        self.writeLog(errorUrl.format("db0","decElem"),"",response.content.decode())
 
 if __name__ == "__main__":
     test = elemTest()
@@ -223,4 +298,10 @@ if __name__ == "__main__":
     #test.updateElemTest()
 
     # testing SEARCH function
-    test.searchElemTest()
+    #test.searchElemTest()
+
+    # testing INCREASE function
+    #test.increaseElemTest()
+
+    # testing DECREASE function
+    test.decreaseElemTest()

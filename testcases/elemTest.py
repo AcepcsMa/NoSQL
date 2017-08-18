@@ -285,6 +285,114 @@ class elemTest:
         response = requests.get(errorUrl.format("db0", "decElem"))
         self.writeLog(errorUrl.format("db0","decElem"),"",response.content.decode())
 
+    # test delete element function
+    def deleteElemTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/deleteElem/{0}/{1}"
+
+        # case1 create an elem and delete it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeElem"
+        params = {
+            "dbName": "db0",
+            "elemName": "elem1",
+            "elemValue": 1
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0","elem1"))
+        self.writeLog(url.format("db0","elem1"),"",response.content.decode())
+
+        # case2 delete the same element repeatedly
+        response = requests.get(url.format("db0","elem1"))
+        self.writeLog(url.format("db0","elem1"),"",response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db100","elem1"))
+        self.writeLog(url.format("db100","elem1"),"",response.content.decode())
+
+        # case4 unknown element name
+        response = requests.get(url.format("db0","elem100"))
+        self.writeLog(url.format("db0","elem100"),"",response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/deleteeelem/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "elem1"))
+        self.writeLog(errorUrl.format("db0","elem1"),"",response.content.decode())
+
+    # test set TTL function
+    def setTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/setElemTTL/{0}/{1}/{2}"
+
+        # case1 create an elem and set TTL
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeElem"
+        params = {
+            "dbName": "db0",
+            "elemName": "elem1",
+            "elemValue": 1
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0","elem1",15))
+        self.writeLog(url.format("db0","elem1",15),"",response.content.decode())
+
+        # case2 unknown database name
+        response = requests.get(url.format("db99","elem1",15))
+        self.writeLog(url.format("db99","elem1",15),"",response.content.decode())
+
+        # case3 unknown element name
+        response = requests.get(url.format("db0","elem999",15))
+        self.writeLog(url.format("db0","elem999",15),"",response.content.decode())
+
+        # case4 TTL is not Int type
+        response = requests.get(url.format("db0","elem1","lol"))
+        self.writeLog(url.format("db0","elem1","lol"),"",response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setttl/{0}/{1}/{2}"
+        response = requests.get(errorUrl.format("db0", "elem1",15))
+        self.writeLog(errorUrl.format("db0","elem1",15),"",response.content.decode())
+
+    # test clear TTL function
+    def clearTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/clearElemTTL/{0}/{1}"
+
+        # case1 set a TTL and then clear it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeElem"
+        setUrl = "http://" + self.host + ":" + str(self.port) + "/setElemTTL/{0}/{1}/{2}"
+        params = {
+            "dbName": "db0",
+            "elemName": "elem1",
+            "elemValue": 1
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(setUrl.format("db0","elem1",15))
+        response = requests.get(url.format("db0","elem1"))
+        self.writeLog(url.format("db0","elem1"),"",response.content.decode())
+
+        # case2 clear TTL repeatedly
+        response = requests.get(url.format("db0","elem1"))
+        self.writeLog(url.format("db0","elem1"),"",response.content.decode())
+
+        # case3 clear non-existed TTL
+        params = {
+            "dbName": "db0",
+            "elemName": "elem2",
+            "elemValue": 1
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0","elem2"))
+        self.writeLog(url.format("db0","elem2"),"",response.content.decode())
+
+        # case4 unknown database name
+        response = requests.get(url.format("db999","elem1"))
+        self.writeLog(url.format("db999","elem2"),"",response.content.decode())
+
+        # case5 unknown element name
+        response = requests.get(url.format("db0","elem111"))
+        self.writeLog(url.format("db0","elem111"),"",response.content.decode())
+
+        # case6 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearttl/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "elem1"))
+        self.writeLog(errorUrl.format("db0","elem1"),"",response.content.decode())
+
 if __name__ == "__main__":
     test = elemTest()
 
@@ -304,4 +412,13 @@ if __name__ == "__main__":
     #test.increaseElemTest()
 
     # testing DECREASE function
-    test.decreaseElemTest()
+    #test.decreaseElemTest()
+
+    # testing DELETE function
+    #test.deleteElemTest()
+
+    # testing set TTL function
+    #test.setTTLTest()
+
+    # testing clear TTL function
+    test.clearTTLTest()

@@ -211,6 +211,8 @@ class elemHandler:
                     msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
                 elif(result == responseCode.ELEM_TTL_CLEAR_SUCCESS):
                     msg = self.makeMessage("Element TTL Clear Success", responseCode.ELEM_TTL_CLEAR_SUCCESS, elemName)
+                elif(result == responseCode.ELEM_NOT_SET_TTL):
+                    msg = self.makeMessage("Element Is Not Set TTL", responseCode.ELEM_NOT_SET_TTL, elemName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:

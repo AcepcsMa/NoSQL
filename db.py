@@ -341,7 +341,7 @@ class NoSqlDb:
             try:
                 self.elemTTL[dbName].pop(elemName)
             except:
-                pass
+                return responseCode.ELEM_NOT_SET_TTL
             self.unlockElem(dbName, elemName)
             return responseCode.ELEM_TTL_CLEAR_SUCCESS
 

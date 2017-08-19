@@ -118,7 +118,7 @@ def deleteList(dbName, listName):
     return flask.jsonify(result)
 
 @app.route("/rmFromList",methods=["POST"])
-def rmFromList(expression):
+def rmFromList():
     myHandler = listHandler(database)
     try:
         dbName = flask.request.json["dbName"]

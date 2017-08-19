@@ -100,9 +100,7 @@ class listHandler:
 
     # remove a value from the given list
     def rmFromList(self, dbName, listName, value):
-        if(self.isValidType(dbName)
-           and self.isValidType(listName)
-           and self.isValidType(value)):
+        if(self.isValidType(dbName) and self.isValidType(listName)):
             # if list exists, execute the removal
             if(self.database.isListExist(dbName, listName) is True):
                 if(self.database.isExpired(dbName, listName, "LIST") is False):

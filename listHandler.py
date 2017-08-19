@@ -27,16 +27,19 @@ class listHandler:
     # create a list in the database
     def createList(self, dbName, listName):
         if(self.isValidType(listName) and self.isValidType(dbName)):
-            if(self.database.isListExist(dbName, listName) is False):
-                result = self.database.createList(dbName, listName)
-                if(result == responseCode.KEY_NAME_INVALID):
-                    msg = self.makeMessage("List Name Is Invalid", responseCode.KEY_NAME_INVALID, listName)
-                elif(result == responseCode.LIST_CREATE_SUCCESS):
-                    msg = self.makeMessage("Make List Success", responseCode.LIST_CREATE_SUCCESS, listName)
+            if(self.database.isDbExist(dbName)):
+                if(self.database.isListExist(dbName, listName) is False):
+                    result = self.database.createList(dbName, listName)
+                    if(result == responseCode.KEY_NAME_INVALID):
+                        msg = self.makeMessage("List Name Is Invalid", responseCode.KEY_NAME_INVALID, listName)
+                    elif(result == responseCode.LIST_CREATE_SUCCESS):
+                        msg = self.makeMessage("Make List Success", responseCode.LIST_CREATE_SUCCESS, listName)
+                    else:
+                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
                 else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage("List Already Exists", responseCode.LIST_ALREADY_EXIST, listName)
             else:
-                msg = self.makeMessage("List Already Exists", responseCode.LIST_ALREADY_EXIST, listName)
+                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         else:  # the type of elem name or elem value is invalid
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
         return msg

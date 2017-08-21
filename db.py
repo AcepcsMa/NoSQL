@@ -804,6 +804,20 @@ class NoSqlDb:
         else:
             return responseCode.DB_NOT_EXIST
 
+    def saveData(self, dbName, dataType, dataFileName, valueFileName, TTLFileName):
+        with open("data" + os.sep + dbName + os.sep + dataFileName, "w") as nameFile:
+            nameFile.write(json.dumps(list(self.elemName[dbName])))
+        with open("data" + os.sep + dbName + os.sep + valueFileName, "w") as valueFile:
+            if(dataType == "SET"):
+                setValue = self.setDict[dbName].copy()
+                for key in setValue.keys():
+                    setValue[key] = list(setValue[key])
+                valueFile.write(json.dumps(setValue))
+            else:
+                valueFile.write(json.dumps(self.elemDict[dbName]))
+        with open("data" + os.sep + dbName + os.sep + TTLFileName, "w") as TTLFile:
+            TTLFile.write(json.dumps(self.elemTTL[dbName]))
+
     def saveDb(self):
         if(self.saveLock is False):
             # check if the data directory exists
@@ -815,35 +829,12 @@ class NoSqlDb:
                     os.makedirs("data{}{}".format(os.sep,dbName))
 
             self.saveLock = True
+
             for dbName in self.dbNameSet:
-                # save elements of each db
-                with open("data" + os.sep + dbName + os.sep + "elemName.txt", "w") as elemNameFile:
-                    elemNameFile.write(json.dumps(list(self.elemName[dbName])))
-                with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "w") as elemValueFile:
-                    elemValueFile.write(json.dumps(self.elemDict[dbName]))
-                with open("data" + os.sep + dbName + os.sep + "elemTTL.txt", "w") as elemTTLFile:
-                    elemTTLFile.write(json.dumps(self.elemTTL[dbName]))
-                with open("data" + os.sep + dbName + os.sep + "listName.txt", "w") as listNameFile:
-                    listNameFile.write(json.dumps(list(self.listName[dbName])))
-                with open("data" + os.sep + dbName + os.sep + "listValue.txt", "w") as listValueFile:
-                    listValueFile.write(json.dumps(self.listDict[dbName]))
-                with open("data" + os.sep + dbName + os.sep + "listTTL.txt", "w") as listTTLFile:
-                    listTTLFile.write(json.dumps(self.listTTL[dbName]))
-                with open("data" + os.sep + dbName + os.sep + "hashName.txt", "w") as hashNameFile:
-                    hashNameFile.write(json.dumps(list(self.hashName[dbName])))
-                with open("data" + os.sep + dbName + os.sep + "hashValue.txt", "w") as hashValueFile:
-                    hashValueFile.write(json.dumps(self.hashDict[dbName]))
-                with open("data" + os.sep + dbName + os.sep + "hashTTL.txt", "w") as hashTTLFile:
-                    hashTTLFile.write(json.dumps(self.hashTTL[dbName]))
-                with open("data" + os.sep + dbName + os.sep + "setName.txt", "w") as setNameFile:
-                    setNameFile.write(json.dumps(list(self.setName[dbName])))
-                with open("data" + os.sep + dbName + os.sep + "setValue.txt", "w") as setValueFile:
-                    setValue = self.setDict[dbName].copy()
-                    for key in setValue.keys():
-                        setValue[key] = list(setValue[key])
-                    setValueFile.write(json.dumps(setValue))
-                with open("data" + os.sep + dbName + os.sep + "setTTL.txt", "w") as setTTLFile:
-                    setTTLFile.write(json.dumps(self.setTTL[dbName]))
+                self.saveData(dbName, "ELEM", "elemName.txt", "elemValue.txt", "elemTTL.txt")
+                self.saveData(dbName, "LIST", "listName.txt", "listValue.txt", "listTTL.txt")
+                self.saveData(dbName, "HASH", "hashName.txt", "hashValue.txt", "hashTTL.txt")
+                self.saveData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
 
             self.saveLock = False
             self.logger.info("Database Save Success")
@@ -853,6 +844,26 @@ class NoSqlDb:
         else:
             self.logger.warning("Database Save Locked")
             return responseCode.DB_SAVE_LOCKED
+
+    def loadData(self, dbName, dataType, dataFileName, valueFileName, TTLFileName):
+        # load names
+        with open("data" + os.sep + dbName + os.sep + dataFileName, "r") as elemNameFile:
+            elemNames = json.loads(elemNameFile.read())
+            for elemName in elemNames:
+                self.elemName[dbName].add(elemName)
+                self.elemLockDict[dbName][elemName] = False
+        # load values
+        with open("data" + os.sep + dbName + os.sep + valueFileName, "r") as elemValueFile:
+            if(dataType == "SET"):
+                setValue = json.loads(elemValueFile.read())
+                for key in setValue.keys():
+                    setValue[key] = set(setValue[key])
+                self.setDict[dbName] = setValue
+            else:
+                self.elemDict[dbName] = json.loads(elemValueFile.read())
+        # load TTL
+        with open("data" + os.sep + dbName + os.sep + TTLFileName, "r") as elemTTLFile:
+            self.elemTTL[dbName] = json.loads(elemTTLFile.read())
 
     def loadDb(self):
         try:
@@ -885,60 +896,11 @@ class NoSqlDb:
                 self.setLockDict[dbName] = dict()
                 self.setDict[dbName] = dict()
 
-                # load element names
-                with open("data"+os.sep+dbName+os.sep+"elemName.txt","r") as elemNameFile:
-                    elemNames = json.loads(elemNameFile.read())
-                    for elemName in elemNames:
-                        self.elemName[dbName].add(elemName)
-                        self.elemLockDict[dbName][elemName] = False
-                # load element values
-                with open("data" + os.sep + dbName + os.sep + "elemValue.txt", "r") as elemValueFile:
-                    self.elemDict[dbName] = json.loads(elemValueFile.read())
-                # load element TTL
-                with open("data" + os.sep + dbName + os.sep + "elemTTL.txt", "r") as elemTTLFile:
-                    self.elemTTL[dbName] = json.loads(elemTTLFile.read())
-
-                # load list names
-                with open("data"+os.sep+dbName+os.sep+"listName.txt","r") as listNameFile:
-                    listNames = json.loads(listNameFile.read())
-                    for listName in listNames:
-                        self.listName[dbName].add(listName)
-                        self.listLockDict[dbName][listName] = False
-                # load list values
-                with open("data" + os.sep + dbName + os.sep + "listValue.txt", "r") as listValueFile:
-                    self.listDict[dbName] = json.loads(listValueFile.read())
-                # load list TTL
-                with open("data" + os.sep + dbName + os.sep + "listTTL.txt", "r") as listTTLFile:
-                    self.listTTL[dbName] = json.loads(listTTLFile.read())
-
-                # load hash names
-                with open("data"+os.sep+dbName+os.sep+"hashName.txt","r") as hashNameFile:
-                    hashNames = json.loads(hashNameFile.read())
-                    for hashName in hashNames:
-                        self.hashName[dbName].add(hashName)
-                        self.hashLockDict[dbName][hashName] = False
-                # load hash values
-                with open("data" + os.sep + dbName + os.sep + "hashValue.txt", "r") as hashValueFile:
-                    self.hashDict[dbName] = json.loads(hashValueFile.read())
-                # load hash TTL
-                with open("data" + os.sep + dbName + os.sep + "hashTTL.txt", "r") as hashTTLFile:
-                    self.hashTTL[dbName] = json.loads(hashTTLFile.read())
-
-                # load set names
-                with open("data" + os.sep + dbName + os.sep + "setName.txt", "r") as setNameFile:
-                    setNames = json.loads(setNameFile.read())
-                    for setName in setNames:
-                        self.setName[dbName].add(setName)
-                        self.setLockDict[dbName][setName] = False
-                # load set values
-                with open("data" + os.sep + dbName + os.sep + "setValue.txt", "r") as setValueFile:
-                    setValue = json.loads(setValueFile.read())
-                    for key in setValue.keys():
-                        setValue[key] = set(setValue[key])
-                    self.setDict[dbName] = setValue
-                # load set TTL
-                with open("data" + os.sep + dbName + os.sep + "setTTL.txt", "r") as setTTLFile:
-                    self.setTTL[dbName] = json.loads(setTTLFile.read())
+                # load data
+                self.loadData(dbName, "ELEM", "elemName.txt", "elemValue.txt", "elemTTL.txt")
+                self.loadData(dbName, "LIST", "listName.txt", "listValue.txt", "listTTL.txt")
+                self.loadData(dbName, "HASH", "hashName.txt", "hashValue.txt", "hashTTL.txt")
+                self.loadData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
 
             self.logger.info("Database Load Success")
 

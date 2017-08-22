@@ -431,18 +431,20 @@ class NoSqlDb:
     @saveTrigger
     def mergeLists(self, dbName, listName1, listName2, resultListName=None):
         if(resultListName is not None):
-            self.createList(resultListName, dbName)
+            self.createList(dbName, resultListName)
             self.lockList(dbName, resultListName)
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName1])
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName2])
             self.unlockList(dbName, resultListName)
+            return self.listDict[dbName][resultListName]
         else:
             if(self.listLockDict[dbName][listName1] is False):
                 self.lockList(dbName, listName1)
                 self.listDict[dbName][listName1].extend(self.listDict[dbName][listName2])
+                return self.listDict[dbName][listName1]
             else:
                 return responseCode.LIST_IS_LOCKED
-        return responseCode.LIST_MERGE_SUCCESS
+        #return responseCode.LIST_MERGE_SUCCESS
 
     @saveTrigger
     def setListTTL(self, dbName, listName, ttl):

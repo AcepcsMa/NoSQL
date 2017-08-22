@@ -146,7 +146,7 @@ def mergeLists():
         resultListName = None if len(resultListName) == 0 else resultListName
     except:
         dbName = listName1 = listName2 = resultListName = None
-    result = myHandler.mergeLists(dbName, listName1, listName2,resultListName)
+    result = myHandler.mergeLists(dbName, listName1, listName2, resultListName)
     return flask.jsonify(result)
 
 @app.route("/searchList/<string:dbName>/<string:expression>",methods=["GET"])

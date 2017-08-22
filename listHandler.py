@@ -143,6 +143,11 @@ class listHandler:
 
     # merge two lists
     def mergeLists(self, dbName, listName1, listName2, resultListName=None):
+        if(self.isValidType(dbName) is False or self.isValidType(listName1) is False
+           or self.isValidType(listName2) is False):
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+            return msg
+
         if(resultListName is not None):
             if(self.database.isListExist(dbName, resultListName) is True):
                 msg = self.makeMessage("Merge Result Exists", responseCode.MERGE_RESULT_EXIST, resultListName)
@@ -150,13 +155,13 @@ class listHandler:
 
         if(self.database.isListExist(dbName, listName1)
            and self.database.isListExist(dbName, listName2)):
-            if(self.database.isListExpired(dbName, listName1) is False
-               and self.database.isListExpired(dbName, listName2) is False):
+            if(self.database.isExpired(dbName, listName1, "LIST") is False
+               and self.database.isExpired(dbName, listName2, "LIST") is False):
                 result = self.database.mergeLists(dbName, listName1, listName2, resultListName)
                 if(result == responseCode.LIST_IS_LOCKED):
                     msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, resultListName)
-                elif(result == responseCode.LIST_MERGE_SUCCESS):
-                    msg = self.makeMessage("List Merge Success", responseCode.LIST_MERGE_SUCCESS, resultListName)
+                elif("list" in str(type(result))):
+                    msg = self.makeMessage("List Merge Success", responseCode.LIST_MERGE_SUCCESS, result)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
             else:

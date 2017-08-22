@@ -1,51 +1,81 @@
-DATE: 2017/08/19 16:47:15
-URL: http://localhost:3080/rmFromList
-PARAMS: {"dbName": "db0", "listName": "list1", "listValue": "hello"}
+DATE: 2017/08/22 17:17:56
+URL: http://localhost:3080/mergeLists
+PARAMS: {"dbName": "db0", "list1": "list1", "list2": "list2", "resultList": "mergeResult"}
 RESPONSE: {
-  "data": "list1", 
-  "msg": "List Remove Value Success", 
-  "typeCode": 22
+  "data": [
+    "hello", 
+    123
+  ], 
+  "msg": "List Merge Success", 
+  "typeCode": 44
 }
 
-DATE: 2017/08/19 16:47:15
-URL: http://localhost:3080/rmFromList
-PARAMS: {"dbName": "db0", "listName": "list1", "listValue": "hello"}
+DATE: 2017/08/22 17:17:56
+URL: http://localhost:3080/mergeLists
+PARAMS: {"dbName": "db0", "list1": "list1", "list2": "list2", "resultList": "mergeResult"}
 RESPONSE: {
-  "data": "list1", 
-  "msg": "List Does Not Contain This Value", 
-  "typeCode": 21
+  "data": "mergeResult", 
+  "msg": "Merge Result Exists", 
+  "typeCode": 43
 }
 
-DATE: 2017/08/19 16:47:15
-URL: http://localhost:3080/rmFromList
-PARAMS: {"dbName": "db100", "listName": "list1", "listValue": "hello"}
+DATE: 2017/08/22 17:17:56
+URL: http://localhost:3080/mergeLists
+PARAMS: {"dbName": "db0", "list1": "list1", "list2": "list2", "resultList": ""}
 RESPONSE: {
-  "data": "list1", 
+  "data": [
+    "hello", 
+    123
+  ], 
+  "msg": "List Merge Success", 
+  "typeCode": 44
+}
+
+DATE: 2017/08/22 17:17:56
+URL: http://localhost:3080/mergeLists
+PARAMS: {"dbName": "db999", "list1": "list1", "list2": "list2", "resultList": "mergeResult"}
+RESPONSE: {
+  "data": "list1 or list2", 
   "msg": "List Does Not Exist", 
   "typeCode": 23
 }
 
-DATE: 2017/08/19 16:47:15
-URL: http://localhost:3080/rmFromList
-PARAMS: {"dbName": "db0", "listName": "list111", "listValue": "hello"}
+DATE: 2017/08/22 17:17:56
+URL: http://localhost:3080/mergeLists
+PARAMS: {"dbName": "db0", "list1": "list123", "list2": "list456", "resultList": "mergeResult"}
 RESPONSE: {
-  "data": "list111", 
-  "msg": "List Does Not Exist", 
-  "typeCode": 23
+  "data": "mergeResult", 
+  "msg": "Merge Result Exists", 
+  "typeCode": 43
 }
 
-DATE: 2017/08/19 16:47:15
-URL: http://localhost:3080/rmFromList
-PARAMS: {"dbName": "db0", "listName": "list1", "listValue": [1, 2, 3]}
+DATE: 2017/08/22 17:17:56
+URL: http://localhost:3080/mergeLists
+PARAMS: {"dbName": [1, 2, 3, 4, 5], "list1": "list123", "list2": "list456", "resultList": "mergeResult"}
 RESPONSE: {
-  "data": "list1", 
-  "msg": "List Does Not Contain This Value", 
-  "typeCode": 21
+  "data": [
+    1, 
+    2, 
+    3, 
+    4, 
+    5
+  ], 
+  "msg": "Element Type Error", 
+  "typeCode": 0
 }
 
-DATE: 2017/08/19 16:47:15
-URL: http://localhost:3080/rmfromlist
-PARAMS: {"dbName": "db100", "listName": "list1", "listValue": "hello"}
+DATE: 2017/08/22 17:17:56
+URL: http://localhost:3080/mergeLists
+PARAMS: {"dbName": "db0", "list1": ["a", "b", "c"], "list2": [1, 2, 3], "resultList": [4, 5, 6]}
+RESPONSE: {
+  "data": "db0", 
+  "msg": "Element Type Error", 
+  "typeCode": 0
+}
+
+DATE: 2017/08/22 17:17:56
+URL: http://localhost:3080/mergelists
+PARAMS: {"dbName": "db0", "list1": ["a", "b", "c"], "list2": [1, 2, 3], "resultList": [4, 5, 6]}
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>
 <h1>Not Found</h1>

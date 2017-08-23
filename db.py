@@ -469,7 +469,7 @@ class NoSqlDb:
             try:
                 self.listTTL[dbName].pop(listName)
             except:
-                pass
+                return responseCode.LIST_NOT_SET_TTL
             self.unlockList(dbName, listName)
             return responseCode.LIST_TTL_CLEAR_SUCCESS
 

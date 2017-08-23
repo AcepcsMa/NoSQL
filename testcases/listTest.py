@@ -360,6 +360,102 @@ class listTest:
         response = requests.post(errorUrl,json=mergeParams)
         self.writeLog(errorUrl,json.dumps(mergeParams),response.content.decode())
 
+    def searchListTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/searchList/{0}/{1}"
+
+        # case1 create several lists and then search by a*
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
+        response = requests.get(createUrl.format("db0","ablist"))
+        response = requests.get(createUrl.format("db0","a"))
+        response = requests.get(createUrl.format("db0","ab123"))
+        response = requests.get(createUrl.format("db0","bbalist"))
+        response = requests.get(createUrl.format("db0","bacg"))
+
+        response = requests.get(url.format("db0","a*"))
+        self.writeLog(url.format("db0","a*"),"",response.content.decode())
+
+        # case2 search by ab*
+        response = requests.get(url.format("db0","ab*"))
+        self.writeLog(url.format("db0","ab*"),"",response.content.decode())
+
+        # case3 search by b*
+        response = requests.get(url.format("db0","b*"))
+        self.writeLog(url.format("db0","b*"),"",response.content.decode())
+
+        # case4 search by ab
+        response = requests.get(url.format("db0","ab"))
+        self.writeLog(url.format("db0","ab"),"",response.content.decode())
+
+        # case5 search by a non-existed expression
+        response = requests.get(url.format("db0","12345"))
+        self.writeLog(url.format("db0","12345"),"",response.content.decode())
+
+        # case6 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/searchlist/{0}/{1}"
+        response = requests.get(errorUrl.format("db0","a*"))
+        self.writeLog(errorUrl.format("db0","a*"),"",response.content.decode())
+
+    def setTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/setListTTL/{0}/{1}/{2}"
+
+        # case1 create a list and set TTL
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
+        response = requests.get(createUrl.format("db0","list1"))
+        response = requests.get(url.format("db0","list1",20))
+        self.writeLog(url.format("db0","list1",20),"",response.content.decode())
+
+        # case2 unknown database name
+        response = requests.get(url.format("db123","list1",15))
+        self.writeLog(url.format("db123","list1",15),"",response.content.decode())
+
+        # case3 unknown list name
+        response = requests.get(url.format("db0","list123",15))
+        self.writeLog(url.format("db0","list123",15),"",response.content.decode())
+
+        # case4 TTL is not Int type
+        response = requests.get(url.format("db0","list1","hi"))
+        self.writeLog(url.format("db0","list1","hi"),"",response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setlistTTL/{0}/{1}/{2}"
+        response = requests.get(errorUrl.format("db0", "list1",15))
+        self.writeLog(errorUrl.format("db0","list1",15),"",response.content.decode())
+
+    # test clear TTL function
+    def clearTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/clearListTTL/{0}/{1}"
+
+        # case1 set a TTL and then clear it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
+        setUrl = "http://" + self.host + ":" + str(self.port) + "/setListTTL/{0}/{1}/{2}"
+        response = requests.get(createUrl.format("db0","list1"))
+        response = requests.get(setUrl.format("db0","list1",20))
+        response = requests.get(url.format("db0","list1"))
+        self.writeLog(url.format("db0","list1"),"",response.content.decode())
+
+        # case2 clear TTL repeatedly
+        response = requests.get(url.format("db0","list1"))
+        self.writeLog(url.format("db0","list1"),"",response.content.decode())
+
+        # case3 clear non-existed TTL
+        response = requests.get(createUrl.format("db0","list2"))
+        response = requests.get(url.format("db0","list2"))
+        self.writeLog(url.format("db0","list2"),"",response.content.decode())
+
+        # case4 unknown database name
+        response = requests.get(url.format("db999","list1"))
+        self.writeLog(url.format("db999","list1"),"",response.content.decode())
+
+        # case5 unknown element name
+        response = requests.get(url.format("db0","list123"))
+        self.writeLog(url.format("db0","list123"),"",response.content.decode())
+
+        # case6 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearlistTTL/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "list1"))
+        self.writeLog(errorUrl.format("db0","list1"),"",response.content.decode())
+
+
 
 if __name__ == "__main__":
     test = listTest()
@@ -383,4 +479,13 @@ if __name__ == "__main__":
     #test.clearListTest()
 
     # testing merge function
-    test.mergeListTest()
+    #test.mergeListTest()
+
+    # testing search function
+    #test.searchListTest()
+
+    # testing set TTL function
+    #test.setTTLTest()
+
+    # testing clear TTL function
+    test.clearTTLTest()

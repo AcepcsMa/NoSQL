@@ -202,7 +202,7 @@ class listHandler:
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
         return msg
 
     # clear TTL for a list
@@ -217,10 +217,12 @@ class listHandler:
                 elif (result == responseCode.LIST_TTL_CLEAR_SUCCESS):
                     msg = self.makeMessage("List TTL Clear Success", responseCode.ELEM_TTL_CLEAR_SUCCESS,
                                            listName)
+                elif(result == responseCode.LIST_NOT_SET_TTL):
+                    msg = self.makeMessage("List Is Not Set TTL", responseCode.LIST_NOT_SET_TTL, listName)
                 else:
                     msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
         return msg
 
     def showTTL(self, dbName, keyName):

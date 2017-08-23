@@ -84,3 +84,4 @@ class responseCode:
     SET_DELETE_SUCCESS = 77
     KEY_NAME_INVALID = 78
     ELEM_NOT_SET_TTL = 79
+    LIST_NOT_SET_TTL = 80

@@ -34,15 +34,18 @@ class hashHandler:
     # create a hash
     def createHash(self, dbName, hashName):
         if(self.isValidType(dbName) and self.isValidType(hashName)):
-            result = self.database.createHash(dbName, hashName)
-            if(result == responseCode.HASH_CREATE_SUCCESS):
-                msg = self.makeMessage("Hash Create Success", responseCode.HASH_CREATE_SUCCESS, hashName)
-            elif(result == responseCode.HASH_EXISTED):
-                msg = self.makeMessage("Hash Already Exists", responseCode.HASH_EXISTED, hashName)
-            elif(result == responseCode.KEY_NAME_INVALID):
-                msg = self.makeMessage("Hash Name Is Invalid", responseCode.KEY_NAME_INVALID, hashName)
+            if(self.database.isDbExist(dbName)):
+                result = self.database.createHash(dbName, hashName)
+                if(result == responseCode.HASH_CREATE_SUCCESS):
+                    msg = self.makeMessage("Hash Create Success", responseCode.HASH_CREATE_SUCCESS, hashName)
+                elif(result == responseCode.HASH_EXISTED):
+                    msg = self.makeMessage("Hash Already Exists", responseCode.HASH_EXISTED, hashName)
+                elif(result == responseCode.KEY_NAME_INVALID):
+                    msg = self.makeMessage("Hash Name Is Invalid", responseCode.KEY_NAME_INVALID, hashName)
+                else:
+                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
             else:
-                msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
@@ -64,7 +67,7 @@ class hashHandler:
 
     # insert a key-value data into the given hash
     def insertHash(self, dbName, hashName, keyName, value):
-        if(self.isValidType(dbName) and self.isValidType(hashName)):
+        if(self.isValidType(dbName) and self.isValidType(hashName) and self.isValidType(keyName)):
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.insertHash(dbName, hashName, keyName, value)

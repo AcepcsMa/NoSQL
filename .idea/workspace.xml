@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.py" afterPath="$PROJECT_DIR$/db.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/listHandler.py" afterPath="$PROJECT_DIR$/listHandler.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/response.py" afterPath="$PROJECT_DIR$/response.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hashHandler.py" afterPath="$PROJECT_DIR$/hashHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcases/listTest.py" afterPath="$PROJECT_DIR$/testcases/listTest.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcases/testLog.log" afterPath="$PROJECT_DIR$/testcases/testLog.log" />
     </list>
@@ -24,8 +22,8 @@
           <file leaf-file-name="db.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/db.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="58">
-                  <caret line="145" column="0" lean-forward="false" selection-start-line="145" selection-start-column="0" selection-end-line="145" selection-end-column="0" />
+                <state relative-caret-position="321">
+                  <caret line="496" column="60" lean-forward="false" selection-start-line="496" selection-start-column="60" selection-end-line="496" selection-end-column="60" />
                   <folding>
                     <element signature="e#37#46#0" expanded="true" />
                     <element signature="e#1411#2802#0" expanded="false" />
@@ -35,21 +33,23 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="listTest.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/testcases/listTest.py">
+          <file leaf-file-name="hashHandler.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/hashHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-142">
-                  <caret line="457" column="0" lean-forward="true" selection-start-line="457" selection-start-column="0" selection-end-line="457" selection-end-column="0" />
+                <state relative-caret-position="141">
+                  <caret line="69" column="95" lean-forward="false" selection-start-line="69" selection-start-column="95" selection-end-line="69" selection-end-column="95" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="hashTest.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/testcases/hashTest.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="419">
+                  <caret line="208" column="25" lean-forward="false" selection-start-line="208" selection-start-column="25" selection-end-line="208" selection-end-column="25" />
                   <folding>
                     <element signature="e#28#43#0" expanded="true" />
-                    <element signature="e#246#526#0" expanded="false" />
-                    <element signature="e#1115#1974#0" expanded="false" />
-                    <element signature="e#2011#3035#0" expanded="false" />
-                    <element signature="e#3075#5582#0" expanded="false" />
-                    <element signature="e#5622#6823#0" expanded="false" />
-                    <element signature="e#6859#9037#0" expanded="false" />
-                    <element signature="e#9076#10557#0" expanded="false" />
-                    <marker date="1503459978000" expanded="false" signature="589:1043" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -58,18 +58,8 @@
           <file leaf-file-name="testLog.log" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/testcases/testLog.log">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="listHandler.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/listHandler.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="188">
-                  <caret line="211" column="0" lean-forward="false" selection-start-line="211" selection-start-column="0" selection-end-line="211" selection-end-column="0" />
+                <state relative-caret-position="241">
+                  <caret line="63" column="27" lean-forward="false" selection-start-line="63" selection-start-column="27" selection-end-line="63" selection-end-column="27" />
                   <folding />
                 </state>
               </provider>
@@ -78,7 +68,7 @@
           <file leaf-file-name="response.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/response.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="436">
+                <state relative-caret-position="1462">
                   <caret line="86" column="25" lean-forward="false" selection-start-line="86" selection-start-column="25" selection-end-line="86" selection-end-column="25" />
                   <folding />
                 </state>
@@ -92,7 +82,7 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1128">
+                <state relative-caret-position="-419">
                   <caret line="150" column="0" lean-forward="false" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
                   <folding>
                     <element signature="e#37#49#0" expanded="true" />
@@ -170,7 +160,6 @@
         <option value="$PROJECT_DIR$/ttlTimer.py" />
         <option value="$PROJECT_DIR$/dbHandler.py" />
         <option value="$PROJECT_DIR$/testcases/test.conf" />
-        <option value="$PROJECT_DIR$/hashHandler.py" />
         <option value="$PROJECT_DIR$/setHandler.py" />
         <option value="$PROJECT_DIR$/elemHandler.py" />
         <option value="$PROJECT_DIR$/testcases/elemTest.py" />
@@ -180,6 +169,8 @@
         <option value="$PROJECT_DIR$/db.py" />
         <option value="$PROJECT_DIR$/listHandler.py" />
         <option value="$PROJECT_DIR$/testcases/listTest.py" />
+        <option value="$PROJECT_DIR$/testcases/hashTest.py" />
+        <option value="$PROJECT_DIR$/hashHandler.py" />
         <option value="$PROJECT_DIR$/testcases/testLog.log" />
       </list>
     </option>
@@ -204,7 +195,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -234,6 +224,7 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -254,7 +245,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.listTest">
+  <component name="RunManager" selected="Python.hashTest">
     <configuration default="false" name="db" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -291,24 +282,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="config" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="NoSQL" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/configParser.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="elemTest" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -340,6 +313,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="NoSQL" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testcases/listTest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="hashTest" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testcases" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="NoSQL" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testcases/hashTest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -412,17 +403,17 @@
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.db" />
       <item index="1" class="java.lang.String" itemvalue="Python.server" />
-      <item index="2" class="java.lang.String" itemvalue="Python.config" />
-      <item index="3" class="java.lang.String" itemvalue="Python.elemTest" />
-      <item index="4" class="java.lang.String" itemvalue="Python.listTest" />
+      <item index="2" class="java.lang.String" itemvalue="Python.elemTest" />
+      <item index="3" class="java.lang.String" itemvalue="Python.listTest" />
+      <item index="4" class="java.lang.String" itemvalue="Python.hashTest" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.listTest" />
-        <item index="1" class="java.lang.String" itemvalue="Python.server" />
-        <item index="2" class="java.lang.String" itemvalue="Python.elemTest" />
-        <item index="3" class="java.lang.String" itemvalue="Python.db" />
-        <item index="4" class="java.lang.String" itemvalue="Python.config" />
+        <item index="0" class="java.lang.String" itemvalue="Python.hashTest" />
+        <item index="1" class="java.lang.String" itemvalue="Python.listTest" />
+        <item index="2" class="java.lang.String" itemvalue="Python.server" />
+        <item index="3" class="java.lang.String" itemvalue="Python.elemTest" />
+        <item index="4" class="java.lang.String" itemvalue="Python.db" />
       </list>
     </recent_temporary>
   </component>
@@ -446,7 +437,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.115277775" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32942554" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32942554" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942554" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -522,12 +513,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="19" />
+      <option name="time" value="20" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/handler.py" />
     <entry file="file://$PROJECT_DIR$/db.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5219">
@@ -739,7 +729,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="581">
           <caret line="1996" column="0" lean-forward="false" selection-start-line="1996" selection-start-column="0" selection-end-line="1996" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -785,13 +774,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hashHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="42" column="102" lean-forward="false" selection-start-line="42" selection-start-column="102" selection-end-line="42" selection-end-column="102" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/setHandler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
@@ -803,7 +785,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="17" lean-forward="false" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -819,20 +800,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="320" column="0" lean-forward="false" selection-start-line="320" selection-start-column="0" selection-end-line="393" selection-end-column="82" />
-          <folding>
-            <element signature="e#1118#3059#0" expanded="false" />
-            <element signature="e#3128#3952#0" expanded="false" />
-            <element signature="e#4027#5610#0" expanded="false" />
-            <element signature="e#5685#7350#0" expanded="false" />
-            <element signature="e#7429#8957#0" expanded="false" />
-            <element signature="e#9036#10562#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1128">
+        <state relative-caret-position="-419">
           <caret line="150" column="0" lean-forward="false" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
           <folding>
             <element signature="e#37#49#0" expanded="true" />
@@ -842,7 +815,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/response.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
+        <state relative-caret-position="1462">
           <caret line="86" column="25" lean-forward="false" selection-start-line="86" selection-start-column="25" selection-end-line="86" selection-end-column="25" />
           <folding />
         </state>
@@ -852,22 +825,36 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2767">
           <caret line="29" column="48" lean-forward="true" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/listHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
+        <state relative-caret-position="3587">
           <caret line="211" column="0" lean-forward="false" selection-start-line="211" selection-start-column="0" selection-end-line="211" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/listTest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="35" column="20" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="e#28#43#0" expanded="false" />
+            <element signature="e#2011#3035#0" expanded="false" />
+            <element signature="e#3075#5582#0" expanded="false" />
+            <element signature="e#5622#6823#0" expanded="false" />
+            <element signature="e#6859#9037#0" expanded="false" />
+            <element signature="e#9076#10557#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/db.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="58">
-          <caret line="145" column="0" lean-forward="false" selection-start-line="145" selection-start-column="0" selection-end-line="145" selection-end-column="0" />
+        <state relative-caret-position="321">
+          <caret line="496" column="60" lean-forward="false" selection-start-line="496" selection-start-column="60" selection-end-line="496" selection-end-column="60" />
           <folding>
             <element signature="e#37#46#0" expanded="true" />
             <element signature="e#1411#2802#0" expanded="false" />
@@ -876,28 +863,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/testLog.log">
+    <entry file="file://$PROJECT_DIR$/hashHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="141">
+          <caret line="69" column="95" lean-forward="false" selection-start-line="69" selection-start-column="95" selection-end-line="69" selection-end-column="95" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/listTest.py">
+    <entry file="file://$PROJECT_DIR$/testcases/testLog.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-142">
-          <caret line="457" column="0" lean-forward="true" selection-start-line="457" selection-start-column="0" selection-end-line="457" selection-end-column="0" />
+        <state relative-caret-position="241">
+          <caret line="63" column="27" lean-forward="false" selection-start-line="63" selection-start-column="27" selection-end-line="63" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/hashTest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="419">
+          <caret line="208" column="25" lean-forward="false" selection-start-line="208" selection-start-column="25" selection-end-line="208" selection-end-column="25" />
           <folding>
             <element signature="e#28#43#0" expanded="true" />
-            <element signature="e#246#526#0" expanded="false" />
-            <element signature="e#1115#1974#0" expanded="false" />
-            <element signature="e#2011#3035#0" expanded="false" />
-            <element signature="e#3075#5582#0" expanded="false" />
-            <element signature="e#5622#6823#0" expanded="false" />
-            <element signature="e#6859#9037#0" expanded="false" />
-            <element signature="e#9076#10557#0" expanded="false" />
-            <marker date="1503459978000" expanded="false" signature="589:1043" ph="..." />
           </folding>
         </state>
       </provider>

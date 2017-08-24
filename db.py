@@ -499,6 +499,10 @@ class NoSqlDb:
             return responseCode.HASH_INSERT_SUCCESS
 
     def isKeyExist(self, dbName, hashName, keyName):
+        if(dbName not in self.dbNameSet):
+            return False
+        elif(hashName not in self.hashDict[dbName].keys()):
+            return False
         return keyName in list(self.hashDict[dbName][hashName].keys())
 
     @saveTrigger

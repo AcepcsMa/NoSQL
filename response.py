@@ -85,3 +85,21 @@ class responseCode:
     KEY_NAME_INVALID = 78
     ELEM_NOT_SET_TTL = 79
     LIST_NOT_SET_TTL = 80
+
+    detail = {
+        HASH_CREATE_SUCCESS:"Hash Create Success",
+        HASH_EXISTED:"Hash Already Exists",
+        KEY_NAME_INVALID:"Hash Name Is Invalid",
+        HASH_IS_LOCKED:"Hash Is Locked",
+        HASH_INSERT_SUCCESS:"Hash Insert Success",
+        HASH_DELETE_SUCCESS:"Hash Delete Success",
+        HASH_REMOVE_SUCCESS:"Hash Remove Success",
+        HASH_CLEAR_SUCCESS:"Hash Clear Success",
+        HASH_REPLACE_SUCCESS:"Hash Replace Success",
+        HASH_MERGE_SUCCESS:"Hash Merge Success",
+        HASH_TTL_SET_SUCCESS:"Hash TTL Set Success",
+        HASH_TTL_CLEAR_SUCCESS:"Hash TTL Clear Success",
+        TTL_NO_RECORD:"TTL No Record",
+        TTL_EXPIRED:"TTL Expired",
+        TTL_SHOW_SUCCESS:"TTL Show Success"
+    }

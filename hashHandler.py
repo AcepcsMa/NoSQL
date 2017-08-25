@@ -27,7 +27,7 @@ class hashHandler:
         message = {
             "msg":msg,
             "typeCode":typeCode,
-            "data":data
+            "data":"" if data is None else data
         }
         return message
 
@@ -36,14 +36,7 @@ class hashHandler:
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isDbExist(dbName)):
                 result = self.database.createHash(dbName, hashName)
-                if(result == responseCode.HASH_CREATE_SUCCESS):
-                    msg = self.makeMessage("Hash Create Success", responseCode.HASH_CREATE_SUCCESS, hashName)
-                elif(result == responseCode.HASH_EXISTED):
-                    msg = self.makeMessage("Hash Already Exists", responseCode.HASH_EXISTED, hashName)
-                elif(result == responseCode.KEY_NAME_INVALID):
-                    msg = self.makeMessage("Hash Name Is Invalid", responseCode.KEY_NAME_INVALID, hashName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result], result, hashName)
             else:
                 msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         else:
@@ -71,12 +64,7 @@ class hashHandler:
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.insertHash(dbName, hashName, keyName, value)
-                    if(result == responseCode.HASH_IS_LOCKED):
-                        msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                    elif(result == responseCode.HASH_INSERT_SUCCESS):
-                        msg = self.makeMessage("Hash Insert Success", responseCode.HASH_INSERT_SUCCESS, hashName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result], result, hashName)
                 else:
                     msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
             else:
@@ -91,12 +79,8 @@ class hashHandler:
             if(self.database.isHashExist(dbName, hashName)):
                 if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.isKeyExist(dbName, hashName, keyName)
-                    if(result == True):
-                        msg = self.makeMessage("Hash Key Exists", responseCode.HASH_KEY_EXIST, keyName)
-                    elif(result == False):
-                        msg = self.makeMessage("Hash Key Does Not Exist", responseCode.HASH_KEY_NOT_EXIST, keyName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    result = responseCode.HASH_KEY_EXIST if result is True else responseCode.HASH_KEY_NOT_EXIST
+                    msg = self.makeMessage(responseCode.detail[result],result,keyName)
                 else:
                     msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
             else:
@@ -110,12 +94,7 @@ class hashHandler:
         if(self.isValidType(dbName) and self.isValidType(hashName)):
             if(self.database.isHashExist(dbName, hashName)):
                 result = self.database.deleteHash(dbName, hashName)
-                if(result == responseCode.HASH_IS_LOCKED):
-                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                elif(result == responseCode.HASH_DELETE_SUCCESS):
-                    msg = self.makeMessage("Hash Delete Success", responseCode.HASH_DELETE_SUCCESS, hashName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result],result,hashName)
             else:
                 msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         else:
@@ -128,12 +107,7 @@ class hashHandler:
             if(self.database.isKeyExist(dbName, hashName, keyName) is True):
                 if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.rmFromHash(dbName, hashName, keyName)
-                    if(result == responseCode.HASH_IS_LOCKED):
-                        msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                    elif(result == responseCode.HASH_REMOVE_SUCCESS):
-                        msg = self.makeMessage("Hash Key Remove Success", responseCode.HASH_REMOVE_SUCCESS, keyName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result],result,hashName)
                 else:
                     msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
             else:
@@ -148,12 +122,7 @@ class hashHandler:
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.clearHash(dbName, hashName)
-                    if(result == responseCode.HASH_IS_LOCKED):
-                        msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                    elif(result == responseCode.HASH_CLEAR_SUCCESS):
-                        msg = self.makeMessage("Hash Clear Success", responseCode.HASH_CLEAR_SUCCESS, hashName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result],result,hashName)
                 else:
                     msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
             else:
@@ -169,12 +138,7 @@ class hashHandler:
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.replaceHash(dbName, hashName, hashValue)
-                    if(result == responseCode.HASH_IS_LOCKED):
-                        msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                    elif(result == responseCode.HASH_REPLACE_SUCCESS):
-                        msg = self.makeMessage("Hash Replace Success", responseCode.HASH_REPLACE_SUCCESS, hashName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result],result,hashName)
                 else:
                     msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
             else:
@@ -195,12 +159,7 @@ class hashHandler:
             if(self.database.isHashExpired(dbName, hashName1) is False
                and self.database.isHashExpired(dbName, hashName2) is False):
                 result = self.database.mergeHashs(dbName, hashName1, hashName2, resultHashName, mergeMode)
-                if (result == responseCode.HASH_IS_LOCKED):
-                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, resultHashName)
-                elif (result == responseCode.HASH_MERGE_SUCCESS):
-                    msg = self.makeMessage("Hash Merge Success", responseCode.HASH_MERGE_SUCCESS, resultHashName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result],result,resultHashName)
             else:
                 msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, "{} or {}".format(hashName1, hashName2))
         else:
@@ -236,12 +195,7 @@ class hashHandler:
                 msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
             else:
                 result = self.database.setHashTTL(dbName, hashName, ttl)
-                if (result == responseCode.HASH_IS_LOCKED):
-                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                elif (result == responseCode.HASH_TTL_SET_SUCCESS):
-                    msg = self.makeMessage("Hash TTL Set Success", responseCode.HASH_TTL_SET_SUCCESS, hashName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result],result,hashName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
@@ -253,13 +207,7 @@ class hashHandler:
                 msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
             else:
                 result = self.database.clearHashTTL(dbName, hashName)
-                if (result == responseCode.HASH_IS_LOCKED):
-                    msg = self.makeMessage("Hash Is Locked", responseCode.HASH_IS_LOCKED, hashName)
-                elif (result == responseCode.HASH_TTL_CLEAR_SUCCESS):
-                    msg = self.makeMessage("Hash TTL Clear Success", responseCode.HASH_TTL_CLEAR_SUCCESS,
-                                           hashName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result],result,hashName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
@@ -267,13 +215,8 @@ class hashHandler:
     def showTTL(self, dbName, keyName):
         if(self.isValidType(dbName) and self.isValidType(keyName)):
             if(self.database.isDbExist(dbName)):
-                result = self.database.showTTL(dbName, keyName, "HASH")
-                if(result == responseCode.TTL_NO_RECORD):
-                    msg = self.makeMessage("TTL No Record", responseCode.TTL_NO_RECORD, keyName)
-                elif(result == responseCode.TTL_EXPIRED):
-                    msg = self.makeMessage("Hash TTL Expired", responseCode.HASH_EXPIRED, keyName)
-                else:
-                    msg = self.makeMessage("TTL Show Success", responseCode.TTL_SHOW_SUCCESS, result)
+                code, result = self.database.showTTL(dbName, keyName, "HASH")
+                msg = self.makeMessage(responseCode.detail[code],code,result)
             else:
                 msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         else:

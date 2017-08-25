@@ -342,4 +342,4 @@ if __name__ == "__main__":
     #test.deleteHashTest()
 
     # testing remove from hash function
-    test.rmFromHashTest()
+    #test.rmFromHashTest()

@@ -205,18 +205,18 @@ class NoSqlDb:
 
         if(keyName in ttlDict.keys()):
             if(ttlDict[keyName]["status"] == False):
-                return responseCode.TTL_EXPIRED
+                return responseCode.TTL_EXPIRED, None
             else:
                 curTime = int(time.time())
                 ttl = ttlDict[keyName]["ttl"]
                 restTime = ttl - (curTime-ttlDict[keyName]["createAt"])
                 if(restTime <= 0):
                     ttlDict[keyName]["status"] = False
-                    return responseCode.TTL_EXPIRED
+                    return responseCode.TTL_EXPIRED, None
                 else:
-                    return restTime
+                    return responseCode.TTL_SHOW_SUCCESS, restTime
         else:
-            return responseCode.TTL_NO_RECORD
+            return responseCode.TTL_NO_RECORD, None
 
     def isExpired(self, dbName, keyName, dataType):
         if (dataType == "ELEM"):

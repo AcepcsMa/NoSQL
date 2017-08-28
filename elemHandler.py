@@ -30,12 +30,7 @@ class elemHandler:
             if(self.database.isDbExist(dbName)):
                 if(self.database.isElemExist(dbName, elemName) is False):
                     result = self.database.createElem(dbName, elemName, elemValue)
-                    if(result == responseCode.KEY_NAME_INVALID):
-                        msg = self.makeMessage("Elem Name Is Invalid", responseCode.KEY_NAME_INVALID, elemName)
-                    elif(result == responseCode.ELEM_CREATE_SUCCESS):
-                        msg = self.makeMessage("Make Element Success", responseCode.ELEM_CREATE_SUCCESS, elemName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result],result,elemName)
                 else:   # this elem already exists in the db
                     msg = self.makeMessage("Element Already Exists", responseCode.ELEM_ALREADY_EXIST, elemName)
             else:
@@ -46,35 +41,12 @@ class elemHandler:
 
     # update the value of an elem in the db
     def updateElem(self, dbName, elemName, elemValue):
-        '''if(self.database.isElemExist(dbName, elemName) is False):
-            msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
-
-        elif(self.database.isExpired(dbName, elemName, "ELEM") is True):
-            msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
-
-        else:   # find the elem in the db
-            if(self.isValidType(elemName) and self.isValidType(elemValue) and self.isValidType(dbName)):
-                result = self.database.updateElem(elemName, elemValue, dbName)
-                if(result == responseCode.ELEM_IS_LOCKED):
-                    msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                elif(result == responseCode.ELEM_UPDATE_SUCCESS):
-                    msg = self.makeMessage("Element Update Success", responseCode.ELEM_UPDATE_SUCCESS, elemName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
-            else:
-                msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
-        return msg'''
         if (self.isValidType(elemName) and self.isValidType(elemValue) and self.isValidType(dbName)):
             if(self.database.isDbExist(dbName)):
                 if(self.database.isElemExist(dbName, elemName)):
                     if(self.database.isExpired(dbName, elemName, "ELEM") is False):
                         result = self.database.updateElem(elemName, elemValue, dbName)
-                        if (result == responseCode.ELEM_IS_LOCKED):
-                            msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                        elif (result == responseCode.ELEM_UPDATE_SUCCESS):
-                            msg = self.makeMessage("Element Update Success", responseCode.ELEM_UPDATE_SUCCESS, elemName)
-                        else:
-                            msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                        msg = self.makeMessage(responseCode.detail[result], result, elemName)
                     else:
                         msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
                 else:
@@ -125,14 +97,7 @@ class elemHandler:
                 if(self.database.isExpired(dbName, elemName, "ELEM") is False):
                     if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                         result = self.database.increaseElem(elemName, dbName)
-                        if(result == responseCode.ELEM_INCR_SUCCESS):
-                            data = self.database.getElem(elemName, dbName)
-                            msg = self.makeMessage("Element Increase Success", responseCode.ELEM_INCR_SUCCESS, data)
-                        elif(result == responseCode.ELEM_IS_LOCKED):
-                            data = self.database.getElem(elemName, dbName)
-                            msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, data)
-                        else:
-                            msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                        msg = self.makeMessage(responseCode.detail[result], result, elemName)
                     else:
                         msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
                 else:
@@ -150,14 +115,7 @@ class elemHandler:
                 if(self.database.isExpired(dbName, elemName, "ELEM") is False):
                     if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                         result = self.database.decreaseElem(elemName, dbName)
-                        if(result == responseCode.ELEM_DECR_SUCCESS):
-                            data = self.database.getElem(elemName, dbName)
-                            msg = self.makeMessage("Element Decrease Success", responseCode.ELEM_DECR_SUCCESS, data)
-                        elif(result == responseCode.ELEM_IS_LOCKED):
-                            data = self.database.getElem(elemName, dbName)
-                            msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, data)
-                        else:
-                            msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                        msg = self.makeMessage(responseCode.detail[result], result, elemName)
                     else:
                         msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
                 else:
@@ -173,12 +131,7 @@ class elemHandler:
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
                 result = self.database.deleteElem(elemName, dbName)
-                if(result == responseCode.ELEM_IS_LOCKED):
-                    msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                elif(result == responseCode.ELEM_DELETE_SUCCESS):
-                    msg = self.makeMessage("Element Delete Success", responseCode.ELEM_DELETE_SUCCESS, elemName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result], result, elemName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg
@@ -190,12 +143,7 @@ class elemHandler:
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
                 result = self.database.setElemTTL(dbName, elemName, ttl)
-                if(result == responseCode.ELEM_IS_LOCKED):
-                    msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                elif(result == responseCode.ELEM_TTL_SET_SUCCESS):
-                    msg = self.makeMessage("Element TTL Set Success", responseCode.ELEM_TTL_SET_SUCCESS, elemName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result], result, elemName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg
@@ -207,14 +155,7 @@ class elemHandler:
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
                 result = self.database.clearElemTTL(dbName, elemName)
-                if(result == responseCode.ELEM_IS_LOCKED):
-                    msg = self.makeMessage("Element Is Locked", responseCode.ELEM_IS_LOCKED, elemName)
-                elif(result == responseCode.ELEM_TTL_CLEAR_SUCCESS):
-                    msg = self.makeMessage("Element TTL Clear Success", responseCode.ELEM_TTL_CLEAR_SUCCESS, elemName)
-                elif(result == responseCode.ELEM_NOT_SET_TTL):
-                    msg = self.makeMessage("Element Is Not Set TTL", responseCode.ELEM_NOT_SET_TTL, elemName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result], result, elemName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg
@@ -223,12 +164,7 @@ class elemHandler:
         if(self.isValidType(dbName) and self.isValidType(keyName)):
             if(self.database.isDbExist(dbName)):
                 result = self.database.showTTL(dbName, keyName, "ELEM")
-                if(result == responseCode.TTL_NO_RECORD):
-                    msg = self.makeMessage("TTL No Record", responseCode.TTL_NO_RECORD, keyName)
-                elif(result == responseCode.TTL_EXPIRED):
-                    msg = self.makeMessage("Element TTL Expired", responseCode.ELEM_EXPIRED, keyName)
-                else:
-                    msg = self.makeMessage("TTL Show Success", responseCode.TTL_SHOW_SUCCESS, result)
+                msg = self.makeMessage(responseCode.detail[result], result, keyName)
             else:
                 msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         else:

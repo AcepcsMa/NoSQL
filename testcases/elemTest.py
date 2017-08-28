@@ -397,7 +397,7 @@ if __name__ == "__main__":
     test = elemTest()
 
     # testing CREATE function
-    #test.createElemTest()
+    test.createElemTest()
 
     # testing GET function
     #test.getElemTest()

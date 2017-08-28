@@ -89,7 +89,7 @@ class responseCode:
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
         HASH_EXISTED:"Hash Already Exists",
-        KEY_NAME_INVALID:"Hash Name Is Invalid",
+        KEY_NAME_INVALID:"Key Name Is Invalid",
         HASH_IS_LOCKED:"Hash Is Locked",
         HASH_INSERT_SUCCESS:"Hash Insert Success",
         HASH_DELETE_SUCCESS:"Hash Delete Success",
@@ -101,5 +101,14 @@ class responseCode:
         HASH_TTL_CLEAR_SUCCESS:"Hash TTL Clear Success",
         TTL_NO_RECORD:"TTL No Record",
         TTL_EXPIRED:"TTL Expired",
-        TTL_SHOW_SUCCESS:"TTL Show Success"
+        TTL_SHOW_SUCCESS:"TTL Show Success",
+        ELEM_CREATE_SUCCESS:"Element Create Success",
+        ELEM_IS_LOCKED:"Element Is Locked",
+        ELEM_UPDATE_SUCCESS:"Element Update Success",
+        ELEM_INCR_SUCCESS:"Element Increase Success",
+        ELEM_DECR_SUCCESS:"Element Decrease Success",
+        ELEM_DELETE_SUCCESS:"Element Delete Success",
+        ELEM_TTL_SET_SUCCESS:"Element TTL Set Success",
+        ELEM_TTL_CLEAR_SUCCESS:"Element TTL Clear Success",
+        ELEM_NOT_SET_TTL:"Element Is Not Set TTL"
     }

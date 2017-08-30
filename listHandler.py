@@ -30,12 +30,7 @@ class listHandler:
             if(self.database.isDbExist(dbName)):
                 if(self.database.isListExist(dbName, listName) is False):
                     result = self.database.createList(dbName, listName)
-                    if(result == responseCode.KEY_NAME_INVALID):
-                        msg = self.makeMessage("List Name Is Invalid", responseCode.KEY_NAME_INVALID, listName)
-                    elif(result == responseCode.LIST_CREATE_SUCCESS):
-                        msg = self.makeMessage("Make List Success", responseCode.LIST_CREATE_SUCCESS, listName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result],result,listName)
                 else:
                     msg = self.makeMessage("List Already Exists", responseCode.LIST_ALREADY_EXIST, listName)
             else:
@@ -67,12 +62,7 @@ class listHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 if(self.database.isExpired(dbName, listName, "LIST") is False):
                     result = self.database.insertList(listName, listValue, dbName)
-                    if(result == responseCode.LIST_IS_LOCKED):
-                        msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                    elif(result == responseCode.LIST_INSERT_SUCCESS):
-                        msg = self.makeMessage("List Insert Success", responseCode.LIST_INSERT_SUCCESS, listName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result],result,listName)
                 else:
                     msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
             else:
@@ -86,12 +76,7 @@ class listHandler:
         if(self.isValidType(listName) and self.isValidType(dbName)):
             if(self.database.isListExist(dbName, listName) is True):
                 result = self.database.deleteList(listName, dbName)
-                if(result == responseCode.LIST_DELETE_SUCCESS):
-                    msg = self.makeMessage("List Delete Success", responseCode.LIST_DELETE_SUCCESS, listName)
-                elif(result == responseCode.LIST_IS_LOCKED):
-                    msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result],result,listName)
             else:
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
@@ -105,14 +90,7 @@ class listHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 if(self.database.isExpired(dbName, listName, "LIST") is False):
                     result = self.database.rmFromList(dbName, listName, value)
-                    if(result == responseCode.LIST_NOT_CONTAIN_VALUE):
-                        msg = self.makeMessage("List Does Not Contain This Value", responseCode.LIST_NOT_CONTAIN_VALUE, listName)
-                    elif(result == responseCode.LIST_REMOVE_SUCCESS):
-                        msg = self.makeMessage("List Remove Value Success", responseCode.LIST_REMOVE_SUCCESS, listName)
-                    elif(result == responseCode.LIST_IS_LOCKED):
-                        msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result],result,listName)
                 else:
                     msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
             else:   # if list does not exist
@@ -127,12 +105,7 @@ class listHandler:
             if(self.database.isListExist(dbName, listName) is True):
                 if(self.database.isExpired(dbName, listName, "LIST") is False):
                     result = self.database.clearList(dbName, listName)
-                    if(result == responseCode.LIST_IS_LOCKED):
-                        msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                    elif(result == responseCode.LIST_CLEAR_SUCCESS):
-                        msg = self.makeMessage("List Clear Success", responseCode.LIST_CLEAR_SUCCESS, listName)
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result],result,listName)
                 else:
                     msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
             else:
@@ -195,12 +168,7 @@ class listHandler:
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
             else:
                 result = self.database.setListTTL(dbName, listName, ttl)
-                if (result == responseCode.LIST_IS_LOCKED):
-                    msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                elif (result == responseCode.LIST_TTL_SET_SUCCESS):
-                    msg = self.makeMessage("List TTL Set Success", responseCode.LIST_TTL_SET_SUCCESS, listName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result],result,listName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
         return msg
@@ -212,15 +180,7 @@ class listHandler:
                 msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
             else:
                 result = self.database.clearListTTL(dbName, listName)
-                if (result == responseCode.LIST_IS_LOCKED):
-                    msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, listName)
-                elif (result == responseCode.LIST_TTL_CLEAR_SUCCESS):
-                    msg = self.makeMessage("List TTL Clear Success", responseCode.ELEM_TTL_CLEAR_SUCCESS,
-                                           listName)
-                elif(result == responseCode.LIST_NOT_SET_TTL):
-                    msg = self.makeMessage("List Is Not Set TTL", responseCode.LIST_NOT_SET_TTL, listName)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                msg = self.makeMessage(responseCode.detail[result],result,listName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
         return msg
@@ -228,13 +188,8 @@ class listHandler:
     def showTTL(self, dbName, keyName):
         if(self.isValidType(dbName) and self.isValidType(keyName)):
             if(self.database.isDbExist(dbName)):
-                result = self.database.showTTL(dbName, keyName, "LIST")
-                if(result == responseCode.TTL_NO_RECORD):
-                    msg = self.makeMessage("TTL No Record", responseCode.TTL_NO_RECORD, keyName)
-                elif(result == responseCode.TTL_EXPIRED):
-                    msg = self.makeMessage("List TTL Expired", responseCode.LIST_EXPIRED, keyName)
-                else:
-                    msg = self.makeMessage("TTL Show Success", responseCode.TTL_SHOW_SUCCESS, result)
+                code, result = self.database.showTTL(dbName, keyName, "LIST")
+                msg = self.makeMessage(responseCode.detail[code], code, result)
             else:
                 msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         else:

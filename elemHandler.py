@@ -163,8 +163,8 @@ class elemHandler:
     def showTTL(self, dbName, keyName):
         if(self.isValidType(dbName) and self.isValidType(keyName)):
             if(self.database.isDbExist(dbName)):
-                result = self.database.showTTL(dbName, keyName, "ELEM")
-                msg = self.makeMessage(responseCode.detail[result], result, keyName)
+                code, result = self.database.showTTL(dbName, keyName, "ELEM")
+                msg = self.makeMessage(responseCode.detail[code], code, result)
             else:
                 msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         else:

@@ -110,5 +110,16 @@ class responseCode:
         ELEM_DELETE_SUCCESS:"Element Delete Success",
         ELEM_TTL_SET_SUCCESS:"Element TTL Set Success",
         ELEM_TTL_CLEAR_SUCCESS:"Element TTL Clear Success",
-        ELEM_NOT_SET_TTL:"Element Is Not Set TTL"
+        ELEM_NOT_SET_TTL:"Element Is Not Set TTL",
+        LIST_CREATE_SUCCESS:"List Create Success",
+        LIST_IS_LOCKED:"List Is Locked",
+        LIST_INSERT_SUCCESS:"List Insert Success",
+        LIST_DELETE_SUCCESS:"List Delete Success",
+        LIST_NOT_CONTAIN_VALUE:"List Does Not Contain This Value",
+        LIST_REMOVE_SUCCESS:"List Remove Value Success",
+        LIST_CLEAR_SUCCESS:"List Clear Success",
+        LIST_TTL_SET_SUCCESS:"List TTL Set Success",
+        LIST_TTL_CLEAR_SUCCESS:"List TTL Clear Success",
+        LIST_NOT_SET_TTL:"List Is Not Set TTL",
+
     }

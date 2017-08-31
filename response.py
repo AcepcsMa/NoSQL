@@ -121,5 +121,15 @@ class responseCode:
         LIST_TTL_SET_SUCCESS:"List TTL Set Success",
         LIST_TTL_CLEAR_SUCCESS:"List TTL Clear Success",
         LIST_NOT_SET_TTL:"List Is Not Set TTL",
-
+        SET_CREATE_SUCCESS:"Set Create Success",
+        SET_IS_LOCKED:"Set Is Locked",
+        SET_VALUE_ALREADY_EXIST:"Set Value Already Exists",
+        SET_INSERT_SUCCESS:"Set Insert Success",
+        SET_VALUE_NOT_EXIST:"Set Value Does Not Exist",
+        SET_REMOVE_SUCCESS:"Set Remove Success",
+        SET_CLEAR_SUCCESS:"Set Clear Success",
+        SET_DELETE_SUCCESS:"Set Delete Success",
+        SET_REPLACE_SUCCESS:"Set Replace Success",
+        SET_TTL_SET_SUCCESS:"Set TTL Set Success",
+        SET_TTL_CLEAR_SUCCESS:"Set TTL Clear Success"
     }

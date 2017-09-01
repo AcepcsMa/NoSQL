@@ -3,6 +3,23 @@ __author__ = 'Ma Haoxiang'
 # import
 from response import responseCode
 
+# a decorator which checks the type of args
+def validTypeCheck(func):
+    def check(*args, **kwargs):
+        dbName = args[1]
+        setName = args[2]
+        if(("str" not in str(type(dbName)) and "int" not in str(type(dbName)))
+           or ("str" not in str(type(setName)) and "int" not in str(type(setName)))):
+            return {
+                "msg":"Element Type Error",
+                "typeCode":responseCode.ELEM_TYPE_ERROR,
+                "data":setName
+            }
+        else:
+            result = func(*args,**kwargs)
+            return result
+    return check
+
 class setHandler:
     def __init__(self, database):
         self.database = database
@@ -28,90 +45,78 @@ class setHandler:
         return message
 
     # create a set
+    @validTypeCheck
     def createSet(self, dbName, setName):
-        if(self.isValidType(dbName) and self.isValidType(setName)):
-            if(self.database.isSetExist(dbName, setName) is False):
-                result = self.database.createSet(dbName, setName)
-                msg = self.makeMessage(responseCode.detail[result],result,setName)
-            else:
-                msg = self.makeMessage("Set Already Exists", responseCode.SET_ALREADY_EXIST, setName)
+        if(self.database.isSetExist(dbName, setName) is False):
+            result = self.database.createSet(dbName, setName)
+            msg = self.makeMessage(responseCode.detail[result],result,setName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+            msg = self.makeMessage("Set Already Exists", responseCode.SET_ALREADY_EXIST, setName)
         return msg
 
     # get set value
+    @validTypeCheck
     def getSet(self, dbName, setName):
-        if(self.isValidType(dbName) and self.isValidType(setName)):
-            if(self.database.isSetExist(dbName, setName) is True):
-                if(self.database.isExpired(dbName, setName, "SET") is False):
-                    setValue = self.database.getSet(dbName, setName)
-                    msg = self.makeMessage("Set Get Success", responseCode.SET_GET_SUCCESS, setValue)
-                else:
-                    msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
+        if(self.database.isSetExist(dbName, setName) is True):
+            if(self.database.isExpired(dbName, setName, "SET") is False):
+                setValue = self.database.getSet(dbName, setName)
+                msg = self.makeMessage("Set Get Success", responseCode.SET_GET_SUCCESS, setValue)
             else:
-                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+                msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+            msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         return msg
 
     # insert a value into the given set
+    @validTypeCheck
     def insertSet(self, dbName, setName, setValue):
-        if(self.isValidType(dbName) and self.isValidType(setName)):
-            if(self.database.isSetExist(dbName, setName)):
-                if(self.database.isExpired(dbName, setName, "SET") is False):
-                    result = self.database.insertSet(dbName, setName, setValue)
-                    msg = self.makeMessage(responseCode.detail[result], result, setName)
-                else:
-                    msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
+        if(self.database.isSetExist(dbName, setName)):
+            if(self.database.isExpired(dbName, setName, "SET") is False):
+                result = self.database.insertSet(dbName, setName, setValue)
+                msg = self.makeMessage(responseCode.detail[result], result, setName)
             else:
-                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+                msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+            msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         return msg
 
     # remove the given value from a set
+    @validTypeCheck
     def rmFromSet(self, dbName, setName, setValue):
-        if(self.isValidType(dbName) and self.isValidType(setName)):
-            if(self.database.isSetExist(dbName, setName)):
-                if(self.database.isExpired(dbName, setName, "SET") is False):
-                    result = self.database.rmFromSet(dbName, setName, setValue)
-                    msg = self.makeMessage(responseCode.detail[result], result, setName)
-                else:
-                    msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
+        if(self.database.isSetExist(dbName, setName)):
+            if(self.database.isExpired(dbName, setName, "SET") is False):
+                result = self.database.rmFromSet(dbName, setName, setValue)
+                msg = self.makeMessage(responseCode.detail[result], result, setName)
             else:
-                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+                msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+            msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         return msg
 
     # clear the given set
+    @validTypeCheck
     def clearSet(self, dbName, setName):
-        if(self.isValidType(dbName) and self.isValidType(setName)):
-            if(self.database.isSetExist(dbName, setName)):
-                if(self.database.isExpired(dbName, setName, "SET") is False):
-                    result = self.database.clearSet(dbName, setName)
-                    msg = self.makeMessage(responseCode.detail[result], result, setName)
-                else:
-                    msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
+        if(self.database.isSetExist(dbName, setName)):
+            if(self.database.isExpired(dbName, setName, "SET") is False):
+                result = self.database.clearSet(dbName, setName)
+                msg = self.makeMessage(responseCode.detail[result], result, setName)
             else:
-                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+                msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+            msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         return msg
 
     # delete the given set
+    @validTypeCheck
     def deleteSet(self, dbName, setName):
-        if (self.isValidType(dbName) and self.isValidType(setName)):
-            if (self.database.isSetExist(dbName, setName)):
-                if(self.database.isExpired(dbName, setName, "SET") is False):
-                    result = self.database.deleteSet(dbName, setName)
-                    msg = self.makeMessage(responseCode.detail[result], result, setName)
-                else:
-                    msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
+        if (self.database.isSetExist(dbName, setName)):
+            if(self.database.isExpired(dbName, setName, "SET") is False):
+                result = self.database.deleteSet(dbName, setName)
+                msg = self.makeMessage(responseCode.detail[result], result, setName)
             else:
-                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+                msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, setName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+            msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         return msg
 
     # search set names using regular expression
@@ -142,14 +147,9 @@ class setHandler:
            and self.isValidType(setName2)):
             if(self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
-                    unionResult = []
+                    unionResult = [None]
                     result = self.database.unionSet(dbName, setName1, setName2, unionResult)
-                    if(result == responseCode.SET_IS_LOCKED):
-                        msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED, "{0} or {1}".format(setName1, setName2))
-                    elif(result == responseCode.SET_UNION_SUCCESS):
-                        msg = self.makeMessage("Set Union Success", responseCode.SET_UNION_SUCCESS, unionResult[0])
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result], result, unionResult[0])
                 else:
                     msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2))
             else:
@@ -165,15 +165,9 @@ class setHandler:
             and self.isValidType(setName2)):
             if (self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
-                    intersectResult = []
+                    intersectResult = [None]
                     result = self.database.intersectSet(dbName, setName1, setName2, intersectResult)
-                    if (result == responseCode.SET_IS_LOCKED):
-                        msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED,
-                                               "{0} or {1}".format(setName1, setName2))
-                    elif (result == responseCode.SET_INTERSECT_SUCCESS):
-                        msg = self.makeMessage("Set Intersect Success", responseCode.SET_INTERSECT_SUCCESS, intersectResult[0])
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result], result, intersectResult[0])
                 else:
                     msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2))
             else:
@@ -190,15 +184,9 @@ class setHandler:
             and self.isValidType(setName2)):
             if (self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
-                    diffResult = []
+                    diffResult = [None]
                     result = self.database.diffSet(dbName, setName1, setName2, diffResult)
-                    if(result == responseCode.SET_IS_LOCKED):
-                        msg = self.makeMessage("Set Is Locked", responseCode.SET_IS_LOCKED,
-                                               "{0} or {1}".format(setName1, setName2))
-                    elif(result == responseCode.SET_DIFF_SUCCESS):
-                        msg = self.makeMessage("Set Diff Success", responseCode.SET_DIFF_SUCCESS, diffResult[0])
-                    else:
-                        msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+                    msg = self.makeMessage(responseCode.detail[result], result, diffResult[0])
                 else:
                     msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2))
             else:
@@ -209,9 +197,9 @@ class setHandler:
         return msg
 
     # replace the existed set with a new set
+    @validTypeCheck
     def replaceSet(self, dbName, setName, setValue):
-        if (self.isValidType(dbName) and self.isValidType(setName)
-            and self.isSet(setValue)):
+        if(self.isSet(setValue)):
             if (self.database.isSetExist(dbName, setName) is True):
                 if(self.database.isExpired(dbName, setName, "SET") is False):
                     result = self.database.replaceSet(dbName, setName, setValue)
@@ -225,36 +213,31 @@ class setHandler:
         return msg
 
     # set TTL for a set
+    @validTypeCheck
     def setTTL(self, dbName, setName, ttl):
-        if (self.isValidType(dbName) and self.isValidType(setName)):
-            if (self.database.isSetExist(dbName, setName) is False):
-                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
-            else:
-                result = self.database.setSetTTL(dbName, setName, ttl)
-                msg = self.makeMessage(responseCode.detail[result], result, setName)
+        if (self.database.isSetExist(dbName, setName) is False):
+            msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+            result = self.database.setSetTTL(dbName, setName, ttl)
+            msg = self.makeMessage(responseCode.detail[result], result, setName)
         return msg
 
     # clear TTL for a set
+    @validTypeCheck
     def clearTTL(self, dbName, setName):
-        if (self.isValidType(dbName) and self.isValidType(setName)):
-            if (self.database.isSetExist(dbName, setName) is False):
-                msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
-            else:
-                result = self.database.clearSetTTL(dbName, setName)
-                msg = self.makeMessage(responseCode.detail[result], result, setName)
+        if (self.database.isSetExist(dbName, setName) is False):
+            msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
+            result = self.database.clearSetTTL(dbName, setName)
+            msg = self.makeMessage(responseCode.detail[result], result, setName)
         return msg
 
+    # show TTL for a set
+    @validTypeCheck
     def showTTL(self, dbName, keyName):
-        if(self.isValidType(dbName) and self.isValidType(keyName)):
-            if(self.database.isDbExist(dbName)):
-                code, result = self.database.showTTL(dbName, keyName, "SET")
-                msg = self.makeMessage(responseCode.detail[code], code, result)
-            else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        if(self.database.isDbExist(dbName)):
+            code, result = self.database.showTTL(dbName, keyName, "SET")
+            msg = self.makeMessage(responseCode.detail[code], code, result)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg

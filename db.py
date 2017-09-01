@@ -7,35 +7,8 @@ import json
 import logging
 import time
 from response import responseCode
+from decorator import *
 
-# a decorator for save trigger
-def saveTrigger(func):
-    def trigger(*args, **kwargs):
-        result = func(*args, **kwargs)
-        self = args[0]
-        self.opCount += 1
-        # when opCounts reach the trigger, save automatically
-        if(self.opCount == self.saveTrigger):
-            self.opCount = 0
-            self.saveDb()
-            self.logger.info("Auto Save Triggers")
-        return result
-    return trigger
-
-# a decorator checking key name validity
-def keyNameValidity(func):
-    def checkValidity(*args, **kwargs):
-        lowercase = [chr(i) for i in range(97,123)]
-        uppercase = [chr(i) for i in range(65,91)]
-        underline = ["_"]
-        keyName = args[2]
-        if(keyName[0] not in lowercase and keyName[0] not in uppercase
-             and keyName[0] not in underline):
-            return responseCode.KEY_NAME_INVALID
-        else:
-            result = func(*args, **kwargs)
-            return result
-    return checkValidity
 
 class NoSqlDb:
     def __init__(self, config):

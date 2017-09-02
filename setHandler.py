@@ -2,23 +2,8 @@ __author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
+from decorator import *
 
-# a decorator which checks the type of args
-def validTypeCheck(func):
-    def check(*args, **kwargs):
-        dbName = args[1]
-        setName = args[2]
-        if(("str" not in str(type(dbName)) and "int" not in str(type(dbName)))
-           or ("str" not in str(type(setName)) and "int" not in str(type(setName)))):
-            return {
-                "msg":"Element Type Error",
-                "typeCode":responseCode.ELEM_TYPE_ERROR,
-                "data":setName
-            }
-        else:
-            result = func(*args,**kwargs)
-            return result
-    return check
 
 class setHandler:
     def __init__(self, database):
@@ -215,7 +200,7 @@ class setHandler:
     # set TTL for a set
     @validTypeCheck
     def setTTL(self, dbName, setName, ttl):
-        if (self.database.isSetExist(dbName, setName) is False):
+        if(self.database.isSetExist(dbName, setName) is False):
             msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         else:
             result = self.database.setSetTTL(dbName, setName, ttl)
@@ -225,7 +210,7 @@ class setHandler:
     # clear TTL for a set
     @validTypeCheck
     def clearTTL(self, dbName, setName):
-        if (self.database.isSetExist(dbName, setName) is False):
+        if(self.database.isSetExist(dbName, setName) is False):
             msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         else:
             result = self.database.clearSetTTL(dbName, setName)

@@ -2,6 +2,7 @@ __author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
+from decorator import *
 
 class listHandler:
     def __init__(self, database):
@@ -25,93 +26,78 @@ class listHandler:
         return message
 
     # create a list in the database
+    @validTypeCheck
     def createList(self, dbName, listName):
-        if(self.isValidType(listName) and self.isValidType(dbName)):
-            if(self.database.isDbExist(dbName)):
-                if(self.database.isListExist(dbName, listName) is False):
-                    result = self.database.createList(dbName, listName)
-                    msg = self.makeMessage(responseCode.detail[result],result,listName)
-                else:
-                    msg = self.makeMessage("List Already Exists", responseCode.LIST_ALREADY_EXIST, listName)
+        if(self.database.isDbExist(dbName)):
+            if(self.database.isListExist(dbName, listName) is False):
+                result = self.database.createList(dbName, listName)
+                msg = self.makeMessage(responseCode.detail[result],result,listName)
             else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
-        else:  # the type of elem name or elem value is invalid
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+                msg = self.makeMessage("List Already Exists", responseCode.LIST_ALREADY_EXIST, listName)
+        else:
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg
 
     # get the value of a given list
+    @validTypeCheck
     def getList(self, dbName, listName):
-        if(self.isValidType(listName) and self.isValidType(dbName)):
-            if(self.database.isListExist(dbName, listName) is True):
-                if(self.database.isExpired(dbName, listName, "LIST") is False):
-                    listValue = self.database.getList(listName, dbName)
-                    msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
-                else:
-                    msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        if(self.database.isListExist(dbName, listName) is True):
+            if(self.database.isExpired(dbName, listName, "LIST") is False):
+                listValue = self.database.getList(listName, dbName)
+                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
             else:
-                msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
     # insert a value into the given list
+    @validTypeCheck
     def insertList(self, dbName, listName, listValue):
-        if(self.isValidType(listName)
-           and self.isValidType(dbName)):
-            # if list exists, execute the insertion
-            if(self.database.isListExist(dbName, listName) is True):
-                if(self.database.isExpired(dbName, listName, "LIST") is False):
-                    result = self.database.insertList(listName, listValue, dbName)
-                    msg = self.makeMessage(responseCode.detail[result],result,listName)
-                else:
-                    msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        if(self.database.isListExist(dbName, listName) is True):
+            if(self.database.isExpired(dbName, listName, "LIST") is False):
+                result = self.database.insertList(listName, listValue, dbName)
+                msg = self.makeMessage(responseCode.detail[result],result,listName)
             else:
-                msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
     # delete a list in the database
+    @validTypeCheck
     def deleteList(self, dbName, listName):
-        if(self.isValidType(listName) and self.isValidType(dbName)):
-            if(self.database.isListExist(dbName, listName) is True):
-                result = self.database.deleteList(listName, dbName)
-                msg = self.makeMessage(responseCode.detail[result],result,listName)
-            else:
-                msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+        if(self.database.isListExist(dbName, listName) is True):
+            result = self.database.deleteList(listName, dbName)
+            msg = self.makeMessage(responseCode.detail[result],result,listName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
     # remove a value from the given list
+    @validTypeCheck
     def rmFromList(self, dbName, listName, value):
-        if(self.isValidType(dbName) and self.isValidType(listName)):
-            # if list exists, execute the removal
-            if(self.database.isListExist(dbName, listName) is True):
-                if(self.database.isExpired(dbName, listName, "LIST") is False):
-                    result = self.database.rmFromList(dbName, listName, value)
-                    msg = self.makeMessage(responseCode.detail[result],result,listName)
-                else:
-                    msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
-            else:   # if list does not exist
-                msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
-        else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+        if(self.database.isListExist(dbName, listName) is True):
+            if(self.database.isExpired(dbName, listName, "LIST") is False):
+                result = self.database.rmFromList(dbName, listName, value)
+                msg = self.makeMessage(responseCode.detail[result],result,listName)
+            else:
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        else:   # if list does not exist
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
     # clear the given list
+    @validTypeCheck
     def clearList(self, dbName, listName):
-        if(self.isValidType(dbName) and self.isValidType(listName)):
-            if(self.database.isListExist(dbName, listName) is True):
-                if(self.database.isExpired(dbName, listName, "LIST") is False):
-                    result = self.database.clearList(dbName, listName)
-                    msg = self.makeMessage(responseCode.detail[result],result,listName)
-                else:
-                    msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        if(self.database.isListExist(dbName, listName) is True):
+            if(self.database.isExpired(dbName, listName, "LIST") is False):
+                result = self.database.clearList(dbName, listName)
+                msg = self.makeMessage(responseCode.detail[result],result,listName)
             else:
-                msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
     # merge two lists
@@ -162,36 +148,30 @@ class listHandler:
         return msg
 
     # set TTL for a list
+    @validTypeCheck
     def setTTL(self, dbName, listName, ttl):
-        if (self.isValidType(dbName) and self.isValidType(listName)):
-            if (self.database.isListExist(dbName, listName) is False):
-                msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
-            else:
-                result = self.database.setListTTL(dbName, listName, ttl)
-                msg = self.makeMessage(responseCode.detail[result],result,listName)
+        if (self.database.isListExist(dbName, listName) is False):
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+            result = self.database.setListTTL(dbName, listName, ttl)
+            msg = self.makeMessage(responseCode.detail[result],result,listName)
         return msg
 
     # clear TTL for a list
+    @validTypeCheck
     def clearTTL(self, dbName, listName):
-        if (self.isValidType(dbName) and self.isValidType(listName)):
-            if (self.database.isListExist(dbName, listName) is False):
-                msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
-            else:
-                result = self.database.clearListTTL(dbName, listName)
-                msg = self.makeMessage(responseCode.detail[result],result,listName)
+        if (self.database.isListExist(dbName, listName) is False):
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, listName)
+            result = self.database.clearListTTL(dbName, listName)
+            msg = self.makeMessage(responseCode.detail[result],result,listName)
         return msg
-
+    
+    @validTypeCheck
     def showTTL(self, dbName, keyName):
-        if(self.isValidType(dbName) and self.isValidType(keyName)):
-            if(self.database.isDbExist(dbName)):
-                code, result = self.database.showTTL(dbName, keyName, "LIST")
-                msg = self.makeMessage(responseCode.detail[code], code, result)
-            else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        if(self.database.isDbExist(dbName)):
+            code, result = self.database.showTTL(dbName, keyName, "LIST")
+            msg = self.makeMessage(responseCode.detail[code], code, result)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg

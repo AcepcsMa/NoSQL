@@ -2,6 +2,7 @@ __author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
+from decorator import *
 
 class elemHandler:
     def __init__(self, database):
@@ -25,53 +26,47 @@ class elemHandler:
         return message
 
     # create an element in the db
+    @validTypeCheck
     def createElem(self, dbName, elemName, elemValue):
-        if(self.isValidType(elemName) and self.isValidType(elemValue) and self.isValidType(dbName)): # check the type of elem name and elem value
-            if(self.database.isDbExist(dbName)):
-                if(self.database.isElemExist(dbName, elemName) is False):
-                    result = self.database.createElem(dbName, elemName, elemValue)
-                    msg = self.makeMessage(responseCode.detail[result],result,elemName)
-                else:   # this elem already exists in the db
-                    msg = self.makeMessage("Element Already Exists", responseCode.ELEM_ALREADY_EXIST, elemName)
-            else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        if(self.isValidType(elemValue)): # check the type of elem name and elem value
+            if(self.database.isElemExist(dbName, elemName) is False):
+                result = self.database.createElem(dbName, elemName, elemValue)
+                msg = self.makeMessage(responseCode.detail[result],result,elemName)
+            else:   # this elem already exists in the db
+                msg = self.makeMessage("Element Already Exists", responseCode.ELEM_ALREADY_EXIST, elemName)
         else:   # the type of elem name or elem value is invalid
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg
 
     # update the value of an elem in the db
+    @validTypeCheck
     def updateElem(self, dbName, elemName, elemValue):
-        if (self.isValidType(elemName) and self.isValidType(elemValue) and self.isValidType(dbName)):
-            if(self.database.isDbExist(dbName)):
-                if(self.database.isElemExist(dbName, elemName)):
-                    if(self.database.isExpired(dbName, elemName, "ELEM") is False):
-                        result = self.database.updateElem(elemName, elemValue, dbName)
-                        msg = self.makeMessage(responseCode.detail[result], result, elemName)
-                    else:
-                        msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
+        if(self.isValidType(elemValue)):
+            if(self.database.isElemExist(dbName, elemName)):
+                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
+                    result = self.database.updateElem(elemName, elemValue, dbName)
+                    msg = self.makeMessage(responseCode.detail[result], result, elemName)
                 else:
-                    msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
+                    msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
             else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+                msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
         return msg
 
     # get the value of existed elem
+    @validTypeCheck
     def getElem(self, dbName, elemName):
-        if(self.isValidType(elemName) and self.isValidType(dbName)):
-            if(self.database.isDbExist(dbName)):
-                if (self.database.isElemExist(dbName, elemName) is False):
-                    msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
-                else:
-                    if(self.database.isExpired(dbName, elemName, "ELEM") is False):
-                        msg = self.makeMessage("Element Get Success", responseCode.ELEM_GET_SUCCESS, self.database.getElem(elemName, dbName))
-                    else:
-                        msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
+        if(self.database.isDbExist(dbName)):
+            if (self.database.isElemExist(dbName, elemName) is False):
+                msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
+                    msg = self.makeMessage("Element Get Success", responseCode.ELEM_GET_SUCCESS, self.database.getElem(elemName, dbName))
+                else:
+                    msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg
 
     # search element using regular expression
@@ -89,84 +84,72 @@ class elemHandler:
         return msg
 
     # increase the value of an element
+    @validTypeCheck
     def increaseElem(self, dbName, elemName):
-        if(self.isValidType(elemName) and self.isValidType(dbName)):
-            if(self.database.isElemExist(dbName, elemName) is False):
-                msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
-            else:
-                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
-                    if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
-                        result = self.database.increaseElem(elemName, dbName)
-                        msg = self.makeMessage(responseCode.detail[result], result, elemName)
-                    else:
-                        msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
-                else:
-                    msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
+        if(self.database.isElemExist(dbName, elemName) is False):
+            msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            if(self.database.isExpired(dbName, elemName, "ELEM") is False):
+                if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
+                    result = self.database.increaseElem(elemName, dbName)
+                    msg = self.makeMessage(responseCode.detail[result], result, elemName)
+                else:
+                    msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            else:
+                msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
         return msg
 
     # decrease the value of an element
+    @validTypeCheck
     def decreaseElem(self, dbName, elemName):
-        if(self.isValidType(elemName) and self.isValidType(dbName)):
-            if(self.database.isElemExist(dbName, elemName) is False):
-                msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
-            else:
-                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
-                    if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
-                        result = self.database.decreaseElem(elemName, dbName)
-                        msg = self.makeMessage(responseCode.detail[result], result, elemName)
-                    else:
-                        msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
-                else:
-                    msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
+        if(self.database.isElemExist(dbName, elemName) is False):
+            msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            if(self.database.isExpired(dbName, elemName, "ELEM") is False):
+                if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
+                    result = self.database.decreaseElem(elemName, dbName)
+                    msg = self.makeMessage(responseCode.detail[result], result, elemName)
+                else:
+                    msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            else:
+                msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
         return msg
 
     # delete an element in the database
+    @validTypeCheck
     def deleteElem(self, dbName, elemName):
-        if(self.isValidType(elemName) and self.isValidType(dbName)):
-            if (self.database.isElemExist(dbName, elemName) is False):
-                msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
-            else:
-                result = self.database.deleteElem(elemName, dbName)
-                msg = self.makeMessage(responseCode.detail[result], result, elemName)
+        if (self.database.isElemExist(dbName, elemName) is False):
+            msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            result = self.database.deleteElem(elemName, dbName)
+            msg = self.makeMessage(responseCode.detail[result], result, elemName)
         return msg
 
     # set TTL for an element
+    @validTypeCheck
     def setTTL(self, dbName, elemName, ttl):
-        if(self.isValidType(dbName) and self.isValidType(elemName)):
-            if(self.database.isElemExist(dbName, elemName) is False):
-                msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
-            else:
-                result = self.database.setElemTTL(dbName, elemName, ttl)
-                msg = self.makeMessage(responseCode.detail[result], result, elemName)
+        if(self.database.isElemExist(dbName, elemName) is False):
+            msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            result = self.database.setElemTTL(dbName, elemName, ttl)
+            msg = self.makeMessage(responseCode.detail[result], result, elemName)
         return msg
 
     # clear TTL for an element
+    @validTypeCheck
     def clearTTL(self, dbName, elemName):
-        if(self.isValidType(dbName) and self.isValidType(elemName)):
-            if(self.database.isElemExist(dbName, elemName) is False):
-                msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
-            else:
-                result = self.database.clearElemTTL(dbName, elemName)
-                msg = self.makeMessage(responseCode.detail[result], result, elemName)
+        if(self.database.isElemExist(dbName, elemName) is False):
+            msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, elemName)
+            result = self.database.clearElemTTL(dbName, elemName)
+            msg = self.makeMessage(responseCode.detail[result], result, elemName)
         return msg
 
+    @validTypeCheck
     def showTTL(self, dbName, keyName):
-        if(self.isValidType(dbName) and self.isValidType(keyName)):
-            if(self.database.isDbExist(dbName)):
-                code, result = self.database.showTTL(dbName, keyName, "ELEM")
-                msg = self.makeMessage(responseCode.detail[code], code, result)
-            else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        if(self.database.isDbExist(dbName)):
+            code, result = self.database.showTTL(dbName, keyName, "ELEM")
+            msg = self.makeMessage(responseCode.detail[code], code, result)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg

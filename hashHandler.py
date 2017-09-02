@@ -2,6 +2,7 @@ __author__ = 'Ma Haoxiang'
 
 # import
 from response import responseCode
+from decorator import *
 
 class hashHandler:
     def __init__(self, database):
@@ -32,35 +33,32 @@ class hashHandler:
         return message
 
     # create a hash
+    @validTypeCheck
     def createHash(self, dbName, hashName):
-        if(self.isValidType(dbName) and self.isValidType(hashName)):
-            if(self.database.isDbExist(dbName)):
-                result = self.database.createHash(dbName, hashName)
-                msg = self.makeMessage(responseCode.detail[result], result, hashName)
-            else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        if(self.database.isDbExist(dbName)):
+            result = self.database.createHash(dbName, hashName)
+            msg = self.makeMessage(responseCode.detail[result], result, hashName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg
 
     # get hash value
+    @validTypeCheck
     def getHash(self, dbName, hashName):
-        if(self.isValidType(dbName) and self.isValidType(hashName)):
-            if(self.database.isHashExist(dbName, hashName) is True):
-                if(self.database.isExpired(dbName, hashName, "HASH") is False):
-                    hashValue = self.database.getHash(dbName, hashName)
-                    msg = self.makeMessage("Hash Get Success", responseCode.HASH_GET_SUCCESS, hashValue)
-                else:
-                    msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+        if(self.database.isHashExist(dbName, hashName) is True):
+            if(self.database.isExpired(dbName, hashName, "HASH") is False):
+                hashValue = self.database.getHash(dbName, hashName)
+                msg = self.makeMessage("Hash Get Success", responseCode.HASH_GET_SUCCESS, hashValue)
             else:
-                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         return msg
 
     # insert a key-value data into the given hash
+    @validTypeCheck
     def insertHash(self, dbName, hashName, keyName, value):
-        if(self.isValidType(dbName) and self.isValidType(hashName) and self.isValidType(keyName)):
+        if(self.isValidType(keyName)):
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.insertHash(dbName, hashName, keyName, value)
@@ -74,67 +72,59 @@ class hashHandler:
         return msg
 
     # check if a key exists in the given hash
+    @validTypeCheck
     def isKeyExist(self, dbName, hashName, keyName):
-        if(self.isValidType(dbName) and self.isValidType(hashName)):
-            if(self.database.isHashExist(dbName, hashName)):
-                if(self.database.isExpired(dbName, hashName, "HASH") is False):
-                    result = self.database.isKeyExist(dbName, hashName, keyName)
-                    result = responseCode.HASH_KEY_EXIST if result is True else responseCode.HASH_KEY_NOT_EXIST
-                    msg = self.makeMessage(responseCode.detail[result],result,keyName)
-                else:
-                    msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+        if(self.database.isHashExist(dbName, hashName)):
+            if(self.database.isExpired(dbName, hashName, "HASH") is False):
+                result = self.database.isKeyExist(dbName, hashName, keyName)
+                result = responseCode.HASH_KEY_EXIST if result is True else responseCode.HASH_KEY_NOT_EXIST
+                msg = self.makeMessage(responseCode.detail[result],result,keyName)
             else:
-                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         return msg
 
     # delete the given hash
+    @validTypeCheck
     def deleteHash(self, dbName, hashName):
-        if(self.isValidType(dbName) and self.isValidType(hashName)):
-            if(self.database.isHashExist(dbName, hashName)):
-                result = self.database.deleteHash(dbName, hashName)
-                msg = self.makeMessage(responseCode.detail[result],result,hashName)
-            else:
-                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        if(self.database.isHashExist(dbName, hashName)):
+            result = self.database.deleteHash(dbName, hashName)
+            msg = self.makeMessage(responseCode.detail[result],result,hashName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         return msg
 
     # remove a key-value data from the given hash
+    @validTypeCheck
     def rmFromHash(self, dbName, hashName, keyName):
-        if(self.isValidType(dbName) and self.isValidType(hashName)):
-            if(self.database.isKeyExist(dbName, hashName, keyName) is True):
-                if(self.database.isExpired(dbName, hashName, "HASH") is False):
-                    result = self.database.rmFromHash(dbName, hashName, keyName)
-                    msg = self.makeMessage(responseCode.detail[result],result,hashName)
-                else:
-                    msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+        if(self.database.isKeyExist(dbName, hashName, keyName) is True):
+            if(self.database.isExpired(dbName, hashName, "HASH") is False):
+                result = self.database.rmFromHash(dbName, hashName, keyName)
+                msg = self.makeMessage(responseCode.detail[result],result,hashName)
             else:
-                msg = self.makeMessage("Hash Key Does Not Exist", responseCode.HASH_KEY_NOT_EXIST, keyName)
+                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            msg = self.makeMessage("Hash Key Does Not Exist", responseCode.HASH_KEY_NOT_EXIST, keyName)
         return msg
 
     # clear the entire hash
+    @validTypeCheck
     def clearHash(self, dbName, hashName):
-        if(self.isValidType(dbName) and self.isValidType(hashName)):
-            if(self.database.isHashExist(dbName, hashName) is True):
-                if(self.database.isExpired(dbName, hashName, "HASH") is False):
-                    result = self.database.clearHash(dbName, hashName)
-                    msg = self.makeMessage(responseCode.detail[result],result,hashName)
-                else:
-                    msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+        if(self.database.isHashExist(dbName, hashName) is True):
+            if(self.database.isExpired(dbName, hashName, "HASH") is False):
+                result = self.database.clearHash(dbName, hashName)
+                msg = self.makeMessage(responseCode.detail[result],result,hashName)
             else:
-                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         return msg
 
     # replace the existed hash with a new value
+    @validTypeCheck
     def replaceHash(self, dbName, hashName, hashValue):
-        if(self.isValidType(dbName) and self.isValidType(hashName)
-           and self.isDict(hashValue)):
+        if(self.isDict(hashValue)):
             if(self.database.isHashExist(dbName, hashName) is True):
                 if(self.database.isExpired(dbName, hashName, "HASH") is False):
                     result = self.database.replaceHash(dbName, hashName, hashValue)
@@ -189,36 +179,30 @@ class hashHandler:
         return msg
 
     # set TTL for a list
+    @validTypeCheck
     def setTTL(self, dbName, hashName, ttl):
-        if (self.isValidType(dbName) and self.isValidType(hashName)):
-            if (self.database.isHashExist(dbName, hashName) is False):
-                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
-            else:
-                result = self.database.setHashTTL(dbName, hashName, ttl)
-                msg = self.makeMessage(responseCode.detail[result],result,hashName)
+        if (self.database.isHashExist(dbName, hashName) is False):
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            result = self.database.setHashTTL(dbName, hashName, ttl)
+            msg = self.makeMessage(responseCode.detail[result],result,hashName)
         return msg
 
     # clear TTL for a list
+    @validTypeCheck
     def clearTTL(self, dbName, hashName):
-        if (self.isValidType(dbName) and self.isValidType(hashName)):
-            if (self.database.isHashExist(dbName, hashName) is False):
-                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
-            else:
-                result = self.database.clearHashTTL(dbName, hashName)
-                msg = self.makeMessage(responseCode.detail[result],result,hashName)
+        if (self.database.isHashExist(dbName, hashName) is False):
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            result = self.database.clearHashTTL(dbName, hashName)
+            msg = self.makeMessage(responseCode.detail[result],result,hashName)
         return msg
 
+    @validTypeCheck
     def showTTL(self, dbName, keyName):
-        if(self.isValidType(dbName) and self.isValidType(keyName)):
-            if(self.database.isDbExist(dbName)):
-                code, result = self.database.showTTL(dbName, keyName, "HASH")
-                msg = self.makeMessage(responseCode.detail[code],code,result)
-            else:
-                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        if(self.database.isDbExist(dbName)):
+            code, result = self.database.showTTL(dbName, keyName, "HASH")
+            msg = self.makeMessage(responseCode.detail[code],code,result)
         else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg

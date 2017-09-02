@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.py" afterPath="$PROJECT_DIR$/db.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/elemHandler.py" afterPath="$PROJECT_DIR$/elemHandler.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setHandler.py" afterPath="$PROJECT_DIR$/setHandler.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hashHandler.py" afterPath="$PROJECT_DIR$/hashHandler.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/listHandler.py" afterPath="$PROJECT_DIR$/listHandler.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,7 +14,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.71485305">
+    <splitter split-orientation="horizontal" split-proportion="0.61795074">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="db.py" pinned="false" current-in-tab="false">
@@ -43,12 +41,14 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="elemHandler.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="elemHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/elemHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="51">
-                  <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-                  <folding />
+                <state relative-caret-position="442">
+                  <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#37#70#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -56,8 +56,32 @@
           <file leaf-file-name="setHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/setHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="68">
-                  <caret line="4" column="23" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
+                <state relative-caret-position="17">
+                  <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#37#70#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="hashHandler.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/hashHandler.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="17">
+                  <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#37#70#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="listHandler.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/listHandler.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2856">
+                  <caret line="168" column="4" lean-forward="true" selection-start-line="168" selection-start-column="4" selection-end-line="168" selection-end-column="4" />
                   <folding>
                     <element signature="e#37#70#0" expanded="true" />
                   </folding>
@@ -174,15 +198,15 @@
         <option value="$PROJECT_DIR$/server.py" />
         <option value="$PROJECT_DIR$/testcases/listTest.py" />
         <option value="$PROJECT_DIR$/testcases/hashTest.py" />
-        <option value="$PROJECT_DIR$/hashHandler.py" />
         <option value="$PROJECT_DIR$/testcases/elemTest.py" />
         <option value="$PROJECT_DIR$/testcases/testLog.log" />
-        <option value="$PROJECT_DIR$/listHandler.py" />
         <option value="$PROJECT_DIR$/response.py" />
         <option value="$PROJECT_DIR$/decorator.py" />
         <option value="$PROJECT_DIR$/db.py" />
         <option value="$PROJECT_DIR$/setHandler.py" />
         <option value="$PROJECT_DIR$/elemHandler.py" />
+        <option value="$PROJECT_DIR$/hashHandler.py" />
+        <option value="$PROJECT_DIR$/listHandler.py" />
       </list>
     </option>
   </component>
@@ -751,22 +775,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hashHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="210" column="13" lean-forward="true" selection-start-line="210" selection-start-column="13" selection-end-line="210" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/listHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="174" column="0" lean-forward="true" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/response.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="768">
@@ -841,16 +849,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/setHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="23" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
-          <folding>
-            <element signature="e#37#70#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/decorator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="782">
@@ -873,9 +871,41 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/elemHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="442">
+          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding>
+            <element signature="e#37#70#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/setHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding>
+            <element signature="e#37#70#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hashHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding>
+            <element signature="e#37#70#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/listHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2856">
+          <caret line="168" column="4" lean-forward="true" selection-start-line="168" selection-start-column="4" selection-end-line="168" selection-end-column="4" />
+          <folding>
+            <element signature="e#37#70#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

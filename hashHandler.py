@@ -1,7 +1,6 @@
 __author__ = 'Ma Haoxiang'
 
 # import
-from response import responseCode
 from decorator import *
 
 class hashHandler:
@@ -9,11 +8,11 @@ class hashHandler:
         self.database = database
 
     # check if the type of elem is valid (string or int)
-    def isValidType(self, elem):
-        if('str' in str(type(elem)) or 'int' in str(type(elem))):
-            return True
-        else:
-            return False
+    def isValidType(self, *elems):
+        for elem in elems:
+            if('str' not in str(type(elem)) and 'int' not in str(type(elem))):
+                return False
+        return True
 
     # check if the type of an elem is INT
     def isInt(self, elem):
@@ -58,17 +57,18 @@ class hashHandler:
     # insert a key-value data into the given hash
     @validTypeCheck
     def insertHash(self, dbName, hashName, keyName, value):
-        if(self.isValidType(keyName)):
-            if(self.database.isHashExist(dbName, hashName)):
-                if(self.database.isExpired("HASH", dbName, hashName) is False):
-                    result = self.database.insertHash(dbName, hashName, keyName, value)
-                    msg = self.makeMessage(responseCode.detail[result], result, hashName)
-                else:
-                    msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
-            else:
-                msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
-        else:
+        if(self.isValidType(keyName) is False):
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+            return msg
+
+        if(self.database.isHashExist(dbName, hashName)):
+            if(self.database.isExpired("HASH", dbName, hashName) is False):
+                result = self.database.insertHash(dbName, hashName, keyName, value)
+                msg = self.makeMessage(responseCode.detail[result], result, hashName)
+            else:
+                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+        else:
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         return msg
 
     # check if a key exists in the given hash

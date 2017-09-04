@@ -30,6 +30,10 @@ class elemHandler:
     # create an element in the db
     @validTypeCheck
     def createElem(self, dbName, elemName, elemValue):
+        if(self.database.isDbExist(dbName) is False):
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+            return msg
+
         if(self.isValidType(elemValue)): # check the type of elem name and elem value
             if(self.database.isElemExist(dbName, elemName) is False):
                 result = self.database.createElem(dbName, elemName, elemValue)

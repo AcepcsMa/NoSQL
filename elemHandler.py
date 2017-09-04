@@ -61,7 +61,7 @@ class elemHandler:
             if (self.database.isElemExist(dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
-                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
+                if(self.database.isExpired("ELEM", dbName, elemName) is False):
                     msg = self.makeMessage("Element Get Success", responseCode.ELEM_GET_SUCCESS, self.database.getElem(elemName, dbName))
                 else:
                     msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)
@@ -89,7 +89,7 @@ class elemHandler:
         if(self.database.isElemExist(dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
-            if(self.database.isExpired(dbName, elemName, "ELEM") is False):
+            if(self.database.isExpired("ELEM", dbName, elemName) is False):
                 if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                     result = self.database.increaseElem(elemName, dbName)
                     msg = self.makeMessage(responseCode.detail[result], result, elemName)
@@ -105,7 +105,7 @@ class elemHandler:
         if(self.database.isElemExist(dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
-            if(self.database.isExpired(dbName, elemName, "ELEM") is False):
+            if(self.database.isExpired("ELEM", dbName, elemName) is False):
                 if(self.isInt(self.database.getElem(elemName, dbName))): # check if the element can be increased
                     result = self.database.decreaseElem(elemName, dbName)
                     msg = self.makeMessage(responseCode.detail[result], result, elemName)

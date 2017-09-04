@@ -45,8 +45,8 @@ class hashHandler:
     # get hash value
     @validTypeCheck
     def getHash(self, dbName, hashName):
-        if(self.database.isHashExist(dbName, hashName) is True):
-            if(self.database.isExpired(dbName, hashName, "HASH") is False):
+        if(self.database.isHashExist(dbName, hashName)):
+            if(self.database.isExpired("HASH", dbName, hashName) is False):
                 hashValue = self.database.getHash(dbName, hashName)
                 msg = self.makeMessage("Hash Get Success", responseCode.HASH_GET_SUCCESS, hashValue)
             else:
@@ -59,8 +59,8 @@ class hashHandler:
     @validTypeCheck
     def insertHash(self, dbName, hashName, keyName, value):
         if(self.isValidType(keyName)):
-            if(self.database.isHashExist(dbName, hashName) is True):
-                if(self.database.isExpired(dbName, hashName, "HASH") is False):
+            if(self.database.isHashExist(dbName, hashName)):
+                if(self.database.isExpired("HASH", dbName, hashName) is False):
                     result = self.database.insertHash(dbName, hashName, keyName, value)
                     msg = self.makeMessage(responseCode.detail[result], result, hashName)
                 else:
@@ -75,7 +75,7 @@ class hashHandler:
     @validTypeCheck
     def isKeyExist(self, dbName, hashName, keyName):
         if(self.database.isHashExist(dbName, hashName)):
-            if(self.database.isExpired(dbName, hashName, "HASH") is False):
+            if(self.database.isExpired("HASH", dbName, hashName) is False):
                 result = self.database.isKeyExist(dbName, hashName, keyName)
                 result = responseCode.HASH_KEY_EXIST if result is True else responseCode.HASH_KEY_NOT_EXIST
                 msg = self.makeMessage(responseCode.detail[result],result,keyName)
@@ -98,8 +98,8 @@ class hashHandler:
     # remove a key-value data from the given hash
     @validTypeCheck
     def rmFromHash(self, dbName, hashName, keyName):
-        if(self.database.isKeyExist(dbName, hashName, keyName) is True):
-            if(self.database.isExpired(dbName, hashName, "HASH") is False):
+        if(self.database.isKeyExist(dbName, hashName, keyName)):
+            if(self.database.isExpired("HASH", dbName, hashName) is False):
                 result = self.database.rmFromHash(dbName, hashName, keyName)
                 msg = self.makeMessage(responseCode.detail[result],result,hashName)
             else:
@@ -112,7 +112,7 @@ class hashHandler:
     @validTypeCheck
     def clearHash(self, dbName, hashName):
         if(self.database.isHashExist(dbName, hashName) is True):
-            if(self.database.isExpired(dbName, hashName, "HASH") is False):
+            if(self.database.isExpired("HASH", dbName, hashName) is False):
                 result = self.database.clearHash(dbName, hashName)
                 msg = self.makeMessage(responseCode.detail[result],result,hashName)
             else:
@@ -124,17 +124,17 @@ class hashHandler:
     # replace the existed hash with a new value
     @validTypeCheck
     def replaceHash(self, dbName, hashName, hashValue):
-        if(self.isDict(hashValue)):
+        if(self.isDict(hashValue) is False):
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        else:
             if(self.database.isHashExist(dbName, hashName) is True):
-                if(self.database.isExpired(dbName, hashName, "HASH") is False):
+                if(self.database.isExpired("HASH", dbName, hashName) is False):
                     result = self.database.replaceHash(dbName, hashName, hashValue)
                     msg = self.makeMessage(responseCode.detail[result],result,hashName)
                 else:
                     msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
             else:
                 msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
-        else:
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
         return msg
 
     # merge two hashs
@@ -144,10 +144,8 @@ class hashHandler:
                 msg = self.makeMessage("Merge Result Exists", responseCode.MERGE_RESULT_EXIST, resultHashName)
                 return msg
 
-        if (self.database.isHashExist(dbName, hashName1)
-            and self.database.isHashExist(dbName, hashName2)):
-            if(self.database.isHashExpired(dbName, hashName1) is False
-               and self.database.isHashExpired(dbName, hashName2) is False):
+        if(self.database.isHashExist(dbName, hashName1, hashName2)):
+            if(self.database.isExpired("HASH", dbName, hashName1, hashName2) is False):
                 result = self.database.mergeHashs(dbName, hashName1, hashName2, resultHashName, mergeMode)
                 msg = self.makeMessage(responseCode.detail[result],result,resultHashName)
             else:

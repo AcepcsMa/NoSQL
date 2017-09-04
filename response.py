@@ -131,5 +131,6 @@ class responseCode:
         SET_DELETE_SUCCESS:"Set Delete Success",
         SET_REPLACE_SUCCESS:"Set Replace Success",
         SET_TTL_SET_SUCCESS:"Set TTL Set Success",
-        SET_TTL_CLEAR_SUCCESS:"Set TTL Clear Success"
+        SET_TTL_CLEAR_SUCCESS:"Set TTL Clear Success",
+        LIST_MERGE_SUCCESS:"Lists Merge Success"
     }

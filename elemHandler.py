@@ -1,7 +1,6 @@
 __author__ = 'Ma Haoxiang'
 
 # import
-from response import responseCode
 from decorator import *
 
 class elemHandler:
@@ -9,8 +8,11 @@ class elemHandler:
         self.database = database
 
     # check if the type of elem is valid (string or int)
-    def isValidType(self, elem):
-        return 'str' in str(type(elem)) or 'int' in str(type(elem))
+    def isValidType(self, *elems):
+        for elem in elems:
+            if('str' not in str(type(elem)) and 'int' not in str(type(elem))):
+                return False
+        return True
 
     # check if the type of an elem is INT
     def isInt(self, elem):

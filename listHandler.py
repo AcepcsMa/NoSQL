@@ -42,7 +42,7 @@ class listHandler:
     @validTypeCheck
     def getList(self, dbName, listName):
         if(self.database.isListExist(dbName, listName) is True):
-            if(self.database.isExpired(dbName, listName, "LIST") is False):
+            if(self.database.isExpired("LIST", dbName, listName) is False):
                 listValue = self.database.getList(listName, dbName)
                 msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
             else:
@@ -55,7 +55,7 @@ class listHandler:
     @validTypeCheck
     def insertList(self, dbName, listName, listValue):
         if(self.database.isListExist(dbName, listName) is True):
-            if(self.database.isExpired(dbName, listName, "LIST") is False):
+            if(self.database.isExpired("LIST", dbName, listName) is False):
                 result = self.database.insertList(listName, listValue, dbName)
                 msg = self.makeMessage(responseCode.detail[result],result,listName)
             else:
@@ -78,7 +78,7 @@ class listHandler:
     @validTypeCheck
     def rmFromList(self, dbName, listName, value):
         if(self.database.isListExist(dbName, listName) is True):
-            if(self.database.isExpired(dbName, listName, "LIST") is False):
+            if(self.database.isExpired("LIST", dbName, listName) is False):
                 result = self.database.rmFromList(dbName, listName, value)
                 msg = self.makeMessage(responseCode.detail[result],result,listName)
             else:
@@ -91,7 +91,7 @@ class listHandler:
     @validTypeCheck
     def clearList(self, dbName, listName):
         if(self.database.isListExist(dbName, listName) is True):
-            if(self.database.isExpired(dbName, listName, "LIST") is False):
+            if(self.database.isExpired("LIST", dbName, listName) is False):
                 result = self.database.clearList(dbName, listName)
                 msg = self.makeMessage(responseCode.detail[result],result,listName)
             else:
@@ -112,17 +112,10 @@ class listHandler:
                 msg = self.makeMessage("Merge Result Exists", responseCode.MERGE_RESULT_EXIST, resultListName)
                 return msg
 
-        if(self.database.isListExist(dbName, listName1)
-           and self.database.isListExist(dbName, listName2)):
-            if(self.database.isExpired(dbName, listName1, "LIST") is False
-               and self.database.isExpired(dbName, listName2, "LIST") is False):
-                result = self.database.mergeLists(dbName, listName1, listName2, resultListName)
-                if(result == responseCode.LIST_IS_LOCKED):
-                    msg = self.makeMessage("List Is Locked", responseCode.LIST_IS_LOCKED, resultListName)
-                elif("list" in str(type(result))):
-                    msg = self.makeMessage("List Merge Success", responseCode.LIST_MERGE_SUCCESS, result)
-                else:
-                    msg = self.makeMessage("Database Error", responseCode.DB_ERROR, dbName)
+        if(self.database.isListExist(dbName, listName1, listName2)):
+            if(self.database.isExpired("LIST", dbName, listName1, listName2) is False):
+                code, result = self.database.mergeLists(dbName, listName1, listName2, resultListName)
+                msg = self.makeMessage(responseCode.detail[code], code, result)
             else:
                 msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, "{} or {}".format(listName1, listName2))
         else:

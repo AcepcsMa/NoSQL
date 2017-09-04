@@ -43,7 +43,7 @@ class setHandler:
     @validTypeCheck
     def getSet(self, dbName, setName):
         if(self.database.isSetExist(dbName, setName) is True):
-            if(self.database.isExpired(dbName, setName, "SET") is False):
+            if(self.database.isExpired("SET", dbName, setName) is False):
                 setValue = self.database.getSet(dbName, setName)
                 msg = self.makeMessage("Set Get Success", responseCode.SET_GET_SUCCESS, setValue)
             else:
@@ -56,7 +56,7 @@ class setHandler:
     @validTypeCheck
     def insertSet(self, dbName, setName, setValue):
         if(self.database.isSetExist(dbName, setName)):
-            if(self.database.isExpired(dbName, setName, "SET") is False):
+            if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.insertSet(dbName, setName, setValue)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
             else:
@@ -69,7 +69,7 @@ class setHandler:
     @validTypeCheck
     def rmFromSet(self, dbName, setName, setValue):
         if(self.database.isSetExist(dbName, setName)):
-            if(self.database.isExpired(dbName, setName, "SET") is False):
+            if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.rmFromSet(dbName, setName, setValue)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
             else:
@@ -82,7 +82,7 @@ class setHandler:
     @validTypeCheck
     def clearSet(self, dbName, setName):
         if(self.database.isSetExist(dbName, setName)):
-            if(self.database.isExpired(dbName, setName, "SET") is False):
+            if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.clearSet(dbName, setName)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
             else:
@@ -95,7 +95,7 @@ class setHandler:
     @validTypeCheck
     def deleteSet(self, dbName, setName):
         if (self.database.isSetExist(dbName, setName)):
-            if(self.database.isExpired(dbName, setName, "SET") is False):
+            if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.deleteSet(dbName, setName)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
             else:
@@ -130,7 +130,7 @@ class setHandler:
         if(self.isValidType(dbName)
            and self.isValidType(setName1)
            and self.isValidType(setName2)):
-            if(self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
+            if(self.database.isSetExist(dbName, setName1, setName2)):
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
                     unionResult = [None]
                     result = self.database.unionSet(dbName, setName1, setName2, unionResult)
@@ -148,7 +148,7 @@ class setHandler:
         if (self.isValidType(dbName)
             and self.isValidType(setName1)
             and self.isValidType(setName2)):
-            if (self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
+            if (self.database.isSetExist(dbName, setName1, setName2)):
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
                     intersectResult = [None]
                     result = self.database.intersectSet(dbName, setName1, setName2, intersectResult)
@@ -167,7 +167,7 @@ class setHandler:
         if (self.isValidType(dbName)
             and self.isValidType(setName1)
             and self.isValidType(setName2)):
-            if (self.database.isSetExist(dbName, setName1) and self.database.isSetExist(dbName, setName2)):
+            if (self.database.isSetExist(dbName, setName1, setName2)):
                 if(self.database.isSetExpired(dbName,setName1) is False and self.database.isSetExpired(dbName, setName2) is False):
                     diffResult = [None]
                     result = self.database.diffSet(dbName, setName1, setName2, diffResult)
@@ -185,8 +185,8 @@ class setHandler:
     @validTypeCheck
     def replaceSet(self, dbName, setName, setValue):
         if(self.isSet(setValue)):
-            if (self.database.isSetExist(dbName, setName) is True):
-                if(self.database.isExpired(dbName, setName, "SET") is False):
+            if (self.database.isSetExist(dbName, setName)):
+                if(self.database.isExpired("SET", dbName, setName) is False):
                     result = self.database.replaceSet(dbName, setName, setValue)
                     msg = self.makeMessage(responseCode.detail[result], result, setName)
                 else:

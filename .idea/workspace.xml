@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.py" afterPath="$PROJECT_DIR$/db.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/elemHandler.py" afterPath="$PROJECT_DIR$/elemHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hashHandler.py" afterPath="$PROJECT_DIR$/hashHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/listHandler.py" afterPath="$PROJECT_DIR$/listHandler.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/response.py" afterPath="$PROJECT_DIR$/response.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setHandler.py" afterPath="$PROJECT_DIR$/setHandler.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,11 +22,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.61795074">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="db.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="db.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/db.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="233">
-                  <caret line="111" column="39" lean-forward="true" selection-start-line="111" selection-start-column="39" selection-end-line="111" selection-end-column="39" />
+                <state relative-caret-position="884">
+                  <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
                   <folding>
                     <element signature="e#37#46#0" expanded="true" />
                     <element signature="e#465#1856#0" expanded="false" />
@@ -34,8 +39,8 @@
           <file leaf-file-name="decorator.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/decorator.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="782">
-                  <caret line="46" column="13" lean-forward="true" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
+                <state relative-caret-position="649">
+                  <caret line="46" column="13" lean-forward="false" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
                   <folding />
                 </state>
               </provider>
@@ -44,8 +49,8 @@
           <file leaf-file-name="elemHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/elemHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="442">
-                  <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+                <state relative-caret-position="258">
+                  <caret line="120" column="34" lean-forward="false" selection-start-line="120" selection-start-column="26" selection-end-line="120" selection-end-column="34" />
                   <folding>
                     <element signature="e#37#70#0" expanded="true" />
                   </folding>
@@ -56,8 +61,8 @@
           <file leaf-file-name="setHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/setHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                <state relative-caret-position="-910">
+                  <caret line="41" column="19" lean-forward="true" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
                   <folding>
                     <element signature="e#37#70#0" expanded="true" />
                   </folding>
@@ -68,8 +73,8 @@
           <file leaf-file-name="hashHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/hashHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                <state relative-caret-position="799">
+                  <caret line="170" column="52" lean-forward="false" selection-start-line="170" selection-start-column="52" selection-end-line="170" selection-end-column="52" />
                   <folding>
                     <element signature="e#37#70#0" expanded="true" />
                   </folding>
@@ -77,11 +82,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="listHandler.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="listHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/listHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2856">
-                  <caret line="168" column="4" lean-forward="true" selection-start-line="168" selection-start-column="4" selection-end-line="168" selection-end-column="4" />
+                <state relative-caret-position="284">
+                  <caret line="114" column="36" lean-forward="false" selection-start-line="114" selection-start-column="25" selection-end-line="114" selection-end-column="36" />
                   <folding>
                     <element signature="e#37#70#0" expanded="true" />
                   </folding>
@@ -102,8 +107,8 @@
           <file leaf-file-name="response.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/response.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="768">
-                  <caret line="133" column="53" lean-forward="false" selection-start-line="133" selection-start-column="53" selection-end-line="133" selection-end-column="53" />
+                <state relative-caret-position="700">
+                  <caret line="134" column="48" lean-forward="false" selection-start-line="134" selection-start-column="48" selection-end-line="134" selection-end-column="48" />
                   <folding />
                 </state>
               </provider>
@@ -161,6 +166,13 @@
       <find>isSetExp</find>
       <find>self.database.isListExpired(dbName, listName)</find>
       <find>self.database.isHashExpired(dbName, hashName)</find>
+      <find>isHashExpired</find>
+      <find>isExpired</find>
+      <find>isElemExist</find>
+      <find>isListExist</find>
+      <find>isSetExist</find>
+      <find>isElemEx</find>
+      <find>isHashExist</find>
     </findStrings>
     <replaceStrings>
       <replace>self.msg[</replace>
@@ -200,13 +212,13 @@
         <option value="$PROJECT_DIR$/testcases/hashTest.py" />
         <option value="$PROJECT_DIR$/testcases/elemTest.py" />
         <option value="$PROJECT_DIR$/testcases/testLog.log" />
-        <option value="$PROJECT_DIR$/response.py" />
         <option value="$PROJECT_DIR$/decorator.py" />
+        <option value="$PROJECT_DIR$/response.py" />
+        <option value="$PROJECT_DIR$/listHandler.py" />
+        <option value="$PROJECT_DIR$/elemHandler.py" />
         <option value="$PROJECT_DIR$/db.py" />
         <option value="$PROJECT_DIR$/setHandler.py" />
-        <option value="$PROJECT_DIR$/elemHandler.py" />
         <option value="$PROJECT_DIR$/hashHandler.py" />
-        <option value="$PROJECT_DIR$/listHandler.py" />
       </list>
     </option>
   </component>
@@ -775,14 +787,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/response.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="768">
-          <caret line="133" column="53" lean-forward="false" selection-start-line="133" selection-start-column="53" selection-end-line="133" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask/globals.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="219">
@@ -849,40 +853,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/decorator.py">
+    <entry file="file://$PROJECT_DIR$/response.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="782">
-          <caret line="46" column="13" lean-forward="true" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
+        <state relative-caret-position="700">
+          <caret line="134" column="48" lean-forward="false" selection-start-line="134" selection-start-column="48" selection-end-line="134" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db.py">
+    <entry file="file://$PROJECT_DIR$/decorator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="111" column="39" lean-forward="true" selection-start-line="111" selection-start-column="39" selection-end-line="111" selection-end-column="39" />
-          <folding>
-            <element signature="e#37#46#0" expanded="true" />
-            <element signature="e#465#1856#0" expanded="false" />
-            <element signature="e#1897#2379#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="649">
+          <caret line="46" column="13" lean-forward="false" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/elemHandler.py">
+    <entry file="file://$PROJECT_DIR$/setHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+        <state relative-caret-position="-910">
+          <caret line="41" column="19" lean-forward="true" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
           <folding>
             <element signature="e#37#70#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/setHandler.py">
+    <entry file="file://$PROJECT_DIR$/elemHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        <state relative-caret-position="258">
+          <caret line="120" column="34" lean-forward="false" selection-start-line="120" selection-start-column="26" selection-end-line="120" selection-end-column="34" />
           <folding>
             <element signature="e#37#70#0" expanded="true" />
           </folding>
@@ -891,8 +891,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hashHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        <state relative-caret-position="799">
+          <caret line="170" column="52" lean-forward="false" selection-start-line="170" selection-start-column="52" selection-end-line="170" selection-end-column="52" />
           <folding>
             <element signature="e#37#70#0" expanded="true" />
           </folding>
@@ -901,10 +901,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/listHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2856">
-          <caret line="168" column="4" lean-forward="true" selection-start-line="168" selection-start-column="4" selection-end-line="168" selection-end-column="4" />
+        <state relative-caret-position="284">
+          <caret line="114" column="36" lean-forward="false" selection-start-line="114" selection-start-column="25" selection-end-line="114" selection-end-column="36" />
           <folding>
             <element signature="e#37#70#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="884">
+          <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
+          <folding>
+            <element signature="e#37#46#0" expanded="true" />
+            <element signature="e#465#1856#0" expanded="false" />
+            <element signature="e#1897#2379#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -111,27 +111,39 @@ class NoSqlDb:
     def isDbExist(self, dbName):
         return dbName in self.dbNameSet
 
-    def isElemExist(self, dbName, elemName):
+    def isElemExist(self, dbName, *elemNames):
         if(self.isDbExist(dbName) is True):
-            return elemName in self.elemName[dbName]
+            for elemName in elemNames:
+                if(elemName not in self.elemName[dbName]):
+                    return False
+            return True
         else:
             return False
 
-    def isListExist(self, dbName, listName):
+    def isListExist(self, dbName, *listNames):
         if(self.isDbExist(dbName) is True):
-            return listName in self.listName[dbName]
+            for listName in listNames:
+                if(listName not in self.listName[dbName]):
+                    return False
+            return True
         else:
             return False
 
-    def isHashExist(self, dbName, hashName):
+    def isHashExist(self, dbName, *hashNames):
         if(self.isDbExist(dbName) is True):
-            return hashName in self.hashName[dbName]
+            for hashName in hashNames:
+                if(hashName not in self.hashName[dbName]):
+                    return False
+            return True
         else:
             return False
 
-    def isSetExist(self, dbName, setName):
+    def isSetExist(self, dbName, *setNames):
         if(self.isDbExist(dbName) is True):
-            return setName in self.setName[dbName]
+            for setName in setNames:
+                if(setName not in self.setName[dbName]):
+                    return False
+            return True
         else:
             return False
 
@@ -191,7 +203,7 @@ class NoSqlDb:
         else:
             return responseCode.TTL_NO_RECORD, None
 
-    def isExpired(self, dbName, keyName, dataType):
+    def isExpired(self, dataType, dbName, *keyNames):
         if (dataType == "ELEM"):
             ttlDict = self.elemTTL[dbName]
         elif (dataType == "LIST"):
@@ -204,18 +216,19 @@ class NoSqlDb:
             ttlDict = None
 
         curTime = int(time.time())
-        if (keyName not in ttlDict.keys()):
-            return False
-        else:
-            if(ttlDict[keyName]["status"] is False):
-                return True
-            createAt = ttlDict[keyName]["createAt"]
-            ttl = ttlDict[keyName]["ttl"]
-            if (curTime - createAt >= ttl):
-                ttlDict[keyName]["status"] = False
-                return True
-            else:
+        for keyName in keyNames:
+            if(keyName not in ttlDict.keys()):
                 return False
+            else:
+                if(ttlDict[keyName]["status"] is False):
+                    return True
+                createAt = ttlDict[keyName]["createAt"]
+                ttl = ttlDict[keyName]["ttl"]
+                if (curTime - createAt >= ttl):
+                    ttlDict[keyName]["status"] = False
+                    return True
+                else:
+                    return False
 
     @keyNameValidity
     @saveTrigger
@@ -409,14 +422,14 @@ class NoSqlDb:
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName1])
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName2])
             self.unlockList(dbName, resultListName)
-            return self.listDict[dbName][resultListName]
+            return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][resultListName]
         else:
             if(self.listLockDict[dbName][listName1] is False):
                 self.lockList(dbName, listName1)
                 self.listDict[dbName][listName1].extend(self.listDict[dbName][listName2])
-                return self.listDict[dbName][listName1]
+                return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][listName1]
             else:
-                return responseCode.LIST_IS_LOCKED
+                return responseCode.LIST_IS_LOCKED, []
         #return responseCode.LIST_MERGE_SUCCESS
 
     @saveTrigger

@@ -138,7 +138,12 @@ class hashHandler:
         return msg
 
     # merge two hashs
+    @validTypeCheck
     def mergeHashs(self, dbName, hashName1, hashName2, resultHashName=None, mergeMode=0):
+        if(self.isValidType(hashName2) is False):
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName2)
+            return msg
+
         if (resultHashName is not None):
             if (self.database.isHashExist(dbName, resultHashName) is True):
                 msg = self.makeMessage("Merge Result Exists", responseCode.MERGE_RESULT_EXIST, resultHashName)

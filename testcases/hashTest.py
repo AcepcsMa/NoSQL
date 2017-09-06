@@ -324,6 +324,206 @@ class hashTest:
         response = requests.post(errorUrl, json=removeParams)
         self.writeLog(errorUrl,json.dumps(removeParams),response.content.decode())
 
+    def clearHashTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/clearHash/{}/{}"
+
+        # case1 create a hash, insert some values and clear it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        insertParams = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key1",
+            "value": 123
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.post(insertUrl, json=insertParams)
+        response = requests.get(url.format("db0","hash1"))
+        self.writeLog(url.format("db0","hash1"), "", response.content.decode())
+
+        # case2 clear an empty hash
+        response = requests.get(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db999", "hash1"))
+        self.writeLog(url.format("db999", "hash1"), "", response.content.decode())
+
+        # case4 unknown hash name
+        response = requests.get(url.format("db0", "hash123"))
+        self.writeLog(url.format("db0", "hash123"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearhash/{}/{}"
+        response = requests.get(errorUrl.format("db0","hash1"))
+        self.writeLog(errorUrl.format("db0","hash1"), "", response.content.decode())
+
+    def replaceHashTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/replaceHash"
+
+        # case1 create a hash, then replace it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+        replaceParams = {
+            "dbName":"db0",
+            "hashName":"hash1",
+            "hashValue":{
+                "key1":1,
+                "key2":2,
+                "key3":3
+            }
+        }
+        response = requests.post(url,json=replaceParams)
+        self.writeLog(url,json.dumps(replaceParams),response.content.decode())
+
+        # case2 error element type
+        replaceParams = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "hashValue": [1,2,3]
+        }
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case3 unknown database name
+        replaceParams = {
+            "dbName": "db999",
+            "hashName": "hash1",
+            "hashValue": {
+                "key1": 1,
+                "key2": 2,
+                "key3": 3
+            }
+        }
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case4 unknown hash name
+        replaceParams = {
+            "dbName": "db0",
+            "hashName": "hash999",
+            "hashValue": {
+                "key1": 1,
+                "key2": 2,
+                "key3": 3
+            }
+        }
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/replacehash"
+        response = requests.post(errorUrl, json=replaceParams)
+        self.writeLog(errorUrl, json.dumps(replaceParams), response.content.decode())
+
+    def mergeHashTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/mergeHashs"
+
+        # case1 create two hashs and then merge into a third hash
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertHash"
+
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+        params["hashName"] = "hash2"
+        response = requests.post(createUrl, json=params)
+
+        insertParmas = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key1",
+            "value":1
+        }
+        response = requests.post(insertUrl, json=params)
+        params["hashName"] = "hash2"
+        params["keyName"] = "key2"
+        response = requests.post(insertUrl, json=params)
+
+        mergeParams = {
+            "dbName":"db0",
+            "hash1":"hash1",
+            "hash2":"hash2",
+            "resultHash":"mergeResult",
+            "mode":0
+        }
+        response = requests.post(url,json=mergeParams)
+        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+
+        # case2 merge result hash already exists
+        response = requests.post(url,json=mergeParams)
+        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+
+        # case3 merge into the first hash
+        mergeParams = {
+            "dbName": "db0",
+            "hash1": "hash1",
+            "hash2": "hash2",
+            "resultHash": "",
+            "mode": 0
+        }
+        response = requests.post(url,json=mergeParams)
+        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+
+        # case4 unknown database name
+        mergeParams = {
+            "dbName": "db999",
+            "hash1": "hash1",
+            "hash2": "hash2",
+            "resultHash": "mergeResult",
+            "mode": 0
+        }
+        response = requests.post(url,json=mergeParams)
+        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+
+        # case5 unknown hash name
+        mergeParams = {
+            "dbName": "db999",
+            "hash1": "hash123",
+            "hash2": "hash456",
+            "resultHash": "mergeResult",
+            "mode": 0
+        }
+        response = requests.post(url,json=mergeParams)
+        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+
+        # case6 error database name type
+        mergeParams = {
+            "dbName": [1,2,3],
+            "hash1": "hash1",
+            "hash2": "hash2",
+            "resultHash": "mergeResult",
+            "mode": 0
+        }
+        response = requests.post(url,json=mergeParams)
+        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+
+        # case7 error hash name type
+        mergeParams = {
+            "dbName": "db999",
+            "hash1": [1,2,3],
+            "hash2": [4,5,6],
+            "resultHash": "mergeResult",
+            "mode": 0
+        }
+        response = requests.post(url,json=mergeParams)
+        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+
+        # case8 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/mergehashs"
+        response = requests.post(errorUrl,json=mergeParams)
+        self.writeLog(errorUrl,json.dumps(mergeParams),response.content.decode())
+
 
 
 if __name__ == "__main__":
@@ -343,3 +543,12 @@ if __name__ == "__main__":
 
     # testing remove from hash function
     #test.rmFromHashTest()
+
+    # testing clear hash function
+    #test.clearHashTest()
+
+    # testing replace hash function
+    #test.replaceHashTest()
+
+    # testing merge hashs function
+    test.mergeHashTest()

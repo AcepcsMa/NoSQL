@@ -1,0 +1,75 @@
+DATE: 2017/09/06 11:08:01
+URL: http://localhost:3080/mergeHashs
+PARAMS: {"dbName": "db0", "hash1": "hash1", "hash2": "hash2", "resultHash": "mergeResult", "mode": 0}
+RESPONSE: {
+  "data": "mergeResult", 
+  "msg": "Hash Merge Success", 
+  "typeCode": 45
+}
+
+DATE: 2017/09/06 11:08:01
+URL: http://localhost:3080/mergeHashs
+PARAMS: {"dbName": "db0", "hash1": "hash1", "hash2": "hash2", "resultHash": "mergeResult", "mode": 0}
+RESPONSE: {
+  "data": "mergeResult", 
+  "msg": "Merge Result Exists", 
+  "typeCode": 43
+}
+
+DATE: 2017/09/06 11:08:01
+URL: http://localhost:3080/mergeHashs
+PARAMS: {"dbName": "db0", "hash1": "hash1", "hash2": "hash2", "resultHash": "", "mode": 0}
+RESPONSE: {
+  "data": "", 
+  "msg": "Hash Merge Success", 
+  "typeCode": 45
+}
+
+DATE: 2017/09/06 11:08:01
+URL: http://localhost:3080/mergeHashs
+PARAMS: {"dbName": "db999", "hash1": "hash1", "hash2": "hash2", "resultHash": "mergeResult", "mode": 0}
+RESPONSE: {
+  "data": "hash1 or hash2", 
+  "msg": "Hash Does Not Exist", 
+  "typeCode": 31
+}
+
+DATE: 2017/09/06 11:08:01
+URL: http://localhost:3080/mergeHashs
+PARAMS: {"dbName": "db999", "hash1": "hash123", "hash2": "hash456", "resultHash": "mergeResult", "mode": 0}
+RESPONSE: {
+  "data": "hash123 or hash456", 
+  "msg": "Hash Does Not Exist", 
+  "typeCode": 31
+}
+
+DATE: 2017/09/06 11:08:01
+URL: http://localhost:3080/mergeHashs
+PARAMS: {"dbName": [1, 2, 3], "hash1": "hash1", "hash2": "hash2", "resultHash": "mergeResult", "mode": 0}
+RESPONSE: {
+  "data": "hash1", 
+  "msg": "Element Type Error", 
+  "typeCode": 0
+}
+
+DATE: 2017/09/06 11:08:01
+URL: http://localhost:3080/mergeHashs
+PARAMS: {"dbName": "db999", "hash1": [1, 2, 3], "hash2": [4, 5, 6], "resultHash": "mergeResult", "mode": 0}
+RESPONSE: {
+  "data": [
+    1, 
+    2, 
+    3
+  ], 
+  "msg": "Element Type Error", 
+  "typeCode": 0
+}
+
+DATE: 2017/09/06 11:08:01
+URL: http://localhost:3080/mergehashs
+PARAMS: {"dbName": "db999", "hash1": [1, 2, 3], "hash2": [4, 5, 6], "resultHash": "mergeResult", "mode": 0}
+RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>
+

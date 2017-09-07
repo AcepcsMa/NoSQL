@@ -1,73 +1,51 @@
-DATE: 2017/09/06 11:08:01
-URL: http://localhost:3080/mergeHashs
-PARAMS: {"dbName": "db0", "hash1": "hash1", "hash2": "hash2", "resultHash": "mergeResult", "mode": 0}
-RESPONSE: {
-  "data": "mergeResult", 
-  "msg": "Hash Merge Success", 
-  "typeCode": 45
-}
-
-DATE: 2017/09/06 11:08:01
-URL: http://localhost:3080/mergeHashs
-PARAMS: {"dbName": "db0", "hash1": "hash1", "hash2": "hash2", "resultHash": "mergeResult", "mode": 0}
-RESPONSE: {
-  "data": "mergeResult", 
-  "msg": "Merge Result Exists", 
-  "typeCode": 43
-}
-
-DATE: 2017/09/06 11:08:01
-URL: http://localhost:3080/mergeHashs
-PARAMS: {"dbName": "db0", "hash1": "hash1", "hash2": "hash2", "resultHash": "", "mode": 0}
-RESPONSE: {
-  "data": "", 
-  "msg": "Hash Merge Success", 
-  "typeCode": 45
-}
-
-DATE: 2017/09/06 11:08:01
-URL: http://localhost:3080/mergeHashs
-PARAMS: {"dbName": "db999", "hash1": "hash1", "hash2": "hash2", "resultHash": "mergeResult", "mode": 0}
-RESPONSE: {
-  "data": "hash1 or hash2", 
-  "msg": "Hash Does Not Exist", 
-  "typeCode": 31
-}
-
-DATE: 2017/09/06 11:08:01
-URL: http://localhost:3080/mergeHashs
-PARAMS: {"dbName": "db999", "hash1": "hash123", "hash2": "hash456", "resultHash": "mergeResult", "mode": 0}
-RESPONSE: {
-  "data": "hash123 or hash456", 
-  "msg": "Hash Does Not Exist", 
-  "typeCode": 31
-}
-
-DATE: 2017/09/06 11:08:01
-URL: http://localhost:3080/mergeHashs
-PARAMS: {"dbName": [1, 2, 3], "hash1": "hash1", "hash2": "hash2", "resultHash": "mergeResult", "mode": 0}
+DATE: 2017/09/07 11:22:51
+URL: http://localhost:3080/clearHashTTL/db0/hash1
+PARAMS: 
 RESPONSE: {
   "data": "hash1", 
-  "msg": "Element Type Error", 
-  "typeCode": 0
+  "msg": "Hash TTL Clear Success", 
+  "typeCode": 53
 }
 
-DATE: 2017/09/06 11:08:01
-URL: http://localhost:3080/mergeHashs
-PARAMS: {"dbName": "db999", "hash1": [1, 2, 3], "hash2": [4, 5, 6], "resultHash": "mergeResult", "mode": 0}
+DATE: 2017/09/07 11:22:51
+URL: http://localhost:3080/clearHashTTL/db0/hash1
+PARAMS: 
 RESPONSE: {
-  "data": [
-    1, 
-    2, 
-    3
-  ], 
-  "msg": "Element Type Error", 
-  "typeCode": 0
+  "data": "hash1", 
+  "msg": "Hash Is Not Set TTL", 
+  "typeCode": 81
 }
 
-DATE: 2017/09/06 11:08:01
-URL: http://localhost:3080/mergehashs
-PARAMS: {"dbName": "db999", "hash1": [1, 2, 3], "hash2": [4, 5, 6], "resultHash": "mergeResult", "mode": 0}
+DATE: 2017/09/07 11:22:51
+URL: http://localhost:3080/clearHashTTL/db0/hash2
+PARAMS: 
+RESPONSE: {
+  "data": "hash2", 
+  "msg": "Hash Is Not Set TTL", 
+  "typeCode": 81
+}
+
+DATE: 2017/09/07 11:22:51
+URL: http://localhost:3080/clearHashTTL/db999/hash1
+PARAMS: 
+RESPONSE: {
+  "data": "hash1", 
+  "msg": "Hash Does Not Exist", 
+  "typeCode": 31
+}
+
+DATE: 2017/09/07 11:22:51
+URL: http://localhost:3080/clearHashTTL/db0/abcde
+PARAMS: 
+RESPONSE: {
+  "data": "abcde", 
+  "msg": "Hash Does Not Exist", 
+  "typeCode": 31
+}
+
+DATE: 2017/09/07 11:22:51
+URL: http://localhost:3080/clearhashttl/db0/hash1
+PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>
 <h1>Not Found</h1>

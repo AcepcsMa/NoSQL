@@ -524,6 +524,108 @@ class hashTest:
         response = requests.post(errorUrl,json=mergeParams)
         self.writeLog(errorUrl,json.dumps(mergeParams),response.content.decode())
 
+    def searchHashTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/searchHash/{}/{}"
+
+        # case1 create several hashs and search
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+        params["hashName"] = "abcd"
+        response = requests.post(createUrl, json=params)
+        params["hashName"] = "bcda1"
+        response = requests.post(createUrl, json=params)
+        params["hashName"] = "bonjour"
+        response = requests.post(createUrl, json=params)
+        params["hashName"] = "a*"
+        response = requests.post(createUrl, json=params)
+
+        response = requests.get(url.format("db0","a*"))
+        self.writeLog(url.format("db0","a*"), "", response.content.decode())
+
+        # case2 unknown database name
+        response = requests.get(url.format("db123", "a*"))
+        self.writeLog(url.format("db123", "a*"), "", response.content.decode())
+
+        # case3 universal regular expression
+        response = requests.get(url.format("db0", "*"))
+        self.writeLog(url.format("db0", "*"), "", response.content.decode())
+
+        # case4 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/searchhash/{}/{}"
+        response = requests.get(errorUrl.format("db0", "*"))
+        self.writeLog(errorUrl.format("db0", "*"), "", response.content.decode())
+
+    def setTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/setHashTTL/{}/{}/{}"
+
+        # case1 create a hash and set TTL
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0", "hash1", 30))
+        self.writeLog(url.format("db0", "hash1", 30), "", response.content.decode())
+
+        # case2 unknown database name
+        response = requests.get(url.format("db999", "hash1", 15))
+        self.writeLog(url.format("db999", "hash1", 15), "", response.content.decode())
+
+        # case3 unknown hash name
+        response = requests.get(url.format("db0", "hash456", 20))
+        self.writeLog(url.format("db0", "hash456", 20), "", response.content.decode())
+
+        # case4 TTL is not Int type
+        response = requests.get(url.format("db0", "hash1", "hello world"))
+        self.writeLog(url.format("db0", "hash1", "hello world"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/sethashttl/{0}/{1}/{2}"
+        response = requests.get(errorUrl.format("db0", "hash1", 15))
+        self.writeLog(errorUrl.format("db0", "hash1", 15), "", response.content.decode())
+
+    def clearTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/clearHashTTL/{}/{}"
+
+        # case1 set a TTL and then clear it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+        setUrl = "http://" + self.host + ":" + str(self.port) + "/setHashTTL/{}/{}/{}"
+        response = requests.get(setUrl.format("db0", "hash1", 20))
+        response = requests.get(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
+
+        # case2 clear TTL repeatedly
+        response = requests.get(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
+
+        # case3 clear non-existed TTL
+        params["hashName"] = "hash2"
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0", "hash2"))
+        self.writeLog(url.format("db0", "hash2"), "", response.content.decode())
+
+        # case4 unknown database name
+        response = requests.get(url.format("db999", "hash1"))
+        self.writeLog(url.format("db999", "hash1"), "", response.content.decode())
+
+        # case5 unknown element name
+        response = requests.get(url.format("db0", "abcde"))
+        self.writeLog(url.format("db0", "abcde"), "", response.content.decode())
+
+        # case6 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearhashttl/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "hash1"))
+        self.writeLog(errorUrl.format("db0", "hash1"), "", response.content.decode())
 
 
 if __name__ == "__main__":
@@ -551,4 +653,13 @@ if __name__ == "__main__":
     #test.replaceHashTest()
 
     # testing merge hashs function
-    test.mergeHashTest()
+    #test.mergeHashTest()
+
+    # testing search hash function
+    #test.searchHashTest()
+
+    # testing set ttl function
+    #test.setTTLTest()
+
+    # testing clear ttl function
+    test.clearTTLTest()

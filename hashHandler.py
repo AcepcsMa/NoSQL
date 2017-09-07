@@ -162,6 +162,10 @@ class hashHandler:
 
     # search hash names using regular expression
     def searchHash(self, dbName, expression):
+        if(self.database.isDbExist(dbName) is False):
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+            return msg
+
         if(self.isValidType(dbName)):
             searchResult = self.database.searchByRE(dbName, expression, "HASH")
             msg = self.makeMessage("Search Hash Success", responseCode.HASH_SEARCH_SUCCESS, searchResult)

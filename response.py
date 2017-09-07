@@ -85,6 +85,7 @@ class responseCode:
     KEY_NAME_INVALID = 78
     ELEM_NOT_SET_TTL = 79
     LIST_NOT_SET_TTL = 80
+    HASH_NOT_SET_TTL = 81
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -132,5 +133,6 @@ class responseCode:
         SET_REPLACE_SUCCESS:"Set Replace Success",
         SET_TTL_SET_SUCCESS:"Set TTL Set Success",
         SET_TTL_CLEAR_SUCCESS:"Set TTL Clear Success",
-        LIST_MERGE_SUCCESS:"Lists Merge Success"
+        LIST_MERGE_SUCCESS:"Lists Merge Success",
+        HASH_NOT_SET_TTL:"Hash Is Not Set TTL"
     }

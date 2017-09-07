@@ -597,7 +597,7 @@ class NoSqlDb:
             try:
                 self.hashTTL[dbName].pop(hashName)
             except:
-                pass
+                return responseCode.HASH_NOT_SET_TTL
             self.unlockHash(dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
 

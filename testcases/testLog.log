@@ -1,50 +1,32 @@
-DATE: 2017/09/07 11:22:51
-URL: http://localhost:3080/clearHashTTL/db0/hash1
+DATE: 2017/09/09 18:10:50
+URL: http://localhost:3080/getSet/db0/set1
 PARAMS: 
 RESPONSE: {
-  "data": "hash1", 
-  "msg": "Hash TTL Clear Success", 
-  "typeCode": 53
+  "data": [], 
+  "msg": "Set Get Success", 
+  "typeCode": 57
 }
 
-DATE: 2017/09/07 11:22:51
-URL: http://localhost:3080/clearHashTTL/db0/hash1
+DATE: 2017/09/09 18:10:50
+URL: http://localhost:3080/getSet/db999/set1
 PARAMS: 
 RESPONSE: {
-  "data": "hash1", 
-  "msg": "Hash Is Not Set TTL", 
-  "typeCode": 81
+  "data": "set1", 
+  "msg": "Set Does Not Exist", 
+  "typeCode": 58
 }
 
-DATE: 2017/09/07 11:22:51
-URL: http://localhost:3080/clearHashTTL/db0/hash2
+DATE: 2017/09/09 18:10:50
+URL: http://localhost:3080/getSet/db0/set123
 PARAMS: 
 RESPONSE: {
-  "data": "hash2", 
-  "msg": "Hash Is Not Set TTL", 
-  "typeCode": 81
+  "data": "set123", 
+  "msg": "Set Does Not Exist", 
+  "typeCode": 58
 }
 
-DATE: 2017/09/07 11:22:51
-URL: http://localhost:3080/clearHashTTL/db999/hash1
-PARAMS: 
-RESPONSE: {
-  "data": "hash1", 
-  "msg": "Hash Does Not Exist", 
-  "typeCode": 31
-}
-
-DATE: 2017/09/07 11:22:51
-URL: http://localhost:3080/clearHashTTL/db0/abcde
-PARAMS: 
-RESPONSE: {
-  "data": "abcde", 
-  "msg": "Hash Does Not Exist", 
-  "typeCode": 31
-}
-
-DATE: 2017/09/07 11:22:51
-URL: http://localhost:3080/clearhashttl/db0/hash1
+DATE: 2017/09/09 18:10:50
+URL: http://localhost:3080/getset/db0/set1
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

@@ -662,4 +662,4 @@ if __name__ == "__main__":
     #test.setTTLTest()
 
     # testing clear ttl function
-    test.clearTTLTest()
+    #test.clearTTLTest()

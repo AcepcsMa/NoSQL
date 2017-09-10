@@ -31,6 +31,10 @@ class setHandler:
     # create a set
     @validTypeCheck
     def createSet(self, dbName, setName):
+        if(self.database.isDbExist(dbName) is False):
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+            return msg
+
         if(self.database.isSetExist(dbName, setName) is False):
             result = self.database.createSet(dbName, setName)
             msg = self.makeMessage(responseCode.detail[result],result,setName)

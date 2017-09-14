@@ -109,6 +109,10 @@ class setHandler:
 
     # search set names using regular expression
     def searchSet(self, dbName, expression):
+        if(self.database.isDbExist(dbName) is False):
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+            return msg
+
         if(self.isValidType(dbName)):
             searchResult = self.database.searchByRE(dbName, expression, "SET")
             msg = self.makeMessage("Search Set Success", responseCode.SET_SEARCH_SUCCESS, searchResult)

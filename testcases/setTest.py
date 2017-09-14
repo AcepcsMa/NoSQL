@@ -187,6 +187,90 @@ class hashTest:
         response = requests.post(errorUrl, json=removeParams)
         self.writeLog(errorUrl, json.dumps(removeParams), response.content.decode())
 
+    def clearSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/clearSet/{}/{}"
+
+        # case1 create, insert, then clear
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
+        response = requests.get(createUrl.format("db0", "set1"))
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": "1"
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        response = requests.get(url.format("db0","set1"))
+        self.writeLog(url.format("db0","set1"), "", response.content.decode())
+
+        # case2 clear an empty set
+        response = requests.get(url.format("db0","set1"))
+        self.writeLog(url.format("db0","set1"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db123","set1"))
+        self.writeLog(url.format("db123","set1"), "", response.content.decode())
+
+        # case4 unknown set name
+        response = requests.get(url.format("db0","set123"))
+        self.writeLog(url.format("db0","set123"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearset/{}/{}"
+        response = requests.get(errorUrl.format("db0","set1"))
+        self.writeLog(errorUrl.format("db0","set1"), "", response.content.decode())
+
+    def deleteSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/deleteSet/{}/{}"
+
+        # case1 create, then delete a set
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "set1"))
+        response = requests.get(url.format("db0","set1"))
+        self.writeLog(url.format("db0","set1"), "", response.content.decode())
+
+        # case2 delete a non-existed set
+        response = requests.get(url.format("db0","set1"))
+        self.writeLog(url.format("db0","set1"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db789","set1"))
+        self.writeLog(url.format("db789","set1"), "", response.content.decode())
+
+        # case4 unknown set name
+        response = requests.get(url.format("db0","set123"))
+        self.writeLog(url.format("db0","set123"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/deleteset/{}/{}"
+        response = requests.get(errorUrl.format("db0","set123"))
+        self.writeLog(errorUrl.format("db0","set123"), "", response.content.decode())
+
+    def searchSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/searchSet/{}/{}"
+
+        # case1 create several sets, then search
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "aabbset"))
+        response = requests.get(createUrl.format("db0", "bcset"))
+        response = requests.get(createUrl.format("db0", "setabset"))
+        response = requests.get(createUrl.format("db0", "qwert1"))
+        response = requests.get(createUrl.format("db0", "qwset"))
+        response = requests.get(url.format("db0","a*"))
+        self.writeLog(url.format("db0","a*"), "", response.content.decode())
+
+        # case2 unknown database name
+        response = requests.get(url.format("db999","a*"))
+        self.writeLog(url.format("db999","a*"), "", response.content.decode())
+
+        # case3 universal regular expression
+        response = requests.get(url.format("db0","*"))
+        self.writeLog(url.format("db0","*"), "", response.content.decode())
+
+        # case4 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/searchset/{}/{}"
+        response = requests.get(errorUrl.format("db0","*"))
+        self.writeLog(errorUrl.format("db0","*"), "", response.content.decode())
 
 if __name__ == "__main__":
     test = hashTest()
@@ -201,4 +285,13 @@ if __name__ == "__main__":
     #test.insertSetTest()
 
     # testing remove from set function
-    test.rmFromSetTest()
+    #test.rmFromSetTest()
+
+    # testing clear set function
+    #test.clearSetTest()
+
+    # testing delete set function
+    #test.deleteSetTest()
+
+    # testing search set function
+    test.searchSetTest()

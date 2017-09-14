@@ -134,5 +134,8 @@ class responseCode:
         SET_TTL_SET_SUCCESS:"Set TTL Set Success",
         SET_TTL_CLEAR_SUCCESS:"Set TTL Clear Success",
         LIST_MERGE_SUCCESS:"Lists Merge Success",
-        HASH_NOT_SET_TTL:"Hash Is Not Set TTL"
+        HASH_NOT_SET_TTL:"Hash Is Not Set TTL",
+        SET_UNION_SUCCESS:"Set Union Success",
+        SET_INTERSECT_SUCCESS:"Set Intersect Success",
+        SET_DIFF_SUCCESS:"Set Diff Success"
     }

@@ -134,7 +134,7 @@ class setHandler:
 
     # set union operation
     def unionSet(self, dbName, setName1, setName2):
-        if(self.isValidType(dbName, setName1, setName2)):
+        if(self.isValidType(dbName, setName1, setName2) is False):
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
             return msg
 
@@ -142,7 +142,7 @@ class setHandler:
             if(self.database.isExpired("SET", dbName,setName1, setName2) is False):
                 unionResult = [None]
                 result = self.database.unionSet(dbName, setName1, setName2, unionResult)
-                msg = self.makeMessage(responseCode.detail[result], result, unionResult[0])
+                msg = self.makeMessage(responseCode.detail[result], result, unionResult[1])
             else:
                 msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2))
         else:
@@ -151,7 +151,7 @@ class setHandler:
 
     # set intersect operation
     def intersectSet(self, dbName, setName1, setName2):
-        if(self.isValidType(dbName, setName1, setName2)):
+        if(self.isValidType(dbName, setName1, setName2) is False):
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
             return msg
 
@@ -159,7 +159,7 @@ class setHandler:
             if(self.database.isExpired("SET", dbName, setName1, setName2) is False):
                 intersectResult = [None]
                 result = self.database.intersectSet(dbName, setName1, setName2, intersectResult)
-                msg = self.makeMessage(responseCode.detail[result], result, intersectResult[0])
+                msg = self.makeMessage(responseCode.detail[result], result, intersectResult[1])
             else:
                 msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2))
         else:
@@ -177,7 +177,7 @@ class setHandler:
             if(self.database.isExpired("SET", dbName, setName1, setName2) is False):
                 diffResult = [None]
                 result = self.database.diffSet(dbName, setName1, setName2, diffResult)
-                msg = self.makeMessage(responseCode.detail[result], result, diffResult[0])
+                msg = self.makeMessage(responseCode.detail[result], result, diffResult[1])
             else:
                 msg = self.makeMessage("Set Is Expired", responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2))
         else:

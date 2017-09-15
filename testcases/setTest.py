@@ -272,6 +272,201 @@ class hashTest:
         response = requests.get(errorUrl.format("db0","*"))
         self.writeLog(errorUrl.format("db0","*"), "", response.content.decode())
 
+    def unionSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/unionSet"
+
+        # case1 create two empty set, then union
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "set1"))
+        response = requests.get(createUrl.format("db0", "set2"))
+        unionParams = {
+            "dbName":"db0",
+            "setName1":"set1",
+            "setName2":"set2"
+        }
+        response = requests.post(url,json=unionParams)
+        self.writeLog(url,json.dumps(unionParams),response.content.decode())
+
+        # case2 insert common values into two sets, then union
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": 1
+        }
+        response = requests.post(insertUrl,json=insertParams)
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set2",
+            "setValue": 1
+        }
+        response = requests.post(url,json=unionParams)
+        self.writeLog(url,json.dumps(unionParams),response.content.decode())
+
+        # case3 unknown database name
+        unionParams["dbName"] = "db999"
+        response = requests.post(url, json=unionParams)
+        self.writeLog(url, json.dumps(unionParams), response.content.decode())
+
+        # case4 error database name type
+        unionParams["dbName"] = [1,2,3]
+        response = requests.post(url, json=unionParams)
+        self.writeLog(url, json.dumps(unionParams), response.content.decode())
+
+        # case5 unknown set name
+        unionParams = {
+            "dbName": "db0",
+            "setName1": "set123",
+            "setName2": "set2"
+        }
+        response = requests.post(url, json=unionParams)
+        self.writeLog(url, json.dumps(unionParams), response.content.decode())
+
+        # case6 error set name type
+        unionParams = {
+            "dbName": "db0",
+            "setName1": ["hello","world"],
+            "setName2": "set2"
+        }
+        response = requests.post(url, json=unionParams)
+        self.writeLog(url, json.dumps(unionParams), response.content.decode())
+
+        # error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/unionset"
+        response = requests.post(errorUrl, json=unionParams)
+        self.writeLog(errorUrl, json.dumps(unionParams), response.content.decode())
+
+    def intersectSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/intersectSet"
+
+        # case1 create two empty set, then intersect
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "set1"))
+        response = requests.get(createUrl.format("db0", "set2"))
+        intersectParams = {
+            "dbName": "db0",
+            "setName1": "set1",
+            "setName2": "set2"
+        }
+        response = requests.post(url, json=intersectParams)
+        self.writeLog(url, json.dumps(intersectParams), response.content.decode())
+
+        # case2 insert common values into two sets, then intersect
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set2",
+            "setValue": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        response = requests.post(url, json=intersectParams)
+        self.writeLog(url, json.dumps(intersectParams), response.content.decode())
+
+        # case3 unknown database name
+        intersectParams["dbName"] = "db999"
+        response = requests.post(url, json=intersectParams)
+        self.writeLog(url, json.dumps(intersectParams), response.content.decode())
+
+        # case4 error database name type
+        intersectParams["dbName"] = [1, 2, 3]
+        response = requests.post(url, json=intersectParams)
+        self.writeLog(url, json.dumps(intersectParams), response.content.decode())
+
+        # case5 unknown set name
+        intersectParams = {
+            "dbName": "db0",
+            "setName1": "set123",
+            "setName2": "set2"
+        }
+        response = requests.post(url, json=intersectParams)
+        self.writeLog(url, json.dumps(intersectParams), response.content.decode())
+
+        # case6 error set name type
+        intersectParams = {
+            "dbName": "db0",
+            "setName1": ["hello", "world"],
+            "setName2": "set2"
+        }
+        response = requests.post(url, json=intersectParams)
+        self.writeLog(url, json.dumps(intersectParams), response.content.decode())
+
+        # error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/intersectset"
+        response = requests.post(errorUrl, json=intersectParams)
+        self.writeLog(errorUrl, json.dumps(intersectParams), response.content.decode())
+
+    def diffSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/diffSet"
+
+        # case1 create two empty set, then diff
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "set1"))
+        response = requests.get(createUrl.format("db0", "set2"))
+        diffParams = {
+            "dbName": "db0",
+            "setName1": "set1",
+            "setName2": "set2"
+        }
+        response = requests.post(url, json=diffParams)
+        self.writeLog(url, json.dumps(diffParams), response.content.decode())
+
+        # case2 insert common values into two sets, then diff
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set2",
+            "setValue": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        response = requests.post(url, json=diffParams)
+        self.writeLog(url, json.dumps(diffParams), response.content.decode())
+
+        # case3 unknown database name
+        diffParams["dbName"] = "db999"
+        response = requests.post(url, json=diffParams)
+        self.writeLog(url, json.dumps(diffParams), response.content.decode())
+
+        # case4 error database name type
+        diffParams["dbName"] = [1, 2, 3]
+        response = requests.post(url, json=diffParams)
+        self.writeLog(url, json.dumps(diffParams), response.content.decode())
+
+        # case5 unknown set name
+        diffParams = {
+            "dbName": "db0",
+            "setName1": "set123",
+            "setName2": "set2"
+        }
+        response = requests.post(url, json=diffParams)
+        self.writeLog(url, json.dumps(diffParams), response.content.decode())
+
+        # case6 error set name type
+        diffParams = {
+            "dbName": "db0",
+            "setName1": ["hello", "world"],
+            "setName2": "set2"
+        }
+        response = requests.post(url, json=diffParams)
+        self.writeLog(url, json.dumps(diffParams), response.content.decode())
+
+        # error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/diffset"
+        response = requests.post(errorUrl, json=diffParams)
+        self.writeLog(errorUrl, json.dumps(diffParams), response.content.decode())
+
+
 if __name__ == "__main__":
     test = hashTest()
 
@@ -294,4 +489,13 @@ if __name__ == "__main__":
     #test.deleteSetTest()
 
     # testing search set function
-    test.searchSetTest()
+    #test.searchSetTest()
+
+    # testing union set function
+    #test.unionSetTest()
+
+    # testing intersect set function
+    #test.intersectSetTest()
+
+    # testing diff set function
+    test.diffSetTest()

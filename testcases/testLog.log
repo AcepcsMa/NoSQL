@@ -1,42 +1,51 @@
-DATE: 2017/09/16 18:58:29
-URL: http://localhost:3080/replaceSet
-PARAMS: {"dbName": "db0", "setName": "set1", "setValue": ["hello", "world"]}
+DATE: 2017/09/16 20:35:45
+URL: http://localhost:3080/clearSetTTL/db0/set1
+PARAMS: 
 RESPONSE: {
   "data": "set1", 
-  "msg": "Set Replace Success", 
-  "typeCode": 69
+  "msg": "Set TTL Clear Success", 
+  "typeCode": 72
 }
 
-DATE: 2017/09/16 18:58:29
-URL: http://localhost:3080/replaceSet
-PARAMS: {"dbName": "db0", "setName": "set1", "setValue": []}
+DATE: 2017/09/16 20:35:45
+URL: http://localhost:3080/clearSetTTL/db0/set1
+PARAMS: 
 RESPONSE: {
   "data": "set1", 
-  "msg": "Set Replace Success", 
-  "typeCode": 69
+  "msg": "Set Is Not Set TTL", 
+  "typeCode": 82
 }
 
-DATE: 2017/09/16 18:58:29
-URL: http://localhost:3080/replaceSet
-PARAMS: {"dbName": "db999", "setName": "set1", "setValue": []}
+DATE: 2017/09/16 20:35:45
+URL: http://localhost:3080/clearSetTTL/db0/set2
+PARAMS: 
+RESPONSE: {
+  "data": "set2", 
+  "msg": "Set Is Not Set TTL", 
+  "typeCode": 82
+}
+
+DATE: 2017/09/16 20:35:45
+URL: http://localhost:3080/clearSetTTL/db999/set1
+PARAMS: 
 RESPONSE: {
   "data": "set1", 
   "msg": "Set Does Not Exist", 
   "typeCode": 58
 }
 
-DATE: 2017/09/16 18:58:29
-URL: http://localhost:3080/replaceSet
-PARAMS: {"dbName": "db0", "setName": "set123", "setValue": "1"}
+DATE: 2017/09/16 20:35:45
+URL: http://localhost:3080/clearSetTTL/db0/set999
+PARAMS: 
 RESPONSE: {
-  "data": "set123", 
+  "data": "set999", 
   "msg": "Set Does Not Exist", 
   "typeCode": 58
 }
 
-DATE: 2017/09/16 18:58:29
-URL: http://localhost:3080/replaceset
-PARAMS: {"dbName": "db0", "setName": "set1", "setValue": "1"}
+DATE: 2017/09/16 20:35:45
+URL: http://localhost:3080/clearsetttl/db0/set1
+PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>
 <h1>Not Found</h1>

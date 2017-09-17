@@ -751,7 +751,7 @@ class NoSqlDb:
             try:
                 self.setTTL[dbName].pop(setName)
             except:
-                pass
+                return responseCode.SET_NOT_SET_TTL
             self.unlockSet(dbName, setName)
             return responseCode.SET_TTL_CLEAR_SUCCESS
 

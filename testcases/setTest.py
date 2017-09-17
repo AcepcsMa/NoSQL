@@ -466,6 +466,120 @@ class hashTest:
         response = requests.post(errorUrl, json=diffParams)
         self.writeLog(errorUrl, json.dumps(diffParams), response.content.decode())
 
+    def replaceSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/replaceSet"
+
+        # case1 create a set, replace it with new value
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "set1"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        replaceParams = {
+            "dbName":"db0",
+            "setName":"set1",
+            "setValue":["hello","world"]
+        }
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case2 replace the set with empty value
+        replaceParams["setValue"] = []
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case3 unknown database name
+        replaceParams["dbName"] = "db999"
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case4 unknown set name
+        replaceParams = {
+            "dbName": "db0",
+            "setName": "set123",
+            "setValue": "1"
+        }
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/replaceset"
+        replaceParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": "1"
+        }
+        response = requests.post(errorUrl, json=replaceParams)
+        self.writeLog(errorUrl, json.dumps(replaceParams), response.content.decode())
+
+    def setTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/setSetTTL/{}/{}/{}"
+
+        # case1 create a set, set ttl
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "set1"))
+        response = requests.get(url.format("db0","set1",20))
+        self.writeLog(url.format("db0","set1",20), "", response.content.decode())
+
+        # case2 set ttl repeatedly
+        response = requests.get(url.format("db0", "set1", 20))
+        self.writeLog(url.format("db0", "set1", 20), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db999", "set1", 20))
+        self.writeLog(url.format("db999", "set1", 20), "", response.content.decode())
+
+        # case4 unknown set name
+        response = requests.get(url.format("db0", "set123", 20))
+        self.writeLog(url.format("db0", "set123", 20), "", response.content.decode())
+
+        # case5 ttl is not INT type
+        response = requests.get(url.format("db0", "set1", "hello"))
+        self.writeLog(url.format("db0", "set1", "hello"), "", response.content.decode())
+
+        # error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setSetttl/{}/{}/{}"
+        response = requests.get(errorUrl.format("db0", "set1", 20))
+        self.writeLog(errorUrl.format("db0", "set1", 20), "", response.content.decode())
+
+    def clearTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/clearSetTTL/{}/{}"
+
+        # case1 set a TTL and then clear it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "set1"))
+        setUrl = "http://" + self.host + ":" + str(self.port) + "/setSetTTL/{}/{}/{}"
+        response = requests.get(setUrl.format("db0","set1",20))
+        response = requests.get(url.format("db0", "set1"))
+        self.writeLog(url.format("db0", "set1"), "", response.content.decode())
+
+        # case2 clear TTL repeatedly
+        response = requests.get(url.format("db0", "set1"))
+        self.writeLog(url.format("db0", "set1"), "", response.content.decode())
+
+        # case3 clear non-existed TTL
+        response = requests.get(createUrl.format("db0","set2"))
+        response = requests.get(url.format("db0", "set2"))
+        self.writeLog(url.format("db0", "set2"), "", response.content.decode())
+
+        # case4 unknown database name
+        response = requests.get(url.format("db999", "set1"))
+        self.writeLog(url.format("db999", "set1"), "", response.content.decode())
+
+        # case5 unknown element name
+        response = requests.get(url.format("db0", "set999"))
+        self.writeLog(url.format("db0", "set999"), "", response.content.decode())
+
+        # case6 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearsetttl/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "set1"))
+        self.writeLog(errorUrl.format("db0", "set1"), "", response.content.decode())
+
+
 
 if __name__ == "__main__":
     test = hashTest()
@@ -498,4 +612,13 @@ if __name__ == "__main__":
     #test.intersectSetTest()
 
     # testing diff set function
-    test.diffSetTest()
+    #test.diffSetTest()
+
+    # testing replace set function
+    #test.replaceSetTest()
+
+    # testing set ttl function
+    #test.setTTLTest()
+
+    # testing clear ttl function
+    #test.clearTTLTest()

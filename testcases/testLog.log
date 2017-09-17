@@ -1,64 +1,42 @@
-DATE: 2017/09/14 18:39:03
-URL: http://localhost:3080/diffSet
-PARAMS: {"dbName": "db0", "setName1": "set1", "setName2": "set2"}
+DATE: 2017/09/16 18:58:29
+URL: http://localhost:3080/replaceSet
+PARAMS: {"dbName": "db0", "setName": "set1", "setValue": ["hello", "world"]}
 RESPONSE: {
-  "data": [], 
-  "msg": "Set Diff Success", 
-  "typeCode": 68
+  "data": "set1", 
+  "msg": "Set Replace Success", 
+  "typeCode": 69
 }
 
-DATE: 2017/09/14 18:39:03
-URL: http://localhost:3080/diffSet
-PARAMS: {"dbName": "db0", "setName1": "set1", "setName2": "set2"}
+DATE: 2017/09/16 18:58:29
+URL: http://localhost:3080/replaceSet
+PARAMS: {"dbName": "db0", "setName": "set1", "setValue": []}
 RESPONSE: {
-  "data": [], 
-  "msg": "Set Diff Success", 
-  "typeCode": 68
+  "data": "set1", 
+  "msg": "Set Replace Success", 
+  "typeCode": 69
 }
 
-DATE: 2017/09/14 18:39:03
-URL: http://localhost:3080/diffSet
-PARAMS: {"dbName": "db999", "setName1": "set1", "setName2": "set2"}
+DATE: 2017/09/16 18:58:29
+URL: http://localhost:3080/replaceSet
+PARAMS: {"dbName": "db999", "setName": "set1", "setValue": []}
 RESPONSE: {
-  "data": "set1 or set2", 
+  "data": "set1", 
   "msg": "Set Does Not Exist", 
   "typeCode": 58
 }
 
-DATE: 2017/09/14 18:39:03
-URL: http://localhost:3080/diffSet
-PARAMS: {"dbName": [1, 2, 3], "setName1": "set1", "setName2": "set2"}
+DATE: 2017/09/16 18:58:29
+URL: http://localhost:3080/replaceSet
+PARAMS: {"dbName": "db0", "setName": "set123", "setValue": "1"}
 RESPONSE: {
-  "data": [
-    1, 
-    2, 
-    3
-  ], 
-  "msg": "Element Type Error", 
-  "typeCode": 0
-}
-
-DATE: 2017/09/14 18:39:03
-URL: http://localhost:3080/diffSet
-PARAMS: {"dbName": "db0", "setName1": "set123", "setName2": "set2"}
-RESPONSE: {
-  "data": "set123 or set2", 
+  "data": "set123", 
   "msg": "Set Does Not Exist", 
   "typeCode": 58
 }
 
-DATE: 2017/09/14 18:39:03
-URL: http://localhost:3080/diffSet
-PARAMS: {"dbName": "db0", "setName1": ["hello", "world"], "setName2": "set2"}
-RESPONSE: {
-  "data": "db0", 
-  "msg": "Element Type Error", 
-  "typeCode": 0
-}
-
-DATE: 2017/09/14 18:39:03
-URL: http://localhost:3080/diffset
-PARAMS: {"dbName": "db0", "setName1": ["hello", "world"], "setName2": "set2"}
+DATE: 2017/09/16 18:58:29
+URL: http://localhost:3080/replaceset
+PARAMS: {"dbName": "db0", "setName": "set1", "setValue": "1"}
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>
 <h1>Not Found</h1>

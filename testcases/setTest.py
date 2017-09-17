@@ -466,6 +466,58 @@ class hashTest:
         response = requests.post(errorUrl, json=diffParams)
         self.writeLog(errorUrl, json.dumps(diffParams), response.content.decode())
 
+    def replaceSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/replaceSet"
+
+        # case1 create a set, replace it with new value
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "set1"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        replaceParams = {
+            "dbName":"db0",
+            "setName":"set1",
+            "setValue":["hello","world"]
+        }
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case2 replace the set with empty value
+        replaceParams["setValue"] = []
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case3 unknown database name
+        replaceParams["dbName"] = "db999"
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case4 unknown set name
+        replaceParams = {
+            "dbName": "db0",
+            "setName": "set123",
+            "setValue": "1"
+        }
+        response = requests.post(url, json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/replaceset"
+        replaceParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": "1"
+        }
+        response = requests.post(errorUrl, json=replaceParams)
+        self.writeLog(errorUrl, json.dumps(replaceParams), response.content.decode())
+
+
+
 
 if __name__ == "__main__":
     test = hashTest()
@@ -498,4 +550,7 @@ if __name__ == "__main__":
     #test.intersectSetTest()
 
     # testing diff set function
-    test.diffSetTest()
+    #test.diffSetTest()
+
+    # testing replace set function
+    test.replaceSetTest()

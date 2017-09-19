@@ -71,18 +71,23 @@ class BSTree:
 
     '''
         public interface for in-order traverse
+        When you need to save the traverse result, set traverseResult as a list,
+        then the result will be appended into the list
     '''
-    def inOrder(self):
-        self.internalInOrder(self.root)
+    def inOrder(self, traverseResult=None):
+        self.internalInOrder(self.root, traverseResult)
 
     '''
         internal function for in-order traverse
     '''
-    def internalInOrder(self, current):
+    def internalInOrder(self, current, traverseResult=None):
         if(current is not None):
-            self.internalInOrder(current.left)
-            print (current.value, current.score)
-            self.internalInOrder(current.right)
+            self.internalInOrder(current.left, traverseResult)
+            if(traverseResult is not None):
+                traverseResult.append((current.value, current.score))
+            else:
+                print (current.value, current.score)
+            self.internalInOrder(current.right, traverseResult)
 
     '''
         a delete function for binary search tree
@@ -204,6 +209,11 @@ class zset:
 
     def display(self):
         self.BSTree.inOrder()
+
+    def get(self):
+        traverseResult = []
+        self.BSTree.inOrder(traverseResult)
+        return traverseResult
 
 
 

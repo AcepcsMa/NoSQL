@@ -12,6 +12,7 @@ from elemHandler import elemHandler
 from listHandler import listHandler
 from hashHandler import hashHandler
 from setHandler import setHandler
+from zsetHandler import zsetHandler
 
 app = flask.Flask(__name__)
 
@@ -424,6 +425,12 @@ def showTTL(dbName, dataType, keyName):
                "typeCode":responseCode.DATA_TYPE_ERROR,
                "data":dataType}
         return flask.jsonify(msg)
+
+@app.route("/makeZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
+def makeZSet(dbName, zsetName):
+    myHandler = zsetHandler(database)
+    result = myHandler.createZSet(dbName, zsetName)
+    return flask.jsonify(result)
 
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):

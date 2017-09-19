@@ -7,6 +7,7 @@ import json
 import logging
 import time
 from decorator import *
+from zset import zset
 
 
 class NoSqlDb:
@@ -40,6 +41,11 @@ class NoSqlDb:
         self.setDict = dict()
         self.setLockDict = dict()
 
+        # zset structures
+        self.zsetName = dict()
+        self.zsetDict = dict()
+        self.zsetLockDict = dict()
+
         self.saveLock = False
 
         # TTL structure
@@ -47,6 +53,7 @@ class NoSqlDb:
         self.listTTL = dict()
         self.hashTTL = dict()
         self.setTTL = dict()
+        self.zsetTTL = dict()
 
         for dbName in self.dbNameSet:
             self.elemName[dbName] = set()
@@ -65,10 +72,15 @@ class NoSqlDb:
             self.setDict[dbName] = dict()
             self.setLockDict[dbName] = dict()
 
+            self.zsetName[dbName] = set()
+            self.zsetDict[dbName] = dict()
+            self.zsetLockDict[dbName] = dict()
+
             self.elemTTL[dbName] = dict()
             self.listTTL[dbName] = dict()
             self.hashTTL[dbName] = dict()
             self.setTTL[dbName] = dict()
+            self.zsetTTL[dbName] = dict()
 
     def initLog(self, config):
         # check log directory
@@ -107,6 +119,12 @@ class NoSqlDb:
     def unlockSet(self, dbName, setName):
         self.setLockDict[dbName][setName] = False
 
+    def lockZSet(self, dbName, zsetName):
+        self.setLockDict[dbName][zsetName] = True
+
+    def unlockZSet(self, dbName, zsetName):
+        self.setLockDict[dbName][zsetName] = False
+
     def isDbExist(self, dbName):
         return dbName in self.dbNameSet
 
@@ -141,6 +159,15 @@ class NoSqlDb:
         if(self.isDbExist(dbName) is True):
             for setName in setNames:
                 if(setName not in self.setName[dbName]):
+                    return False
+            return True
+        else:
+            return False
+
+    def isZSetExist(self, dbName, *zsetNames):
+        if (self.isDbExist(dbName) is True):
+            for zsetName in zsetNames:
+                if (zsetName not in self.zsetName[dbName]):
                     return False
             return True
         else:
@@ -754,6 +781,16 @@ class NoSqlDb:
                 return responseCode.SET_NOT_SET_TTL
             self.unlockSet(dbName, setName)
             return responseCode.SET_TTL_CLEAR_SUCCESS
+
+    @keyNameValidity
+    @saveTrigger
+    def createZSet(self, dbName, zsetName):
+        self.lockZSet(dbName, zsetName)
+        self.zsetName[dbName].add(zsetName)
+        self.zsetDict[dbName][zsetName] = zset()
+        self.unlockZSet(dbName, zsetName)
+        self.logger.info("ZSet Create Success {0}->{1}".format(dbName, zsetName))
+        return responseCode.ZSET_CREATE_SUCCESS
 
     @saveTrigger
     def addDb(self, dbName):

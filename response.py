@@ -87,6 +87,8 @@ class responseCode:
     LIST_NOT_SET_TTL = 80
     HASH_NOT_SET_TTL = 81
     SET_NOT_SET_TTL = 82
+    ZSET_CREATE_SUCCESS = 83
+    ZSET_ALREADY_EXIST = 84
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -139,5 +141,6 @@ class responseCode:
         SET_UNION_SUCCESS:"Set Union Success",
         SET_INTERSECT_SUCCESS:"Set Intersect Success",
         SET_DIFF_SUCCESS:"Set Diff Success",
-        SET_NOT_SET_TTL:"Set Is Not Set TTL"
+        SET_NOT_SET_TTL:"Set Is Not Set TTL",
+        ZSET_CREATE_SUCCESS:"ZSet Create Success"
     }

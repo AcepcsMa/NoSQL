@@ -120,10 +120,10 @@ class NoSqlDb:
         self.setLockDict[dbName][setName] = False
 
     def lockZSet(self, dbName, zsetName):
-        self.setLockDict[dbName][zsetName] = True
+        self.zsetLockDict[dbName][zsetName] = True
 
     def unlockZSet(self, dbName, zsetName):
-        self.setLockDict[dbName][zsetName] = False
+        self.zsetLockDict[dbName][zsetName] = False
 
     def isDbExist(self, dbName):
         return dbName in self.dbNameSet
@@ -238,6 +238,8 @@ class NoSqlDb:
             ttlDict = self.hashTTL[dbName]
         elif (dataType == "SET"):
             ttlDict = self.setTTL[dbName]
+        elif (dataType == "ZSET"):
+            ttlDict = self.zsetTTL[dbName]
         else:
             ttlDict = None
 
@@ -791,6 +793,25 @@ class NoSqlDb:
         self.unlockZSet(dbName, zsetName)
         self.logger.info("ZSet Create Success {0}->{1}".format(dbName, zsetName))
         return responseCode.ZSET_CREATE_SUCCESS
+
+    def getZSet(self, dbName, zsetName):
+        return self.zsetDict[dbName][zsetName].get()
+
+    @saveTrigger
+    def insertZSet(self, dbName, zsetName, value, score):
+        if(self.zsetLockDict[dbName][zsetName] is True):
+            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            return responseCode.SET_IS_LOCKED
+        else:
+            try:
+                self.lockZSet(dbName, zsetName)
+                if(self.zsetDict[dbName][zsetName].add(value, score) is True):
+                    self.logger.info("ZSet Insert Success {0}->{1}->{2}:{3}".format(dbName, zsetName, value, score))
+                    return responseCode.ZSET_INSERT_SUCCESS
+                else:
+                    return responseCode.ZSET_VALUE_ALREADY_EXIST
+            finally:
+                self.unlockZSet(dbName, zsetName)
 
     @saveTrigger
     def addDb(self, dbName):

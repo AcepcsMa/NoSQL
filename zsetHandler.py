@@ -40,3 +40,27 @@ class zsetHandler:
         else:
             msg = self.makeMessage("ZSet Already Exists", responseCode.ZSET_ALREADY_EXIST, zsetName)
         return msg
+
+    @validTypeCheck
+    def getZSet(self, dbName, zsetName):
+        if (self.database.isZSetExist(dbName, zsetName) is True):
+            if (self.database.isExpired("ZSET", dbName, zsetName) is False):
+                zsetValue = self.database.getZSet(dbName, zsetName)
+                msg = self.makeMessage("ZSet Get Success", responseCode.ZSET_GET_SUCCESS, zsetValue)
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg
+
+    @validTypeCheck
+    def insertZSet(self, dbName, zsetName, value, score):
+        if (self.database.isZSetExist(dbName, zsetName)):
+            if (self.database.isExpired("ZSET", dbName, zsetName) is False):
+                result = self.database.insertZSet(dbName, zsetName, value, score)
+                msg = self.makeMessage(responseCode.detail[result], result, zsetName)
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg

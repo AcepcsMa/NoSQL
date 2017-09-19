@@ -89,6 +89,12 @@ class responseCode:
     SET_NOT_SET_TTL = 82
     ZSET_CREATE_SUCCESS = 83
     ZSET_ALREADY_EXIST = 84
+    ZSET_GET_SUCCESS = 85
+    ZSET_EXPIRED = 86
+    ZSET_NOT_EXIST = 87
+    ZSET_IS_LOCKED = 88
+    ZSET_INSERT_SUCCESS = 89
+    ZSET_VALUE_ALREADY_EXIST = 90
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -142,5 +148,8 @@ class responseCode:
         SET_INTERSECT_SUCCESS:"Set Intersect Success",
         SET_DIFF_SUCCESS:"Set Diff Success",
         SET_NOT_SET_TTL:"Set Is Not Set TTL",
-        ZSET_CREATE_SUCCESS:"ZSet Create Success"
+        ZSET_CREATE_SUCCESS:"ZSet Create Success",
+        ZSET_IS_LOCKED:"ZSet Is Locked",
+        ZSET_INSERT_SUCCESS:"ZSet Insert Success",
+        ZSET_VALUE_ALREADY_EXIST:"ZSet Value Already Exists"
     }

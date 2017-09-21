@@ -205,7 +205,10 @@ class zset:
             return (result.value, result.score)
 
     def remove(self, key):
-        return self.BSTree.delete(key)
+        result = self.BSTree.delete(key)
+        if(result is True):
+            self.valueDict.pop(key)
+        return result
 
     def display(self):
         self.BSTree.inOrder()

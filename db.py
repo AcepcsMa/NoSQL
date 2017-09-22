@@ -801,7 +801,7 @@ class NoSqlDb:
     def insertZSet(self, dbName, zsetName, value, score):
         if(self.zsetLockDict[dbName][zsetName] is True):
             self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
-            return responseCode.SET_IS_LOCKED
+            return responseCode.ZSET_IS_LOCKED
         else:
             try:
                 self.lockZSet(dbName, zsetName)
@@ -812,6 +812,29 @@ class NoSqlDb:
                     return responseCode.ZSET_VALUE_ALREADY_EXIST
             finally:
                 self.unlockZSet(dbName, zsetName)
+
+    @saveTrigger
+    def rmFromZSet(self, dbName, zsetName, value):
+        if (self.zsetLockDict[dbName][zsetName] is True):
+            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_IS_LOCKED
+        else:
+            self.lockZSet(dbName, zsetName)
+            result = self.zsetDict[dbName][zsetName].remove(value)
+            self.unlockZSet(dbName, zsetName)
+            return responseCode.ZSET_REMOVE_SUCCESS if result is True else responseCode.ZSET_NOT_CONTAIN_VALUE
+
+    @saveTrigger
+    def clearZSet(self, dbName, zsetName):
+        if (self.zsetLockDict[dbName][zsetName] is True):
+            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_IS_LOCKED
+        else:
+            self.lockZSet(dbName, zsetName)
+            self.zsetDict[dbName][zsetName].clear()
+            self.unlockZSet(dbName, zsetName)
+            self.logger.info("ZSet Clear Success {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_CLEAR_SUCCESS
 
     @saveTrigger
     def addDb(self, dbName):

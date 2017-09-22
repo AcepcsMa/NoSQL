@@ -451,6 +451,24 @@ def insertZSet():
     result = myHandler.insertZSet(dbName, zsetName, value, score)
     return flask.jsonify(result)
 
+@app.route("/rmFromZSet",methods=["POST"])
+def rmFromZSet():
+    myHandler = zsetHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        zsetName = flask.request.json["zsetName"]
+        value = flask.request.json["value"]
+    except:
+        dbName = zsetName = value = None
+    result = myHandler.rmFromZSet(dbName, zsetName, value)
+    return flask.jsonify(result)
+
+@app.route("/clearZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
+def clearZSet(dbName, zsetName):
+    myHandler = zsetHandler(database)
+    result = myHandler.clearZSet(dbName, zsetName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

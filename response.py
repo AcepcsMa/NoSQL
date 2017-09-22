@@ -95,6 +95,9 @@ class responseCode:
     ZSET_IS_LOCKED = 88
     ZSET_INSERT_SUCCESS = 89
     ZSET_VALUE_ALREADY_EXIST = 90
+    ZSET_REMOVE_SUCCESS = 91
+    ZSET_NOT_CONTAIN_VALUE = 92
+    ZSET_CLEAR_SUCCESS = 93
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -151,5 +154,8 @@ class responseCode:
         ZSET_CREATE_SUCCESS:"ZSet Create Success",
         ZSET_IS_LOCKED:"ZSet Is Locked",
         ZSET_INSERT_SUCCESS:"ZSet Insert Success",
-        ZSET_VALUE_ALREADY_EXIST:"ZSet Value Already Exists"
+        ZSET_VALUE_ALREADY_EXIST:"ZSet Value Already Exists",
+        ZSET_REMOVE_SUCCESS:"ZSet Remove Value Success",
+        ZSET_NOT_CONTAIN_VALUE:"ZSet Doest Not Contain This Value",
+        ZSET_CLEAR_SUCCESS:"ZSet Clear Success"
     }

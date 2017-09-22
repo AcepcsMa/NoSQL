@@ -89,6 +89,9 @@ class BSTree:
                 print (current.value, current.score)
             self.internalInOrder(current.right, traverseResult)
 
+    def clear(self):
+        self.root = None
+
     '''
         a delete function for binary search tree
     '''
@@ -217,6 +220,10 @@ class zset:
         traverseResult = []
         self.BSTree.inOrder(traverseResult)
         return traverseResult
+
+    def clear(self):
+        self.valueDict = {}
+        self.BSTree.clear()
 
 
 

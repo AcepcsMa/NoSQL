@@ -76,3 +76,15 @@ class zsetHandler:
         else:
             msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
         return msg
+
+    @validTypeCheck
+    def clearZSet(self, dbName, zsetName):
+        if (self.database.isZSetExist(dbName, zsetName)):
+            if (self.database.isExpired("ZSET", dbName, zsetName) is False):
+                result = self.database.clearZSet(dbName, zsetName)
+                msg = self.makeMessage(responseCode.detail[result], result, zsetName)
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg

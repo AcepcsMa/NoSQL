@@ -825,6 +825,18 @@ class NoSqlDb:
             return responseCode.ZSET_REMOVE_SUCCESS if result is True else responseCode.ZSET_NOT_CONTAIN_VALUE
 
     @saveTrigger
+    def clearZSet(self, dbName, zsetName):
+        if (self.zsetLockDict[dbName][zsetName] is True):
+            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_IS_LOCKED
+        else:
+            self.lockZSet(dbName, zsetName)
+            self.zsetDict[dbName][zsetName].clear()
+            self.unlockZSet(dbName, zsetName)
+            self.logger.info("ZSet Clear Success {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_CLEAR_SUCCESS
+
+    @saveTrigger
     def addDb(self, dbName):
         if(self.saveLock is True):
             self.logger.warning("Database Save Locked {0}".format(dbName))

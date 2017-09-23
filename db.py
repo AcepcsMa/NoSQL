@@ -190,9 +190,13 @@ class NoSqlDb:
         elif(dataType == "SET"):
             names = self.setName[dbName]
             logInfo = "Search Set Success {0} {1}"
+        elif (dataType == "ZSET"):
+            names = self.zsetName[dbName]
+            logInfo = "Search ZSet Success {0} {1}"
         else:
             names = []
             logInfo = "Search Fail {0} {1}"
+
         for name in names:
             try:
                 if(len(re.findall("({})".format(expression),name)) > 0):
@@ -835,6 +839,26 @@ class NoSqlDb:
             self.unlockZSet(dbName, zsetName)
             self.logger.info("ZSet Clear Success {0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_CLEAR_SUCCESS
+
+    @saveTrigger
+    def deleteZSet(self, dbName, zsetName):
+        if (self.zsetLockDict[dbName][zsetName] is True):
+            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_IS_LOCKED
+        else:
+            self.lockZSet(dbName, zsetName)
+            self.zsetName[dbName].discard(zsetName)
+            self.zsetDict[dbName].pop(zsetName)
+            self.unlockZSet(dbName, zsetName)
+            self.zsetLockDict[dbName].pop(zsetName)
+            self.logger.info("ZSet Delete Success {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_DELETE_SUCCESS
+
+    def searchAllZSet(self, dbName):
+        if(self.isDbExist(dbName) is False):
+            return []
+        self.logger.info("Search All ZSet Success {0}".format(dbName))
+        return list(self.zsetName[dbName])
 
     @saveTrigger
     def addDb(self, dbName):

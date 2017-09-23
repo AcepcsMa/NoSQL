@@ -98,6 +98,8 @@ class responseCode:
     ZSET_REMOVE_SUCCESS = 91
     ZSET_NOT_CONTAIN_VALUE = 92
     ZSET_CLEAR_SUCCESS = 93
+    ZSET_DELETE_SUCCESS = 94
+    ZSET_SEARCH_SUCCESS = 95
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -157,5 +159,7 @@ class responseCode:
         ZSET_VALUE_ALREADY_EXIST:"ZSet Value Already Exists",
         ZSET_REMOVE_SUCCESS:"ZSet Remove Value Success",
         ZSET_NOT_CONTAIN_VALUE:"ZSet Doest Not Contain This Value",
-        ZSET_CLEAR_SUCCESS:"ZSet Clear Success"
+        ZSET_CLEAR_SUCCESS:"ZSet Clear Success",
+        ZSET_DELETE_SUCCESS:"ZSet Delete Success",
+        ZSET_SEARCH_SUCCESS:"ZSet Search Success"
     }

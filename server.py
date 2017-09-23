@@ -469,6 +469,24 @@ def clearZSet(dbName, zsetName):
     result = myHandler.clearZSet(dbName, zsetName)
     return flask.jsonify(result)
 
+@app.route("/deleteZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
+def deleteZSet(dbName, zsetName):
+    myHandler = zsetHandler(database)
+    result = myHandler.deleteZSet(dbName, zsetName)
+    return flask.jsonify(result)
+
+@app.route("/searchZSet/<string:dbName>/<string:expression>",methods=["GET"])
+def searchZSet(dbName, expression):
+    myHandler = zsetHandler(database)
+    result = myHandler.searchZSet(dbName, expression)
+    return flask.jsonify(result)
+
+@app.route("/searchAllZSet/<string:dbName>",methods=["GET"])
+def searchAllZSet(dbName):
+    myHandler = zsetHandler(database)
+    result = myHandler.searchAllZSet(dbName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

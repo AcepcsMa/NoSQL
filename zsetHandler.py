@@ -88,3 +88,38 @@ class zsetHandler:
         else:
             msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
         return msg
+
+    @validTypeCheck
+    def deleteZSet(self, dbName, zsetName):
+        if (self.database.isZSetExist(dbName, zsetName)):
+            if (self.database.isExpired("ZSET", dbName, zsetName) is False):
+                result = self.database.deleteZSet(dbName, zsetName)
+                msg = self.makeMessage(responseCode.detail[result], result, zsetName)
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg
+
+    def searchZSet(self, dbName, expression):
+        if (self.database.isDbExist(dbName) is False):
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+            return msg
+
+        if (self.isValidType(dbName)):
+            searchResult = self.database.searchByRE(dbName, expression, "ZSET")
+            msg = self.makeMessage("Search ZSet Success", responseCode.ZSET_SEARCH_SUCCESS, searchResult)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg
+
+    def searchAllZSet(self, dbName):
+        if (self.isValidType(dbName)):
+            if (self.database.isDbExist(dbName)):
+                searchResult = self.database.searchAllZSet(dbName)
+                msg = self.makeMessage("Search ZSet Success", responseCode.ZSET_SEARCH_SUCCESS, searchResult)
+            else:
+                msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        else:
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
+        return msg

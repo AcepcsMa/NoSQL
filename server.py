@@ -487,6 +487,18 @@ def searchAllZSet(dbName):
     result = myHandler.searchAllZSet(dbName)
     return flask.jsonify(result)
 
+@app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
+def findMinFromZSet(dbName, zsetName):
+    myHandler = zsetHandler(database)
+    result = myHandler.findMin(dbName, zsetName)
+    return flask.jsonify(result)
+
+@app.route("/findMaxFromZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
+def findMaxFromZSet(dbName, zsetName):
+    myHandler = zsetHandler(database)
+    result = myHandler.findMax(dbName, zsetName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

@@ -860,6 +860,12 @@ class NoSqlDb:
         self.logger.info("Search All ZSet Success {0}".format(dbName))
         return list(self.zsetName[dbName])
 
+    def findMinFromZSet(self, dbName, zsetName):
+        return self.zsetDict[dbName][zsetName].findMin()
+
+    def findMaxFromZSet(self, dbName, zsetName):
+        return self.zsetDict[dbName][zsetName].findMax()
+
     @saveTrigger
     def addDb(self, dbName):
         if(self.saveLock is True):

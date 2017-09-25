@@ -100,6 +100,9 @@ class responseCode:
     ZSET_CLEAR_SUCCESS = 93
     ZSET_DELETE_SUCCESS = 94
     ZSET_SEARCH_SUCCESS = 95
+    ZSET_FIND_MIN_SUCCESS = 96
+    ZSET_FIND_MAX_SUCCESS = 96
+    ZSET_IS_EMPTY = 97
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",

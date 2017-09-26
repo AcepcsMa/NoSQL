@@ -505,6 +505,19 @@ def getScore(dbName, zsetName,valueName):
     result = myHandler.getScore(dbName, zsetName, valueName)
     return flask.jsonify(result)
 
+@app.route("/getValues",methods=["POST"])
+def getValues():
+    myHandler = zsetHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        zsetName = flask.request.json["zsetName"]
+        start = flask.request.json["start"]
+        end = flask.request.json["end"]
+    except:
+        dbName = zsetName = start = end = None
+    result = myHandler.getValues(dbName, zsetName, start, end)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

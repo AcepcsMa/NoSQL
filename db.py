@@ -876,6 +876,11 @@ class NoSqlDb:
         result = self.zsetDict[dbName][zsetName].find(valueName)
         return result[1]
 
+    def getValues(self, dbName, zsetName, start, end):
+        traverseResult = self.zsetDict[dbName][zsetName].get()
+        traverseResult = [result for result in traverseResult if result[1] >= start and result[1] < end]
+        return traverseResult
+
     @saveTrigger
     def addDb(self, dbName):
         if(self.saveLock is True):

@@ -104,6 +104,8 @@ class responseCode:
     ZSET_FIND_MAX_SUCCESS = 96
     ZSET_IS_EMPTY = 97
     ZSET_GET_SCORE_SUCCESS = 98
+    ZSET_SCORE_RANGE_ERROR = 99
+    ZSET_GET_VALUES_SUCCESS = 100
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",

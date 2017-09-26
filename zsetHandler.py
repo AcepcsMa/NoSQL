@@ -55,6 +55,12 @@ class zsetHandler:
 
     @validTypeCheck
     def insertZSet(self, dbName, zsetName, value, score):
+
+        # score must be int type
+        if(isinstance(score,int) is False):
+            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, score)
+            return msg
+
         if (self.database.isZSetExist(dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.insertZSet(dbName, zsetName, value, score)
@@ -138,7 +144,7 @@ class zsetHandler:
 
     @validTypeCheck
     def findMax(self, dbName, zsetName):
-        if (self.database.isZSetExist(dbName, zsetName)):
+        if(self.database.isZSetExist(dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.findMaxFromZSet(dbName, zsetName)
                 msg = self.makeMessage("Find Max Element Success", responseCode.ZSET_FIND_MAX_SUCCESS, list(result))
@@ -150,10 +156,26 @@ class zsetHandler:
 
     @validTypeCheck
     def getScore(self, dbName, zsetName, valueName):
-        if (self.database.isZSetExist(dbName, zsetName)):
+        if(self.database.isZSetExist(dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.getScoreFromZSet(dbName, zsetName, valueName)
                 msg = self.makeMessage("Get Score Success", responseCode.ZSET_GET_SCORE_SUCCESS, result)
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg
+
+    @validTypeCheck
+    def getValues(self, dbName, zsetName, start, end):
+        if(start >= end):
+            msg = self.makeMessage("Score Range Error", responseCode.ZSET_SCORE_RANGE_ERROR, "{}-{}".format(start,end))
+            return msg
+
+        if(self.database.isZSetExist(dbName, zsetName)):
+            if (self.database.isExpired("ZSET", dbName, zsetName) is False):
+                result = self.database.getValues(dbName, zsetName, start, end)
+                msg = self.makeMessage("Get Values Success", responseCode.ZSET_GET_VALUES_SUCCESS, result)
             else:
                 msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
         else:

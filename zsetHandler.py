@@ -129,10 +129,7 @@ class zsetHandler:
         if (self.database.isZSetExist(dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.findMinFromZSet(dbName, zsetName)
-                if(result[0] is None and result[1] is None):
-                    msg = self.makeMessage("ZSet Is Empty", responseCode.ZSET_IS_EMPTY, zsetName)
-                else:
-                    msg = self.makeMessage("Find Min Element Success", responseCode.ZSET_FIND_MIN_SUCCESS, list(result))
+                msg = self.makeMessage("Find Min Element Success", responseCode.ZSET_FIND_MIN_SUCCESS, list(result))
             else:
                 msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
         else:
@@ -144,10 +141,19 @@ class zsetHandler:
         if (self.database.isZSetExist(dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.findMaxFromZSet(dbName, zsetName)
-                if (result[0] is None and result[1] is None):
-                    msg = self.makeMessage("ZSet Is Empty", responseCode.ZSET_IS_EMPTY, zsetName)
-                else:
-                    msg = self.makeMessage("Find Max Element Success", responseCode.ZSET_FIND_MAX_SUCCESS, list(result))
+                msg = self.makeMessage("Find Max Element Success", responseCode.ZSET_FIND_MAX_SUCCESS, list(result))
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg
+
+    @validTypeCheck
+    def getScore(self, dbName, zsetName, valueName):
+        if (self.database.isZSetExist(dbName, zsetName)):
+            if (self.database.isExpired("ZSET", dbName, zsetName) is False):
+                result = self.database.getScoreFromZSet(dbName, zsetName, valueName)
+                msg = self.makeMessage("Get Score Success", responseCode.ZSET_GET_SCORE_SUCCESS, result)
             else:
                 msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
         else:

@@ -165,13 +165,19 @@ class NoSqlDb:
             return False
 
     def isZSetExist(self, dbName, *zsetNames):
-        if (self.isDbExist(dbName) is True):
+        if(self.isDbExist(dbName) is True):
             for zsetName in zsetNames:
                 if (zsetName not in self.zsetName[dbName]):
                     return False
             return True
         else:
             return False
+
+    '''def isZSetValueExist(self, dbName, zsetName, valueName):
+        if(self.isZSetExist(dbName, zsetName) is True):
+            return self.zsetDict[dbName][zsetName].isValueExist(valueName)
+        else:
+            return False'''
 
     def searchByRE(self, dbName, expression, dataType):
         if(self.isDbExist(dbName) is False):
@@ -865,6 +871,10 @@ class NoSqlDb:
 
     def findMaxFromZSet(self, dbName, zsetName):
         return self.zsetDict[dbName][zsetName].findMax()
+
+    def getScoreFromZSet(self, dbName, zsetName, valueName):
+        result = self.zsetDict[dbName][zsetName].find(valueName)
+        return result[1]
 
     @saveTrigger
     def addDb(self, dbName):

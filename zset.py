@@ -225,6 +225,9 @@ class zset:
         self.valueDict = {}
         self.BSTree.clear()
 
+    def isValueExist(self, value):
+        return value in self.valueDict.keys()
+
 
 
 if __name__ == "__main__":

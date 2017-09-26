@@ -499,6 +499,12 @@ def findMaxFromZSet(dbName, zsetName):
     result = myHandler.findMax(dbName, zsetName)
     return flask.jsonify(result)
 
+@app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>",methods=["GET"])
+def getScore(dbName, zsetName,valueName):
+    myHandler = zsetHandler(database)
+    result = myHandler.getScore(dbName, zsetName, valueName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

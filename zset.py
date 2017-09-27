@@ -171,6 +171,22 @@ class BSTree:
             successor.right = delNode.right
         return successor
 
+    def getRank(self, key):
+        node = self.find(key)
+        if(node is None):
+            return -1
+        return self.rank(self.root, node.value, node.score)
+
+
+    def rank(self, current, key, score):
+        count = 0
+        if(current is None):
+            return 0
+        if(current.score < score):
+            count += 1
+        return count + self.rank(current.left, key, score) + self.rank(current.right, key, score)
+
+
 class zset:
     '''
         a class of sorted set (implemented by binary search tree)
@@ -228,7 +244,19 @@ class zset:
     def isValueExist(self, value):
         return value in self.valueDict.keys()
 
+    def size(self):
+        return len(self.valueDict.keys())
 
+    def getRank(self, key):
+        return self.BSTree.getRank(key)
 
 if __name__ == "__main__":
-    pass
+    z = zset()
+    z.add("hh",1)
+    z.add("gg",5)
+    z.add("pp",-3)
+    z.add("qq",2)
+
+    print (z.getRank("ggh"))
+    print (z.getRank("hh"))
+    print (z.getRank("gg"))

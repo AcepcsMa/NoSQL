@@ -106,6 +106,8 @@ class responseCode:
     ZSET_GET_SCORE_SUCCESS = 98
     ZSET_SCORE_RANGE_ERROR = 99
     ZSET_GET_VALUES_SUCCESS = 100
+    ZSET_GET_SIZE_SUCCESS = 101
+    ZSET_GET_RANK_SUCCESS = 102
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",

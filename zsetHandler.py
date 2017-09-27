@@ -181,3 +181,25 @@ class zsetHandler:
         else:
             msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
         return msg
+
+    def getSize(self, dbName, zsetName):
+        if(self.database.isZSetExist(dbName, zsetName)):
+            if(self.database.isExpired("ZSET", dbName, zsetName) is False):
+                result = self.database.getSize(dbName, zsetName)
+                msg = self.makeMessage("Get ZSet size Success", responseCode.ZSET_GET_SIZE_SUCCESS, result)
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg
+
+    def getRank(self, dbName, zsetName, value):
+        if(self.database.isZSetExist(dbName, zsetName)):
+            if(self.database.isExpired("ZSET", dbName, zsetName) is False):
+                result = self.database.getRank(dbName, zsetName, value)
+                msg = self.makeMessage("Get ZSet Rank Success", responseCode.ZSET_GET_RANK_SUCCESS, result)
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg

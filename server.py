@@ -518,6 +518,18 @@ def getValues():
     result = myHandler.getValues(dbName, zsetName, start, end)
     return flask.jsonify(result)
 
+@app.route("/getZSetSize/<string:dbName>/<string:zsetName>",methods=["GET"])
+def getZSetSize(dbName, zsetName):
+    myHandler = zsetHandler(database)
+    result = myHandler.getSize(dbName, zsetName)
+    return flask.jsonify(result)
+
+@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>",methods=["GET"])
+def getRank(dbName, zsetName, value):
+    myHandler = zsetHandler(database)
+    result = myHandler.getRank(dbName, zsetName, value)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

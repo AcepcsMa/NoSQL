@@ -881,6 +881,12 @@ class NoSqlDb:
         traverseResult = [result for result in traverseResult if result[1] >= start and result[1] < end]
         return traverseResult
 
+    def getSize(self, dbName, zsetName):
+        return self.zsetDict[dbName][zsetName].size()
+
+    def getRank(self, dbName, zsetName, value):
+        return self.zsetDict[dbName][zsetName].getRank(value)
+
     @saveTrigger
     def addDb(self, dbName):
         if(self.saveLock is True):

@@ -543,6 +543,18 @@ def rmFromZSetByScore():
     result = myHandler.rmByScore(dbName, zsetName, start, end)
     return flask.jsonify(result)
 
+@app.route("/setZSetTTL/<string:dbName>/<string:zsetName>/<int:ttl>",methods=["GET"])
+def setZSetTTL(dbName, zsetName, ttl):
+    myHandler = zsetHandler(database)
+    result = myHandler.setTTL(dbName, zsetName, ttl)
+    return flask.jsonify(result)
+
+@app.route("/clearZSetTTL/<string:dbName>/<string:zsetName>",methods=["GET"])
+def clearZSetTTL(dbName, zsetName):
+    myHandler = zsetHandler(database)
+    result = myHandler.clearTTL(dbName, zsetName)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

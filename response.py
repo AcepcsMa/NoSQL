@@ -109,6 +109,9 @@ class responseCode:
     ZSET_GET_SIZE_SUCCESS = 101
     ZSET_GET_RANK_SUCCESS = 102
     ZSET_REMOVE_BY_SCORE_SUCCESS = 103
+    ZSET_TTL_SET_SUCCESS = 104
+    ZSET_NOT_SET_TTL = 105
+    ZSET_TTL_CLEAR_SUCCESS = 106
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -171,5 +174,8 @@ class responseCode:
         ZSET_CLEAR_SUCCESS:"ZSet Clear Success",
         ZSET_DELETE_SUCCESS:"ZSet Delete Success",
         ZSET_SEARCH_SUCCESS:"ZSet Search Success",
-        ZSET_REMOVE_BY_SCORE_SUCCESS:"ZSet Remove By Score Success"
+        ZSET_REMOVE_BY_SCORE_SUCCESS:"ZSet Remove By Score Success",
+        ZSET_TTL_SET_SUCCESS:"ZSet TTL Set Success",
+        ZSET_NOT_SET_TTL:"ZSet Is Not Set TTL",
+        ZSET_TTL_CLEAR_SUCCESS:"ZSet TTL Clear Success"
     }

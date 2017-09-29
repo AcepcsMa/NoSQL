@@ -899,6 +899,33 @@ class NoSqlDb:
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
 
     @saveTrigger
+    def setZSetTTL(self, dbName, zsetName, ttl):
+        if (self.zsetLockDict[dbName][zsetName] is True):
+            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_IS_LOCKED
+        else:
+            self.lockZSet(dbName, zsetName)
+            self.zsetTTL[dbName][zsetName] = {"createAt": int(time.time()),
+                                            "ttl": int(ttl),
+                                            "status": True}
+            self.unlockZSet(dbName, zsetName)
+            return responseCode.ZSET_TTL_SET_SUCCESS
+
+    @saveTrigger
+    def clearZSetTTL(self, dbName, zsetName):
+        if (self.zsetLockDict[dbName][zsetName] is True):
+            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            return responseCode.ZSET_IS_LOCKED
+        else:
+            self.lockZSet(dbName, zsetName)
+            try:
+                self.zsetTTL[dbName].pop(zsetName)
+            except:
+                return responseCode.ZSET_NOT_SET_TTL
+            self.unlockZSet(dbName, zsetName)
+            return responseCode.ZSET_TTL_CLEAR_SUCCESS
+
+    @saveTrigger
     def addDb(self, dbName):
         if(self.saveLock is True):
             self.logger.warning("Database Save Locked {0}".format(dbName))

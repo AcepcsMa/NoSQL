@@ -108,6 +108,7 @@ class responseCode:
     ZSET_GET_VALUES_SUCCESS = 100
     ZSET_GET_SIZE_SUCCESS = 101
     ZSET_GET_RANK_SUCCESS = 102
+    ZSET_REMOVE_BY_SCORE_SUCCESS = 103
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -169,5 +170,6 @@ class responseCode:
         ZSET_NOT_CONTAIN_VALUE:"ZSet Doest Not Contain This Value",
         ZSET_CLEAR_SUCCESS:"ZSet Clear Success",
         ZSET_DELETE_SUCCESS:"ZSet Delete Success",
-        ZSET_SEARCH_SUCCESS:"ZSet Search Success"
+        ZSET_SEARCH_SUCCESS:"ZSet Search Success",
+        ZSET_REMOVE_BY_SCORE_SUCCESS:"ZSet Remove By Score Success"
     }

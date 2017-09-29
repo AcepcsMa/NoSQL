@@ -250,6 +250,13 @@ class zset:
     def getRank(self, key):
         return self.BSTree.getRank(key)
 
+    def removeByScore(self, start, end):
+        deleteKeys = [key for key in self.valueDict.keys() if self.valueDict[key] >= start and self.valueDict[key] < end]
+        for key in deleteKeys:
+            self.remove(key)
+        return len(deleteKeys)
+
+
 if __name__ == "__main__":
     z = zset()
     z.add("hh",1)

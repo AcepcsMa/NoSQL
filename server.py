@@ -530,6 +530,19 @@ def getRank(dbName, zsetName, value):
     result = myHandler.getRank(dbName, zsetName, value)
     return flask.jsonify(result)
 
+@app.route("/rmFromZSetByScore",methods=["POST"])
+def rmFromZSetByScore():
+    myHandler = zsetHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        zsetName = flask.request.json["zsetName"]
+        start = flask.request.json["start"]
+        end = flask.request.json["end"]
+    except:
+        dbName = zsetName = start = end = None
+    result = myHandler.rmByScore(dbName, zsetName, start, end)
+    return flask.jsonify(result)
+
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)

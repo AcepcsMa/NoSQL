@@ -203,3 +203,39 @@ class zsetHandler:
         else:
             msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
         return msg
+
+    @validTypeCheck
+    def rmByScore(self, dbName, zsetName, start, end):
+        if(start >= end):
+            msg = self.makeMessage("Score Range Error", responseCode.ZSET_SCORE_RANGE_ERROR, "{}-{}".format(start, end))
+            return msg
+
+        if(self.database.isZSetExist(dbName, zsetName)):
+            if(self.database.isExpired("ZSET", dbName, zsetName) is False):
+                result = self.database.rmByScore(dbName, zsetName, start, end)
+                code = result[0]
+                removeCount = result[1]
+                msg = self.makeMessage(responseCode.detail[code], code, removeCount)
+            else:
+                msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
+        else:
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        return msg
+
+    @validTypeCheck
+    def setTTL(self, dbName, zsetName, ttl):
+        if(self.database.isZSetExist(dbName, zsetName) is False):
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        else:
+            result = self.database.setZSetTTL(dbName, zsetName, ttl)
+            msg = self.makeMessage(responseCode.detail[result], result, zsetName)
+        return msg
+
+    @validTypeCheck
+    def clearTTL(self, dbName, zsetName):
+        if (self.database.isZSetExist(dbName, zsetName) is False):
+            msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
+        else:
+            result = self.database.clearZSetTTL(dbName, zsetName)
+            msg = self.makeMessage(responseCode.detail[result], result, zsetName)
+        return msg

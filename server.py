@@ -415,6 +415,8 @@ def showTTL(dbName, dataType, keyName):
         myHandler = hashHandler(database)
     elif(dataType == "SET"):
         myHandler = setHandler(database)
+    elif(dataType == "ZSET"):
+        myHandler = zsetHandler(database)
     else:
         myHandler = None
     try:
@@ -515,7 +517,7 @@ def getValues():
         end = flask.request.json["end"]
     except:
         dbName = zsetName = start = end = None
-    result = myHandler.getValues(dbName, zsetName, start, end)
+    result = myHandler.getValuesByRange(dbName, zsetName, start, end)
     return flask.jsonify(result)
 
 @app.route("/getZSetSize/<string:dbName>/<string:zsetName>",methods=["GET"])

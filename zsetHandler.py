@@ -167,14 +167,14 @@ class zsetHandler:
         return msg
 
     @validTypeCheck
-    def getValues(self, dbName, zsetName, start, end):
+    def getValuesByRange(self, dbName, zsetName, start, end):
         if(start >= end):
             msg = self.makeMessage("Score Range Error", responseCode.ZSET_SCORE_RANGE_ERROR, "{}-{}".format(start,end))
             return msg
 
         if(self.database.isZSetExist(dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
-                result = self.database.getValues(dbName, zsetName, start, end)
+                result = self.database.getValuesByRange(dbName, zsetName, start, end)
                 msg = self.makeMessage("Get Values Success", responseCode.ZSET_GET_VALUES_SUCCESS, result)
             else:
                 msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
@@ -238,4 +238,13 @@ class zsetHandler:
         else:
             result = self.database.clearZSetTTL(dbName, zsetName)
             msg = self.makeMessage(responseCode.detail[result], result, zsetName)
+        return msg
+
+    @validTypeCheck
+    def showTTL(self, dbName, keyName):
+        if (self.database.isDbExist(dbName)):
+            code, result = self.database.showTTL(dbName, keyName, "ZSET")
+            msg = self.makeMessage(responseCode.detail[code], code, result)
+        else:
+            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg

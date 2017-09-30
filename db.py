@@ -221,6 +221,8 @@ class NoSqlDb:
             ttlDict = self.hashTTL[dbName]
         elif(dataType == "SET"):
             ttlDict = self.setTTL[dbName]
+        elif(dataType == "ZSET"):
+            ttlDict = self.zsetTTL[dbName]
         else:
             ttlDict = None
 
@@ -770,7 +772,7 @@ class NoSqlDb:
     @saveTrigger
     def setSetTTL(self, dbName, setName, ttl):
         if (self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Locked {0}->{1}".format(dbName, setName))
+            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lockSet(dbName, setName)
@@ -783,7 +785,7 @@ class NoSqlDb:
     @saveTrigger
     def clearSetTTL(self, dbName, setName):
         if (self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Locked {0}->{1}".format(dbName, setName))
+            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lockSet(dbName, setName)
@@ -876,7 +878,7 @@ class NoSqlDb:
         result = self.zsetDict[dbName][zsetName].find(valueName)
         return result[1]
 
-    def getValues(self, dbName, zsetName, start, end):
+    def getValuesByRange(self, dbName, zsetName, start, end):
         traverseResult = self.zsetDict[dbName][zsetName].get()
         traverseResult = [result for result in traverseResult if result[1] >= start and result[1] < end]
         return traverseResult

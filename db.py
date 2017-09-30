@@ -970,6 +970,18 @@ class NoSqlDb:
         else:
             return responseCode.DB_NOT_EXIST
 
+    def saveZSet(self, dbName, dataFileName, valueFileName, TTLFileName):
+        with open("data" + os.sep + dbName + os.sep + dataFileName, "w") as nameFile:
+            nameFile.write(json.dumps(list(self.zsetName[dbName])))
+        with open("data" + os.sep + dbName + os.sep + TTLFileName, "w") as TTLFile:
+            TTLFile.write(json.dumps(self.zsetTTL[dbName]))
+        with open("data" + os.sep + dbName + os.sep + valueFileName, "w") as valueFile:
+            saveDict = dict()
+            for zsetName in self.zsetDict[dbName].keys():
+                zset = self.zsetDict[dbName][zsetName]
+                saveDict[zsetName] = zset.valueDict
+            valueFile.write(json.dumps(saveDict))
+
     def saveData(self, dbName, dataType, dataFileName, valueFileName, TTLFileName):
         if(dataType == "ELEM"):
             names = self.elemName
@@ -1020,6 +1032,7 @@ class NoSqlDb:
                 self.saveData(dbName, "LIST", "listName.txt", "listValue.txt", "listTTL.txt")
                 self.saveData(dbName, "HASH", "hashName.txt", "hashValue.txt", "hashTTL.txt")
                 self.saveData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
+                self.saveZSet(dbName, "zsetName.txt","zsetValue.txt", "zsetTTL.txt")
 
             self.saveLock = False
             self.logger.info("Database Save Success")
@@ -1029,6 +1042,27 @@ class NoSqlDb:
         else:
             self.logger.warning("Database Save Locked")
             return responseCode.DB_SAVE_LOCKED
+
+    def loadZSet(self, dbName, dataFileName, valueFileName, TTLFileName):
+        # load names
+        with open("data" + os.sep + dbName + os.sep + dataFileName, "r") as nameFile:
+            names = json.loads(nameFile.read())
+            for name in names:
+                self.zsetName[dbName].add(name)
+                self.zsetLockDict[dbName][name] = False
+
+        # load values
+        with open("data" + os.sep + dbName + os.sep + valueFileName, "r") as valueFile:
+            data = json.loads(valueFile.read())
+            for zsetName in data.keys():
+                self.zsetDict[dbName][zsetName] = zset()
+                values = data[zsetName]
+                for key in values.keys():
+                    self.zsetDict[dbName][zsetName].add(key, values[key])
+
+        # load TTL
+        with open("data" + os.sep + dbName + os.sep + TTLFileName, "r") as TTLFile:
+            self.zsetTTL[dbName] = json.loads(TTLFile.read())
 
     def loadData(self, dbName, dataType, dataFileName, valueFileName, TTLFileName):
         if (dataType == "ELEM"):
@@ -1104,11 +1138,17 @@ class NoSqlDb:
                 self.setLockDict[dbName] = dict()
                 self.setDict[dbName] = dict()
 
+                # init zset structure
+                self.zsetName[dbName] = set()
+                self.zsetLockDict[dbName] = dict()
+                self.zsetDict[dbName] = dict()
+
                 # load data
                 self.loadData(dbName, "ELEM", "elemName.txt", "elemValue.txt", "elemTTL.txt")
                 self.loadData(dbName, "LIST", "listName.txt", "listValue.txt", "listTTL.txt")
                 self.loadData(dbName, "HASH", "hashName.txt", "hashValue.txt", "hashTTL.txt")
                 self.loadData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
+                self.loadZSet(dbName, "zsetName.txt", "zsetValue.txt", "zsetTTL.txt")
 
             self.logger.info("Database Load Success")
 

@@ -1,50 +1,32 @@
-DATE: 2017/09/16 20:35:45
-URL: http://localhost:3080/clearSetTTL/db0/set1
+DATE: 2017/10/02 12:01:46
+URL: http://localhost:3080/getZSet/db0/zset1
 PARAMS: 
 RESPONSE: {
-  "data": "set1", 
-  "msg": "Set TTL Clear Success", 
-  "typeCode": 72
+  "data": [], 
+  "msg": "ZSet Get Success", 
+  "typeCode": 85
 }
 
-DATE: 2017/09/16 20:35:45
-URL: http://localhost:3080/clearSetTTL/db0/set1
+DATE: 2017/10/02 12:01:46
+URL: http://localhost:3080/getZSet/db999/zset1
 PARAMS: 
 RESPONSE: {
-  "data": "set1", 
-  "msg": "Set Is Not Set TTL", 
-  "typeCode": 82
+  "data": "zset1", 
+  "msg": "ZSet Does Not Exist", 
+  "typeCode": 87
 }
 
-DATE: 2017/09/16 20:35:45
-URL: http://localhost:3080/clearSetTTL/db0/set2
+DATE: 2017/10/02 12:01:46
+URL: http://localhost:3080/getZSet/db0/zset123
 PARAMS: 
 RESPONSE: {
-  "data": "set2", 
-  "msg": "Set Is Not Set TTL", 
-  "typeCode": 82
+  "data": "zset123", 
+  "msg": "ZSet Does Not Exist", 
+  "typeCode": 87
 }
 
-DATE: 2017/09/16 20:35:45
-URL: http://localhost:3080/clearSetTTL/db999/set1
-PARAMS: 
-RESPONSE: {
-  "data": "set1", 
-  "msg": "Set Does Not Exist", 
-  "typeCode": 58
-}
-
-DATE: 2017/09/16 20:35:45
-URL: http://localhost:3080/clearSetTTL/db0/set999
-PARAMS: 
-RESPONSE: {
-  "data": "set999", 
-  "msg": "Set Does Not Exist", 
-  "typeCode": 58
-}
-
-DATE: 2017/09/16 20:35:45
-URL: http://localhost:3080/clearsetttl/db0/set1
+DATE: 2017/10/02 12:01:46
+URL: http://localhost:3080/getzset/db0/zset1
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

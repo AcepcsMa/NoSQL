@@ -4,7 +4,7 @@ import requests
 import json
 import time
 
-class hashTest:
+class setTest:
     def __init__(self):
         self.host, self.port = self.readTestConfig()
 
@@ -582,7 +582,7 @@ class hashTest:
 
 
 if __name__ == "__main__":
-    test = hashTest()
+    test = setTest()
 
     # testing make set function
     #test.makeSetTest()

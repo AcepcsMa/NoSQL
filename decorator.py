@@ -37,8 +37,8 @@ def validTypeCheck(func):
     def check(*args, **kwargs):
         dbName = args[1]
         keyName = args[2]
-        if(("str" not in str(type(dbName)) and "int" not in str(type(dbName)))
-           or ("str" not in str(type(keyName)) and "int" not in str(type(keyName)))):
+        if((isinstance(dbName,int) is False and isinstance(dbName,str) is False)
+           or (isinstance(keyName,str) is False and isinstance(keyName,int) is False)):
             return {
                 "msg":"Element Type Error",
                 "typeCode":responseCode.ELEM_TYPE_ERROR,

@@ -173,12 +173,6 @@ class NoSqlDb:
         else:
             return False
 
-    '''def isZSetValueExist(self, dbName, zsetName, valueName):
-        if(self.isZSetExist(dbName, zsetName) is True):
-            return self.zsetDict[dbName][zsetName].isValueExist(valueName)
-        else:
-            return False'''
-
     def searchByRE(self, dbName, expression, dataType):
         if(self.isDbExist(dbName) is False):
             return []

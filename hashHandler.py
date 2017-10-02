@@ -10,17 +10,17 @@ class hashHandler:
     # check if the type of elem is valid (string or int)
     def isValidType(self, *elems):
         for elem in elems:
-            if('str' not in str(type(elem)) and 'int' not in str(type(elem))):
+            if(isinstance(elem,str) is False and isinstance(elem,int) is False):
                 return False
         return True
 
     # check if the type of an elem is INT
     def isInt(self, elem):
-        return "int" in str(type(elem))
+        return isinstance(elem, int)
 
     # check if the type of an elem is DICT
     def isDict(self, elem):
-        return "dict" in str(type(elem))
+        return isinstance(elem,dict)
 
     # make the response message
     def makeMessage(self, msg, typeCode, data):

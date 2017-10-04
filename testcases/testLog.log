@@ -1,0 +1,88 @@
+DATE: 2017/10/04 11:15:08
+URL: http://localhost:3080/clearZSet/db0/zset1
+PARAMS: 
+RESPONSE: {
+  "data": "zset1", 
+  "msg": "ZSet Clear Success", 
+  "typeCode": 93
+}
+
+DATE: 2017/10/04 11:15:08
+URL: http://localhost:3080/clearZSet/db0/zset1
+PARAMS: 
+RESPONSE: {
+  "data": "zset1", 
+  "msg": "ZSet Clear Success", 
+  "typeCode": 93
+}
+
+DATE: 2017/10/04 11:15:08
+URL: http://localhost:3080/clearZSet/db123/zset1
+PARAMS: 
+RESPONSE: {
+  "data": "zset1", 
+  "msg": "ZSet Does Not Exist", 
+  "typeCode": 87
+}
+
+DATE: 2017/10/04 11:15:08
+URL: http://localhost:3080/clearZSet/db0/zset123
+PARAMS: 
+RESPONSE: {
+  "data": "zset123", 
+  "msg": "ZSet Does Not Exist", 
+  "typeCode": 87
+}
+
+DATE: 2017/10/04 11:15:08
+URL: http://localhost:3080/clearzset/db0/zset1
+PARAMS: 
+RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>
+
+DATE: 2017/10/04 11:17:04
+URL: http://localhost:3080/deleteZSet/db0/zset1
+PARAMS: 
+RESPONSE: {
+  "data": "zset1", 
+  "msg": "ZSet Delete Success", 
+  "typeCode": 94
+}
+
+DATE: 2017/10/04 11:17:04
+URL: http://localhost:3080/deleteZSet/db0/zset1
+PARAMS: 
+RESPONSE: {
+  "data": "zset1", 
+  "msg": "ZSet Does Not Exist", 
+  "typeCode": 87
+}
+
+DATE: 2017/10/04 11:17:04
+URL: http://localhost:3080/deleteZSet/db789/zset1
+PARAMS: 
+RESPONSE: {
+  "data": "zset1", 
+  "msg": "ZSet Does Not Exist", 
+  "typeCode": 87
+}
+
+DATE: 2017/10/04 11:17:04
+URL: http://localhost:3080/deleteZSet/db0/zset123
+PARAMS: 
+RESPONSE: {
+  "data": "zset123", 
+  "msg": "ZSet Does Not Exist", 
+  "typeCode": 87
+}
+
+DATE: 2017/10/04 11:17:04
+URL: http://localhost:3080/deletezset/db0/zset123
+PARAMS: 
+RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>
+

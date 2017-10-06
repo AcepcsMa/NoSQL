@@ -250,6 +250,108 @@ class zsetTest:
         response = requests.get(errorUrl.format("db0","zset123"))
         self.writeLog(errorUrl.format("db0","zset123"), "", response.content.decode())
 
+    def searchZSetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/searchZSet/{}/{}"
+
+        # case1 create several sets, then search
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "zset1"))
+        response = requests.get(createUrl.format("db0", "zs"))
+        response = requests.get(createUrl.format("db0", "z1"))
+        response = requests.get(createUrl.format("db0", "abczs"))
+        response = requests.get(createUrl.format("db0", "set"))
+        response = requests.get(url.format("db0","z*"))
+        self.writeLog(url.format("db0","z*"), "", response.content.decode())
+
+        # case2 unknown database name
+        response = requests.get(url.format("db999","z*"))
+        self.writeLog(url.format("db999","z*"), "", response.content.decode())
+
+        # case3 universal regular expression
+        response = requests.get(url.format("db0","*"))
+        self.writeLog(url.format("db0","*"), "", response.content.decode())
+
+        # case4 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/searchzset/{}/{}"
+        response = requests.get(errorUrl.format("db0","*"))
+        self.writeLog(errorUrl.format("db0","*"), "", response.content.decode())
+
+    def findMinTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/findMinFromZSet/{}/{}"
+
+        # case1 create a zset, insert, then find min
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "zset1"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
+        insertParams = {
+            "dbName": "db0",
+            "zsetName": "zset1",
+            "value": "hello",
+            "score": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        insertParams["value"] = "world"
+        insertParams["score"] = 3
+        response = requests.post(insertUrl, json=insertParams)
+        response = requests.get(url.format("db0","zset1"))
+        self.writeLog(url.format("db0","zset1"),"",response.content.decode())
+
+        # case2 find min in an empty zset
+        response = requests.get(createUrl.format("db0", "zset2"))
+        response = requests.get(url.format("db0","zset2"))
+        self.writeLog(url.format("db0","zset2"),"",response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db123", "zset2"))
+        self.writeLog(url.format("db123", "zset2"), "", response.content.decode())
+
+        # case4 unknown zset name
+        response = requests.get(url.format("db0", "zset123"))
+        self.writeLog(url.format("db0", "zset123"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/findminfromzset/{}/{}"
+        response = requests.get(errorUrl.format("db0", "zset1"))
+        self.writeLog(errorUrl.format("db0", "zset1"), "", response.content.decode())
+
+    def findMaxTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/findMaxFromZSet/{}/{}"
+
+        # case1 create a zset, insert, then find max
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "zset1"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
+        insertParams = {
+            "dbName": "db0",
+            "zsetName": "zset1",
+            "value": "hello",
+            "score": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        insertParams["value"] = "world"
+        insertParams["score"] = 3
+        response = requests.post(insertUrl, json=insertParams)
+        response = requests.get(url.format("db0","zset1"))
+        self.writeLog(url.format("db0","zset1"),"",response.content.decode())
+
+        # case2 find min in an empty zset
+        response = requests.get(createUrl.format("db0", "zset2"))
+        response = requests.get(url.format("db0","zset2"))
+        self.writeLog(url.format("db0","zset2"),"",response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db123", "zset2"))
+        self.writeLog(url.format("db123", "zset2"), "", response.content.decode())
+
+        # case4 unknown zset name
+        response = requests.get(url.format("db0", "zset123"))
+        self.writeLog(url.format("db0", "zset123"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/findmaxfromzset/{}/{}"
+        response = requests.get(errorUrl.format("db0", "zset1"))
+        self.writeLog(errorUrl.format("db0", "zset1"), "", response.content.decode())
+
 
 if __name__ == "__main__":
     test = zsetTest()
@@ -270,4 +372,13 @@ if __name__ == "__main__":
     #test.clearZSetTest()
 
     # testing delete zset function
-    test.deleteSetTest()
+    #test.deleteSetTest()
+
+    # testing search zset function
+    #test.searchZSetTest()
+
+    # testing find min from zset function
+    #test.findMinTest()
+
+    # testing find max from zset function
+    test.findMaxTest()

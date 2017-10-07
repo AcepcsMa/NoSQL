@@ -507,8 +507,8 @@ def getScore(dbName, zsetName,valueName):
     result = myHandler.getScore(dbName, zsetName, valueName)
     return flask.jsonify(result)
 
-@app.route("/getValues",methods=["POST"])
-def getValues():
+@app.route("/getValuesByRange",methods=["POST"])
+def getValuesByRange():
     myHandler = zsetHandler(database)
     try:
         dbName = flask.request.json["dbName"]

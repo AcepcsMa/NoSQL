@@ -1,38 +1,32 @@
-DATE: 2017/10/06 10:52:47
-URL: http://localhost:3080/findMaxFromZSet/db0/zset1
+DATE: 2017/10/07 11:26:51
+URL: http://localhost:3080/getZSetSize/db0/zset1
 PARAMS: 
 RESPONSE: {
-  "data": [
-    "world", 
-    3
-  ], 
-  "msg": "Find Max Element Success", 
-  "typeCode": 96
+  "data": 3, 
+  "msg": "Get ZSet size Success", 
+  "typeCode": 101
 }
 
-DATE: 2017/10/06 10:52:47
-URL: http://localhost:3080/findMaxFromZSet/db0/zset2
+DATE: 2017/10/07 11:26:51
+URL: http://localhost:3080/getZSetSize/db0/zset2
 PARAMS: 
 RESPONSE: {
-  "data": [
-    null, 
-    null
-  ], 
-  "msg": "Find Max Element Success", 
-  "typeCode": 96
+  "data": 0, 
+  "msg": "Get ZSet size Success", 
+  "typeCode": 101
 }
 
-DATE: 2017/10/06 10:52:47
-URL: http://localhost:3080/findMaxFromZSet/db123/zset2
+DATE: 2017/10/07 11:26:51
+URL: http://localhost:3080/getZSetSize/db123/zset1
 PARAMS: 
 RESPONSE: {
-  "data": "zset2", 
+  "data": "zset1", 
   "msg": "ZSet Does Not Exist", 
   "typeCode": 87
 }
 
-DATE: 2017/10/06 10:52:47
-URL: http://localhost:3080/findMaxFromZSet/db0/zset123
+DATE: 2017/10/07 11:26:51
+URL: http://localhost:3080/getZSetSize/db0/zset123
 PARAMS: 
 RESPONSE: {
   "data": "zset123", 
@@ -40,8 +34,8 @@ RESPONSE: {
   "typeCode": 87
 }
 
-DATE: 2017/10/06 10:52:47
-URL: http://localhost:3080/findmaxfromzset/db0/zset1
+DATE: 2017/10/07 11:26:51
+URL: http://localhost:3080/getzsetsize/db0/zset1
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

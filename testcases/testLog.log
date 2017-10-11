@@ -1,42 +1,51 @@
-DATE: 2017/10/10 22:41:04
-URL: http://localhost:3080/rmFromZSetByScore
-PARAMS: {"dbName": "db0", "zsetName": "zset1", "start": 1, "end": 3}
+DATE: 2017/10/11 10:45:32
+URL: http://localhost:3080/clearZSetTTL/db0/zset1
+PARAMS: 
 RESPONSE: {
-  "data": 1, 
-  "msg": "ZSet Remove By Score Success", 
-  "typeCode": 103
+  "data": "zset1", 
+  "msg": "ZSet TTL Clear Success", 
+  "typeCode": 106
 }
 
-DATE: 2017/10/10 22:41:04
-URL: http://localhost:3080/rmFromZSetByScore
-PARAMS: {"dbName": "db0", "zsetName": "zset1", "start": 90, "end": 100}
+DATE: 2017/10/11 10:45:32
+URL: http://localhost:3080/clearZSetTTL/db0/zset1
+PARAMS: 
 RESPONSE: {
-  "data": 0, 
-  "msg": "ZSet Remove By Score Success", 
-  "typeCode": 103
+  "data": "zset1", 
+  "msg": "ZSet Is Not Set TTL", 
+  "typeCode": 105
 }
 
-DATE: 2017/10/10 22:41:04
-URL: http://localhost:3080/rmFromZSetByScore
-PARAMS: {"dbName": "db123", "zsetName": "zset1", "start": 90, "end": 100}
+DATE: 2017/10/11 10:45:32
+URL: http://localhost:3080/clearZSetTTL/db0/zset2
+PARAMS: 
+RESPONSE: {
+  "data": "zset2", 
+  "msg": "ZSet Is Not Set TTL", 
+  "typeCode": 105
+}
+
+DATE: 2017/10/11 10:45:32
+URL: http://localhost:3080/clearZSetTTL/db999/zset1
+PARAMS: 
 RESPONSE: {
   "data": "zset1", 
   "msg": "ZSet Does Not Exist", 
   "typeCode": 87
 }
 
-DATE: 2017/10/10 22:41:04
-URL: http://localhost:3080/rmFromZSetByScore
-PARAMS: {"dbName": "db0", "zsetName": "zset123", "start": 90, "end": 100}
+DATE: 2017/10/11 10:45:32
+URL: http://localhost:3080/clearZSetTTL/db0/zset999
+PARAMS: 
 RESPONSE: {
-  "data": "zset123", 
+  "data": "zset999", 
   "msg": "ZSet Does Not Exist", 
   "typeCode": 87
 }
 
-DATE: 2017/10/10 22:41:04
-URL: http://localhost:3080/rmfromzsetbyscore
-PARAMS: {"dbName": "db0", "zsetName": "zset123", "start": 90, "end": 100}
+DATE: 2017/10/11 10:45:32
+URL: http://localhost:3080/clearzsetttl/db0/zset1
+PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>
 <h1>Not Found</h1>

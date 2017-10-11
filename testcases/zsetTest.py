@@ -590,6 +590,68 @@ class zsetTest:
         response = requests.post(errorUrl, json=removeParam)
         self.writeLog(errorUrl, json.dumps(removeParam), response.content.decode())
 
+    def setTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/setZSetTTL/{}/{}/{}"
+
+        # case1 create a set, set ttl
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "zset1"))
+        response = requests.get(url.format("db0","zset1",20))
+        self.writeLog(url.format("db0","zet1",20), "", response.content.decode())
+
+        # case2 set ttl repeatedly
+        response = requests.get(url.format("db0", "zset1", 20))
+        self.writeLog(url.format("db0", "zset1", 20), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db999", "zset1", 20))
+        self.writeLog(url.format("db999", "zset1", 20), "", response.content.decode())
+
+        # case4 unknown set name
+        response = requests.get(url.format("db0", "zset123", 20))
+        self.writeLog(url.format("db0", "zset123", 20), "", response.content.decode())
+
+        # case5 ttl is not INT type
+        response = requests.get(url.format("db0", "zset1", "hello"))
+        self.writeLog(url.format("db0", "zset1", "hello"), "", response.content.decode())
+
+        # error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setzsetttl/{}/{}/{}"
+        response = requests.get(errorUrl.format("db0", "zset1", 20))
+        self.writeLog(errorUrl.format("db0", "zset1", 20), "", response.content.decode())
+
+    def clearTTLTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/clearZSetTTL/{}/{}"
+
+        # case1 set a TTL and then clear it
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "zset1"))
+        setUrl = "http://" + self.host + ":" + str(self.port) + "/setZSetTTL/{}/{}/{}"
+        response = requests.get(setUrl.format("db0","zset1",20))
+        response = requests.get(url.format("db0", "zset1"))
+        self.writeLog(url.format("db0", "zset1"), "", response.content.decode())
+
+        # case2 clear TTL repeatedly
+        response = requests.get(url.format("db0", "zset1"))
+        self.writeLog(url.format("db0", "zset1"), "", response.content.decode())
+
+        # case3 clear non-existed TTL
+        response = requests.get(createUrl.format("db0","zset2"))
+        response = requests.get(url.format("db0", "zset2"))
+        self.writeLog(url.format("db0", "zset2"), "", response.content.decode())
+
+        # case4 unknown database name
+        response = requests.get(url.format("db999", "zset1"))
+        self.writeLog(url.format("db999", "zset1"), "", response.content.decode())
+
+        # case5 unknown element name
+        response = requests.get(url.format("db0", "zset999"))
+        self.writeLog(url.format("db0", "zset999"), "", response.content.decode())
+
+        # case6 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearzsetttl/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "zset1"))
+        self.writeLog(errorUrl.format("db0", "zset1"), "", response.content.decode())
 
 
 if __name__ == "__main__":
@@ -635,4 +697,10 @@ if __name__ == "__main__":
     #test.getRankTest()
 
     # testing remove by score function
-    test.rmByScoreTest()
+    #test.rmByScoreTest()
+
+    # testing set ttl function
+    #test.setTTLTest()
+
+    # testing clear ttl function
+    test.clearTTLTest()

@@ -365,7 +365,8 @@ class NoSqlDb:
                 self.elemTTL[dbName].pop(elemName)
             except:
                 return responseCode.ELEM_NOT_SET_TTL
-            self.unlockElem(dbName, elemName)
+            finally:
+                self.unlockElem(dbName, elemName)
             return responseCode.ELEM_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
@@ -490,7 +491,8 @@ class NoSqlDb:
                 self.listTTL[dbName].pop(listName)
             except:
                 return responseCode.LIST_NOT_SET_TTL
-            self.unlockList(dbName, listName)
+            finally:
+                self.unlockList(dbName, listName)
             return responseCode.LIST_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
@@ -633,7 +635,8 @@ class NoSqlDb:
                 self.hashTTL[dbName].pop(hashName)
             except:
                 return responseCode.HASH_NOT_SET_TTL
-            self.unlockHash(dbName, hashName)
+            finally:
+                self.unlockHash(dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
@@ -787,7 +790,8 @@ class NoSqlDb:
                 self.setTTL[dbName].pop(setName)
             except:
                 return responseCode.SET_NOT_SET_TTL
-            self.unlockSet(dbName, setName)
+            finally:
+                self.unlockSet(dbName, setName)
             return responseCode.SET_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
@@ -918,7 +922,8 @@ class NoSqlDb:
                 self.zsetTTL[dbName].pop(zsetName)
             except:
                 return responseCode.ZSET_NOT_SET_TTL
-            self.unlockZSet(dbName, zsetName)
+            finally:
+                self.unlockZSet(dbName, zsetName)
             return responseCode.ZSET_TTL_CLEAR_SUCCESS
 
     @saveTrigger

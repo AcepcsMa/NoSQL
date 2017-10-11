@@ -494,6 +494,104 @@ class zsetTest:
         response = requests.get(errorUrl.format("db0", "zset1"))
         self.writeLog(errorUrl.format("db0", "zset1"), "", response.content.decode())
 
+    def getRankTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/getRank/{}/{}/{}"
+
+        # case1 create a zset, insert
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "zset1"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
+        insertParams = {
+            "dbName": "db0",
+            "zsetName": "zset1",
+            "value": "a",
+            "score": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        insertParams["value"] = "b"
+        insertParams["score"] = 3
+        response = requests.post(insertUrl, json=insertParams)
+        insertParams["value"] = "c"
+        insertParams["score"] = 5
+        response = requests.post(insertUrl, json=insertParams)
+        response = requests.get(url.format("db0", "zset1", "b"))
+        self.writeLog(url.format("db0", "zset1", "b"), "", response.content.decode())
+
+        # case2 get rank from empty zset
+        response = requests.get(createUrl.format("db0", "zset2"))
+        response = requests.get(url.format("db0", "zset2", "a"))
+        self.writeLog(url.format("db0", "zset2", "a"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db123", "zset1", "a"))
+        self.writeLog(url.format("db123", "zset1", "a"), "", response.content.decode())
+
+        # case4 unknown zset name
+        response = requests.get(url.format("db0", "zset123", "b"))
+        self.writeLog(url.format("db0", "zset123", "b"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/getrank/{}/{}/{}"
+        response = requests.get(errorUrl.format("db0", "zset1", "a"))
+        self.writeLog(errorUrl.format("db0", "zset1", "a"), "", response.content.decode())
+
+    def rmByScoreTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/rmFromZSetByScore"
+
+        # case1 create, insert, then remove
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        response = requests.get(createUrl.format("db0", "zset1"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
+        insertParams = {
+            "dbName": "db0",
+            "zsetName": "zset1",
+            "value": "a",
+            "score": 1
+        }
+        response = requests.post(insertUrl, json=insertParams)
+        insertParams["value"] = "b"
+        insertParams["score"] = 3
+        response = requests.post(insertUrl, json=insertParams)
+        insertParams["value"] = "c"
+        insertParams["score"] = 5
+        response = requests.post(insertUrl, json=insertParams)
+        removeParam = {
+            "dbName": "db0",
+            "zsetName": "zset1",
+            "start": 1,
+            "end": 3
+        }
+        response = requests.post(url, json=removeParam)
+        self.writeLog(url, json.dumps(removeParam), response.content.decode())
+
+        # case2 score is out of range
+        removeParam = {
+            "dbName": "db0",
+            "zsetName": "zset1",
+            "start": 90,
+            "end": 100
+        }
+        response = requests.post(url, json=removeParam)
+        self.writeLog(url, json.dumps(removeParam), response.content.decode())
+
+        # case3 unknown database name
+        removeParam["dbName"] = "db123"
+        response = requests.post(url, json=removeParam)
+        self.writeLog(url, json.dumps(removeParam), response.content.decode())
+
+        # case4 unknown zset name
+        removeParam["dbName"] = "db0"
+        removeParam["zsetName"] = "zset123"
+        response = requests.post(url, json=removeParam)
+        self.writeLog(url, json.dumps(removeParam), response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/rmfromzsetbyscore"
+        response = requests.post(errorUrl, json=removeParam)
+        self.writeLog(errorUrl, json.dumps(removeParam), response.content.decode())
+
+
+
 if __name__ == "__main__":
     test = zsetTest()
 
@@ -531,4 +629,10 @@ if __name__ == "__main__":
     #test.getValuesByRangeTest()
 
     # testing get size function
-    test.getSizeTest()
+    #test.getSizeTest()
+
+    # testing rank function
+    #test.getRankTest()
+
+    # testing remove by score function
+    test.rmByScoreTest()

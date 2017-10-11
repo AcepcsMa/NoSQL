@@ -248,7 +248,7 @@ class zset:
         return len(self.valueDict.keys())
 
     def getRank(self, key):
-        return self.BSTree.getRank(key)
+        return self.BSTree.getRank(key)+1
 
     def removeByScore(self, start, end):
         deleteKeys = [key for key in self.valueDict.keys() if self.valueDict[key] >= start and self.valueDict[key] < end]

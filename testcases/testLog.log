@@ -1,42 +1,42 @@
-DATE: 2017/10/07 11:26:51
-URL: http://localhost:3080/getZSetSize/db0/zset1
-PARAMS: 
+DATE: 2017/10/10 22:41:04
+URL: http://localhost:3080/rmFromZSetByScore
+PARAMS: {"dbName": "db0", "zsetName": "zset1", "start": 1, "end": 3}
 RESPONSE: {
-  "data": 3, 
-  "msg": "Get ZSet size Success", 
-  "typeCode": 101
+  "data": 1, 
+  "msg": "ZSet Remove By Score Success", 
+  "typeCode": 103
 }
 
-DATE: 2017/10/07 11:26:51
-URL: http://localhost:3080/getZSetSize/db0/zset2
-PARAMS: 
+DATE: 2017/10/10 22:41:04
+URL: http://localhost:3080/rmFromZSetByScore
+PARAMS: {"dbName": "db0", "zsetName": "zset1", "start": 90, "end": 100}
 RESPONSE: {
   "data": 0, 
-  "msg": "Get ZSet size Success", 
-  "typeCode": 101
+  "msg": "ZSet Remove By Score Success", 
+  "typeCode": 103
 }
 
-DATE: 2017/10/07 11:26:51
-URL: http://localhost:3080/getZSetSize/db123/zset1
-PARAMS: 
+DATE: 2017/10/10 22:41:04
+URL: http://localhost:3080/rmFromZSetByScore
+PARAMS: {"dbName": "db123", "zsetName": "zset1", "start": 90, "end": 100}
 RESPONSE: {
   "data": "zset1", 
   "msg": "ZSet Does Not Exist", 
   "typeCode": 87
 }
 
-DATE: 2017/10/07 11:26:51
-URL: http://localhost:3080/getZSetSize/db0/zset123
-PARAMS: 
+DATE: 2017/10/10 22:41:04
+URL: http://localhost:3080/rmFromZSetByScore
+PARAMS: {"dbName": "db0", "zsetName": "zset123", "start": 90, "end": 100}
 RESPONSE: {
   "data": "zset123", 
   "msg": "ZSet Does Not Exist", 
   "typeCode": 87
 }
 
-DATE: 2017/10/07 11:26:51
-URL: http://localhost:3080/getzsetsize/db0/zset1
-PARAMS: 
+DATE: 2017/10/10 22:41:04
+URL: http://localhost:3080/rmfromzsetbyscore
+PARAMS: {"dbName": "db0", "zsetName": "zset123", "start": 90, "end": 100}
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>
 <h1>Not Found</h1>

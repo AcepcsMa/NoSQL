@@ -495,6 +495,9 @@ class NoSqlDb:
                 self.unlockList(dbName, listName)
             return responseCode.LIST_TTL_CLEAR_SUCCESS
 
+    def getListSize(self, dbName, listName):
+        return (responseCode.LIST_GET_SIZE_SUCCESS,len(self.listDict[dbName][listName]))
+
     @keyNameValidity
     @saveTrigger
     def createHash(self, dbName, hashName):
@@ -638,6 +641,9 @@ class NoSqlDb:
             finally:
                 self.unlockHash(dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
+
+    def getHashSize(self, dbName, hashName):
+        return (responseCode.HASH_GET_SIZE_SUCCESS,len(self.hashDict[dbName][hashName].keys()))
 
     @keyNameValidity
     @saveTrigger
@@ -793,6 +799,9 @@ class NoSqlDb:
             finally:
                 self.unlockSet(dbName, setName)
             return responseCode.SET_TTL_CLEAR_SUCCESS
+
+    def getSetSize(self, dbName, setName):
+        return (responseCode.SET_GET_SIZE_SUCCESS, len(self.setDict[dbName][setName]))
 
     @keyNameValidity
     @saveTrigger

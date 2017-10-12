@@ -174,6 +174,12 @@ def clearListTTL(dbName, listName):
     result = myHandler.clearTTL(dbName, listName)
     return flask.jsonify(result)
 
+@app.route("/getListSize/<string:dbName>/<string:listName>",methods=["GET"])
+def getListSize(dbName, listName):
+    myHandler = listHandler(database)
+    result = myHandler.getSize(dbName, listName)
+    return flask.jsonify(result)
+
 @app.route("/makeHash",methods=["POST"])
 def makeHash():
     myHandler = hashHandler(database)
@@ -283,6 +289,12 @@ def setHashTTL(dbName, hashName, ttl):
 def clearHashTTL(dbName, hashName):
     myHandler = hashHandler(database)
     result = myHandler.clearTTL(dbName, hashName)
+    return flask.jsonify(result)
+
+@app.route("/getHashSize/<string:dbName>/<string:hashName>",methods=["GET"])
+def getHashSize(dbName, hashName):
+    myHandler = hashHandler(database)
+    result = myHandler.getSize(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/makeSet/<string:dbName>/<string:setName>",methods=["GET"])
@@ -403,6 +415,12 @@ def setSetTTL(dbName, setName, ttl):
 def clearSetTTL(dbName, setName):
     myHandler = setHandler(database)
     result = myHandler.clearTTL(dbName, setName)
+    return flask.jsonify(result)
+
+@app.route("/getSetSize/<string:dbName>/<string:setName>",methods=["GET"])
+def getSetSize(dbName, setName):
+    myHandler = setHandler(database)
+    result = myHandler.getSize(dbName, setName)
     return flask.jsonify(result)
 
 @app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",methods=["GET"])

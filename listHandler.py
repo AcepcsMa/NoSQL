@@ -144,7 +144,7 @@ class listHandler:
     # set TTL for a list
     @validTypeCheck
     def setTTL(self, dbName, listName, ttl):
-        if (self.database.isListExist(dbName, listName) is False):
+        if(self.database.isListExist(dbName, listName) is False):
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
             result = self.database.setListTTL(dbName, listName, ttl)
@@ -154,7 +154,7 @@ class listHandler:
     # clear TTL for a list
     @validTypeCheck
     def clearTTL(self, dbName, listName):
-        if (self.database.isListExist(dbName, listName) is False):
+        if(self.database.isListExist(dbName, listName) is False):
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
             result = self.database.clearListTTL(dbName, listName)
@@ -168,4 +168,13 @@ class listHandler:
             msg = self.makeMessage(responseCode.detail[code], code, result)
         else:
             msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+        return msg
+
+    @validTypeCheck
+    def getSize(self, dbName, listName):
+        if(self.database.isListExist(dbName, listName) is False):
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+        else:
+            code, result = self.database.getListSize(dbName, listName)
+            msg = self.makeMessage(responseCode.detail[code],code,result)
         return msg

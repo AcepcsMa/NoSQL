@@ -1,50 +1,41 @@
-DATE: 2017/10/11 10:45:32
-URL: http://localhost:3080/clearZSetTTL/db0/zset1
+DATE: 2017/10/12 19:03:16
+URL: http://localhost:3080/getListSize/db0/list1
 PARAMS: 
 RESPONSE: {
-  "data": "zset1", 
-  "msg": "ZSet TTL Clear Success", 
-  "typeCode": 106
+  "data": 1, 
+  "msg": "List Get Size Success", 
+  "typeCode": 108
 }
 
-DATE: 2017/10/11 10:45:32
-URL: http://localhost:3080/clearZSetTTL/db0/zset1
+DATE: 2017/10/12 19:03:16
+URL: http://localhost:3080/getListSize/db0/list2
 PARAMS: 
 RESPONSE: {
-  "data": "zset1", 
-  "msg": "ZSet Is Not Set TTL", 
-  "typeCode": 105
+  "data": 0, 
+  "msg": "List Get Size Success", 
+  "typeCode": 108
 }
 
-DATE: 2017/10/11 10:45:32
-URL: http://localhost:3080/clearZSetTTL/db0/zset2
+DATE: 2017/10/12 19:03:16
+URL: http://localhost:3080/getListSize/db123/list1
 PARAMS: 
 RESPONSE: {
-  "data": "zset2", 
-  "msg": "ZSet Is Not Set TTL", 
-  "typeCode": 105
+  "data": "list1", 
+  "msg": "List Does Not Exist", 
+  "typeCode": 23
 }
 
-DATE: 2017/10/11 10:45:32
-URL: http://localhost:3080/clearZSetTTL/db999/zset1
+DATE: 2017/10/12 19:03:16
+URL: http://localhost:3080/getListSize/db0/list123
 PARAMS: 
 RESPONSE: {
-  "data": "zset1", 
-  "msg": "ZSet Does Not Exist", 
-  "typeCode": 87
+  "data": "list123", 
+  "msg": "List Does Not Exist", 
+  "typeCode": 23
 }
 
-DATE: 2017/10/11 10:45:32
-URL: http://localhost:3080/clearZSetTTL/db0/zset999
-PARAMS: 
-RESPONSE: {
-  "data": "zset999", 
-  "msg": "ZSet Does Not Exist", 
-  "typeCode": 87
-}
-
-DATE: 2017/10/11 10:45:32
-URL: http://localhost:3080/clearzsetttl/db0/zset1
+DATE: 2017/10/12 19:03:16
+URL: http://localhost:3080/getlistsize/db0/list1
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

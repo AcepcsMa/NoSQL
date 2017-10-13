@@ -627,6 +627,48 @@ class hashTest:
         response = requests.get(errorUrl.format("db0", "hash1"))
         self.writeLog(errorUrl.format("db0", "hash1"), "", response.content.decode())
 
+    def getSizeTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/getHashSize/{}/{}"
+
+        # case1 create a hash, insert, and get its size
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+        insertParmas = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key1",
+            "value": 1
+        }
+        response = requests.post(insertUrl, json=insertParmas)
+        response = requests.get(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
+
+        # case2 get size of an empty hash
+        params = {
+            "dbName": "db0",
+            "hashName": "hash2"
+        }
+        response = requests.post(createUrl, json=params)
+        response = requests.get(url.format("db0", "hash2"))
+        self.writeLog(url.format("db0", "hash2"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db123", "hash1"))
+        self.writeLog(url.format("db123", "hash1"), "", response.content.decode())
+
+        # case4 unknown hash name
+        response = requests.get(url.format("db0", "hash123"))
+        self.writeLog(url.format("db0", "hash123"), "", response.content.decode())
+
+        #case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/gethashsize/{}/{}"
+        response = requests.get(errorUrl.format("db0", "hash1"))
+        self.writeLog(errorUrl.format("db0", "hash1"), "", response.content.decode())
 
 if __name__ == "__main__":
     test = hashTest()
@@ -663,3 +705,6 @@ if __name__ == "__main__":
 
     # testing clear ttl function
     #test.clearTTLTest()
+
+    # testing get size function
+    test.getSizeTest()

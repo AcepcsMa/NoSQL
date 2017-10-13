@@ -455,7 +455,39 @@ class listTest:
         response = requests.get(errorUrl.format("db0", "list1"))
         self.writeLog(errorUrl.format("db0","list1"),"",response.content.decode())
 
+    def getSizeTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/getListSize/{}/{}"
 
+        # case1 create a list, insert, and get its size
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{}/{}"
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertList"
+        response = requests.get(createUrl.format("db0", "list1"))
+        insertParmas = {
+            "dbName": "db0",
+            "listName": "list1",
+            "listValue": "123"
+        }
+        response = requests.post(insertUrl, json=insertParmas)
+        response = requests.get(url.format("db0", "list1"))
+        self.writeLog(url.format("db0", "list1"), "", response.content.decode())
+
+        # case2 get size of an empty list
+        response = requests.get(createUrl.format("db0", "list2"))
+        response = requests.get(url.format("db0", "list2"))
+        self.writeLog(url.format("db0", "list2"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db123", "list1"))
+        self.writeLog(url.format("db123", "list1"), "", response.content.decode())
+
+        # case4 unknown hash name
+        response = requests.get(url.format("db0", "list123"))
+        self.writeLog(url.format("db0", "list123"), "", response.content.decode())
+
+        #case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/getlistsize/{}/{}"
+        response = requests.get(errorUrl.format("db0", "list1"))
+        self.writeLog(errorUrl.format("db0", "list1"), "", response.content.decode())
 
 if __name__ == "__main__":
     test = listTest()
@@ -489,3 +521,6 @@ if __name__ == "__main__":
 
     # testing clear TTL function
     #test.clearTTLTest()
+
+    # testing get size function
+    test.getSizeTest()

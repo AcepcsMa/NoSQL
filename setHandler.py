@@ -231,3 +231,12 @@ class setHandler:
         else:
             msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg
+
+    @validTypeCheck
+    def getSize(self, dbName, setName):
+        if(self.database.isSetExist(dbName, setName) is False):
+            msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
+        else:
+            code, result = self.database.getSetSize(dbName, setName)
+            msg = self.makeMessage(responseCode.detail[code], code, result)
+        return msg

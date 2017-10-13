@@ -213,3 +213,12 @@ class hashHandler:
         else:
             msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
         return msg
+
+    @validTypeCheck
+    def getSize(self, dbName, hashName):
+        if (self.database.isHashExist(dbName, hashName) is False):
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        else:
+            code, result = self.database.getHashSize(dbName, hashName)
+            msg = self.makeMessage(responseCode.detail[code], code, result)
+        return msg

@@ -1,41 +1,41 @@
-DATE: 2017/10/12 19:03:16
-URL: http://localhost:3080/getListSize/db0/list1
+DATE: 2017/10/13 17:53:00
+URL: http://localhost:3080/getSetSize/db0/set1
 PARAMS: 
 RESPONSE: {
   "data": 1, 
-  "msg": "List Get Size Success", 
-  "typeCode": 108
+  "msg": "Set Get Size Success", 
+  "typeCode": 109
 }
 
-DATE: 2017/10/12 19:03:16
-URL: http://localhost:3080/getListSize/db0/list2
+DATE: 2017/10/13 17:53:00
+URL: http://localhost:3080/getSetSize/db0/set2
 PARAMS: 
 RESPONSE: {
   "data": 0, 
-  "msg": "List Get Size Success", 
-  "typeCode": 108
+  "msg": "Set Get Size Success", 
+  "typeCode": 109
 }
 
-DATE: 2017/10/12 19:03:16
-URL: http://localhost:3080/getListSize/db123/list1
+DATE: 2017/10/13 17:53:00
+URL: http://localhost:3080/getSetSize/db123/set1
 PARAMS: 
 RESPONSE: {
-  "data": "list1", 
-  "msg": "List Does Not Exist", 
-  "typeCode": 23
+  "data": "set1", 
+  "msg": "Set Does Not Exist", 
+  "typeCode": 58
 }
 
-DATE: 2017/10/12 19:03:16
-URL: http://localhost:3080/getListSize/db0/list123
+DATE: 2017/10/13 17:53:00
+URL: http://localhost:3080/getSetSize/db0/set123
 PARAMS: 
 RESPONSE: {
-  "data": "list123", 
-  "msg": "List Does Not Exist", 
-  "typeCode": 23
+  "data": "set123", 
+  "msg": "Set Does Not Exist", 
+  "typeCode": 58
 }
 
-DATE: 2017/10/12 19:03:16
-URL: http://localhost:3080/getlistsize/db0/list1
+DATE: 2017/10/13 17:53:01
+URL: http://localhost:3080/getsetsize/db0/set1
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

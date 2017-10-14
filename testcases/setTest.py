@@ -579,7 +579,39 @@ class setTest:
         response = requests.get(errorUrl.format("db0", "set1"))
         self.writeLog(errorUrl.format("db0", "set1"), "", response.content.decode())
 
+    def getSizeTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/getSetSize/{}/{}"
 
+        # case1 create a set, insert, and get its size
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
+        insertParams = {
+            "dbName": "db0",
+            "setName": "set1",
+            "setValue": 1
+        }
+        response = requests.get(createUrl.format("db0", "set1"))
+        response = requests.post(insertUrl, json=insertParams)
+        response = requests.get(url.format("db0", "set1"))
+        self.writeLog(url.format("db0", "set1"), "", response.content.decode())
+
+        # case2 get size of an empty set
+        response = requests.get(createUrl.format("db0", "set2"))
+        response = requests.get(url.format("db0", "set2"))
+        self.writeLog(url.format("db0", "set2"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db123", "set1"))
+        self.writeLog(url.format("db123", "set1"), "", response.content.decode())
+
+        # case4 unknown hash name
+        response = requests.get(url.format("db0", "set123"))
+        self.writeLog(url.format("db0", "set123"), "", response.content.decode())
+
+        #case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/getsetsize/{}/{}"
+        response = requests.get(errorUrl.format("db0", "set1"))
+        self.writeLog(errorUrl.format("db0", "set1"), "", response.content.decode())
 
 if __name__ == "__main__":
     test = setTest()
@@ -622,3 +654,6 @@ if __name__ == "__main__":
 
     # testing clear ttl function
     #test.clearTTLTest()
+
+    # testing get size function
+    test.getSizeTest()

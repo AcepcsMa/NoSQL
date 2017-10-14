@@ -219,6 +219,6 @@ class hashHandler:
         if (self.database.isHashExist(dbName, hashName) is False):
             msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         else:
-            code, result = self.database.getHashSize(dbName, hashName)
+            code, result = self.database.getSize(dbName, hashName, "HASH")
             msg = self.makeMessage(responseCode.detail[code], code, result)
         return msg

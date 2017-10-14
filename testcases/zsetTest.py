@@ -653,7 +653,6 @@ class zsetTest:
         response = requests.get(errorUrl.format("db0", "zset1"))
         self.writeLog(errorUrl.format("db0", "zset1"), "", response.content.decode())
 
-
 if __name__ == "__main__":
     test = zsetTest()
 
@@ -691,7 +690,7 @@ if __name__ == "__main__":
     #test.getValuesByRangeTest()
 
     # testing get size function
-    #test.getSizeTest()
+    test.getSizeTest()
 
     # testing rank function
     #test.getRankTest()
@@ -703,4 +702,4 @@ if __name__ == "__main__":
     #test.setTTLTest()
 
     # testing clear ttl function
-    test.clearTTLTest()
+    #test.clearTTLTest()

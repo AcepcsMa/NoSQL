@@ -495,9 +495,6 @@ class NoSqlDb:
                 self.unlockList(dbName, listName)
             return responseCode.LIST_TTL_CLEAR_SUCCESS
 
-    def getListSize(self, dbName, listName):
-        return (responseCode.LIST_GET_SIZE_SUCCESS,len(self.listDict[dbName][listName]))
-
     @keyNameValidity
     @saveTrigger
     def createHash(self, dbName, hashName):
@@ -641,9 +638,6 @@ class NoSqlDb:
             finally:
                 self.unlockHash(dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
-
-    def getHashSize(self, dbName, hashName):
-        return (responseCode.HASH_GET_SIZE_SUCCESS,len(self.hashDict[dbName][hashName].keys()))
 
     @keyNameValidity
     @saveTrigger
@@ -800,9 +794,6 @@ class NoSqlDb:
                 self.unlockSet(dbName, setName)
             return responseCode.SET_TTL_CLEAR_SUCCESS
 
-    def getSetSize(self, dbName, setName):
-        return (responseCode.SET_GET_SIZE_SUCCESS, len(self.setDict[dbName][setName]))
-
     @keyNameValidity
     @saveTrigger
     def createZSet(self, dbName, zsetName):
@@ -890,8 +881,18 @@ class NoSqlDb:
         traverseResult = [result for result in traverseResult if result[1] >= start and result[1] < end]
         return traverseResult
 
-    def getSize(self, dbName, zsetName):
-        return self.zsetDict[dbName][zsetName].size()
+    def getSize(self, dbName, keyName, type):
+        if(type == "ZSET"):
+            return (responseCode.GET_SIZE_SUCCESS,self.zsetDict[dbName][keyName].size())
+        if(type == "LIST"):
+            data = self.listDict[dbName][keyName]
+        elif(type == "HASH"):
+            data = self.hashDict[dbName][keyName].keys()
+        elif(type == "SET"):
+            data = self.setDict[dbName][keyName]
+        else:
+            data = []
+        return (responseCode.GET_SIZE_SUCCESS, len(data))
 
     def getRank(self, dbName, zsetName, value):
         return self.zsetDict[dbName][zsetName].getRank(value)

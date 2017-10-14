@@ -237,6 +237,6 @@ class setHandler:
         if(self.database.isSetExist(dbName, setName) is False):
             msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         else:
-            code, result = self.database.getSetSize(dbName, setName)
+            code, result = self.database.getSize(dbName, setName, "SET")
             msg = self.makeMessage(responseCode.detail[code], code, result)
         return msg

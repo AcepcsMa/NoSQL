@@ -175,6 +175,6 @@ class listHandler:
         if(self.database.isListExist(dbName, listName) is False):
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
-            code, result = self.database.getListSize(dbName, listName)
+            code, result = self.database.getSize(dbName, listName, "LIST")
             msg = self.makeMessage(responseCode.detail[code],code,result)
         return msg

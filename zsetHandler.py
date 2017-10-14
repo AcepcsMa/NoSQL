@@ -181,8 +181,8 @@ class zsetHandler:
     def getSize(self, dbName, zsetName):
         if(self.database.isZSetExist(dbName, zsetName)):
             if(self.database.isExpired("ZSET", dbName, zsetName) is False):
-                result = self.database.getSize(dbName, zsetName)
-                msg = self.makeMessage("Get ZSet size Success", responseCode.ZSET_GET_SIZE_SUCCESS, result)
+                code, result = self.database.getSize(dbName, zsetName, "ZSET")
+                msg = self.makeMessage(responseCode.detail[code], code, result)
             else:
                 msg = self.makeMessage("ZSet Is Expired", responseCode.ZSET_EXPIRED, zsetName)
         else:

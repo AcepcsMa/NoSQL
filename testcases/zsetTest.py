@@ -690,7 +690,7 @@ if __name__ == "__main__":
     #test.getValuesByRangeTest()
 
     # testing get size function
-    #test.getSizeTest()
+    test.getSizeTest()
 
     # testing rank function
     #test.getRankTest()

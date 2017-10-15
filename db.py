@@ -128,50 +128,25 @@ class NoSqlDb:
     def isDbExist(self, dbName):
         return dbName in self.dbNameSet
 
-    def isElemExist(self, dbName, *elemNames):
-        if(self.isDbExist(dbName) is True):
-            for elemName in elemNames:
-                if(elemName not in self.elemName[dbName]):
-                    return False
-            return True
-        else:
+    def isExist(self, type, dbName, *keyNames):
+        if(self.isDbExist(dbName) is False):
             return False
-
-    def isListExist(self, dbName, *listNames):
-        if(self.isDbExist(dbName) is True):
-            for listName in listNames:
-                if(listName not in self.listName[dbName]):
-                    return False
-            return True
+        if(type == "ELEM"):
+            nameSet = self.elemName
+        elif(type == "LIST"):
+            nameSet = self.listName
+        elif(type == "HASH"):
+            nameSet = self.hashName
+        elif(type == "SET"):
+            nameSet = self.setName
+        elif(type == "ZSET"):
+            nameSet = self.zsetName
         else:
-            return False
-
-    def isHashExist(self, dbName, *hashNames):
-        if(self.isDbExist(dbName) is True):
-            for hashName in hashNames:
-                if(hashName not in self.hashName[dbName]):
-                    return False
-            return True
-        else:
-            return False
-
-    def isSetExist(self, dbName, *setNames):
-        if(self.isDbExist(dbName) is True):
-            for setName in setNames:
-                if(setName not in self.setName[dbName]):
-                    return False
-            return True
-        else:
-            return False
-
-    def isZSetExist(self, dbName, *zsetNames):
-        if(self.isDbExist(dbName) is True):
-            for zsetName in zsetNames:
-                if (zsetName not in self.zsetName[dbName]):
-                    return False
-            return True
-        else:
-            return False
+            nameSet = []
+        for keyName in keyNames:
+            if(keyName not in nameSet[dbName]):
+                return False
+        return True
 
     def searchByRE(self, dbName, expression, dataType):
         if(self.isDbExist(dbName) is False):
@@ -465,7 +440,6 @@ class NoSqlDb:
                 return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][listName1]
             else:
                 return responseCode.LIST_IS_LOCKED, []
-        #return responseCode.LIST_MERGE_SUCCESS
 
     @saveTrigger
     def setListTTL(self, dbName, listName, ttl):

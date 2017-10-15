@@ -35,7 +35,7 @@ class setHandler:
             msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
             return msg
 
-        if(self.database.isSetExist(dbName, setName) is False):
+        if(self.database.isExist("SET", dbName, setName) is False):
             result = self.database.createSet(dbName, setName)
             msg = self.makeMessage(responseCode.detail[result],result,setName)
         else:
@@ -45,7 +45,7 @@ class setHandler:
     # get set value
     @validTypeCheck
     def getSet(self, dbName, setName):
-        if(self.database.isSetExist(dbName, setName) is True):
+        if(self.database.isExist("SET", dbName, setName) is True):
             if(self.database.isExpired("SET", dbName, setName) is False):
                 setValue = self.database.getSet(dbName, setName)
                 msg = self.makeMessage("Set Get Success", responseCode.SET_GET_SUCCESS, setValue)
@@ -58,7 +58,7 @@ class setHandler:
     # insert a value into the given set
     @validTypeCheck
     def insertSet(self, dbName, setName, setValue):
-        if(self.database.isSetExist(dbName, setName)):
+        if(self.database.isExist("SET", dbName, setName)):
             if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.insertSet(dbName, setName, setValue)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
@@ -71,7 +71,7 @@ class setHandler:
     # remove the given value from a set
     @validTypeCheck
     def rmFromSet(self, dbName, setName, setValue):
-        if(self.database.isSetExist(dbName, setName)):
+        if(self.database.isExist("SET", dbName, setName)):
             if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.rmFromSet(dbName, setName, setValue)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
@@ -84,7 +84,7 @@ class setHandler:
     # clear the given set
     @validTypeCheck
     def clearSet(self, dbName, setName):
-        if(self.database.isSetExist(dbName, setName)):
+        if(self.database.isExist("SET", dbName, setName)):
             if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.clearSet(dbName, setName)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
@@ -97,7 +97,7 @@ class setHandler:
     # delete the given set
     @validTypeCheck
     def deleteSet(self, dbName, setName):
-        if(self.database.isSetExist(dbName, setName)):
+        if(self.database.isExist("SET", dbName, setName)):
             if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.deleteSet(dbName, setName)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
@@ -138,7 +138,7 @@ class setHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
             return msg
 
-        if(self.database.isSetExist(dbName, setName1, setName2)):
+        if(self.database.isExist("SET", dbName, setName1, setName2)):
             if(self.database.isExpired("SET", dbName,setName1, setName2) is False):
                 unionResult = [None]
                 result = self.database.unionSet(dbName, setName1, setName2, unionResult)
@@ -155,7 +155,7 @@ class setHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
             return msg
 
-        if(self.database.isSetExist(dbName, setName1, setName2)):
+        if(self.database.isExist("SET", dbName, setName1, setName2)):
             if(self.database.isExpired("SET", dbName, setName1, setName2) is False):
                 intersectResult = [None]
                 result = self.database.intersectSet(dbName, setName1, setName2, intersectResult)
@@ -173,7 +173,7 @@ class setHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, dbName)
             return msg
 
-        if(self.database.isSetExist(dbName, setName1, setName2)):
+        if(self.database.isExist("SET", dbName, setName1, setName2)):
             if(self.database.isExpired("SET", dbName, setName1, setName2) is False):
                 diffResult = [None]
                 result = self.database.diffSet(dbName, setName1, setName2, diffResult)
@@ -192,7 +192,7 @@ class setHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, setName)
             return msg
 
-        if(self.database.isSetExist(dbName, setName)):
+        if(self.database.isExist("SET", dbName, setName)):
             if(self.database.isExpired("SET", dbName, setName) is False):
                 result = self.database.replaceSet(dbName, setName, setValue)
                 msg = self.makeMessage(responseCode.detail[result], result, setName)
@@ -205,7 +205,7 @@ class setHandler:
     # set TTL for a set
     @validTypeCheck
     def setTTL(self, dbName, setName, ttl):
-        if(self.database.isSetExist(dbName, setName) is False):
+        if(self.database.isExist("SET", dbName, setName) is False):
             msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         else:
             result = self.database.setSetTTL(dbName, setName, ttl)
@@ -215,7 +215,7 @@ class setHandler:
     # clear TTL for a set
     @validTypeCheck
     def clearTTL(self, dbName, setName):
-        if(self.database.isSetExist(dbName, setName) is False):
+        if(self.database.isExist("SET", dbName, setName) is False):
             msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         else:
             result = self.database.clearSetTTL(dbName, setName)
@@ -234,7 +234,7 @@ class setHandler:
 
     @validTypeCheck
     def getSize(self, dbName, setName):
-        if(self.database.isSetExist(dbName, setName) is False):
+        if(self.database.isExist("SET", dbName, setName) is False):
             msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         else:
             code, result = self.database.getSize(dbName, setName, "SET")

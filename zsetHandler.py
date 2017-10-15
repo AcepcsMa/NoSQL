@@ -30,7 +30,7 @@ class zsetHandler:
             msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
             return msg
 
-        if (self.database.isZSetExist(dbName, zsetName) is False):
+        if (self.database.isExist("ZSET", dbName, zsetName) is False):
             result = self.database.createZSet(dbName, zsetName)
             msg = self.makeMessage(responseCode.detail[result], result, zsetName)
         else:
@@ -39,7 +39,7 @@ class zsetHandler:
 
     @validTypeCheck
     def getZSet(self, dbName, zsetName):
-        if (self.database.isZSetExist(dbName, zsetName) is True):
+        if (self.database.isExist("ZSET", dbName, zsetName) is True):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 zsetValue = self.database.getZSet(dbName, zsetName)
                 msg = self.makeMessage("ZSet Get Success", responseCode.ZSET_GET_SUCCESS, zsetValue)
@@ -57,7 +57,7 @@ class zsetHandler:
             msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, score)
             return msg
 
-        if (self.database.isZSetExist(dbName, zsetName)):
+        if (self.database.isExist("ZSET", dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.insertZSet(dbName, zsetName, value, score)
                 msg = self.makeMessage(responseCode.detail[result], result, zsetName)
@@ -69,7 +69,7 @@ class zsetHandler:
 
     @validTypeCheck
     def rmFromZSet(self, dbName, zsetName, value):
-        if (self.database.isZSetExist(dbName, zsetName)):
+        if (self.database.isExist("ZSET", dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.rmFromZSet(dbName, zsetName, value)
                 msg = self.makeMessage(responseCode.detail[result], result, zsetName)
@@ -81,7 +81,7 @@ class zsetHandler:
 
     @validTypeCheck
     def clearZSet(self, dbName, zsetName):
-        if (self.database.isZSetExist(dbName, zsetName)):
+        if (self.database.isExist("ZSET", dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.clearZSet(dbName, zsetName)
                 msg = self.makeMessage(responseCode.detail[result], result, zsetName)
@@ -93,7 +93,7 @@ class zsetHandler:
 
     @validTypeCheck
     def deleteZSet(self, dbName, zsetName):
-        if (self.database.isZSetExist(dbName, zsetName)):
+        if (self.database.isExist("ZSET", dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.deleteZSet(dbName, zsetName)
                 msg = self.makeMessage(responseCode.detail[result], result, zsetName)
@@ -128,7 +128,7 @@ class zsetHandler:
 
     @validTypeCheck
     def findMin(self, dbName, zsetName):
-        if (self.database.isZSetExist(dbName, zsetName)):
+        if (self.database.isExist("ZSET", dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.findMinFromZSet(dbName, zsetName)
                 msg = self.makeMessage("Find Min Element Success", responseCode.ZSET_FIND_MIN_SUCCESS, list(result))
@@ -140,7 +140,7 @@ class zsetHandler:
 
     @validTypeCheck
     def findMax(self, dbName, zsetName):
-        if(self.database.isZSetExist(dbName, zsetName)):
+        if(self.database.isExist("ZSET", dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.findMaxFromZSet(dbName, zsetName)
                 msg = self.makeMessage("Find Max Element Success", responseCode.ZSET_FIND_MAX_SUCCESS, list(result))
@@ -152,7 +152,7 @@ class zsetHandler:
 
     @validTypeCheck
     def getScore(self, dbName, zsetName, valueName):
-        if(self.database.isZSetExist(dbName, zsetName)):
+        if(self.database.isExist("ZSET", dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.getScoreFromZSet(dbName, zsetName, valueName)
                 msg = self.makeMessage("Get Score Success", responseCode.ZSET_GET_SCORE_SUCCESS, result)
@@ -168,7 +168,7 @@ class zsetHandler:
             msg = self.makeMessage("Score Range Error", responseCode.ZSET_SCORE_RANGE_ERROR, "{}-{}".format(start,end))
             return msg
 
-        if(self.database.isZSetExist(dbName, zsetName)):
+        if(self.database.isExist("ZSET", dbName, zsetName)):
             if (self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.getValuesByRange(dbName, zsetName, start, end)
                 msg = self.makeMessage("Get Values Success", responseCode.ZSET_GET_VALUES_SUCCESS, result)
@@ -179,7 +179,7 @@ class zsetHandler:
         return msg
 
     def getSize(self, dbName, zsetName):
-        if(self.database.isZSetExist(dbName, zsetName)):
+        if(self.database.isExist("ZSET", dbName, zsetName)):
             if(self.database.isExpired("ZSET", dbName, zsetName) is False):
                 code, result = self.database.getSize(dbName, zsetName, "ZSET")
                 msg = self.makeMessage(responseCode.detail[code], code, result)
@@ -190,7 +190,7 @@ class zsetHandler:
         return msg
 
     def getRank(self, dbName, zsetName, value):
-        if(self.database.isZSetExist(dbName, zsetName)):
+        if(self.database.isExist("ZSET", dbName, zsetName)):
             if(self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.getRank(dbName, zsetName, value)
                 msg = self.makeMessage("Get ZSet Rank Success", responseCode.ZSET_GET_RANK_SUCCESS, result)
@@ -206,7 +206,7 @@ class zsetHandler:
             msg = self.makeMessage("Score Range Error", responseCode.ZSET_SCORE_RANGE_ERROR, "{}-{}".format(start, end))
             return msg
 
-        if(self.database.isZSetExist(dbName, zsetName)):
+        if(self.database.isExist("ZSET", dbName, zsetName)):
             if(self.database.isExpired("ZSET", dbName, zsetName) is False):
                 result = self.database.rmByScore(dbName, zsetName, start, end)
                 code = result[0]
@@ -220,7 +220,7 @@ class zsetHandler:
 
     @validTypeCheck
     def setTTL(self, dbName, zsetName, ttl):
-        if(self.database.isZSetExist(dbName, zsetName) is False):
+        if(self.database.isExist("ZSET", dbName, zsetName) is False):
             msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
         else:
             result = self.database.setZSetTTL(dbName, zsetName, ttl)
@@ -229,7 +229,7 @@ class zsetHandler:
 
     @validTypeCheck
     def clearTTL(self, dbName, zsetName):
-        if (self.database.isZSetExist(dbName, zsetName) is False):
+        if (self.database.isExist("ZSET", dbName, zsetName) is False):
             msg = self.makeMessage("ZSet Does Not Exist", responseCode.ZSET_NOT_EXIST, zsetName)
         else:
             result = self.database.clearZSetTTL(dbName, zsetName)

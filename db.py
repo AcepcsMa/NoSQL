@@ -95,35 +95,35 @@ class NoSqlDb:
         hdr.setFormatter(formatter)
         self.logger.addHandler(hdr)
 
-    def lockElem(self, dbName, elemName):
-        self.elemLockDict[dbName][elemName] = True
+    def lock(self, type, dbName, keyName):
+        if(type == "ELEM"):
+            lockDict = self.elemLockDict
+        elif(type == "LIST"):
+            lockDict = self.listLockDict
+        elif(type == "HASH"):
+            lockDict = self.hashLockDict
+        elif(type == "SET"):
+            lockDict = self.setLockDict
+        elif(type == "ZSET"):
+            lockDict = self.zsetLockDict
+        else:
+            return
+        lockDict[dbName][keyName] = True
 
-    def unlockElem(self, dbName, elemName):
-        self.elemLockDict[dbName][elemName] = False
-
-    def lockList(self, dbName, listName):
-        self.listLockDict[dbName][listName] = True
-
-    def unlockList(self, dbName, listName):
-        self.listLockDict[dbName][listName] = False
-
-    def lockHash(self, dbName, hashName):
-        self.hashLockDict[dbName][hashName] = True
-
-    def unlockHash(self, dbName, hashName):
-        self.hashLockDict[dbName][hashName] = False
-
-    def lockSet(self, dbName, setName):
-        self.setLockDict[dbName][setName] = True
-
-    def unlockSet(self, dbName, setName):
-        self.setLockDict[dbName][setName] = False
-
-    def lockZSet(self, dbName, zsetName):
-        self.zsetLockDict[dbName][zsetName] = True
-
-    def unlockZSet(self, dbName, zsetName):
-        self.zsetLockDict[dbName][zsetName] = False
+    def unlock(self, type, dbName, keyName):
+        if(type == "ELEM"):
+            lockDict = self.elemLockDict
+        elif(type == "LIST"):
+            lockDict = self.listLockDict
+        elif(type == "HASH"):
+            lockDict = self.hashLockDict
+        elif(type == "SET"):
+            lockDict = self.setLockDict
+        elif(type == "ZSET"):
+            lockDict = self.zsetLockDict
+        else:
+            return
+        lockDict[dbName][keyName] = False
 
     def isDbExist(self, dbName):
         return dbName in self.dbNameSet
@@ -242,10 +242,10 @@ class NoSqlDb:
     @keyNameValidity
     @saveTrigger
     def createElem(self, dbName, elemName, value):
-        self.lockElem(dbName, elemName) # lock this element avoiding r/w implements
+        self.lock("ELEM", dbName, elemName) # lock this element avoiding r/w implements
         self.elemName[dbName].add(elemName)
         self.elemDict[dbName][elemName] = value
-        self.unlockElem(dbName, elemName)
+        self.unlock("ELEM", dbName, elemName)
         self.logger.info("Create Element Success {0}->{1}->{2}".format(dbName, elemName, value))
         return responseCode.ELEM_CREATE_SUCCESS
 
@@ -255,9 +255,9 @@ class NoSqlDb:
             return responseCode.ELEM_IS_LOCKED
 
         else:   # update the value
-            self.lockElem(dbName, elemName)
+            self.lock("ELEM", dbName, elemName)
             self.elemDict[dbName][elemName] = value
-            self.unlockElem(dbName, elemName)
+            self.unlock("ELEM", dbName, elemName)
             self.logger.info("Update Element Success {0}->{1}->{2}".format(dbName, elemName, value))
             return responseCode.ELEM_UPDATE_SUCCESS
 
@@ -281,9 +281,9 @@ class NoSqlDb:
             self.logger.warning("Increase Element Locked {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lockElem(dbName, elemName)
+            self.lock("ELEM", dbName, elemName)
             self.elemDict[dbName][elemName] += 1
-            self.unlockElem(dbName, elemName)
+            self.unlock("ELEM", dbName, elemName)
             self.logger.info("Increase Element Success {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_INCR_SUCCESS
 
@@ -293,9 +293,9 @@ class NoSqlDb:
             self.logger.warning("Decrease Element Locked {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lockElem(dbName, elemName)
+            self.lock("ELEM", dbName, elemName)
             self.elemDict[dbName][elemName] -= 1
-            self.unlockElem(dbName, elemName)
+            self.unlock("ELEM", dbName, elemName)
             self.logger.info("Decrease Element Success {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_DECR_SUCCESS
 
@@ -305,7 +305,7 @@ class NoSqlDb:
             self.logger.warning("Delete Element Locked {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lockElem(dbName, elemName)
+            self.lock("ELEM", dbName, elemName)
             self.elemName[dbName].remove(elemName)
             self.elemDict[dbName].pop(elemName)
             try:
@@ -322,11 +322,11 @@ class NoSqlDb:
             self.logger.warning("Element Locked {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lockElem(dbName, elemName)
+            self.lock("ELEM", dbName, elemName)
             self.elemTTL[dbName][elemName] = {"createAt":int(time.time()),
                                               "ttl":int(ttl),
                                               "status":True}
-            self.unlockElem(dbName, elemName)
+            self.unlock("ELEM", dbName, elemName)
             return responseCode.ELEM_TTL_SET_SUCCESS
 
     @saveTrigger
@@ -335,22 +335,22 @@ class NoSqlDb:
             self.logger.warning("Element Locked {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lockElem(dbName, elemName)
+            self.lock("ELEM", dbName, elemName)
             try:
                 self.elemTTL[dbName].pop(elemName)
             except:
                 return responseCode.ELEM_NOT_SET_TTL
             finally:
-                self.unlockElem(dbName, elemName)
+                self.unlock("ELEM", dbName, elemName)
             return responseCode.ELEM_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
     @saveTrigger
     def createList(self, dbName, listName):
-        self.lockList(dbName, listName)
+        self.lock("LIST", dbName, listName)
         self.listName[dbName].add(listName)
         self.listDict[dbName][listName] = list()
-        self.unlockList(dbName, listName)
+        self.unlock("LIST", dbName, listName)
         self.logger.info("Create List Success {0}->{1}".format(dbName, listName))
         return responseCode.LIST_CREATE_SUCCESS
 
@@ -368,9 +368,9 @@ class NoSqlDb:
             self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lockList(dbName, listName)
+            self.lock("LIST", dbName, listName)
             self.listDict[dbName][listName].append(value)
-            self.unlockList(dbName, listName)
+            self.unlock("LIST", dbName, listName)
             self.logger.info("Insert List Success {0}->{1}->{2}".format(dbName, listName, value))
             return responseCode.LIST_INSERT_SUCCESS
 
@@ -380,14 +380,14 @@ class NoSqlDb:
             self.logger.warning("Delete List Locked {0}->{1}".format(dbName, listName))
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lockList(dbName, listName)
+            self.lock("LIST", dbName, listName)
             self.listName[dbName].remove(listName)
             self.listDict[dbName].pop(listName)
             try:
                 self.listTTL[dbName].pop(listName)
             except:
                 pass
-            self.unlockList(dbName, listName)
+            self.unlock("LIST", dbName, listName)
             self.listLockDict[dbName].pop(listName)
             self.logger.info("Delete List Success {0}->{1}".format(dbName, listName))
             return responseCode.LIST_DELETE_SUCCESS
@@ -401,9 +401,9 @@ class NoSqlDb:
             if(value not in self.listDict[dbName][listName]):
                 return responseCode.LIST_NOT_CONTAIN_VALUE
             else:
-                self.lockList(dbName, listName)
+                self.lock("LIST", dbName, listName)
                 self.listDict[dbName][listName].remove(value)
-                self.unlockList(dbName, listName)
+                self.unlock("LIST", dbName, listName)
                 self.logger.info("Remove From List Success {0}->{1}->{2}".format(dbName, listName, value))
                 return responseCode.LIST_REMOVE_SUCCESS
 
@@ -419,23 +419,23 @@ class NoSqlDb:
             self.logger.warning("Clear List Locked {0}->{1}")
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lockList(dbName, listName)
+            self.lock("LIST", dbName, listName)
             self.listDict[dbName][listName] = []
-            self.unlockList(dbName, listName)
+            self.unlock("LIST", dbName, listName)
             return responseCode.LIST_CLEAR_SUCCESS
 
     @saveTrigger
     def mergeLists(self, dbName, listName1, listName2, resultListName=None):
         if(resultListName is not None):
             self.createList(dbName, resultListName)
-            self.lockList(dbName, resultListName)
+            self.lock("LIST", dbName, resultListName)
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName1])
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName2])
-            self.unlockList(dbName, resultListName)
+            self.unlock("LIST", dbName, resultListName)
             return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][resultListName]
         else:
             if(self.listLockDict[dbName][listName1] is False):
-                self.lockList(dbName, listName1)
+                self.lock("LIST", dbName, listName1)
                 self.listDict[dbName][listName1].extend(self.listDict[dbName][listName2])
                 return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][listName1]
             else:
@@ -447,11 +447,11 @@ class NoSqlDb:
             self.logger.warning("List Locked {0}->{1}".format(dbName, listName))
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lockList(dbName, listName)
+            self.lock("LIST", dbName, listName)
             self.listTTL[dbName][listName] = {"createAt":int(time.time()),
                                               "ttl":int(ttl),
                                               "status":True}
-            self.unlockList(dbName, listName)
+            self.unlock("LIST", dbName, listName)
             return responseCode.LIST_TTL_SET_SUCCESS
 
     @saveTrigger
@@ -460,23 +460,23 @@ class NoSqlDb:
             self.logger.warning("List Locked {0}->{1}".format(dbName, listName))
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lockList(dbName, listName)
+            self.lock("LIST", dbName, listName)
             try:
                 self.listTTL[dbName].pop(listName)
             except:
                 return responseCode.LIST_NOT_SET_TTL
             finally:
-                self.unlockList(dbName, listName)
+                self.unlock("LIST", dbName, listName)
             return responseCode.LIST_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
     @saveTrigger
     def createHash(self, dbName, hashName):
-        if(self.isHashExist(dbName,hashName) is False):
+        if(self.isExist("HASH", dbName, hashName) is False):
             self.hashName[dbName].add(hashName)
-            self.lockHash(dbName, hashName)
+            self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName] = dict()
-            self.unlockHash(dbName, hashName)
+            self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_CREATE_SUCCESS
         else:
             return responseCode.HASH_EXISTED
@@ -489,9 +489,9 @@ class NoSqlDb:
         if(self.hashLockDict[dbName][hashName] is True):
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lockHash(dbName, hashName)
+            self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName][keyName] = value
-            self.unlockHash(dbName, hashName)
+            self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_INSERT_SUCCESS
 
     def isKeyExist(self, dbName, hashName, keyName):
@@ -506,14 +506,14 @@ class NoSqlDb:
         if(self.hashLockDict[dbName][hashName] is True):
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lockHash(dbName, hashName)
+            self.lock("HASH", dbName, hashName)
             self.hashDict[dbName].pop(hashName)
             self.hashName[dbName].remove(hashName)
             try:
                 self.hashTTL[dbName].pop(hashName)
             except:
                 pass
-            self.unlockHash(dbName, hashName)
+            self.unlock("HASH", dbName, hashName)
             self.hashLockDict[dbName].pop(hashName)
             return responseCode.HASH_DELETE_SUCCESS
 
@@ -522,9 +522,9 @@ class NoSqlDb:
         if(self.hashLockDict[dbName][hashName] is True):
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lockHash(dbName, hashName)
+            self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName].pop(keyName)
-            self.unlockHash(dbName, hashName)
+            self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_REMOVE_SUCCESS
 
     @saveTrigger
@@ -532,9 +532,9 @@ class NoSqlDb:
         if(self.hashLockDict[dbName][hashName] is True):
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lockHash(dbName, hashName)
+            self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName].clear()
-            self.unlockHash(dbName, hashName)
+            self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_CLEAR_SUCCESS
 
     @saveTrigger
@@ -542,9 +542,9 @@ class NoSqlDb:
         if(self.hashLockDict[dbName][hashName] is True):
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lockHash(dbName, hashName)
+            self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName] = hashValue
-            self.unlockHash(dbName, hashName)
+            self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_REPLACE_SUCCESS
 
     @saveTrigger
@@ -558,18 +558,18 @@ class NoSqlDb:
 
         if (resultHashName is not None):
             self.createHash(dbName, resultHashName)
-            self.lockHash(dbName, resultHashName)
+            self.lock("HASH", dbName, resultHashName)
             baseKeys = self.hashDict[dbName][baseDictName].keys()
             otherKeys = self.hashDict[dbName][otherDictName].keys()
             self.hashDict[dbName][resultHashName] = self.hashDict[dbName][baseDictName].copy()
             for key in otherKeys:
                 if(key not in baseKeys):
                     self.hashDict[dbName][resultHashName][key] = self.hashDict[dbName][otherDictName][key]
-            self.unlockHash(dbName, resultHashName)
+            self.unlock("HASH", dbName, resultHashName)
 
         else:
             if (self.hashLockDict[dbName][baseDictName] is False):
-                self.lockHash(dbName, baseDictName)
+                self.lock("HASH", dbName, baseDictName)
                 baseKeys = self.hashDict[dbName][baseDictName].keys()
                 otherKeys = self.hashDict[dbName][otherDictName].keys()
                 for key in otherKeys:
@@ -591,11 +591,11 @@ class NoSqlDb:
             self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lockHash(dbName, hashName)
+            self.lock("HASH", dbName, hashName)
             self.hashTTL[dbName][hashName] = {"createAt":int(time.time()),
                                               "ttl":int(ttl),
                                               "status":True}
-            self.unlockHash(dbName, hashName)
+            self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_TTL_SET_SUCCESS
 
     @saveTrigger
@@ -604,22 +604,22 @@ class NoSqlDb:
             self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lockHash(dbName, hashName)
+            self.lock("HASH", dbName, hashName)
             try:
                 self.hashTTL[dbName].pop(hashName)
             except:
                 return responseCode.HASH_NOT_SET_TTL
             finally:
-                self.unlockHash(dbName, hashName)
+                self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
     @saveTrigger
     def createSet(self, dbName, setName):
-        self.lockSet(dbName, setName)
+        self.lock("SET", dbName, setName)
         self.setName[dbName].add(setName)
         self.setDict[dbName][setName] = set()
-        self.unlockSet(dbName, setName)
+        self.unlock("SET", dbName, setName)
         self.logger.info("Set Create Success {0}->{1}".format(dbName, setName))
         return responseCode.SET_CREATE_SUCCESS
 
@@ -633,9 +633,9 @@ class NoSqlDb:
             return responseCode.SET_IS_LOCKED
         else:
             if(setValue not in self.setDict[dbName][setName]):
-                self.lockSet(dbName, setName)
+                self.lock("SET", dbName, setName)
                 self.setDict[dbName][setName].add(setValue)
-                self.unlockSet(dbName, setName)
+                self.unlock("SET", dbName, setName)
                 self.logger.info("Set Insert Success {0}->{1}->{2}".format(dbName, setName, setValue))
                 return responseCode.SET_INSERT_SUCCESS
             else:
@@ -648,9 +648,9 @@ class NoSqlDb:
             return responseCode.SET_IS_LOCKED
         else:
             if(setValue in self.setDict[dbName][setName]):
-                self.lockSet(dbName, setName)
+                self.lock("SET", dbName, setName)
                 self.setDict[dbName][setName].discard(setValue)
-                self.unlockSet(dbName, setName)
+                self.unlock("SET", dbName, setName)
                 self.logger.info("Set Remove Success {0}->{1}->{2}".format(dbName, setName, setValue))
                 return responseCode.SET_REMOVE_SUCCESS
             else:
@@ -662,9 +662,9 @@ class NoSqlDb:
             self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lockSet(dbName, setName)
+            self.lock("SET", dbName, setName)
             self.setDict[dbName][setName].clear()
-            self.unlockSet(dbName, setName)
+            self.unlock("SET", dbName, setName)
             self.logger.info("Set Clear Success {0}->{1}".format(dbName, setName))
             return responseCode.SET_CLEAR_SUCCESS
 
@@ -674,10 +674,10 @@ class NoSqlDb:
             self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lockSet(dbName, setName)
+            self.lock("SET", dbName, setName)
             self.setName[dbName].discard(setName)
             self.setDict[dbName].pop(setName)
-            self.unlockSet(dbName, setName)
+            self.unlock("SET", dbName, setName)
             self.setLockDict[dbName].pop(setName)
             self.logger.info("Set Delete Success {0}->{1}".format(dbName, setName))
             return responseCode.SET_DELETE_SUCCESS
@@ -695,11 +695,11 @@ class NoSqlDb:
             self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lockSet(dbName, setName1)
-            self.lockSet(dbName, setName2)
+            self.lock("SET", dbName, setName1)
+            self.lock("SET", dbName, setName2)
             unionResult.append(list(self.setDict[dbName][setName1].union(self.setDict[dbName][setName2])))
-            self.unlockSet(dbName, setName1)
-            self.unlockSet(dbName, setName2)
+            self.unlock("SET", dbName, setName1)
+            self.unlock("SET", dbName, setName2)
             return responseCode.SET_UNION_SUCCESS
 
     @saveTrigger
@@ -709,11 +709,11 @@ class NoSqlDb:
             self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lockSet(dbName, setName1)
-            self.lockSet(dbName, setName2)
+            self.lock("SET", dbName, setName1)
+            self.lock("SET", dbName, setName2)
             intersectResult.append(list(self.setDict[dbName][setName1].intersection(self.setDict[dbName][setName2])))
-            self.unlockSet(dbName, setName1)
-            self.unlockSet(dbName, setName2)
+            self.unlock("SET", dbName, setName1)
+            self.unlock("SET", dbName, setName2)
             return responseCode.SET_INTERSECT_SUCCESS
 
     @saveTrigger
@@ -723,11 +723,11 @@ class NoSqlDb:
             self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lockSet(dbName, setName1)
-            self.lockSet(dbName, setName2)
+            self.lock("SET", dbName, setName1)
+            self.lock("SET", dbName, setName2)
             diffResult.append(list(self.setDict[dbName][setName1].difference(self.setDict[dbName][setName2])))
-            self.unlockSet(dbName, setName1)
-            self.unlockSet(dbName, setName2)
+            self.unlock("SET", dbName, setName1)
+            self.unlock("SET", dbName, setName2)
             return responseCode.SET_DIFF_SUCCESS
 
     @saveTrigger
@@ -735,9 +735,9 @@ class NoSqlDb:
         if (self.setLockDict[dbName][setName] is True):
             return responseCode.SET_IS_LOCKED
         else:
-            self.lockSet(dbName, setName)
+            self.lock("SET", dbName, setName)
             self.setDict[dbName][setName] = setValue
-            self.unlockSet(dbName, setName)
+            self.unlock("SET", dbName, setName)
             return responseCode.SET_REPLACE_SUCCESS
 
     @saveTrigger
@@ -746,11 +746,11 @@ class NoSqlDb:
             self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lockSet(dbName, setName)
+            self.lock("SET", dbName, setName)
             self.setTTL[dbName][setName] = {"createAt": int(time.time()),
                                               "ttl": int(ttl),
                                               "status": True}
-            self.unlockSet(dbName, setName)
+            self.unlock("SET", dbName, setName)
             return responseCode.SET_TTL_SET_SUCCESS
 
     @saveTrigger
@@ -759,22 +759,22 @@ class NoSqlDb:
             self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lockSet(dbName, setName)
+            self.lock("SET", dbName, setName)
             try:
                 self.setTTL[dbName].pop(setName)
             except:
                 return responseCode.SET_NOT_SET_TTL
             finally:
-                self.unlockSet(dbName, setName)
+                self.unlock("SET", dbName, setName)
             return responseCode.SET_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
     @saveTrigger
     def createZSet(self, dbName, zsetName):
-        self.lockZSet(dbName, zsetName)
+        self.lock("ZSET", dbName, zsetName)
         self.zsetName[dbName].add(zsetName)
         self.zsetDict[dbName][zsetName] = zset()
-        self.unlockZSet(dbName, zsetName)
+        self.unlock("ZSET", dbName, zsetName)
         self.logger.info("ZSet Create Success {0}->{1}".format(dbName, zsetName))
         return responseCode.ZSET_CREATE_SUCCESS
 
@@ -788,14 +788,14 @@ class NoSqlDb:
             return responseCode.ZSET_IS_LOCKED
         else:
             try:
-                self.lockZSet(dbName, zsetName)
+                self.lock("ZSET", dbName, zsetName)
                 if(self.zsetDict[dbName][zsetName].add(value, score) is True):
                     self.logger.info("ZSet Insert Success {0}->{1}->{2}:{3}".format(dbName, zsetName, value, score))
                     return responseCode.ZSET_INSERT_SUCCESS
                 else:
                     return responseCode.ZSET_VALUE_ALREADY_EXIST
             finally:
-                self.unlockZSet(dbName, zsetName)
+                self.unlock("ZSET", dbName, zsetName)
 
     @saveTrigger
     def rmFromZSet(self, dbName, zsetName, value):
@@ -803,9 +803,9 @@ class NoSqlDb:
             self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lockZSet(dbName, zsetName)
+            self.lock("ZSET", dbName, zsetName)
             result = self.zsetDict[dbName][zsetName].remove(value)
-            self.unlockZSet(dbName, zsetName)
+            self.unlock("ZSET", dbName, zsetName)
             return responseCode.ZSET_REMOVE_SUCCESS if result is True else responseCode.ZSET_NOT_CONTAIN_VALUE
 
     @saveTrigger
@@ -814,9 +814,9 @@ class NoSqlDb:
             self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lockZSet(dbName, zsetName)
+            self.lock("ZSET", dbName, zsetName)
             self.zsetDict[dbName][zsetName].clear()
-            self.unlockZSet(dbName, zsetName)
+            self.unlock("ZSET", dbName, zsetName)
             self.logger.info("ZSet Clear Success {0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_CLEAR_SUCCESS
 
@@ -826,10 +826,10 @@ class NoSqlDb:
             self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lockZSet(dbName, zsetName)
+            self.lock("ZSET", dbName, zsetName)
             self.zsetName[dbName].discard(zsetName)
             self.zsetDict[dbName].pop(zsetName)
-            self.unlockZSet(dbName, zsetName)
+            self.unlock("ZSET", dbName, zsetName)
             self.zsetLockDict[dbName].pop(zsetName)
             self.logger.info("ZSet Delete Success {0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_DELETE_SUCCESS
@@ -877,9 +877,9 @@ class NoSqlDb:
             self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
             return (responseCode.ZSET_IS_LOCKED, 0)
         else:
-            self.lockZSet(dbName, zsetName)
+            self.lock("ZSET", dbName, zsetName)
             result = self.zsetDict[dbName][zsetName].removeByScore(start, end)
-            self.unlockZSet(dbName, zsetName)
+            self.unlock("ZSET", dbName, zsetName)
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
 
     @saveTrigger
@@ -888,11 +888,11 @@ class NoSqlDb:
             self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lockZSet(dbName, zsetName)
+            self.lock("ZSET", dbName, zsetName)
             self.zsetTTL[dbName][zsetName] = {"createAt": int(time.time()),
                                             "ttl": int(ttl),
                                             "status": True}
-            self.unlockZSet(dbName, zsetName)
+            self.unlock("ZSET", dbName, zsetName)
             return responseCode.ZSET_TTL_SET_SUCCESS
 
     @saveTrigger
@@ -901,13 +901,13 @@ class NoSqlDb:
             self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lockZSet(dbName, zsetName)
+            self.lock("ZSET", dbName, zsetName)
             try:
                 self.zsetTTL[dbName].pop(zsetName)
             except:
                 return responseCode.ZSET_NOT_SET_TTL
             finally:
-                self.unlockZSet(dbName, zsetName)
+                self.unlock("ZSET", dbName, zsetName)
             return responseCode.ZSET_TTL_CLEAR_SUCCESS
 
     @saveTrigger

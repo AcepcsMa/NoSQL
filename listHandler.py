@@ -31,7 +31,7 @@ class listHandler:
     @validTypeCheck
     def createList(self, dbName, listName):
         if(self.database.isDbExist(dbName)):
-            if(self.database.isListExist(dbName, listName) is False):
+            if(self.database.isExist("LIST", dbName, listName) is False):
                 result = self.database.createList(dbName, listName)
                 msg = self.makeMessage(responseCode.detail[result],result,listName)
             else:
@@ -43,7 +43,7 @@ class listHandler:
     # get the value of a given list
     @validTypeCheck
     def getList(self, dbName, listName):
-        if(self.database.isListExist(dbName, listName) is True):
+        if(self.database.isExist("LIST", dbName, listName) is True):
             if(self.database.isExpired("LIST", dbName, listName) is False):
                 listValue = self.database.getList(listName, dbName)
                 msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
@@ -56,7 +56,7 @@ class listHandler:
     # insert a value into the given list
     @validTypeCheck
     def insertList(self, dbName, listName, listValue):
-        if(self.database.isListExist(dbName, listName) is True):
+        if(self.database.isExist("LIST", dbName, listName) is True):
             if(self.database.isExpired("LIST", dbName, listName) is False):
                 result = self.database.insertList(listName, listValue, dbName)
                 msg = self.makeMessage(responseCode.detail[result],result,listName)
@@ -69,7 +69,7 @@ class listHandler:
     # delete a list in the database
     @validTypeCheck
     def deleteList(self, dbName, listName):
-        if(self.database.isListExist(dbName, listName) is True):
+        if(self.database.isExist("LIST", dbName, listName) is True):
             result = self.database.deleteList(listName, dbName)
             msg = self.makeMessage(responseCode.detail[result],result,listName)
         else:
@@ -79,7 +79,7 @@ class listHandler:
     # remove a value from the given list
     @validTypeCheck
     def rmFromList(self, dbName, listName, value):
-        if(self.database.isListExist(dbName, listName) is True):
+        if(self.database.isExist("LIST", dbName, listName) is True):
             if(self.database.isExpired("LIST", dbName, listName) is False):
                 result = self.database.rmFromList(dbName, listName, value)
                 msg = self.makeMessage(responseCode.detail[result],result,listName)
@@ -92,7 +92,7 @@ class listHandler:
     # clear the given list
     @validTypeCheck
     def clearList(self, dbName, listName):
-        if(self.database.isListExist(dbName, listName) is True):
+        if(self.database.isExist("LIST", dbName, listName) is True):
             if(self.database.isExpired("LIST", dbName, listName) is False):
                 result = self.database.clearList(dbName, listName)
                 msg = self.makeMessage(responseCode.detail[result],result,listName)
@@ -109,11 +109,11 @@ class listHandler:
             return msg
 
         if(resultListName is not None):
-            if(self.database.isListExist(dbName, resultListName) is True):
+            if(self.database.isExist("LIST", dbName, resultListName) is True):
                 msg = self.makeMessage("Merge Result Exists", responseCode.MERGE_RESULT_EXIST, resultListName)
                 return msg
 
-        if(self.database.isListExist(dbName, listName1, listName2)):
+        if(self.database.isExist("LIST", dbName, listName1, listName2)):
             if(self.database.isExpired("LIST", dbName, listName1, listName2) is False):
                 code, result = self.database.mergeLists(dbName, listName1, listName2, resultListName)
                 msg = self.makeMessage(responseCode.detail[code], code, result)
@@ -144,7 +144,7 @@ class listHandler:
     # set TTL for a list
     @validTypeCheck
     def setTTL(self, dbName, listName, ttl):
-        if(self.database.isListExist(dbName, listName) is False):
+        if(self.database.isExist("LIST", dbName, listName) is False):
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
             result = self.database.setListTTL(dbName, listName, ttl)
@@ -154,7 +154,7 @@ class listHandler:
     # clear TTL for a list
     @validTypeCheck
     def clearTTL(self, dbName, listName):
-        if(self.database.isListExist(dbName, listName) is False):
+        if(self.database.isExist("LIST", dbName, listName) is False):
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
             result = self.database.clearListTTL(dbName, listName)
@@ -172,7 +172,7 @@ class listHandler:
 
     @validTypeCheck
     def getSize(self, dbName, listName):
-        if(self.database.isListExist(dbName, listName) is False):
+        if(self.database.isExist("LIST", dbName, listName) is False):
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         else:
             code, result = self.database.getSize(dbName, listName, "LIST")

@@ -35,7 +35,7 @@ class elemHandler:
             return msg
 
         if(self.isValidType(elemValue)): # check the type of elem name and elem value
-            if(self.database.isElemExist(dbName, elemName) is False):
+            if(self.database.isExist("ELEM", dbName, elemName) is False):
                 result = self.database.createElem(dbName, elemName, elemValue)
                 msg = self.makeMessage(responseCode.detail[result],result,elemName)
             else:   # this elem already exists in the db
@@ -48,7 +48,7 @@ class elemHandler:
     @validTypeCheck
     def updateElem(self, dbName, elemName, elemValue):
         if(self.isValidType(elemValue)):
-            if(self.database.isElemExist(dbName, elemName)):
+            if(self.database.isExist("ELEM", dbName, elemName)):
                 if(self.database.isExpired(dbName, elemName, "ELEM") is False):
                     result = self.database.updateElem(elemName, elemValue, dbName)
                     msg = self.makeMessage(responseCode.detail[result], result, elemName)
@@ -64,7 +64,7 @@ class elemHandler:
     @validTypeCheck
     def getElem(self, dbName, elemName):
         if(self.database.isDbExist(dbName)):
-            if (self.database.isElemExist(dbName, elemName) is False):
+            if (self.database.isExist("ELEM", dbName, elemName) is False):
                 msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
             else:
                 if(self.database.isExpired("ELEM", dbName, elemName) is False):
@@ -92,7 +92,7 @@ class elemHandler:
     # increase the value of an element
     @validTypeCheck
     def increaseElem(self, dbName, elemName):
-        if(self.database.isElemExist(dbName, elemName) is False):
+        if(self.database.isExist("ELEM", dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
             if(self.database.isExpired("ELEM", dbName, elemName) is False):
@@ -108,7 +108,7 @@ class elemHandler:
     # decrease the value of an element
     @validTypeCheck
     def decreaseElem(self, dbName, elemName):
-        if(self.database.isElemExist(dbName, elemName) is False):
+        if(self.database.isExist("ELEM", dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
             if(self.database.isExpired("ELEM", dbName, elemName) is False):
@@ -124,7 +124,7 @@ class elemHandler:
     # delete an element in the database
     @validTypeCheck
     def deleteElem(self, dbName, elemName):
-        if (self.database.isElemExist(dbName, elemName) is False):
+        if (self.database.isExist("ELEM", dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
             result = self.database.deleteElem(elemName, dbName)
@@ -134,7 +134,7 @@ class elemHandler:
     # set TTL for an element
     @validTypeCheck
     def setTTL(self, dbName, elemName, ttl):
-        if(self.database.isElemExist(dbName, elemName) is False):
+        if(self.database.isExist("ELEM", dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
             result = self.database.setElemTTL(dbName, elemName, ttl)
@@ -144,7 +144,7 @@ class elemHandler:
     # clear TTL for an element
     @validTypeCheck
     def clearTTL(self, dbName, elemName):
-        if(self.database.isElemExist(dbName, elemName) is False):
+        if(self.database.isExist("ELEM", dbName, elemName) is False):
             msg = self.makeMessage("Element Does Not Exist", responseCode.ELEM_NOT_EXIST, elemName)
         else:
             result = self.database.clearElemTTL(dbName, elemName)

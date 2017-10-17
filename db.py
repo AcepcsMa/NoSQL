@@ -9,7 +9,6 @@ import time
 from decorator import *
 from zset import zset
 
-
 class NoSqlDb:
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
@@ -95,34 +94,72 @@ class NoSqlDb:
         hdr.setFormatter(formatter)
         self.logger.addHandler(hdr)
 
-    def lock(self, type, dbName, keyName):
-        if(type == "ELEM"):
+    def getLockDict(self, type):
+        if (type == "ELEM"):
             lockDict = self.elemLockDict
-        elif(type == "LIST"):
+        elif (type == "LIST"):
             lockDict = self.listLockDict
-        elif(type == "HASH"):
+        elif (type == "HASH"):
             lockDict = self.hashLockDict
-        elif(type == "SET"):
+        elif (type == "SET"):
             lockDict = self.setLockDict
-        elif(type == "ZSET"):
+        elif (type == "ZSET"):
             lockDict = self.zsetLockDict
         else:
-            return
+            raise Exception("Type Error")
+        return lockDict
+
+    def getNameSet(self, type):
+        if (type == "ELEM"):
+            nameSet = self.elemName
+        elif (type == "LIST"):
+            nameSet = self.listName
+        elif (type == "HASH"):
+            nameSet = self.hashName
+        elif (type == "SET"):
+            nameSet = self.setName
+        elif (type == "ZSET"):
+            nameSet = self.zsetName
+        else:
+            raise Exception("Type Error")
+        return nameSet
+
+    def getTTLDict(self, type):
+        if (type == "ELEM"):
+            ttlDict = self.elemTTL
+        elif (type == "LIST"):
+            ttlDict = self.listTTL
+        elif (type == "HASH"):
+            ttlDict = self.hashTTL
+        elif (type == "SET"):
+            ttlDict = self.setTTL
+        elif (type == "ZSET"):
+            ttlDict = self.zsetTTL
+        else:
+            raise Exception("Type Error")
+        return ttlDict
+
+    def getValueDict(self, type):
+        if (type == "ELEM"):
+            valueDict = self.elemDict
+        elif (type == "LIST"):
+            valueDict = self.listDict
+        elif (type == "HASH"):
+            valueDict = self.hashDict
+        elif (type == "SET"):
+            valueDict = self.setDict
+        elif(type == "ZSET"):
+            valueDict = self.zsetDict
+        else:
+            raise Exception("Type Error")
+        return valueDict
+
+    def lock(self, type, dbName, keyName):
+        lockDict = self.getLockDict(type)
         lockDict[dbName][keyName] = True
 
     def unlock(self, type, dbName, keyName):
-        if(type == "ELEM"):
-            lockDict = self.elemLockDict
-        elif(type == "LIST"):
-            lockDict = self.listLockDict
-        elif(type == "HASH"):
-            lockDict = self.hashLockDict
-        elif(type == "SET"):
-            lockDict = self.setLockDict
-        elif(type == "ZSET"):
-            lockDict = self.zsetLockDict
-        else:
-            return
+        lockDict = self.getLockDict(type)
         lockDict[dbName][keyName] = False
 
     def isDbExist(self, dbName):
@@ -131,18 +168,7 @@ class NoSqlDb:
     def isExist(self, type, dbName, *keyNames):
         if(self.isDbExist(dbName) is False):
             return False
-        if(type == "ELEM"):
-            nameSet = self.elemName
-        elif(type == "LIST"):
-            nameSet = self.listName
-        elif(type == "HASH"):
-            nameSet = self.hashName
-        elif(type == "SET"):
-            nameSet = self.setName
-        elif(type == "ZSET"):
-            nameSet = self.zsetName
-        else:
-            nameSet = []
+        nameSet = self.getNameSet(type)
         for keyName in keyNames:
             if(keyName not in nameSet[dbName]):
                 return False
@@ -153,24 +179,8 @@ class NoSqlDb:
             return []
         searchResult = set()
         expression = re.sub("\*",".*",expression)   # convert expression to regular expression
-        if(dataType == "ELEM"):
-            names = self.elemName[dbName]
-            logInfo = "Search Element Success {0} {1}"
-        elif(dataType == "LIST"):
-            names = self.listName[dbName]
-            logInfo = "Search LIST Success {0} {1}"
-        elif(dataType == "HASH"):
-            names = self.hashName[dbName]
-            logInfo = "Search Hash Success {0} {1}"
-        elif(dataType == "SET"):
-            names = self.setName[dbName]
-            logInfo = "Search Set Success {0} {1}"
-        elif (dataType == "ZSET"):
-            names = self.zsetName[dbName]
-            logInfo = "Search ZSet Success {0} {1}"
-        else:
-            names = []
-            logInfo = "Search Fail {0} {1}"
+        names = self.getNameSet(dataType)[dbName]
+        logInfo = "Search Success {0} {1}"
 
         for name in names:
             try:
@@ -182,18 +192,7 @@ class NoSqlDb:
         return list(searchResult)
 
     def showTTL(self, dbName, keyName, dataType):
-        if(dataType == "ELEM"):
-            ttlDict = self.elemTTL[dbName]
-        elif(dataType == "LIST"):
-            ttlDict = self.listTTL[dbName]
-        elif(dataType == "HASH"):
-            ttlDict = self.hashTTL[dbName]
-        elif(dataType == "SET"):
-            ttlDict = self.setTTL[dbName]
-        elif(dataType == "ZSET"):
-            ttlDict = self.zsetTTL[dbName]
-        else:
-            ttlDict = None
+        ttlDict = self.getTTLDict(dataType)[dbName]
 
         if(keyName in ttlDict.keys()):
             if(ttlDict[keyName]["status"] == False):
@@ -211,24 +210,13 @@ class NoSqlDb:
             return responseCode.TTL_NO_RECORD, None
 
     def isExpired(self, dataType, dbName, *keyNames):
-        if (dataType == "ELEM"):
-            ttlDict = self.elemTTL[dbName]
-        elif (dataType == "LIST"):
-            ttlDict = self.listTTL[dbName]
-        elif (dataType == "HASH"):
-            ttlDict = self.hashTTL[dbName]
-        elif (dataType == "SET"):
-            ttlDict = self.setTTL[dbName]
-        elif (dataType == "ZSET"):
-            ttlDict = self.zsetTTL[dbName]
-        else:
-            ttlDict = None
+        ttlDict = self.getTTLDict(dataType)[dbName]
 
-        curTime = int(time.time())
         for keyName in keyNames:
             if(keyName not in ttlDict.keys()):
                 return False
             else:
+                curTime = int(time.time())
                 if(ttlDict[keyName]["status"] is False):
                     return True
                 createAt = ttlDict[keyName]["createAt"]
@@ -858,14 +846,7 @@ class NoSqlDb:
     def getSize(self, dbName, keyName, type):
         if(type == "ZSET"):
             return (responseCode.GET_SIZE_SUCCESS,self.zsetDict[dbName][keyName].size())
-        if(type == "LIST"):
-            data = self.listDict[dbName][keyName]
-        elif(type == "HASH"):
-            data = self.hashDict[dbName][keyName].keys()
-        elif(type == "SET"):
-            data = self.setDict[dbName][keyName]
-        else:
-            data = []
+        data = self.getValueDict(type)[dbName][keyName]
         return (responseCode.GET_SIZE_SUCCESS, len(data))
 
     def getRank(self, dbName, zsetName, value):
@@ -966,24 +947,9 @@ class NoSqlDb:
             valueFile.write(json.dumps(saveDict))
 
     def saveData(self, dbName, dataType, dataFileName, valueFileName, TTLFileName):
-        if(dataType == "ELEM"):
-            names = self.elemName
-            values = self.elemDict
-            ttl = self.elemTTL
-        elif(dataType == "LIST"):
-            names = self.listName
-            values = self.listDict
-            ttl = self.listTTL
-        elif(dataType == "HASH"):
-            names = self.hashName
-            values = self.hashDict
-            ttl = self.hashTTL
-        elif(dataType == "SET"):
-            names = self.setName
-            values = self.setDict
-            ttl = self.setTTL
-        else:
-            return
+        names = self.getNameSet(dataType)
+        values = self.getValueDict(dataType)
+        ttl = self.getTTLDict(dataType)
 
         with open("data" + os.sep + dbName + os.sep + dataFileName, "w") as nameFile:
             nameFile.write(json.dumps(list(names[dbName])))
@@ -1048,28 +1014,10 @@ class NoSqlDb:
             self.zsetTTL[dbName] = json.loads(TTLFile.read())
 
     def loadData(self, dbName, dataType, dataFileName, valueFileName, TTLFileName):
-        if (dataType == "ELEM"):
-            nameDict = self.elemName
-            valueDict = self.elemDict
-            ttlDict = self.elemTTL
-            lockDict = self.elemLockDict
-        elif (dataType == "LIST"):
-            nameDict = self.listName
-            valueDict = self.listDict
-            ttlDict = self.listTTL
-            lockDict = self.listLockDict
-        elif (dataType == "HASH"):
-            nameDict = self.hashName
-            valueDict = self.hashDict
-            ttlDict = self.hashTTL
-            lockDict = self.hashLockDict
-        elif (dataType == "SET"):
-            nameDict = self.setName
-            valueDict = self.setDict
-            ttlDict = self.setTTL
-            lockDict = self.setLockDict
-        else:
-            return
+        nameDict = self.getNameSet(dataType)
+        valueDict = self.getValueDict(dataType)
+        ttlDict = self.getTTLDict(dataType)
+        lockDict = self.getLockDict(dataType)
 
         # load names
         with open("data" + os.sep + dbName + os.sep + dataFileName, "r") as nameFile:

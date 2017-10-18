@@ -53,13 +53,15 @@ class listHandler:
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
+    # get values of a given list from start index to end index
+    @validTypeCheck
     def getListByRange(self, dbName, listName, start, end):
         if(start > end):
             msg = self.makeMessage("Start Should Be Smaller Than End", responseCode.LIST_RANGE_ERROR, listName)
             return msg
         if(self.database.isExist("LIST", dbName, listName) is True):
             if(self.database.isExpired("LIST", dbName, listName) is False):
-                listValue = self.database.getListByRange(dbName, listName, start, end)
+                listValue = self.database.getList(listName, dbName, start, end)
                 msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
             else:
                 msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)

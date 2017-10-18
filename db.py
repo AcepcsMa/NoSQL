@@ -342,17 +342,14 @@ class NoSqlDb:
         self.logger.info("Create List Success {0}->{1}".format(dbName, listName))
         return responseCode.LIST_CREATE_SUCCESS
 
-    def getList(self, listName, dbName):
+    def getList(self, listName, dbName, start=None, end=None):
         try:
-            listValue = self.listDict[dbName][listName]
-        except:
-            listValue = None
-        self.logger.info("Get List Success {0}->{1}".format(dbName, listName))
-        return listValue
-
-    def getListByRange(self, dbName, listName, start, end):
-        try:
-            listValue = self.listDict[dbName][listName][start:end]
+            if(start is None and end is None):
+                listValue = self.listDict[dbName][listName]
+            elif(start is not None and end is not None):
+                listValue = self.listDict[dbName][listName][start:end]
+            else:
+                listValue = None
         except:
             listValue = None
         self.logger.info("Get List Success {0}->{1}".format(dbName, listName))

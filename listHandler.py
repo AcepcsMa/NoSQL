@@ -53,6 +53,20 @@ class listHandler:
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
+    def getListByRange(self, dbName, listName, start, end):
+        if(start > end):
+            msg = self.makeMessage("Start Should Be Smaller Than End", responseCode.LIST_RANGE_ERROR, listName)
+            return msg
+        if(self.database.isExist("LIST", dbName, listName) is True):
+            if(self.database.isExpired("LIST", dbName, listName) is False):
+                listValue = self.database.getListByRange(dbName, listName, start, end)
+                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
+            else:
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        else:
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+        return msg
+
     # insert a value into the given list
     @validTypeCheck
     def insertList(self, dbName, listName, listValue):

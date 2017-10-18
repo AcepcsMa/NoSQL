@@ -100,6 +100,20 @@ def getList(dbName, listName):
     result = myHandler.getList(dbName, listName)
     return flask.jsonify(result)
 
+@app.route("/getListByRange",methods=["POST"])
+def getListByRange():
+    myHandler = listHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        listName = flask.request.json["listName"]
+        start = flask.request.json["start"]
+        end = flask.request.json["end"]
+    except Exception as e:
+        print (e)
+        dbName = listName = start = end = None
+    result = myHandler.getListByRange(dbName, listName, start, end)
+    return flask.jsonify(result)
+
 @app.route("/insertList",methods=["POST"])
 def insertList():
     myHandler = listHandler(database)

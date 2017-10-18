@@ -112,6 +112,7 @@ class responseCode:
     ZSET_NOT_SET_TTL = 104
     ZSET_TTL_CLEAR_SUCCESS = 105
     GET_SIZE_SUCCESS = 106
+    LIST_RANGE_ERROR = 107
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",

@@ -350,6 +350,14 @@ class NoSqlDb:
         self.logger.info("Get List Success {0}->{1}".format(dbName, listName))
         return listValue
 
+    def getListByRange(self, dbName, listName, start, end):
+        try:
+            listValue = self.listDict[dbName][listName][start:end]
+        except:
+            listValue = None
+        self.logger.info("Get List Success {0}->{1}".format(dbName, listName))
+        return listValue
+
     @saveTrigger
     def insertList(self, listName, value, dbName):
         if(self.listLockDict[dbName][listName] is True):

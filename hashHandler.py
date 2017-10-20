@@ -54,6 +54,19 @@ class hashHandler:
             msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         return msg
 
+    # get keyset of the given hash
+    @validTypeCheck
+    def getKeySet(self, dbName, hashName):
+        if(self.database.isExist("HASH", dbName, hashName)):
+            if(self.database.isExpired("HASH", dbName, hashName) is False):
+                keySet = self.database.getHashKeySet(dbName, hashName)
+                msg = self.makeMessage("Hash Key Set Get Success", responseCode.HASH_KEYSET_GET_SUCCESS, keySet)
+            else:
+                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+        else:
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        return msg
+
     # insert a key-value data into the given hash
     @validTypeCheck
     def insertHash(self, dbName, hashName, keyName, value):

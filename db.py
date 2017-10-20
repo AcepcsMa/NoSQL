@@ -498,6 +498,9 @@ class NoSqlDb:
     def getHash(self, dbName, hashName):
         return self.hashDict[dbName][hashName]
 
+    def getHashKeySet(self, dbName, hashName):
+        return list(self.hashDict[dbName][hashName].keys())
+
     @saveTrigger
     def insertHash(self, dbName, hashName, keyName, value):
         if(self.hashLockDict[dbName][hashName] is True):

@@ -118,6 +118,7 @@ class responseCode:
     HASH_TYPE = 110
     SET_TYPE = 111
     ZSET_TYPE = 112
+    HASH_KEYSET_GET_SUCCESS = 113
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",

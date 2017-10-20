@@ -16,6 +16,11 @@ from zsetHandler import zsetHandler
 
 app = flask.Flask(__name__)
 
+@app.route("/getType/<string:dbName>/<string:keyName>",methods=["GET"])
+def getType(dbName, keyName):
+    result = database.getType(dbName, keyName)
+    return flask.jsonify(result)
+
 @app.route("/makeElem",methods=["POST"])
 def makeElem():
     myHandler = elemHandler(database)

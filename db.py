@@ -94,6 +94,27 @@ class NoSqlDb:
         hdr.setFormatter(formatter)
         self.logger.addHandler(hdr)
 
+    # get the data type of the given key name
+    def getType(self, dbName, keyName):
+        if(keyName in self.elemName[dbName]):
+            type = responseCode.ELEM_TYPE
+        elif(keyName in self.listName[dbName]):
+            type = responseCode.LIST_TYPE
+        elif(keyName in self.hashName[dbName]):
+            type = responseCode.HASH_TYPE
+        elif(keyName in self.setName[dbName]):
+            type = responseCode.SET_TYPE
+        elif(keyName in self.zsetName[dbName]):
+            type = responseCode.ZSET_TYPE
+        else:
+            type = responseCode.ELEM_TYPE_ERROR
+        message = {
+            "msg": responseCode.detail[type],
+            "typeCode": type,
+            "data": keyName
+        }
+        return message
+
     def getLockDict(self, type):
         if (type == "ELEM"):
             lockDict = self.elemLockDict

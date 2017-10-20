@@ -16,6 +16,11 @@ from zsetHandler import zsetHandler
 
 app = flask.Flask(__name__)
 
+@app.route("/getType/<string:dbName>/<string:keyName>",methods=["GET"])
+def getType(dbName, keyName):
+    result = database.getType(dbName, keyName)
+    return flask.jsonify(result)
+
 @app.route("/makeElem",methods=["POST"])
 def makeElem():
     myHandler = elemHandler(database)
@@ -209,6 +214,12 @@ def makeHash():
 def getHash(dbName, hashName):
     myHandler = hashHandler(database)
     result = myHandler.getHash(dbName, hashName)
+    return flask.jsonify(result)
+
+@app.route("/getHashKeySet/<string:dbName>/<string:hashName>",methods=["GET"])
+def getHashKeySet(dbName, hashName):
+    myHandler = hashHandler(database)
+    result = myHandler.getKeySet(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/insertHash",methods=["POST"])

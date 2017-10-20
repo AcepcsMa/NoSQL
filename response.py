@@ -113,6 +113,12 @@ class responseCode:
     ZSET_TTL_CLEAR_SUCCESS = 105
     GET_SIZE_SUCCESS = 106
     LIST_RANGE_ERROR = 107
+    ELEM_TYPE = 108
+    LIST_TYPE = 109
+    HASH_TYPE = 110
+    SET_TYPE = 111
+    ZSET_TYPE = 112
+    HASH_KEYSET_GET_SUCCESS = 113
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -179,5 +185,10 @@ class responseCode:
         ZSET_TTL_SET_SUCCESS:"ZSet TTL Set Success",
         ZSET_NOT_SET_TTL:"ZSet Is Not Set TTL",
         ZSET_TTL_CLEAR_SUCCESS:"ZSet TTL Clear Success",
-        GET_SIZE_SUCCESS:"Get Size Success"
+        GET_SIZE_SUCCESS:"Get Size Success",
+        ELEM_TYPE:"Element",
+        LIST_TYPE:"List",
+        HASH_TYPE:"Hash",
+        SET_TYPE:"Set",
+        ZSET_TYPE:"ZSet"
     }

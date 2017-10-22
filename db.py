@@ -501,6 +501,9 @@ class NoSqlDb:
     def getHashKeySet(self, dbName, hashName):
         return list(self.hashDict[dbName][hashName].keys())
 
+    def getHashValues(self, dbName, hashName):
+        return list(self.hashDict[dbName][hashName].values())
+
     @saveTrigger
     def insertHash(self, dbName, hashName, keyName, value):
         if(self.hashLockDict[dbName][hashName] is True):
@@ -629,6 +632,12 @@ class NoSqlDb:
             finally:
                 self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
+
+    def increaseHash(self, dbName, hashName, keyName):
+        if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
+            return responseCode.ELEM_TYPE_ERROR, None
+        self.hashDict[dbName][hashName][keyName] += 1
+        return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][hashName][keyName]
 
     @keyNameValidity
     @saveTrigger

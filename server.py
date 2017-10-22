@@ -222,6 +222,12 @@ def getHashKeySet(dbName, hashName):
     result = myHandler.getKeySet(dbName, hashName)
     return flask.jsonify(result)
 
+@app.route("/getHashValues/<string:dbName>/<string:hashName>",methods=["GET"])
+def getHashValues(dbName, hashName):
+    myHandler = hashHandler(database)
+    result = myHandler.getValues(dbName, hashName)
+    return flask.jsonify(result)
+
 @app.route("/insertHash",methods=["POST"])
 def insertHash():
     myHandler = hashHandler(database)
@@ -320,6 +326,12 @@ def clearHashTTL(dbName, hashName):
 def getHashSize(dbName, hashName):
     myHandler = hashHandler(database)
     result = myHandler.getSize(dbName, hashName)
+    return flask.jsonify(result)
+
+@app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>",methods=["GET"])
+def increaseHash(dbName, hashName, keyName):
+    myHandler = hashHandler(database)
+    result = myHandler.increaseHash(dbName, hashName, keyName)
     return flask.jsonify(result)
 
 @app.route("/makeSet/<string:dbName>/<string:setName>",methods=["GET"])

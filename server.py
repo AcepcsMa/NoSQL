@@ -222,6 +222,12 @@ def getHashKeySet(dbName, hashName):
     result = myHandler.getKeySet(dbName, hashName)
     return flask.jsonify(result)
 
+@app.route("/getHashValues/<string:dbName>/<string:hashName>",methods=["GET"])
+def getHashValues(dbName, hashName):
+    myHandler = hashHandler(database)
+    result = myHandler.getValues(dbName, hashName)
+    return flask.jsonify(result)
+
 @app.route("/insertHash",methods=["POST"])
 def insertHash():
     myHandler = hashHandler(database)

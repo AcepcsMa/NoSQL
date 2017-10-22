@@ -328,6 +328,12 @@ def getHashSize(dbName, hashName):
     result = myHandler.getSize(dbName, hashName)
     return flask.jsonify(result)
 
+@app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>",methods=["GET"])
+def increaseHash(dbName, hashName, keyName):
+    myHandler = hashHandler(database)
+    result = myHandler.increaseHash(dbName, hashName, keyName)
+    return flask.jsonify(result)
+
 @app.route("/makeSet/<string:dbName>/<string:setName>",methods=["GET"])
 def makeSet(dbName, setName):
     myHandler = setHandler(database)

@@ -120,6 +120,7 @@ class responseCode:
     ZSET_TYPE = 112
     HASH_KEYSET_GET_SUCCESS = 113
     HASH_VALUES_GET_SUCCESS = 114
+    HASH_INCR_SUCCESS = 115
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -191,5 +192,7 @@ class responseCode:
         LIST_TYPE:"List",
         HASH_TYPE:"Hash",
         SET_TYPE:"Set",
-        ZSET_TYPE:"ZSet"
+        ZSET_TYPE:"ZSet",
+        HASH_INCR_SUCCESS:"Hash Value Increase Success",
+        ELEM_TYPE_ERROR:"Element Type Error"
     }

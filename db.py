@@ -633,6 +633,12 @@ class NoSqlDb:
                 self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
 
+    def increaseHash(self, dbName, hashName, keyName):
+        if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
+            return responseCode.ELEM_TYPE_ERROR, None
+        self.hashDict[dbName][hashName][keyName] += 1
+        return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][hashName][keyName]
+
     @keyNameValidity
     @saveTrigger
     def createSet(self, dbName, setName):

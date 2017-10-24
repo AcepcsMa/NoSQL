@@ -99,21 +99,22 @@ class NoSqlDb:
         hdr.setFormatter(formatter)
         self.logger.addHandler(hdr)
 
+    def translateType(self, dataType):
+        typeCode = responseCode.ELEM_TYPE_ERROR
+        if(dataType == "ELEM"):
+            typeCode = responseCode.ELEM_TYPE
+        elif(dataType == "LIST"):
+            typeCode = responseCode.LIST_TYPE
+        elif(dataType == "HASH"):
+            typeCode = responseCode.HASH_TYPE
+        elif(dataType == "SET"):
+            typeCode = responseCode.SET_TYPE
+        elif(dataType == "ZSET"):
+            typeCode = responseCode.ZSET_TYPE
+        return typeCode
+
     # get the data type of the given key name
     def getType(self, dbName, keyName):
-        '''if(keyName in self.elemName[dbName]):
-            type = responseCode.ELEM_TYPE
-        elif(keyName in self.listName[dbName]):
-            type = responseCode.LIST_TYPE
-        elif(keyName in self.hashName[dbName]):
-            type = responseCode.HASH_TYPE
-        elif(keyName in self.setName[dbName]):
-            type = responseCode.SET_TYPE
-        elif(keyName in self.zsetName[dbName]):
-            type = responseCode.ZSET_TYPE
-        else:
-            type = responseCode.ELEM_TYPE_ERROR'''
-
         try:
             type = self.invertedTypeDict[dbName][keyName]
         except:
@@ -1098,6 +1099,8 @@ class NoSqlDb:
             for name in names:
                 nameDict[dbName].add(name)
                 lockDict[dbName][name] = False
+                self.invertedTypeDict[dbName][name] = self.translateType(dataType)
+
         # load values
         with open("data" + os.sep + dbName + os.sep + valueFileName, "r") as valueFile:
             if(dataType == "SET"):

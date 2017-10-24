@@ -658,6 +658,7 @@ if __name__ == '__main__':
 
     # init the ttl timer
     TTLTimer = ttlTimer.ttlTimer(databaseList, serverConfig["TTL_CHECK_INTERVAL"])
+    TTLTimer.setDaemon(True)
 
     # run the server
     app.run(host=serverConfig["HOST"], port=serverConfig["PORT"], debug=serverConfig["DEBUG"])

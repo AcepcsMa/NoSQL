@@ -20,6 +20,9 @@ class NoSqlDb:
         self.loadDb()
 
     def initDb(self):
+
+        self.invertedTypeDict = dict()
+
         # element structures
         self.elemName = dict()
         self.elemDict = dict()
@@ -55,6 +58,8 @@ class NoSqlDb:
         self.zsetTTL = dict()
 
         for dbName in self.dbNameSet:
+            self.invertedTypeDict[dbName] = dict()
+
             self.elemName[dbName] = set()
             self.elemDict[dbName] = dict()
             self.elemLockDict[dbName] = dict()
@@ -96,7 +101,7 @@ class NoSqlDb:
 
     # get the data type of the given key name
     def getType(self, dbName, keyName):
-        if(keyName in self.elemName[dbName]):
+        '''if(keyName in self.elemName[dbName]):
             type = responseCode.ELEM_TYPE
         elif(keyName in self.listName[dbName]):
             type = responseCode.LIST_TYPE
@@ -107,7 +112,13 @@ class NoSqlDb:
         elif(keyName in self.zsetName[dbName]):
             type = responseCode.ZSET_TYPE
         else:
+            type = responseCode.ELEM_TYPE_ERROR'''
+
+        try:
+            type = self.invertedTypeDict[dbName][keyName]
+        except:
             type = responseCode.ELEM_TYPE_ERROR
+
         message = {
             "msg": responseCode.detail[type],
             "typeCode": type,
@@ -254,6 +265,7 @@ class NoSqlDb:
         self.lock("ELEM", dbName, elemName) # lock this element avoiding r/w implements
         self.elemName[dbName].add(elemName)
         self.elemDict[dbName][elemName] = value
+        self.invertedTypeDict[dbName][elemName] = responseCode.ELEM_TYPE
         self.unlock("ELEM", dbName, elemName)
         self.logger.info("Create Element Success {0}->{1}->{2}".format(dbName, elemName, value))
         return responseCode.ELEM_CREATE_SUCCESS
@@ -319,6 +331,7 @@ class NoSqlDb:
             self.elemDict[dbName].pop(elemName)
             try:
                 self.elemTTL[dbName].pop(elemName)
+                self.invertedTypeDict[dbName].pop(elemName)
             except:
                 pass
             self.elemLockDict[dbName].pop(elemName)
@@ -359,6 +372,7 @@ class NoSqlDb:
         self.lock("LIST", dbName, listName)
         self.listName[dbName].add(listName)
         self.listDict[dbName][listName] = list()
+        self.invertedTypeDict[dbName][listName] = responseCode.LIST_TYPE
         self.unlock("LIST", dbName, listName)
         self.logger.info("Create List Success {0}->{1}".format(dbName, listName))
         return responseCode.LIST_CREATE_SUCCESS
@@ -399,6 +413,7 @@ class NoSqlDb:
             self.listDict[dbName].pop(listName)
             try:
                 self.listTTL[dbName].pop(listName)
+                self.invertedTypeDict[dbName].pop(listName)
             except:
                 pass
             self.unlock("LIST", dbName, listName)
@@ -490,6 +505,7 @@ class NoSqlDb:
             self.hashName[dbName].add(hashName)
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName] = dict()
+            self.invertedTypeDict[dbName][hashName] = responseCode.HASH_TYPE
             self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_CREATE_SUCCESS
         else:
@@ -531,6 +547,7 @@ class NoSqlDb:
             self.hashName[dbName].remove(hashName)
             try:
                 self.hashTTL[dbName].pop(hashName)
+                self.invertedTypeDict[dbName].pop(hashName)
             except:
                 pass
             self.unlock("HASH", dbName, hashName)
@@ -620,7 +637,7 @@ class NoSqlDb:
 
     @saveTrigger
     def clearHashTTL(self, dbName, hashName):
-        if (self.hashLockDict[dbName][hashName] is True):
+        if(self.hashLockDict[dbName][hashName] is True):
             self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
@@ -633,11 +650,25 @@ class NoSqlDb:
                 self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
 
+    @saveTrigger
     def increaseHash(self, dbName, hashName, keyName):
         if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
             return responseCode.ELEM_TYPE_ERROR, None
+
+        self.lock("HASH", dbName, hashName)
         self.hashDict[dbName][hashName][keyName] += 1
+        self.unlock("HASH", dbName, hashName)
         return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][hashName][keyName]
+
+    @saveTrigger
+    def decreaseHash(self, dbName, hashName, keyName):
+        if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
+            return responseCode.ELEM_TYPE_ERROR, None
+
+        self.lock("HASH", dbName, hashName)
+        self.hashDict[dbName][hashName][keyName] -= 1
+        self.unlock("HASH", dbName, hashName)
+        return responseCode.HASH_DECR_SUCCESS, self.hashDict[dbName][hashName][keyName]
 
     @keyNameValidity
     @saveTrigger
@@ -645,6 +676,7 @@ class NoSqlDb:
         self.lock("SET", dbName, setName)
         self.setName[dbName].add(setName)
         self.setDict[dbName][setName] = set()
+        self.invertedTypeDict[dbName][setName] = responseCode.SET_TYPE
         self.unlock("SET", dbName, setName)
         self.logger.info("Set Create Success {0}->{1}".format(dbName, setName))
         return responseCode.SET_CREATE_SUCCESS
@@ -703,6 +735,7 @@ class NoSqlDb:
             self.lock("SET", dbName, setName)
             self.setName[dbName].discard(setName)
             self.setDict[dbName].pop(setName)
+            self.invertedTypeDict[dbName].pop(setName)
             self.unlock("SET", dbName, setName)
             self.setLockDict[dbName].pop(setName)
             self.logger.info("Set Delete Success {0}->{1}".format(dbName, setName))
@@ -800,6 +833,7 @@ class NoSqlDb:
         self.lock("ZSET", dbName, zsetName)
         self.zsetName[dbName].add(zsetName)
         self.zsetDict[dbName][zsetName] = zset()
+        self.invertedTypeDict[dbName][zsetName] = responseCode.ZSET_TYPE
         self.unlock("ZSET", dbName, zsetName)
         self.logger.info("ZSet Create Success {0}->{1}".format(dbName, zsetName))
         return responseCode.ZSET_CREATE_SUCCESS
@@ -855,6 +889,7 @@ class NoSqlDb:
             self.lock("ZSET", dbName, zsetName)
             self.zsetName[dbName].discard(zsetName)
             self.zsetDict[dbName].pop(zsetName)
+            self.invertedTypeDict[dbName].pop(zsetName)
             self.unlock("ZSET", dbName, zsetName)
             self.zsetLockDict[dbName].pop(zsetName)
             self.logger.info("ZSet Delete Success {0}->{1}".format(dbName, zsetName))

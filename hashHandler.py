@@ -248,10 +248,23 @@ class hashHandler:
             msg = self.makeMessage(responseCode.detail[code], code, result)
         return msg
 
+    @validTypeCheck
     def increaseHash(self, dbName, hashName, keyName):
         if(self.database.isKeyExist(dbName, hashName, keyName)):
             if(self.database.isExpired("HASH", dbName, hashName) is False):
                 code, value = self.database.increaseHash(dbName, hashName, keyName)
+                msg = self.makeMessage(responseCode.detail[code], code, value)
+            else:
+                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+        else:
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        return msg
+
+    @validTypeCheck
+    def decreaseHash(self, dbName, hashName, keyName):
+        if(self.database.isKeyExist(dbName, hashName, keyName)):
+            if(self.database.isExpired("HASH", dbName, hashName) is False):
+                code, value = self.database.decreaseHash(dbName, hashName, keyName)
                 msg = self.makeMessage(responseCode.detail[code], code, value)
             else:
                 msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)

@@ -620,7 +620,7 @@ class NoSqlDb:
 
     @saveTrigger
     def clearHashTTL(self, dbName, hashName):
-        if (self.hashLockDict[dbName][hashName] is True):
+        if(self.hashLockDict[dbName][hashName] is True):
             self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
@@ -633,11 +633,25 @@ class NoSqlDb:
                 self.unlock("HASH", dbName, hashName)
             return responseCode.HASH_TTL_CLEAR_SUCCESS
 
+    @saveTrigger
     def increaseHash(self, dbName, hashName, keyName):
         if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
             return responseCode.ELEM_TYPE_ERROR, None
+
+        self.lock("HASH", dbName, hashName)
         self.hashDict[dbName][hashName][keyName] += 1
+        self.unlock("HASH", dbName, hashName)
         return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][hashName][keyName]
+
+    @saveTrigger
+    def decreaseHash(self, dbName, hashName, keyName):
+        if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
+            return responseCode.ELEM_TYPE_ERROR, None
+
+        self.lock("HASH", dbName, hashName)
+        self.hashDict[dbName][hashName][keyName] -= 1
+        self.unlock("HASH", dbName, hashName)
+        return responseCode.HASH_DECR_SUCCESS, self.hashDict[dbName][hashName][keyName]
 
     @keyNameValidity
     @saveTrigger

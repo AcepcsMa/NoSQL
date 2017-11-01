@@ -521,6 +521,15 @@ class NoSqlDb:
     def getHashValues(self, dbName, hashName):
         return list(self.hashDict[dbName][hashName].values())
 
+    def getMultipleHashValues(self, dbName, hashName, keyNames):
+        result = list()
+        for keyName in keyNames:
+            try:
+                result.append(self.hashDict[dbName][hashName][keyName])
+            except:
+                result.append(None)
+        return result
+
     @saveTrigger
     def insertHash(self, dbName, hashName, keyName, value):
         if(self.hashLockDict[dbName][hashName] is True):

@@ -79,6 +79,18 @@ class hashHandler:
             msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
         return msg
 
+    @validTypeCheck
+    def getMultipleValues(self, dbName, hashName, keyNames):
+        if(self.database.isExist("HASH", dbName, hashName)):
+            if(self.database.isExpired("HASH", dbName, hashName) is False):
+                valueList = self.database.getMultipleHashValues(dbName, hashName, keyNames)
+                msg = self.makeMessage("Hash Get Success", responseCode.HASH_VALUES_GET_SUCCESS, valueList)
+            else:
+                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+        else:
+            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+        return msg
+
     # insert a key-value data into the given hash
     @validTypeCheck
     def insertHash(self, dbName, hashName, keyName, value):

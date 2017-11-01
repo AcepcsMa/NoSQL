@@ -228,6 +228,18 @@ def getHashValues(dbName, hashName):
     result = myHandler.getValues(dbName, hashName)
     return flask.jsonify(result)
 
+@app.route("/getMultipleHashValues",methods=["POST"])
+def getMultipleHashValues():
+    myHandler = hashHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        hashName = flask.request.json["hashName"]
+        keyNames = flask.request.json["keyNames"]
+    except:
+        dbName = hashName = keyNames = None
+    result = myHandler.getMultipleValues(dbName, hashName, keyNames)
+    return flask.jsonify(result)
+
 @app.route("/insertHash",methods=["POST"])
 def insertHash():
     myHandler = hashHandler(database)

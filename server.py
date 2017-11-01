@@ -119,6 +119,12 @@ def getListByRange():
     result = myHandler.getListByRange(dbName, listName, start, end)
     return flask.jsonify(result)
 
+@app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>",methods=["GET"])
+def getListRandom(dbName, listName, numRand):
+    myHandler = listHandler(database)
+    result = myHandler.getListRandom(dbName, listName, numRand)
+    return flask.jsonify(result)
+
 @app.route("/insertList",methods=["POST"])
 def insertList():
     myHandler = listHandler(database)

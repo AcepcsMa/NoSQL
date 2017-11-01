@@ -6,6 +6,7 @@ import os
 import json
 import logging
 import time
+import random
 from decorator import *
 from zset import zset
 
@@ -390,6 +391,12 @@ class NoSqlDb:
             listValue = None
         self.logger.info("Get List Success {0}->{1}".format(dbName, listName))
         return listValue
+
+    def getListRandom(self, dbName, listName, numRand):
+        if(len(self.listDict[dbName][listName]) < numRand):
+            return responseCode.LIST_LENGTH_TOO_SHORT, None
+        result = random.sample(self.listDict[dbName][listName], numRand)
+        return responseCode.LIST_GET_SUCCESS, result
 
     @saveTrigger
     def insertList(self, listName, value, dbName):

@@ -119,6 +119,12 @@ def getListByRange():
     result = myHandler.getListByRange(dbName, listName, start, end)
     return flask.jsonify(result)
 
+@app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>",methods=["GET"])
+def getListRandom(dbName, listName, numRand):
+    myHandler = listHandler(database)
+    result = myHandler.getListRandom(dbName, listName, numRand)
+    return flask.jsonify(result)
+
 @app.route("/insertList",methods=["POST"])
 def insertList():
     myHandler = listHandler(database)
@@ -226,6 +232,18 @@ def getHashKeySet(dbName, hashName):
 def getHashValues(dbName, hashName):
     myHandler = hashHandler(database)
     result = myHandler.getValues(dbName, hashName)
+    return flask.jsonify(result)
+
+@app.route("/getMultipleHashValues",methods=["POST"])
+def getMultipleHashValues():
+    myHandler = hashHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        hashName = flask.request.json["hashName"]
+        keyNames = flask.request.json["keyNames"]
+    except:
+        dbName = hashName = keyNames = None
+    result = myHandler.getMultipleValues(dbName, hashName, keyNames)
     return flask.jsonify(result)
 
 @app.route("/insertHash",methods=["POST"])

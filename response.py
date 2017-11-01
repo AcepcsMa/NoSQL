@@ -122,6 +122,8 @@ class responseCode:
     HASH_VALUES_GET_SUCCESS = 114
     HASH_INCR_SUCCESS = 115
     HASH_DECR_SUCCESS = 116
+    LIST_LENGTH_TOO_SHORT = 117
+    INVALID_NUMBER = 118
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -196,5 +198,7 @@ class responseCode:
         ZSET_TYPE:"ZSet",
         HASH_INCR_SUCCESS:"Hash Value Increase Success",
         ELEM_TYPE_ERROR:"Element Type Error",
-        HASH_DECR_SUCCESS:"Hash Value Decrease Success"
+        HASH_DECR_SUCCESS:"Hash Value Decrease Success",
+        LIST_LENGTH_TOO_SHORT:"List Length Is Too Short",
+        LIST_GET_SUCCESS:"List Value Get Success"
     }

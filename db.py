@@ -6,6 +6,7 @@ import os
 import json
 import logging
 import time
+import random
 from decorator import *
 from zset import zset
 
@@ -391,6 +392,12 @@ class NoSqlDb:
         self.logger.info("Get List Success {0}->{1}".format(dbName, listName))
         return listValue
 
+    def getListRandom(self, dbName, listName, numRand):
+        if(len(self.listDict[dbName][listName]) < numRand):
+            return responseCode.LIST_LENGTH_TOO_SHORT, None
+        result = random.sample(self.listDict[dbName][listName], numRand)
+        return responseCode.LIST_GET_SUCCESS, result
+
     @saveTrigger
     def insertList(self, listName, value, dbName):
         if(self.listLockDict[dbName][listName] is True):
@@ -520,6 +527,15 @@ class NoSqlDb:
 
     def getHashValues(self, dbName, hashName):
         return list(self.hashDict[dbName][hashName].values())
+
+    def getMultipleHashValues(self, dbName, hashName, keyNames):
+        result = list()
+        for keyName in keyNames:
+            try:
+                result.append(self.hashDict[dbName][hashName][keyName])
+            except:
+                result.append(None)
+        return result
 
     @saveTrigger
     def insertHash(self, dbName, hashName, keyName, value):

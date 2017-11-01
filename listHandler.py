@@ -69,6 +69,21 @@ class listHandler:
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
+    @validTypeCheck
+    def getListRandom(self, dbName, listName, numRand):
+        if(numRand <= 0):
+            msg = self.makeMessage("Invalid Random Number", responseCode.INVALID_NUMBER, numRand)
+            return msg
+        if(self.database.isExist("LIST", dbName, listName) is True):
+            if(self.database.isExpired("LIST", dbName, listName) is False):
+                code, listValue = self.database.getListRandom(dbName, listName, numRand)
+                msg = self.makeMessage(responseCode.detail[code], code, listValue)
+            else:
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        else:
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+        return msg
+
     # insert a value into the given list
     @validTypeCheck
     def insertList(self, dbName, listName, listValue):

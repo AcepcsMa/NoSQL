@@ -124,6 +124,7 @@ class responseCode:
     HASH_DECR_SUCCESS = 116
     LIST_LENGTH_TOO_SHORT = 117
     INVALID_NUMBER = 118
+    SET_LENGTH_TOO_SHORT = 119
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -200,5 +201,7 @@ class responseCode:
         ELEM_TYPE_ERROR:"Element Type Error",
         HASH_DECR_SUCCESS:"Hash Value Decrease Success",
         LIST_LENGTH_TOO_SHORT:"List Length Is Too Short",
-        LIST_GET_SUCCESS:"List Value Get Success"
+        LIST_GET_SUCCESS:"List Value Get Success",
+        SET_LENGTH_TOO_SHORT:"Set Length Is Too Short",
+        SET_GET_SUCCESS:"Set Value Get Success"
     }

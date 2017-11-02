@@ -125,6 +125,7 @@ class responseCode:
     LIST_LENGTH_TOO_SHORT = 117
     INVALID_NUMBER = 118
     SET_LENGTH_TOO_SHORT = 119
+    SAVE_INTERVAL_CHANGE_SUCCESS = 120
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",

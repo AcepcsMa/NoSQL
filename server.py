@@ -666,6 +666,11 @@ def saveDb():
     result = myHandler.saveDb()
     return flask.jsonify(result)
 
+@app.route("/changeSaveInterval/<int:interval>",methods=["GET"])
+def changeSaveInterval(interval):
+    result = saveTimer.setInterval(interval)
+    return flask.jsonify(result)
+
 if __name__ == '__main__':
     # init the config parser and read the server config
     confParser = configParser()

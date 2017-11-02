@@ -701,6 +701,12 @@ class NoSqlDb:
     def getSet(self, dbName, setName):
         return list(self.setDict[dbName][setName])
 
+    def getSetRandom(self, dbName, setName, numRand):
+        if(len(self.setDict[dbName][setName]) < numRand):
+            return responseCode.SET_LENGTH_TOO_SHORT, None
+        result = random.sample(self.setDict[dbName][setName], numRand)
+        return responseCode.SET_GET_SUCCESS, result
+
     @saveTrigger
     def insertSet(self, dbName, setName, setValue):
         if(self.setLockDict[dbName][setName] is True):

@@ -55,6 +55,21 @@ class setHandler:
             msg = self.makeMessage("Set Does Not Exist", responseCode.SET_NOT_EXIST, setName)
         return msg
 
+    @validTypeCheck
+    def getSetRandom(self, dbName, setName, numRand):
+        if (numRand <= 0):
+            msg = self.makeMessage("Invalid Random Number", responseCode.INVALID_NUMBER, numRand)
+            return msg
+        if (self.database.isExist("SET", dbName, setName) is True):
+            if (self.database.isExpired("SET", dbName, setName) is False):
+                code, listValue = self.database.getSetRandom(dbName, setName, numRand)
+                msg = self.makeMessage(responseCode.detail[code], code, listValue)
+            else:
+                msg = self.makeMessage("Set Is Expired", responseCode.LIST_EXPIRED, setName)
+        else:
+            msg = self.makeMessage("Set Does Not Exist", responseCode.LIST_NOT_EXIST, setName)
+        return msg
+
     # insert a value into the given set
     @validTypeCheck
     def insertSet(self, dbName, setName, setValue):

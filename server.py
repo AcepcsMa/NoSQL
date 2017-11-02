@@ -370,6 +370,12 @@ def getSet(dbName, setName):
     result = myHandler.getSet(dbName, setName)
     return flask.jsonify(result)
 
+@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>",methods=["GET"])
+def getSetRandom(dbName, setName, numRand):
+    myHandler = setHandler(database)
+    result = myHandler.getSetRandom(dbName, setName, numRand)
+    return flask.jsonify(result)
+
 @app.route("/insertSet",methods=["POST"])
 def insertSet():
     myHandler = setHandler(database)
@@ -658,6 +664,11 @@ def delDatabase(dbName):
 def saveDb():
     myHandler = dbHandler(database)
     result = myHandler.saveDb()
+    return flask.jsonify(result)
+
+@app.route("/changeSaveInterval/<int:interval>",methods=["GET"])
+def changeSaveInterval(interval):
+    result = saveTimer.setInterval(interval)
     return flask.jsonify(result)
 
 if __name__ == '__main__':

@@ -351,6 +351,7 @@ class NoSqlDb:
                                               "ttl":int(ttl),
                                               "status":True}
             self.unlock("ELEM", dbName, elemName)
+            self.logger.info("Element TTL Set Success {}->{}:{}".format(dbName, elemName, ttl))
             return responseCode.ELEM_TTL_SET_SUCCESS
 
     @saveTrigger
@@ -366,6 +367,7 @@ class NoSqlDb:
                 return responseCode.ELEM_NOT_SET_TTL
             finally:
                 self.unlock("ELEM", dbName, elemName)
+            self.logger.info("Element TTL Set Success {}->{}".format(dbName, elemName))
             return responseCode.ELEM_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
@@ -459,6 +461,7 @@ class NoSqlDb:
             self.lock("LIST", dbName, listName)
             self.listDict[dbName][listName] = []
             self.unlock("LIST", dbName, listName)
+            self.logger.info("List Clear Success {}->{}".format(dbName, listName))
             return responseCode.LIST_CLEAR_SUCCESS
 
     @saveTrigger
@@ -469,13 +472,16 @@ class NoSqlDb:
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName1])
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName2])
             self.unlock("LIST", dbName, resultListName)
+            self.logger.info("Lists Merge Success {} merges {}->{}".format(dbName, listName1, listName2, resultListName))
             return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][resultListName]
         else:
             if(self.listLockDict[dbName][listName1] is False):
                 self.lock("LIST", dbName, listName1)
                 self.listDict[dbName][listName1].extend(self.listDict[dbName][listName2])
+                self.logger.info("Lists Merge Success {} merges {}->{}".format(dbName, listName1, listName2, listName1))
                 return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][listName1]
             else:
+                self.logger.info("List Locked {}->{}".format(dbName, listName1))
                 return responseCode.LIST_IS_LOCKED, []
 
     @saveTrigger
@@ -489,6 +495,7 @@ class NoSqlDb:
                                               "ttl":int(ttl),
                                               "status":True}
             self.unlock("LIST", dbName, listName)
+            self.logger.info("List TTL Set Success {}->{}:{}".format(dbName, listName, ttl))
             return responseCode.LIST_TTL_SET_SUCCESS
 
     @saveTrigger
@@ -504,6 +511,7 @@ class NoSqlDb:
                 return responseCode.LIST_NOT_SET_TTL
             finally:
                 self.unlock("LIST", dbName, listName)
+            self.logger.info("List TTL Clear Success {}->{}".format(dbName, listName))
             return responseCode.LIST_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
@@ -515,8 +523,10 @@ class NoSqlDb:
             self.hashDict[dbName][hashName] = dict()
             self.invertedTypeDict[dbName][hashName] = responseCode.HASH_TYPE
             self.unlock("HASH", dbName, hashName)
+            self.logger.info("Hash Create Success {}->{}".format(dbName, hashName))
             return responseCode.HASH_CREATE_SUCCESS
         else:
+            self.logger.warning("Hash Create Fail(Hash Exists) {}->{}".format(dbName, hashName))
             return responseCode.HASH_EXISTED
 
     def getHash(self, dbName, hashName):
@@ -540,11 +550,13 @@ class NoSqlDb:
     @saveTrigger
     def insertHash(self, dbName, hashName, keyName, value):
         if(self.hashLockDict[dbName][hashName] is True):
+            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName][keyName] = value
             self.unlock("HASH", dbName, hashName)
+            self.logger.info("Hash Insert Success {}->{} {}:{}".format(dbName, hashName, keyName, value))
             return responseCode.HASH_INSERT_SUCCESS
 
     def isKeyExist(self, dbName, hashName, keyName):
@@ -557,6 +569,7 @@ class NoSqlDb:
     @saveTrigger
     def deleteHash(self, dbName, hashName):
         if(self.hashLockDict[dbName][hashName] is True):
+            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
@@ -569,36 +582,43 @@ class NoSqlDb:
                 pass
             self.unlock("HASH", dbName, hashName)
             self.hashLockDict[dbName].pop(hashName)
+            self.logger.info("Hash Delete Success {}->{}".format(dbName, hashName))
             return responseCode.HASH_DELETE_SUCCESS
 
     @saveTrigger
     def rmFromHash(self, dbName, hashName, keyName):
         if(self.hashLockDict[dbName][hashName] is True):
+            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName].pop(keyName)
             self.unlock("HASH", dbName, hashName)
+            self.logger.info("Hash Value Remove Success {}->{}:{}".format(dbName, hashName, keyName))
             return responseCode.HASH_REMOVE_SUCCESS
 
     @saveTrigger
     def clearHash(self, dbName, hashName):
         if(self.hashLockDict[dbName][hashName] is True):
+            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName].clear()
             self.unlock("HASH", dbName, hashName)
+            self.logger.info("Hash Clear Success {}->{}".format(dbName, hashName))
             return responseCode.HASH_CLEAR_SUCCESS
 
     @saveTrigger
     def replaceHash(self, dbName, hashName, hashValue):
         if(self.hashLockDict[dbName][hashName] is True):
+            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName] = hashValue
             self.unlock("HASH", dbName, hashName)
+            self.logger.info("Hash Replace Success {}->{}".format(dbName, hashName))
             return responseCode.HASH_REPLACE_SUCCESS
 
     @saveTrigger
@@ -620,6 +640,7 @@ class NoSqlDb:
                 if(key not in baseKeys):
                     self.hashDict[dbName][resultHashName][key] = self.hashDict[dbName][otherDictName][key]
             self.unlock("HASH", dbName, resultHashName)
+            self.logger.info("Hash Merge Success {} merges {} -> {}".format(hashName1, hashName2, resultHashName))
 
         else:
             if (self.hashLockDict[dbName][baseDictName] is False):
@@ -629,7 +650,9 @@ class NoSqlDb:
                 for key in otherKeys:
                     if(key not in baseKeys):
                         self.hashDict[dbName][baseDictName][key] = self.hashDict[dbName][otherDictName][key]
+                self.logger.info("Hash Merge Success {} merges {} -> {}".format(hashName1, hashName2, hashName1))
             else:
+                self.logger.warning("Hash Is Locked {}->{} or {}->{}".format(dbName, hashName1, dbName, hashName2))
                 return responseCode.HASH_IS_LOCKED
         return responseCode.HASH_MERGE_SUCCESS
 
@@ -642,7 +665,7 @@ class NoSqlDb:
     @saveTrigger
     def setHashTTL(self, dbName, hashName, ttl):
         if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
+            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
@@ -650,41 +673,48 @@ class NoSqlDb:
                                               "ttl":int(ttl),
                                               "status":True}
             self.unlock("HASH", dbName, hashName)
+            self.logger.info("Hash TTL Set Success {}->{}:{}".format(dbName, hashName, ttl))
             return responseCode.HASH_TTL_SET_SUCCESS
 
     @saveTrigger
     def clearHashTTL(self, dbName, hashName):
         if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Locked {0}->{1}".format(dbName, hashName))
+            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             try:
                 self.hashTTL[dbName].pop(hashName)
             except:
+                self.logger.warning("Hash Is Not Set TTL".format(dbName, hashName))
                 return responseCode.HASH_NOT_SET_TTL
             finally:
                 self.unlock("HASH", dbName, hashName)
+            self.logger.info("Hash TTL Clear Success".format(dbName, hashName))
             return responseCode.HASH_TTL_CLEAR_SUCCESS
 
     @saveTrigger
     def increaseHash(self, dbName, hashName, keyName):
         if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
+            self.logger.warning("Hash Value Type Is Not Integer {}->{}:{}".format(dbName, hashName, keyName))
             return responseCode.ELEM_TYPE_ERROR, None
 
         self.lock("HASH", dbName, hashName)
         self.hashDict[dbName][hashName][keyName] += 1
         self.unlock("HASH", dbName, hashName)
+        self.logger.info("Hash Value Increase Success {}->{}:{}".format(dbName, hashName, keyName))
         return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][hashName][keyName]
 
     @saveTrigger
     def decreaseHash(self, dbName, hashName, keyName):
         if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
+            self.logger.warning("Hash Value Type Is Not Integer {}->{}:{}".format(dbName, hashName, keyName))
             return responseCode.ELEM_TYPE_ERROR, None
 
         self.lock("HASH", dbName, hashName)
         self.hashDict[dbName][hashName][keyName] -= 1
         self.unlock("HASH", dbName, hashName)
+        self.logger.info("Hash Value Decrease Success {}->{}:{}".format(dbName, hashName, keyName))
         return responseCode.HASH_DECR_SUCCESS, self.hashDict[dbName][hashName][keyName]
 
     @keyNameValidity

@@ -812,6 +812,8 @@ class NoSqlDb:
             unionResult.append(list(self.setDict[dbName][setName1].union(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
+            self.logger.info("Set Union Success {}->{} unions {}->{} to {}->{}"
+                             .format(dbName, setName1, dbName, setName2, dbName, unionResult))
             return responseCode.SET_UNION_SUCCESS
 
     @saveTrigger
@@ -826,13 +828,15 @@ class NoSqlDb:
             intersectResult.append(list(self.setDict[dbName][setName1].intersection(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
+            self.logger.info("Set Intersect Success {}->{} intersects {}->{} to {}->{}"
+                             .format(dbName, setName1, dbName, setName2, dbName, intersectResult))
             return responseCode.SET_INTERSECT_SUCCESS
 
     @saveTrigger
     def diffSet(self, dbName, setName1, setName2, diffResult):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
-            self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
+            self.logger.warning("Set Is Locked {}->{} or {}->{}".format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
@@ -840,22 +844,26 @@ class NoSqlDb:
             diffResult.append(list(self.setDict[dbName][setName1].difference(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
+            self.logger.info("Set Diff Success {}->{} unions {}->{} to {}->{}"
+                             .format(dbName, setName1, dbName, setName2, dbName, diffResult))
             return responseCode.SET_DIFF_SUCCESS
 
     @saveTrigger
     def replaceSet(self, dbName, setName, setValue):
         if (self.setLockDict[dbName][setName] is True):
+            self.logger.warning("Set Is Locked {}->{}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName)
             self.setDict[dbName][setName] = setValue
             self.unlock("SET", dbName, setName)
+            self.logger.info("Set Replace Success {}->{}".format(dbName, setName))
             return responseCode.SET_REPLACE_SUCCESS
 
     @saveTrigger
     def setSetTTL(self, dbName, setName, ttl):
         if (self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+            self.logger.warning("Set Is Locked {}->{}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName)
@@ -863,12 +871,13 @@ class NoSqlDb:
                                               "ttl": int(ttl),
                                               "status": True}
             self.unlock("SET", dbName, setName)
+            self.logger.info("Set TTL Set Success {}->{}:{}".format(dbName,setName, ttl))
             return responseCode.SET_TTL_SET_SUCCESS
 
     @saveTrigger
     def clearSetTTL(self, dbName, setName):
         if (self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+            self.logger.warning("Set Is Locked {}->{}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName)
@@ -878,6 +887,7 @@ class NoSqlDb:
                 return responseCode.SET_NOT_SET_TTL
             finally:
                 self.unlock("SET", dbName, setName)
+            self.logger.info("Set TTL Clear Success {}->{}".format(dbName, setName))
             return responseCode.SET_TTL_CLEAR_SUCCESS
 
     @keyNameValidity
@@ -906,6 +916,7 @@ class NoSqlDb:
                     self.logger.info("ZSet Insert Success {0}->{1}->{2}:{3}".format(dbName, zsetName, value, score))
                     return responseCode.ZSET_INSERT_SUCCESS
                 else:
+                    self.logger.warning("ZSet Insert Fail(Value Existed) {}->{}:{}".format(dbName, zsetName, value))
                     return responseCode.ZSET_VALUE_ALREADY_EXIST
             finally:
                 self.unlock("ZSET", dbName, zsetName)
@@ -913,30 +924,34 @@ class NoSqlDb:
     @saveTrigger
     def rmFromZSet(self, dbName, zsetName, value):
         if (self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            self.logger.warning("ZSet Is Locked {}->{}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
             self.lock("ZSET", dbName, zsetName)
             result = self.zsetDict[dbName][zsetName].remove(value)
             self.unlock("ZSET", dbName, zsetName)
+            if(result is True):
+                self.logger.info("ZSet Remove Success {}->{}:{}".format(dbName, zsetName, value))
+            else:
+                self.logger.info("ZSet Remove Fail(Value Not Existed) {}->{}:{}".format(dbName, zsetName, value))
             return responseCode.ZSET_REMOVE_SUCCESS if result is True else responseCode.ZSET_NOT_CONTAIN_VALUE
 
     @saveTrigger
     def clearZSet(self, dbName, zsetName):
         if (self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            self.logger.warning("ZSet Is Locked {}->{}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
             self.lock("ZSET", dbName, zsetName)
             self.zsetDict[dbName][zsetName].clear()
             self.unlock("ZSET", dbName, zsetName)
-            self.logger.info("ZSet Clear Success {0}->{1}".format(dbName, zsetName))
+            self.logger.info("ZSet Clear Success {}->{}".format(dbName, zsetName))
             return responseCode.ZSET_CLEAR_SUCCESS
 
     @saveTrigger
     def deleteZSet(self, dbName, zsetName):
         if (self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            self.logger.warning("ZSet Is Locked {}->{}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
             self.lock("ZSET", dbName, zsetName)
@@ -945,13 +960,13 @@ class NoSqlDb:
             self.invertedTypeDict[dbName].pop(zsetName)
             self.unlock("ZSET", dbName, zsetName)
             self.zsetLockDict[dbName].pop(zsetName)
-            self.logger.info("ZSet Delete Success {0}->{1}".format(dbName, zsetName))
+            self.logger.info("ZSet Delete Success {}->{}".format(dbName, zsetName))
             return responseCode.ZSET_DELETE_SUCCESS
 
     def searchAllZSet(self, dbName):
         if(self.isDbExist(dbName) is False):
             return []
-        self.logger.info("Search All ZSet Success {0}".format(dbName))
+        self.logger.info("Search All ZSet Success {}".format(dbName))
         return list(self.zsetName[dbName])
 
     def findMinFromZSet(self, dbName, zsetName):
@@ -981,12 +996,13 @@ class NoSqlDb:
     @saveTrigger
     def rmByScore(self, dbName, zsetName, start, end):
         if(self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+            self.logger.warning("ZSet Is Locked {}->{}".format(dbName, zsetName))
             return (responseCode.ZSET_IS_LOCKED, 0)
         else:
             self.lock("ZSET", dbName, zsetName)
             result = self.zsetDict[dbName][zsetName].removeByScore(start, end)
             self.unlock("ZSET", dbName, zsetName)
+            self.logger.info("ZSet Remove By Score Success {}->{} [{},{})".format(dbName, zsetName, start, end))
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
 
     @saveTrigger
@@ -1000,6 +1016,7 @@ class NoSqlDb:
                                             "ttl": int(ttl),
                                             "status": True}
             self.unlock("ZSET", dbName, zsetName)
+            self.logger.info("ZSet TTL Set Success {}->{}:{}".format(dbName, zsetName, ttl))
             return responseCode.ZSET_TTL_SET_SUCCESS
 
     @saveTrigger
@@ -1015,6 +1032,7 @@ class NoSqlDb:
                 return responseCode.ZSET_NOT_SET_TTL
             finally:
                 self.unlock("ZSET", dbName, zsetName)
+            self.logger.info("ZSet TTL Clear Success {}->{}".format(dbName, zsetName))
             return responseCode.ZSET_TTL_CLEAR_SUCCESS
 
     @saveTrigger
@@ -1054,10 +1072,13 @@ class NoSqlDb:
                         os.rmdir(os.path.join(root, name))
                 os.rmdir("data"+os.sep+dbName)
                 self.saveLock = False
+                self.logger.info("Database Delete Success {}".format(dbName))
                 return responseCode.DB_DELETE_SUCCESS
             else:
+                self.logger.warning("Database Delete Fail(Save Locked) {}".format(dbName))
                 return responseCode.DB_SAVE_LOCKED
         else:
+            self.logger.warning("Database Delete Fail(Not Existed) {}".format(dbName))
             return responseCode.DB_NOT_EXIST
 
     def saveZSet(self, dbName, dataFileName, valueFileName, TTLFileName):

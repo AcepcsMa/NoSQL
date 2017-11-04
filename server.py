@@ -81,17 +81,17 @@ def deleteElem(dbName, elemName):
     result = myHandler.deleteElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/setElemTTL/<string:dbName>/<string:elemName>/<int:ttl>",methods=["GET"])
+'''@app.route("/setElemTTL/<string:dbName>/<string:elemName>/<int:ttl>",methods=["GET"])
 def setElemTTL(dbName, elemName, ttl):
     myHandler = elemHandler(database)
     result = myHandler.setTTL(dbName, elemName, ttl)
-    return flask.jsonify(result)
+    return flask.jsonify(result)'''
 
-@app.route("/clearElemTTL/<string:dbName>/<string:elemName>",methods=["GET"])
+'''@app.route("/clearElemTTL/<string:dbName>/<string:elemName>",methods=["GET"])
 def clearElemTTL(dbName, elemName):
     myHandler = elemHandler(database)
     result = myHandler.clearTTL(dbName, elemName)
-    return flask.jsonify(result)
+    return flask.jsonify(result)'''
 
 @app.route("/makeList/<string:dbName>/<string:listName>",methods=["GET"])
 def makeList(dbName, listName):
@@ -187,7 +187,7 @@ def searchAllList(dbName):
     result = myHandler.searchAllList(dbName)
     return flask.jsonify(result)
 
-@app.route("/setListTTL/<string:dbName>/<string:listName>/<int:ttl>",methods=["GET"])
+'''@app.route("/setListTTL/<string:dbName>/<string:listName>/<int:ttl>",methods=["GET"])
 def setListTTL(dbName, listName, ttl):
     myHandler = listHandler(database)
     result = myHandler.setTTL(dbName, listName, ttl)
@@ -197,7 +197,7 @@ def setListTTL(dbName, listName, ttl):
 def clearListTTL(dbName, listName):
     myHandler = listHandler(database)
     result = myHandler.clearTTL(dbName, listName)
-    return flask.jsonify(result)
+    return flask.jsonify(result)'''
 
 @app.route("/getListSize/<string:dbName>/<string:listName>",methods=["GET"])
 def getListSize(dbName, listName):
@@ -328,7 +328,7 @@ def searchAllHash(dbName):
     result = myHandler.searchAllHash(dbName)
     return flask.jsonify(result)
 
-@app.route("/setHashTTL/<string:dbName>/<string:hashName>/<int:ttl>",methods=["GET"])
+'''@app.route("/setHashTTL/<string:dbName>/<string:hashName>/<int:ttl>",methods=["GET"])
 def setHashTTL(dbName, hashName, ttl):
     myHandler = hashHandler(database)
     result = myHandler.setTTL(dbName, hashName, ttl)
@@ -338,7 +338,7 @@ def setHashTTL(dbName, hashName, ttl):
 def clearHashTTL(dbName, hashName):
     myHandler = hashHandler(database)
     result = myHandler.clearTTL(dbName, hashName)
-    return flask.jsonify(result)
+    return flask.jsonify(result)'''
 
 @app.route("/getHashSize/<string:dbName>/<string:hashName>",methods=["GET"])
 def getHashSize(dbName, hashName):
@@ -472,7 +472,7 @@ def replaceSet():
     result = myHandler.replaceSet(dbName, setName, setValue)
     return flask.jsonify(result)
 
-@app.route("/setSetTTL/<string:dbName>/<string:setName>/<int:ttl>",methods=["GET"])
+'''@app.route("/setSetTTL/<string:dbName>/<string:setName>/<int:ttl>",methods=["GET"])
 def setSetTTL(dbName, setName, ttl):
     myHandler = setHandler(database)
     result = myHandler.setTTL(dbName, setName, ttl)
@@ -482,7 +482,7 @@ def setSetTTL(dbName, setName, ttl):
 def clearSetTTL(dbName, setName):
     myHandler = setHandler(database)
     result = myHandler.clearTTL(dbName, setName)
-    return flask.jsonify(result)
+    return flask.jsonify(result)'''
 
 @app.route("/getSetSize/<string:dbName>/<string:setName>",methods=["GET"])
 def getSetSize(dbName, setName):
@@ -630,7 +630,7 @@ def rmFromZSetByScore():
     result = myHandler.rmByScore(dbName, zsetName, start, end)
     return flask.jsonify(result)
 
-@app.route("/setZSetTTL/<string:dbName>/<string:zsetName>/<int:ttl>",methods=["GET"])
+'''@app.route("/setZSetTTL/<string:dbName>/<string:zsetName>/<int:ttl>",methods=["GET"])
 def setZSetTTL(dbName, zsetName, ttl):
     myHandler = zsetHandler(database)
     result = myHandler.setTTL(dbName, zsetName, ttl)
@@ -640,7 +640,7 @@ def setZSetTTL(dbName, zsetName, ttl):
 def clearZSetTTL(dbName, zsetName):
     myHandler = zsetHandler(database)
     result = myHandler.clearTTL(dbName, zsetName)
-    return flask.jsonify(result)
+    return flask.jsonify(result)'''
 
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):

@@ -126,6 +126,10 @@ class responseCode:
     INVALID_NUMBER = 118
     SET_LENGTH_TOO_SHORT = 119
     SAVE_INTERVAL_CHANGE_SUCCESS = 120
+    LOCKED = 121
+    TTL_SET_SUCCESS = 122
+    NOT_SET_TTL = 123
+    TTL_CLEAR_SUCCESS = 124
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",

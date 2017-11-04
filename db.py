@@ -9,6 +9,7 @@ import time
 import random
 from decorator import *
 from zset import zset
+from TTLTool import *
 
 class NoSqlDb:
     def __init__(self, config):
@@ -19,6 +20,7 @@ class NoSqlDb:
         self.initDb()
         self.initLog(config)
         self.loadDb()
+        #self.TTLTool = TTLTool(self)
 
     def initDb(self):
 
@@ -340,6 +342,7 @@ class NoSqlDb:
             self.logger.info("Delete Element Success {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_DELETE_SUCCESS
 
+    '''
     @saveTrigger
     def setElemTTL(self, dbName, elemName, ttl):
         if(self.elemLockDict[dbName][elemName] is True):
@@ -369,6 +372,7 @@ class NoSqlDb:
                 self.unlock("ELEM", dbName, elemName)
             self.logger.info("Element TTL Set Success {}->{}".format(dbName, elemName))
             return responseCode.ELEM_TTL_CLEAR_SUCCESS
+    '''
 
     @keyNameValidity
     @saveTrigger
@@ -484,6 +488,7 @@ class NoSqlDb:
                 self.logger.info("List Locked {}->{}".format(dbName, listName1))
                 return responseCode.LIST_IS_LOCKED, []
 
+    '''
     @saveTrigger
     def setListTTL(self, dbName, listName, ttl):
         if(self.listLockDict[dbName][listName] is True):
@@ -513,6 +518,7 @@ class NoSqlDb:
                 self.unlock("LIST", dbName, listName)
             self.logger.info("List TTL Clear Success {}->{}".format(dbName, listName))
             return responseCode.LIST_TTL_CLEAR_SUCCESS
+    '''
 
     @keyNameValidity
     @saveTrigger
@@ -662,6 +668,7 @@ class NoSqlDb:
         self.logger.info("Search All Hash Success {0}".format(dbName))
         return list(self.hashName[dbName])
 
+    '''
     @saveTrigger
     def setHashTTL(self, dbName, hashName, ttl):
         if(self.hashLockDict[dbName][hashName] is True):
@@ -692,6 +699,7 @@ class NoSqlDb:
                 self.unlock("HASH", dbName, hashName)
             self.logger.info("Hash TTL Clear Success".format(dbName, hashName))
             return responseCode.HASH_TTL_CLEAR_SUCCESS
+    '''
 
     @saveTrigger
     def increaseHash(self, dbName, hashName, keyName):
@@ -860,6 +868,7 @@ class NoSqlDb:
             self.logger.info("Set Replace Success {}->{}".format(dbName, setName))
             return responseCode.SET_REPLACE_SUCCESS
 
+    '''
     @saveTrigger
     def setSetTTL(self, dbName, setName, ttl):
         if (self.setLockDict[dbName][setName] is True):
@@ -889,6 +898,7 @@ class NoSqlDb:
                 self.unlock("SET", dbName, setName)
             self.logger.info("Set TTL Clear Success {}->{}".format(dbName, setName))
             return responseCode.SET_TTL_CLEAR_SUCCESS
+    '''
 
     @keyNameValidity
     @saveTrigger
@@ -1005,6 +1015,7 @@ class NoSqlDb:
             self.logger.info("ZSet Remove By Score Success {}->{} [{},{})".format(dbName, zsetName, start, end))
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
 
+    '''
     @saveTrigger
     def setZSetTTL(self, dbName, zsetName, ttl):
         if (self.zsetLockDict[dbName][zsetName] is True):
@@ -1034,6 +1045,7 @@ class NoSqlDb:
                 self.unlock("ZSET", dbName, zsetName)
             self.logger.info("ZSet TTL Clear Success {}->{}".format(dbName, zsetName))
             return responseCode.ZSET_TTL_CLEAR_SUCCESS
+    '''
 
     @saveTrigger
     def addDb(self, dbName):

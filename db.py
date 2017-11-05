@@ -5,7 +5,6 @@ import re
 import os
 import json
 import logging
-import time
 import random
 from decorator import *
 from zset import zset
@@ -20,7 +19,6 @@ class NoSqlDb:
         self.initDb()
         self.initLog(config)
         self.loadDb()
-        #self.TTLTool = TTLTool(self)
 
     def initDb(self):
 
@@ -342,38 +340,6 @@ class NoSqlDb:
             self.logger.info("Delete Element Success {0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_DELETE_SUCCESS
 
-    '''
-    @saveTrigger
-    def setElemTTL(self, dbName, elemName, ttl):
-        if(self.elemLockDict[dbName][elemName] is True):
-            self.logger.warning("Element Locked {0}->{1}".format(dbName, elemName))
-            return responseCode.ELEM_IS_LOCKED
-        else:
-            self.lock("ELEM", dbName, elemName)
-            self.elemTTL[dbName][elemName] = {"createAt":int(time.time()),
-                                              "ttl":int(ttl),
-                                              "status":True}
-            self.unlock("ELEM", dbName, elemName)
-            self.logger.info("Element TTL Set Success {}->{}:{}".format(dbName, elemName, ttl))
-            return responseCode.ELEM_TTL_SET_SUCCESS
-
-    @saveTrigger
-    def clearElemTTL(self, dbName, elemName):
-        if (self.elemLockDict[dbName][elemName] is True):
-            self.logger.warning("Element Locked {0}->{1}".format(dbName, elemName))
-            return responseCode.ELEM_IS_LOCKED
-        else:
-            self.lock("ELEM", dbName, elemName)
-            try:
-                self.elemTTL[dbName].pop(elemName)
-            except:
-                return responseCode.ELEM_NOT_SET_TTL
-            finally:
-                self.unlock("ELEM", dbName, elemName)
-            self.logger.info("Element TTL Set Success {}->{}".format(dbName, elemName))
-            return responseCode.ELEM_TTL_CLEAR_SUCCESS
-    '''
-
     @keyNameValidity
     @saveTrigger
     def createList(self, dbName, listName):
@@ -487,38 +453,6 @@ class NoSqlDb:
             else:
                 self.logger.info("List Locked {}->{}".format(dbName, listName1))
                 return responseCode.LIST_IS_LOCKED, []
-
-    '''
-    @saveTrigger
-    def setListTTL(self, dbName, listName, ttl):
-        if(self.listLockDict[dbName][listName] is True):
-            self.logger.warning("List Locked {0}->{1}".format(dbName, listName))
-            return responseCode.LIST_IS_LOCKED
-        else:
-            self.lock("LIST", dbName, listName)
-            self.listTTL[dbName][listName] = {"createAt":int(time.time()),
-                                              "ttl":int(ttl),
-                                              "status":True}
-            self.unlock("LIST", dbName, listName)
-            self.logger.info("List TTL Set Success {}->{}:{}".format(dbName, listName, ttl))
-            return responseCode.LIST_TTL_SET_SUCCESS
-
-    @saveTrigger
-    def clearListTTL(self, dbName, listName):
-        if (self.listLockDict[dbName][listName] is True):
-            self.logger.warning("List Locked {0}->{1}".format(dbName, listName))
-            return responseCode.LIST_IS_LOCKED
-        else:
-            self.lock("LIST", dbName, listName)
-            try:
-                self.listTTL[dbName].pop(listName)
-            except:
-                return responseCode.LIST_NOT_SET_TTL
-            finally:
-                self.unlock("LIST", dbName, listName)
-            self.logger.info("List TTL Clear Success {}->{}".format(dbName, listName))
-            return responseCode.LIST_TTL_CLEAR_SUCCESS
-    '''
 
     @keyNameValidity
     @saveTrigger
@@ -667,39 +601,6 @@ class NoSqlDb:
             return []
         self.logger.info("Search All Hash Success {0}".format(dbName))
         return list(self.hashName[dbName])
-
-    '''
-    @saveTrigger
-    def setHashTTL(self, dbName, hashName, ttl):
-        if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
-            return responseCode.HASH_IS_LOCKED
-        else:
-            self.lock("HASH", dbName, hashName)
-            self.hashTTL[dbName][hashName] = {"createAt":int(time.time()),
-                                              "ttl":int(ttl),
-                                              "status":True}
-            self.unlock("HASH", dbName, hashName)
-            self.logger.info("Hash TTL Set Success {}->{}:{}".format(dbName, hashName, ttl))
-            return responseCode.HASH_TTL_SET_SUCCESS
-
-    @saveTrigger
-    def clearHashTTL(self, dbName, hashName):
-        if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
-            return responseCode.HASH_IS_LOCKED
-        else:
-            self.lock("HASH", dbName, hashName)
-            try:
-                self.hashTTL[dbName].pop(hashName)
-            except:
-                self.logger.warning("Hash Is Not Set TTL".format(dbName, hashName))
-                return responseCode.HASH_NOT_SET_TTL
-            finally:
-                self.unlock("HASH", dbName, hashName)
-            self.logger.info("Hash TTL Clear Success".format(dbName, hashName))
-            return responseCode.HASH_TTL_CLEAR_SUCCESS
-    '''
 
     @saveTrigger
     def increaseHash(self, dbName, hashName, keyName):
@@ -868,38 +769,6 @@ class NoSqlDb:
             self.logger.info("Set Replace Success {}->{}".format(dbName, setName))
             return responseCode.SET_REPLACE_SUCCESS
 
-    '''
-    @saveTrigger
-    def setSetTTL(self, dbName, setName, ttl):
-        if (self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {}->{}".format(dbName, setName))
-            return responseCode.SET_IS_LOCKED
-        else:
-            self.lock("SET", dbName, setName)
-            self.setTTL[dbName][setName] = {"createAt": int(time.time()),
-                                              "ttl": int(ttl),
-                                              "status": True}
-            self.unlock("SET", dbName, setName)
-            self.logger.info("Set TTL Set Success {}->{}:{}".format(dbName,setName, ttl))
-            return responseCode.SET_TTL_SET_SUCCESS
-
-    @saveTrigger
-    def clearSetTTL(self, dbName, setName):
-        if (self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {}->{}".format(dbName, setName))
-            return responseCode.SET_IS_LOCKED
-        else:
-            self.lock("SET", dbName, setName)
-            try:
-                self.setTTL[dbName].pop(setName)
-            except:
-                return responseCode.SET_NOT_SET_TTL
-            finally:
-                self.unlock("SET", dbName, setName)
-            self.logger.info("Set TTL Clear Success {}->{}".format(dbName, setName))
-            return responseCode.SET_TTL_CLEAR_SUCCESS
-    '''
-
     @keyNameValidity
     @saveTrigger
     def createZSet(self, dbName, zsetName):
@@ -1014,38 +883,6 @@ class NoSqlDb:
             self.unlock("ZSET", dbName, zsetName)
             self.logger.info("ZSet Remove By Score Success {}->{} [{},{})".format(dbName, zsetName, start, end))
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
-
-    '''
-    @saveTrigger
-    def setZSetTTL(self, dbName, zsetName, ttl):
-        if (self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
-            return responseCode.ZSET_IS_LOCKED
-        else:
-            self.lock("ZSET", dbName, zsetName)
-            self.zsetTTL[dbName][zsetName] = {"createAt": int(time.time()),
-                                            "ttl": int(ttl),
-                                            "status": True}
-            self.unlock("ZSET", dbName, zsetName)
-            self.logger.info("ZSet TTL Set Success {}->{}:{}".format(dbName, zsetName, ttl))
-            return responseCode.ZSET_TTL_SET_SUCCESS
-
-    @saveTrigger
-    def clearZSetTTL(self, dbName, zsetName):
-        if (self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
-            return responseCode.ZSET_IS_LOCKED
-        else:
-            self.lock("ZSET", dbName, zsetName)
-            try:
-                self.zsetTTL[dbName].pop(zsetName)
-            except:
-                return responseCode.ZSET_NOT_SET_TTL
-            finally:
-                self.unlock("ZSET", dbName, zsetName)
-            self.logger.info("ZSet TTL Clear Success {}->{}".format(dbName, zsetName))
-            return responseCode.ZSET_TTL_CLEAR_SUCCESS
-    '''
 
     @saveTrigger
     def addDb(self, dbName):

@@ -6,6 +6,7 @@ import db
 from configParser import configParser
 import timer
 import ttlTimer
+from TTLTool import TTLTool
 from response import responseCode
 from dbHandler import dbHandler
 from elemHandler import elemHandler
@@ -19,6 +20,29 @@ app = flask.Flask(__name__)
 @app.route("/getType/<string:dbName>/<string:keyName>",methods=["GET"])
 def getType(dbName, keyName):
     result = database.getType(dbName, keyName)
+    return flask.jsonify(result)
+
+@app.route("/setTTL",methods=["POST"])
+def setTTL():
+    try:
+        dataType = flask.request.json["dataType"]
+        dbName = flask.request.json["dbName"]
+        keyName = flask.request.json["keyName"]
+        ttl = flask.request.json["ttl"]
+    except:
+        dataType = dbName = keyName = ttl = None
+    result = ttlTool.setTTL(dbName, keyName, ttl, dataType)
+    return flask.jsonify(result)
+
+@app.route("/clearTTL",methods=["POST"])
+def clearTTL():
+    try:
+        dataType = flask.request.json["dataType"]
+        dbName = flask.request.json["dbName"]
+        keyName = flask.request.json["keyName"]
+    except:
+        dataType = dbName = keyName = None
+    result = ttlTool.clearListTTL(dbName, keyName, dataType)
     return flask.jsonify(result)
 
 @app.route("/makeElem",methods=["POST"])
@@ -80,18 +104,6 @@ def deleteElem(dbName, elemName):
     myHandler = elemHandler(database)
     result = myHandler.deleteElem(dbName, elemName)
     return flask.jsonify(result)
-
-'''@app.route("/setElemTTL/<string:dbName>/<string:elemName>/<int:ttl>",methods=["GET"])
-def setElemTTL(dbName, elemName, ttl):
-    myHandler = elemHandler(database)
-    result = myHandler.setTTL(dbName, elemName, ttl)
-    return flask.jsonify(result)'''
-
-'''@app.route("/clearElemTTL/<string:dbName>/<string:elemName>",methods=["GET"])
-def clearElemTTL(dbName, elemName):
-    myHandler = elemHandler(database)
-    result = myHandler.clearTTL(dbName, elemName)
-    return flask.jsonify(result)'''
 
 @app.route("/makeList/<string:dbName>/<string:listName>",methods=["GET"])
 def makeList(dbName, listName):
@@ -186,18 +198,6 @@ def searchAllList(dbName):
     myHandler = listHandler(database)
     result = myHandler.searchAllList(dbName)
     return flask.jsonify(result)
-
-'''@app.route("/setListTTL/<string:dbName>/<string:listName>/<int:ttl>",methods=["GET"])
-def setListTTL(dbName, listName, ttl):
-    myHandler = listHandler(database)
-    result = myHandler.setTTL(dbName, listName, ttl)
-    return flask.jsonify(result)
-
-@app.route("/clearListTTL/<string:dbName>/<string:listName>",methods=["GET"])
-def clearListTTL(dbName, listName):
-    myHandler = listHandler(database)
-    result = myHandler.clearTTL(dbName, listName)
-    return flask.jsonify(result)'''
 
 @app.route("/getListSize/<string:dbName>/<string:listName>",methods=["GET"])
 def getListSize(dbName, listName):
@@ -327,18 +327,6 @@ def searchAllHash(dbName):
     myHandler = hashHandler(database)
     result = myHandler.searchAllHash(dbName)
     return flask.jsonify(result)
-
-'''@app.route("/setHashTTL/<string:dbName>/<string:hashName>/<int:ttl>",methods=["GET"])
-def setHashTTL(dbName, hashName, ttl):
-    myHandler = hashHandler(database)
-    result = myHandler.setTTL(dbName, hashName, ttl)
-    return flask.jsonify(result)
-
-@app.route("/clearHashTTL/<string:dbName>/<string:hashName>",methods=["GET"])
-def clearHashTTL(dbName, hashName):
-    myHandler = hashHandler(database)
-    result = myHandler.clearTTL(dbName, hashName)
-    return flask.jsonify(result)'''
 
 @app.route("/getHashSize/<string:dbName>/<string:hashName>",methods=["GET"])
 def getHashSize(dbName, hashName):
@@ -471,18 +459,6 @@ def replaceSet():
         dbName = setName = setValue = None
     result = myHandler.replaceSet(dbName, setName, setValue)
     return flask.jsonify(result)
-
-'''@app.route("/setSetTTL/<string:dbName>/<string:setName>/<int:ttl>",methods=["GET"])
-def setSetTTL(dbName, setName, ttl):
-    myHandler = setHandler(database)
-    result = myHandler.setTTL(dbName, setName, ttl)
-    return flask.jsonify(result)
-
-@app.route("/clearSetTTL/<string:dbName>/<string:setName>",methods=["GET"])
-def clearSetTTL(dbName, setName):
-    myHandler = setHandler(database)
-    result = myHandler.clearTTL(dbName, setName)
-    return flask.jsonify(result)'''
 
 @app.route("/getSetSize/<string:dbName>/<string:setName>",methods=["GET"])
 def getSetSize(dbName, setName):
@@ -630,18 +606,6 @@ def rmFromZSetByScore():
     result = myHandler.rmByScore(dbName, zsetName, start, end)
     return flask.jsonify(result)
 
-'''@app.route("/setZSetTTL/<string:dbName>/<string:zsetName>/<int:ttl>",methods=["GET"])
-def setZSetTTL(dbName, zsetName, ttl):
-    myHandler = zsetHandler(database)
-    result = myHandler.setTTL(dbName, zsetName, ttl)
-    return flask.jsonify(result)
-
-@app.route("/clearZSetTTL/<string:dbName>/<string:zsetName>",methods=["GET"])
-def clearZSetTTL(dbName, zsetName):
-    myHandler = zsetHandler(database)
-    result = myHandler.clearTTL(dbName, zsetName)
-    return flask.jsonify(result)'''
-
 @app.route("/addDatabase/<string:dbName>",methods=["GET"])
 def addDatabase(dbName):
     myHandler = dbHandler(database)
@@ -688,6 +652,9 @@ if __name__ == '__main__':
     # init the ttl timer
     TTLTimer = ttlTimer.ttlTimer(databaseList, serverConfig["TTL_CHECK_INTERVAL"])
     TTLTimer.setDaemon(True)
+
+    # init ttl tool
+    ttlTool = TTLTool(databaseList)
 
     # run the server
     app.run(host=serverConfig["HOST"], port=serverConfig["PORT"], debug=serverConfig["DEBUG"])

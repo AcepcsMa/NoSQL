@@ -1,48 +1,60 @@
 __author__ = 'Ma Haoxiang'
 
-from response import responseCode
 import time
+from decorator import *
 
 # class of TTL tools
 class TTLTool:
 
-    def __init__(self, database):
-        self.database = database
+    def __init__(self, databaseList):
+        self.database = databaseList[0]
+
+    # make the response message
+    def makeMessage(self, msg, typeCode, data):
+        message = {
+            "msg": msg,
+            "typeCode": typeCode,
+            "data": data
+        }
+        return message
 
     def setTTL(self, dbName, keyName, ttl, dataType):
-
         lockDict = self.database.getLockDict(dataType)
         ttlDict = self.database.getTTLDict(dataType)
-        typeName = self.database.translateType(dataType)
 
         if (lockDict[dbName][keyName] is True):
-            self.database.logger.warning("{} Is Locked {}->{}".format(typeName, dbName, keyName))
-            return responseCode.LOCKED
+            self.database.logger.warning("{} Is Locked {}->{}".format(dataType, dbName, keyName))
+            msg = self.makeMessage("{} Is Locked".format(dataType), responseCode.LOCKED, keyName)
+            return msg
         else:
-            self.database.lock(typeName, dbName, keyName)
+            self.database.lock(dataType, dbName, keyName)
             ttlDict[dbName][keyName] = {"createAt": int(time.time()),
                                               "ttl": int(ttl),
                                               "status": True}
-            self.database.unlock("LIST", dbName, keyName)
-            self.database.logger.info("List TTL Set Success {}->{}:{}".format(dbName, keyName, ttl))
-            return responseCode.TTL_SET_SUCCESS
+            self.database.unlock(dataType, dbName, keyName)
+            self.database.logger.info("TTL Set Success {}->{}:{}".format(dbName, keyName, ttl))
+            msg = self.makeMessage("TTL Set Success", responseCode.TTL_SET_SUCCESS, keyName)
+            self.database.opCount += 1
+            return msg
 
     def clearListTTL(self, dbName, keyName, dataType):
-
         lockDict = self.database.getLockDict(dataType)
         ttlDict = self.database.getTTLDict(dataType)
-        typeName = self.database.translateType(dataType)
 
         if (lockDict[dbName][keyName] is True):
-            self.database.logger.warning("{} Locked {}->{}".format(typeName, dbName, keyName))
-            return responseCode.LOCKED
+            self.database.logger.warning("{} Locked {}->{}".format(dataType, dbName, keyName))
+            msg = self.makeMessage("{} Is Locked".format(dataType), responseCode.LOCKED, keyName)
+            return msg
         else:
-            self.database.lock(typeName, dbName, keyName)
+            self.database.lock(dataType, dbName, keyName)
             try:
                 ttlDict[dbName].pop(keyName)
             except:
-                return responseCode.NOT_SET_TTL
+                msg = self.makeMessage("{} Is Not Set TTL".format(dataType), responseCode.NOT_SET_TTL, keyName)
+                return msg
             finally:
-                self.database.unlock(typeName, dbName, keyName)
-            self.database.logger.info("{} TTL Clear Success {}->{}".format(typeName, dbName, keyName))
-            return responseCode.TTL_CLEAR_SUCCESS
+                self.database.unlock(dataType, dbName, keyName)
+            self.database.logger.info("{} TTL Clear Success {}->{}".format(dataType, dbName, keyName))
+            msg = self.makeMessage("TTL Clear Success", responseCode.TTL_CLEAR_SUCCESS, keyName)
+            self.database.opCount += 1
+            return msg

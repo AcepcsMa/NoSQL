@@ -371,13 +371,16 @@ class NoSqlDb:
         return responseCode.LIST_GET_SUCCESS, result
 
     @saveTrigger
-    def insertList(self, listName, value, dbName):
+    def insertList(self, listName, value, dbName, isLeft=None):
         if(self.listLockDict[dbName][listName] is True):
             self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
             return responseCode.LIST_IS_LOCKED
         else:
             self.lock("LIST", dbName, listName)
-            self.listDict[dbName][listName].append(value)
+            if(isLeft is None):
+                self.listDict[dbName][listName].append(value)
+            else:
+                self.listDict[dbName][listName].insert(0, value)
             self.unlock("LIST", dbName, listName)
             self.logger.info("Insert List Success {0}->{1}->{2}".format(dbName, listName, value))
             return responseCode.LIST_INSERT_SUCCESS

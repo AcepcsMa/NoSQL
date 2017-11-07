@@ -97,6 +97,19 @@ class listHandler:
             msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
         return msg
 
+    # insert a value into the given list
+    @validTypeCheck
+    def insertListL(self, dbName, listName, listValue):
+        if(self.database.isExist("LIST", dbName, listName) is True):
+            if(self.database.isExpired("LIST", dbName, listName) is False):
+                result = self.database.insertList(listName, listValue, dbName, True)
+                msg = self.makeMessage(responseCode.detail[result], result, listName)
+            else:
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        else:
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+        return msg
+
     # delete a list in the database
     @validTypeCheck
     def deleteList(self, dbName, listName):

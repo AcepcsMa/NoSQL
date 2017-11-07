@@ -149,6 +149,18 @@ def insertList():
     result = myHandler.insertList(dbName, listName, listValue)
     return flask.jsonify(result)
 
+@app.route("/leftInsertList",methods=["POST"])
+def leftInsertList():
+    myHandler = listHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        listName = flask.request.json["listName"]
+        listValue = flask.request.json["listValue"]
+    except:
+        dbName = listName = listValue = None
+    result = myHandler.insertListL(dbName, listName, listValue)
+    return flask.jsonify(result)
+
 @app.route("/deleteList/<string:dbName>/<string:listName>",methods=["GET"])
 def deleteList(dbName, listName):
     myHandler = listHandler(database)

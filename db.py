@@ -357,6 +357,8 @@ class NoSqlDb:
                 listValue = self.listDict[dbName][listName]
             elif(start is not None and end is not None):
                 listValue = self.listDict[dbName][listName][start:end]
+            elif(start is not None and end is None):
+                listValue = self.listDict[dbName][listName][start:]
             else:
                 listValue = None
         except:

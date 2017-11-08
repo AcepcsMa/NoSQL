@@ -117,6 +117,18 @@ def getList(dbName, listName):
     result = myHandler.getList(dbName, listName)
     return flask.jsonify(result)
 
+@app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>",methods=["GET"])
+def leftGetList(dbName, listName, count):
+    myHandler = listHandler(database)
+    result = myHandler.getListL(dbName, listName, count)
+    return flask.jsonify(result)
+
+@app.route("/rightGetList/<string:dbName>/<string:listName>/<int:count>",methods=["GET"])
+def rightGetList(dbName, listName, count):
+    myHandler = listHandler(database)
+    result = myHandler.getListR(dbName, listName, count)
+    return flask.jsonify(result)
+
 @app.route("/getListByRange",methods=["POST"])
 def getListByRange():
     myHandler = listHandler(database)

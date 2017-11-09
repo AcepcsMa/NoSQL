@@ -74,6 +74,50 @@ class listTest:
         response = requests.get(errorUrl.format("db0","list1"))
         self.writeLog(errorUrl.format("db0","list1"),"",response.content.decode())
 
+    def leftGetListTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/leftGetList/{0}/{1}/{2}"
+
+        # case1 create a list and get its value
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
+        response = requests.get(createUrl.format("db0", "list1"))
+        response = requests.get(url.format("db0", "list1", 3))
+        self.writeLog(url.format("db0", "list1", 3), "", response.content.decode())
+
+        # case2 unknown database name
+        response = requests.get(url.format("db999", "list1", 3))
+        self.writeLog(url.format("db999", "list1", 3), "", response.content.decode())
+
+        # case3 unknown list name
+        response = requests.get(url.format("db0", "list999", 3))
+        self.writeLog(url.format("db0", "list999", 3), "", response.content.decode())
+
+        # case4 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/leftgetlist/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "list1", 3))
+        self.writeLog(errorUrl.format("db0", "list1", 3), "", response.content.decode())
+
+    def rightGetListTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/rightGetList/{0}/{1}/{2}"
+
+        # case1 create a list and get its value
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
+        response = requests.get(createUrl.format("db0", "list1"))
+        response = requests.get(url.format("db0", "list1", 3))
+        self.writeLog(url.format("db0", "list1", 3), "", response.content.decode())
+
+        # case2 unknown database name
+        response = requests.get(url.format("db999", "list1", 3))
+        self.writeLog(url.format("db999", "list1", 3), "", response.content.decode())
+
+        # case3 unknown list name
+        response = requests.get(url.format("db0", "list999", 3))
+        self.writeLog(url.format("db0", "list999", 3), "", response.content.decode())
+
+        # case4 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/rightgetlist/{0}/{1}"
+        response = requests.get(errorUrl.format("db0", "list1", 3))
+        self.writeLog(errorUrl.format("db0", "list1", 3), "", response.content.decode())
+
     def insertListTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/insertList"
 
@@ -523,4 +567,10 @@ if __name__ == "__main__":
     #test.clearTTLTest()
 
     # testing get size function
-    test.getSizeTest()
+    #test.getSizeTest()
+
+    # testing left get function
+    #test.leftGetListTest()
+
+    # testing right get function
+    test.rightGetListTest()

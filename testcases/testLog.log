@@ -1,41 +1,32 @@
-DATE: 2017/10/16 18:25:20
-URL: http://localhost:3080/getZSetSize/db0/zset1
+DATE: 2017/11/08 17:17:36
+URL: http://localhost:3080/rightGetList/db0/list1/3
 PARAMS: 
 RESPONSE: {
-  "data": 3, 
-  "msg": "Get Size Success", 
-  "typeCode": 106
+  "data": [], 
+  "msg": "Get List Success", 
+  "typeCode": 25
 }
 
-DATE: 2017/10/16 18:25:20
-URL: http://localhost:3080/getZSetSize/db0/zset2
+DATE: 2017/11/08 17:17:36
+URL: http://localhost:3080/rightGetList/db999/list1/3
 PARAMS: 
 RESPONSE: {
-  "data": 0, 
-  "msg": "Get Size Success", 
-  "typeCode": 106
+  "data": "list1", 
+  "msg": "List Does Not Exist", 
+  "typeCode": 23
 }
 
-DATE: 2017/10/16 18:25:20
-URL: http://localhost:3080/getZSetSize/db123/zset1
+DATE: 2017/11/08 17:17:36
+URL: http://localhost:3080/rightGetList/db0/list999/3
 PARAMS: 
 RESPONSE: {
-  "data": "zset1", 
-  "msg": "ZSet Does Not Exist", 
-  "typeCode": 87
+  "data": "list999", 
+  "msg": "List Does Not Exist", 
+  "typeCode": 23
 }
 
-DATE: 2017/10/16 18:25:20
-URL: http://localhost:3080/getZSetSize/db0/zset123
-PARAMS: 
-RESPONSE: {
-  "data": "zset123", 
-  "msg": "ZSet Does Not Exist", 
-  "typeCode": 87
-}
-
-DATE: 2017/10/16 18:25:20
-URL: http://localhost:3080/getzsetsize/db0/zset1
+DATE: 2017/11/08 17:17:36
+URL: http://localhost:3080/rightgetlist/db0/list1
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

@@ -70,6 +70,30 @@ class listHandler:
         return msg
 
     @validTypeCheck
+    def getListL(self, dbName, listName, count):
+        if(self.database.isExist("LIST", dbName, listName) is True):
+            if(self.database.isExpired("LIST", dbName, listName) is False):
+                listValue = self.database.getList(listName, dbName, 0, count)
+                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
+            else:
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        else:
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+        return msg
+
+    @validTypeCheck
+    def getListR(self, dbName, listName, count):
+        if (self.database.isExist("LIST", dbName, listName) is True):
+            if (self.database.isExpired("LIST", dbName, listName) is False):
+                listValue = self.database.getList(listName, dbName, -count)
+                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
+            else:
+                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+        else:
+            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+        return msg
+
+    @validTypeCheck
     def getListRandom(self, dbName, listName, numRand):
         if(numRand <= 0):
             msg = self.makeMessage("Invalid Random Number", responseCode.INVALID_NUMBER, numRand)

@@ -670,6 +670,104 @@ class hashTest:
         response = requests.get(errorUrl.format("db0", "hash1"))
         self.writeLog(errorUrl.format("db0", "hash1"), "", response.content.decode())
 
+    def increaseTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/increaseHash/{}/{}/{}"
+
+        # case1 create a hash, insert, and increase
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+        insertParmas = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key1",
+            "value": 1
+        }
+        response = requests.post(insertUrl, json=insertParmas)
+        response = requests.get(url.format("db0", "hash1", "key1"))
+        self.writeLog(url.format("db0", "hash1", "key1"), "", response.content.decode())
+
+        # case2 increase non-existed key
+        response = requests.get(url.format("db0", "hash1", "key2"))
+        self.writeLog(url.format("db0", "hash1", "key2"), "", response.content.decode())
+
+        # case3 increase non-int key
+        insertParmas = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key3",
+            "value": "1"
+        }
+        response = requests.post(insertUrl, json=insertParmas)
+        response = requests.get(url.format("db0", "hash1", "key3"))
+        self.writeLog(url.format("db0", "hash1", "key3"), "", response.content.decode())
+
+        # case4 unknown database name
+        response = requests.get(url.format("db999", "hash1", "key2"))
+        self.writeLog(url.format("db0", "hash1", "key2"), "", response.content.decode())
+
+        # case5 unknown hash name
+        response = requests.get(url.format("db0", "hash2", "key2"))
+        self.writeLog(url.format("db0", "hash2", "key2"), "", response.content.decode())
+
+        # error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/increasehash/{}/{}/{}"
+        response = requests.get(errorUrl.format("db0", "hash1", "key1"))
+        self.writeLog(errorUrl.format("db0", "hash1", "key1"), "", response.content.decode())
+
+    def decreaseTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/decreaseHash/{}/{}/{}"
+
+        # case1 create a hash, insert, and decrease
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+        insertParmas = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key1",
+            "value": 1
+        }
+        response = requests.post(insertUrl, json=insertParmas)
+        response = requests.get(url.format("db0", "hash1", "key1"))
+        self.writeLog(url.format("db0", "hash1", "key1"), "", response.content.decode())
+
+        # case2 decrease non-existed key
+        response = requests.get(url.format("db0", "hash1", "key2"))
+        self.writeLog(url.format("db0", "hash1", "key2"), "", response.content.decode())
+
+        # case3 decrease non-int key
+        insertParmas = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key3",
+            "value": "1"
+        }
+        response = requests.post(insertUrl, json=insertParmas)
+        response = requests.get(url.format("db0", "hash1", "key3"))
+        self.writeLog(url.format("db0", "hash1", "key3"), "", response.content.decode())
+
+        # case4 unknown database name
+        response = requests.get(url.format("db999", "hash1", "key2"))
+        self.writeLog(url.format("db0", "hash1", "key2"), "", response.content.decode())
+
+        # case5 unknown hash name
+        response = requests.get(url.format("db0", "hash2", "key2"))
+        self.writeLog(url.format("db0", "hash2", "key2"), "", response.content.decode())
+
+        # error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/decreasehash/{}/{}/{}"
+        response = requests.get(errorUrl.format("db0", "hash1", "key1"))
+        self.writeLog(errorUrl.format("db0", "hash1", "key1"), "", response.content.decode())
+
 if __name__ == "__main__":
     test = hashTest()
 
@@ -707,4 +805,10 @@ if __name__ == "__main__":
     #test.clearTTLTest()
 
     # testing get size function
-    test.getSizeTest()
+    #test.getSizeTest()
+
+    # testing increase hash function
+    #test.increaseTest()
+
+    # testing decrease hash function
+    test.decreaseTest()

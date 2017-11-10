@@ -1,32 +1,50 @@
-DATE: 2017/11/08 17:17:36
-URL: http://localhost:3080/rightGetList/db0/list1/3
+DATE: 2017/11/10 12:42:29
+URL: http://localhost:3080/decreaseHash/db0/hash1/key1
 PARAMS: 
 RESPONSE: {
-  "data": [], 
-  "msg": "Get List Success", 
-  "typeCode": 25
+  "data": 0, 
+  "msg": "Hash Value Decrease Success", 
+  "typeCode": 116
 }
 
-DATE: 2017/11/08 17:17:36
-URL: http://localhost:3080/rightGetList/db999/list1/3
+DATE: 2017/11/10 12:42:29
+URL: http://localhost:3080/decreaseHash/db0/hash1/key2
 PARAMS: 
 RESPONSE: {
-  "data": "list1", 
-  "msg": "List Does Not Exist", 
-  "typeCode": 23
+  "data": "hash1", 
+  "msg": "Hash Does Not Exist", 
+  "typeCode": 31
 }
 
-DATE: 2017/11/08 17:17:36
-URL: http://localhost:3080/rightGetList/db0/list999/3
+DATE: 2017/11/10 12:42:29
+URL: http://localhost:3080/decreaseHash/db0/hash1/key3
 PARAMS: 
 RESPONSE: {
-  "data": "list999", 
-  "msg": "List Does Not Exist", 
-  "typeCode": 23
+  "data": "", 
+  "msg": "Element Type Error", 
+  "typeCode": 0
 }
 
-DATE: 2017/11/08 17:17:36
-URL: http://localhost:3080/rightgetlist/db0/list1
+DATE: 2017/11/10 12:42:29
+URL: http://localhost:3080/decreaseHash/db0/hash1/key2
+PARAMS: 
+RESPONSE: {
+  "data": "hash1", 
+  "msg": "Hash Does Not Exist", 
+  "typeCode": 31
+}
+
+DATE: 2017/11/10 12:42:29
+URL: http://localhost:3080/decreaseHash/db0/hash2/key2
+PARAMS: 
+RESPONSE: {
+  "data": "hash2", 
+  "msg": "Hash Does Not Exist", 
+  "typeCode": 31
+}
+
+DATE: 2017/11/10 12:42:29
+URL: http://localhost:3080/decreasehash/db0/hash1/key1
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

@@ -768,6 +768,84 @@ class hashTest:
         response = requests.get(errorUrl.format("db0", "hash1", "key1"))
         self.writeLog(errorUrl.format("db0", "hash1", "key1"), "", response.content.decode())
 
+    def getKeySetTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/getHashKeySet/{}/{}"
+
+        # case1 create, get empty key set
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+
+        response = requests.get(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
+
+        # case2 insert, get key set
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertHash"
+        insertParmas = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key1",
+            "value": 1
+        }
+        response = requests.post(insertUrl, json=insertParmas)
+        response = requests.get(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db999", "hash1"))
+        self.writeLog(url.format("db999", "hash1"), "", response.content.decode())
+
+        # case4 unknown hash name
+        response = requests.get(url.format("db0", "hash999"))
+        self.writeLog(url.format("db0", "hash999"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/gethashkeyset/{}/{}"
+        response = requests.get(errorUrl.format("db0", "hash1"))
+        self.writeLog(errorUrl.format("db0", "hash1"), "", response.content.decode())
+
+    def getValuesTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/getHashValues/{}/{}"
+
+        # case1 create, get empty hash values
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
+        params = {
+            "dbName": "db0",
+            "hashName": "hash1"
+        }
+        response = requests.post(createUrl, json=params)
+
+        response = requests.get(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
+
+        # case2 insert, get hash values
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertHash"
+        insertParmas = {
+            "dbName": "db0",
+            "hashName": "hash1",
+            "keyName": "key1",
+            "value": 1
+        }
+        response = requests.post(insertUrl, json=insertParmas)
+        response = requests.get(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
+
+        # case3 unknown database name
+        response = requests.get(url.format("db999", "hash1"))
+        self.writeLog(url.format("db999", "hash1"), "", response.content.decode())
+
+        # case4 unknown hash name
+        response = requests.get(url.format("db0", "hash999"))
+        self.writeLog(url.format("db0", "hash999"), "", response.content.decode())
+
+        # case5 error url
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/gethashvalues/{}/{}"
+        response = requests.get(errorUrl.format("db0", "hash1"))
+        self.writeLog(errorUrl.format("db0", "hash1"), "", response.content.decode())
+
 if __name__ == "__main__":
     test = hashTest()
 
@@ -811,4 +889,10 @@ if __name__ == "__main__":
     #test.increaseTest()
 
     # testing decrease hash function
-    test.decreaseTest()
+    #test.decreaseTest()
+
+    # testing get key set function
+    #test.getKeySetTest()
+
+    # testing get hash values function
+    #test.getValuesTest()

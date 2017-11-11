@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.conf" afterPath="$PROJECT_DIR$/server.conf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.py" afterPath="$PROJECT_DIR$/server.py" />
-    </list>
+    <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

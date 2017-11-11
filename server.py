@@ -63,7 +63,7 @@ def getElem(dbName, elemName):
     result = myHandler.getElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/updateElem",methods=["POST"])
+@app.route("/updateElem",methods=["PUT"])
 def updateElem():
     myHandler = elemHandler(database)
     try:
@@ -87,27 +87,32 @@ def searchAllElem(dbName):
     result = myHandler.searchAllElem(dbName)
     return flask.jsonify(result)
 
-@app.route("/increaseElem/<string:dbName>/<string:elemName>",methods=["GET"])
+@app.route("/increaseElem/<string:dbName>/<string:elemName>",methods=["PUT"])
 def increaseElem(dbName, elemName):
     myHandler = elemHandler(database)
     result = myHandler.increaseElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/decreaseElem/<string:dbName>/<string:elemName>",methods=["GET"])
+@app.route("/decreaseElem/<string:dbName>/<string:elemName>",methods=["PUT"])
 def decreaseElem(dbName, elemName):
     myHandler = elemHandler(database)
     result = myHandler.decreaseElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/deleteElem/<string:dbName>/<string:elemName>",methods=["GET"])
+@app.route("/deleteElem/<string:dbName>/<string:elemName>",methods=["DELETE"])
 def deleteElem(dbName, elemName):
     myHandler = elemHandler(database)
     result = myHandler.deleteElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/makeList/<string:dbName>/<string:listName>",methods=["GET"])
-def makeList(dbName, listName):
+@app.route("/makeList",methods=["POST"])
+def makeList():
     myHandler = listHandler(database)
+    try:
+        dbName = flask.request.json["dbName"]
+        listName = flask.request.json["listName"]
+    except:
+        dbName = listName = None
     result = myHandler.createList(dbName, listName)
     return flask.jsonify(result)
 
@@ -129,17 +134,9 @@ def rightGetList(dbName, listName, count):
     result = myHandler.getListR(dbName, listName, count)
     return flask.jsonify(result)
 
-@app.route("/getListByRange",methods=["POST"])
-def getListByRange():
+@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>",methods=["GET"])
+def getListByRange(dbName, listName, start, end):
     myHandler = listHandler(database)
-    try:
-        dbName = flask.request.json["dbName"]
-        listName = flask.request.json["listName"]
-        start = flask.request.json["start"]
-        end = flask.request.json["end"]
-    except Exception as e:
-        print (e)
-        dbName = listName = start = end = None
     result = myHandler.getListByRange(dbName, listName, start, end)
     return flask.jsonify(result)
 
@@ -149,7 +146,7 @@ def getListRandom(dbName, listName, numRand):
     result = myHandler.getListRandom(dbName, listName, numRand)
     return flask.jsonify(result)
 
-@app.route("/insertList",methods=["POST"])
+@app.route("/insertList",methods=["PUT"])
 def insertList():
     myHandler = listHandler(database)
     try:
@@ -161,7 +158,7 @@ def insertList():
     result = myHandler.insertList(dbName, listName, listValue)
     return flask.jsonify(result)
 
-@app.route("/leftInsertList",methods=["POST"])
+@app.route("/leftInsertList",methods=["PUT"])
 def leftInsertList():
     myHandler = listHandler(database)
     try:
@@ -173,13 +170,13 @@ def leftInsertList():
     result = myHandler.insertListL(dbName, listName, listValue)
     return flask.jsonify(result)
 
-@app.route("/deleteList/<string:dbName>/<string:listName>",methods=["GET"])
+@app.route("/deleteList/<string:dbName>/<string:listName>",methods=["DELETE"])
 def deleteList(dbName, listName):
     myHandler = listHandler(database)
     result = myHandler.deleteList(dbName, listName)
     return flask.jsonify(result)
 
-@app.route("/rmFromList",methods=["POST"])
+@app.route("/rmFromList",methods=["PUT"])
 def rmFromList():
     myHandler = listHandler(database)
     try:
@@ -191,13 +188,13 @@ def rmFromList():
     result = myHandler.rmFromList(dbName, listName, listValue)
     return flask.jsonify(result)
 
-@app.route("/clearList/<dbName>/<listName>",methods=["GET"])
+@app.route("/clearList/<dbName>/<listName>",methods=["PUT"])
 def clearList(dbName, listName):
     myHandler = listHandler(database)
     result = myHandler.clearList(dbName, listName)
     return flask.jsonify(result)
 
-@app.route("/mergeLists",methods=["POST"])
+@app.route("/mergeLists",methods=["PUT"])
 def mergeLists():
     myHandler = listHandler(database)
     try:

@@ -272,7 +272,7 @@ class NoSqlDb:
         self.logger.info("Create Element Success {0}->{1}->{2}".format(dbName, elemName, value))
         return responseCode.ELEM_CREATE_SUCCESS
 
-    def updateElem(self, elemName, value, dbName):
+    def updateElem(self, dbName, elemName, value):
         if self.elemLockDict[dbName][elemName] is True: # element is locked
             self.logger.warning("Update Element Locked {0}->{1}->{2}".format(dbName, elemName, value))
             return responseCode.ELEM_IS_LOCKED

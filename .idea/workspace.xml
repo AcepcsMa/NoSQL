@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db.py" afterPath="$PROJECT_DIR$/db.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/elemHandler.py" afterPath="$PROJECT_DIR$/elemHandler.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.conf" afterPath="$PROJECT_DIR$/server.conf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.py" afterPath="$PROJECT_DIR$/server.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,7 +14,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.3672496">
+    <splitter split-orientation="horizontal" split-proportion="0.36565977">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="db.py" pinned="false" current-in-tab="false">
@@ -120,8 +118,8 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="408">
-                  <caret line="100" column="0" lean-forward="false" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+                <state relative-caret-position="349">
+                  <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
                   <folding>
                     <element signature="e#37#49#0" expanded="true" />
                   </folding>
@@ -222,7 +220,6 @@
         <option value="$PROJECT_DIR$/data/db0/setTTL.txt" />
         <option value="$PROJECT_DIR$/data/db0/listTTL.txt" />
         <option value="$PROJECT_DIR$/data/db0/listName.txt" />
-        <option value="$PROJECT_DIR$/server.conf" />
         <option value="$PROJECT_DIR$/hashHandler.py" />
         <option value="$PROJECT_DIR$/data/db0/listValue.txt" />
         <option value="$PROJECT_DIR$/setHandler.py" />
@@ -236,6 +233,7 @@
         <option value="$PROJECT_DIR$/db.py" />
         <option value="$PROJECT_DIR$/elemHandler.py" />
         <option value="$PROJECT_DIR$/server.py" />
+        <option value="$PROJECT_DIR$/server.conf" />
       </list>
     </option>
   </component>
@@ -857,14 +855,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="23" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/response.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="675">
@@ -959,10 +949,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="100" column="0" lean-forward="false" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+        <state relative-caret-position="349">
+          <caret line="171" column="0" lean-forward="true" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
           <folding>
             <element signature="e#37#49#0" expanded="true" />
           </folding>

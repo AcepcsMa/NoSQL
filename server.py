@@ -63,7 +63,7 @@ def getElem(dbName, elemName):
     result = myHandler.getElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/updateElem",methods=["POST"])
+@app.route("/updateElem",methods=["PUT"])
 def updateElem():
     myHandler = elemHandler(database)
     try:
@@ -87,19 +87,19 @@ def searchAllElem(dbName):
     result = myHandler.searchAllElem(dbName)
     return flask.jsonify(result)
 
-@app.route("/increaseElem/<string:dbName>/<string:elemName>",methods=["GET"])
+@app.route("/increaseElem/<string:dbName>/<string:elemName>",methods=["PUT"])
 def increaseElem(dbName, elemName):
     myHandler = elemHandler(database)
     result = myHandler.increaseElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/decreaseElem/<string:dbName>/<string:elemName>",methods=["GET"])
+@app.route("/decreaseElem/<string:dbName>/<string:elemName>",methods=["PUT"])
 def decreaseElem(dbName, elemName):
     myHandler = elemHandler(database)
     result = myHandler.decreaseElem(dbName, elemName)
     return flask.jsonify(result)
 
-@app.route("/deleteElem/<string:dbName>/<string:elemName>",methods=["GET"])
+@app.route("/deleteElem/<string:dbName>/<string:elemName>",methods=["DELETE"])
 def deleteElem(dbName, elemName):
     myHandler = elemHandler(database)
     result = myHandler.deleteElem(dbName, elemName)

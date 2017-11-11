@@ -49,8 +49,8 @@ class elemHandler:
     def updateElem(self, dbName, elemName, elemValue):
         if(self.isValidType(elemValue)):
             if(self.database.isExist("ELEM", dbName, elemName)):
-                if(self.database.isExpired(dbName, elemName, "ELEM") is False):
-                    result = self.database.updateElem(elemName, elemValue, dbName)
+                if(self.database.isExpired("ELEM", dbName, elemName) is False):
+                    result = self.database.updateElem(dbName, elemName, elemValue)
                     msg = self.makeMessage(responseCode.detail[result], result, elemName)
                 else:
                     msg = self.makeMessage("Elem Is Expired", responseCode.ELEM_EXPIRED, elemName)

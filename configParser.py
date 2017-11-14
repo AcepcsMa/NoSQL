@@ -10,7 +10,7 @@ class configParser:
 
     # read server configuration
     def getServerConfig(self, confFileName):
-        if(self.configPath is not None):
+        if self.configPath is not None:
             filePath = self.configPath + confFileName
         else:
             filePath = confFileName
@@ -19,7 +19,3 @@ class configParser:
             configJson = json.loads(configFile.read())
             configJson['DEBUG'] = True if configJson["DEBUG"] == "TRUE" else False
             return configJson
-
-
-if __name__ == '__main__':
-    pass

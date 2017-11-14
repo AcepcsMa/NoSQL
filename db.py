@@ -6,13 +6,13 @@ import os
 import json
 import logging
 import random
-from decorator import *
 from zset import zset
 from TTLTool import *
 
 class NoSqlDb:
+
     def __init__(self, config):
-        self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initial databases
+        self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initialize databases
         self.saveTrigger = config["SAVE_TRIGGER"]
         self.opCount = 0
 
@@ -89,28 +89,29 @@ class NoSqlDb:
 
     def initLog(self, config):
         # check log directory
-        if (os.path.exists(config["LOG_PATH"]) is False):
+        if os.path.exists(config["LOG_PATH"]) is False:
             os.mkdir(config["LOG_PATH"])
 
         # register a logger
         self.logger = logging.getLogger('dbLogger')
         self.logger.setLevel(logging.INFO)
         hdr = logging.FileHandler(config["LOG_PATH"] + "db.log", mode="a")
-        formatter = logging.Formatter('[%(asctime)s] %(name)s:%(levelname)s: %(message)s')
+        formatter = logging.Formatter('[%(asctime)s] %(name)s:'
+                                      '%(levelname)s: %(message)s')
         hdr.setFormatter(formatter)
         self.logger.addHandler(hdr)
 
     def translateType(self, dataType):
         typeCode = responseCode.ELEM_TYPE_ERROR
-        if(dataType == "ELEM"):
+        if dataType == "ELEM":
             typeCode = responseCode.ELEM_TYPE
-        elif(dataType == "LIST"):
+        elif dataType == "LIST":
             typeCode = responseCode.LIST_TYPE
-        elif(dataType == "HASH"):
+        elif dataType == "HASH":
             typeCode = responseCode.HASH_TYPE
-        elif(dataType == "SET"):
+        elif dataType == "SET":
             typeCode = responseCode.SET_TYPE
-        elif(dataType == "ZSET"):
+        elif dataType == "ZSET":
             typeCode = responseCode.ZSET_TYPE
         return typeCode
 
@@ -129,60 +130,60 @@ class NoSqlDb:
         return message
 
     def getLockDict(self, type):
-        if (type == "ELEM"):
+        if type == "ELEM":
             lockDict = self.elemLockDict
-        elif (type == "LIST"):
+        elif type == "LIST":
             lockDict = self.listLockDict
-        elif (type == "HASH"):
+        elif type == "HASH":
             lockDict = self.hashLockDict
-        elif (type == "SET"):
+        elif type == "SET":
             lockDict = self.setLockDict
-        elif (type == "ZSET"):
+        elif type == "ZSET":
             lockDict = self.zsetLockDict
         else:
             raise Exception("Type Error")
         return lockDict
 
     def getNameSet(self, type):
-        if (type == "ELEM"):
+        if type == "ELEM":
             nameSet = self.elemName
-        elif (type == "LIST"):
+        elif type == "LIST":
             nameSet = self.listName
-        elif (type == "HASH"):
+        elif type == "HASH":
             nameSet = self.hashName
-        elif (type == "SET"):
+        elif type == "SET":
             nameSet = self.setName
-        elif (type == "ZSET"):
+        elif type == "ZSET":
             nameSet = self.zsetName
         else:
             raise Exception("Type Error")
         return nameSet
 
     def getTTLDict(self, type):
-        if (type == "ELEM"):
+        if type == "ELEM":
             ttlDict = self.elemTTL
-        elif (type == "LIST"):
+        elif type == "LIST":
             ttlDict = self.listTTL
-        elif (type == "HASH"):
+        elif type == "HASH":
             ttlDict = self.hashTTL
-        elif (type == "SET"):
+        elif type == "SET":
             ttlDict = self.setTTL
-        elif (type == "ZSET"):
+        elif type == "ZSET":
             ttlDict = self.zsetTTL
         else:
             raise Exception("Type Error")
         return ttlDict
 
     def getValueDict(self, type):
-        if (type == "ELEM"):
+        if type == "ELEM":
             valueDict = self.elemDict
-        elif (type == "LIST"):
+        elif type == "LIST":
             valueDict = self.listDict
-        elif (type == "HASH"):
+        elif type == "HASH":
             valueDict = self.hashDict
-        elif (type == "SET"):
+        elif type == "SET":
             valueDict = self.setDict
-        elif(type == "ZSET"):
+        elif type == "ZSET":
             valueDict = self.zsetDict
         else:
             raise Exception("Type Error")
@@ -200,16 +201,16 @@ class NoSqlDb:
         return dbName in self.dbNameSet
 
     def isExist(self, type, dbName, *keyNames):
-        if(self.isDbExist(dbName) is False):
+        if self.isDbExist(dbName) is False:
             return False
         nameSet = self.getNameSet(type)
         for keyName in keyNames:
-            if(keyName not in nameSet[dbName]):
+            if keyName not in nameSet[dbName]:
                 return False
         return True
 
     def searchByRE(self, dbName, expression, dataType):
-        if(self.isDbExist(dbName) is False):
+        if self.isDbExist(dbName) is False:
             return []
         searchResult = set()
         expression = re.sub("\*",".*",expression)   # convert expression to regular expression
@@ -218,7 +219,7 @@ class NoSqlDb:
 
         for name in names:
             try:
-                if(len(re.findall("({})".format(expression),name)) > 0):
+                if len(re.findall("({})".format(expression),name)) > 0:
                     searchResult.add(name)
             except:
                 continue
@@ -228,14 +229,14 @@ class NoSqlDb:
     def showTTL(self, dbName, keyName, dataType):
         ttlDict = self.getTTLDict(dataType)[dbName]
 
-        if(keyName in ttlDict.keys()):
-            if(ttlDict[keyName]["status"] == False):
+        if keyName in ttlDict.keys():
+            if ttlDict[keyName]["status"] == False:
                 return responseCode.TTL_EXPIRED, None
             else:
                 curTime = int(time.time())
                 ttl = ttlDict[keyName]["ttl"]
                 restTime = ttl - (curTime-ttlDict[keyName]["createAt"])
-                if(restTime <= 0):
+                if restTime <= 0:
                     ttlDict[keyName]["status"] = False
                     return responseCode.TTL_EXPIRED, None
                 else:
@@ -247,7 +248,7 @@ class NoSqlDb:
         ttlDict = self.getTTLDict(dataType)[dbName]
 
         for keyName in keyNames:
-            if(keyName not in ttlDict.keys()):
+            if keyName not in ttlDict.keys():
                 return False
             else:
                 curTime = int(time.time())
@@ -255,7 +256,7 @@ class NoSqlDb:
                     return True
                 createAt = ttlDict[keyName]["createAt"]
                 ttl = ttlDict[keyName]["ttl"]
-                if (curTime - createAt >= ttl):
+                if curTime - createAt >= ttl:
                     ttlDict[keyName]["status"] = False
                     return True
                 else:
@@ -269,19 +270,22 @@ class NoSqlDb:
         self.elemDict[dbName][elemName] = value
         self.invertedTypeDict[dbName][elemName] = responseCode.ELEM_TYPE
         self.unlock("ELEM", dbName, elemName)
-        self.logger.info("Create Element Success {0}->{1}->{2}".format(dbName, elemName, value))
+        self.logger.info("Create Element Success "
+                         "{0}->{1}->{2}".format(dbName, elemName, value))
         return responseCode.ELEM_CREATE_SUCCESS
 
     def updateElem(self, dbName, elemName, value):
         if self.elemLockDict[dbName][elemName] is True: # element is locked
-            self.logger.warning("Update Element Locked {0}->{1}->{2}".format(dbName, elemName, value))
+            self.logger.warning("Update Element Locked "
+                                "{0}->{1}->{2}".format(dbName, elemName, value))
             return responseCode.ELEM_IS_LOCKED
 
         else:   # update the value
             self.lock("ELEM", dbName, elemName)
             self.elemDict[dbName][elemName] = value
             self.unlock("ELEM", dbName, elemName)
-            self.logger.info("Update Element Success {0}->{1}->{2}".format(dbName, elemName, value))
+            self.logger.info("Update Element Success "
+                             "{0}->{1}->{2}".format(dbName, elemName, value))
             return responseCode.ELEM_UPDATE_SUCCESS
 
     def getElem(self, elemName, dbName):
@@ -289,43 +293,49 @@ class NoSqlDb:
             elemValue = self.elemDict[dbName][elemName]
         except:
             elemValue = None
-        self.logger.info("Get Element Success {0}->{1}".format(dbName, elemName))
+        self.logger.info("Get Element Success "
+                         "{0}->{1}".format(dbName, elemName))
         return elemValue
 
     def searchAllElem(self, dbName):
-        if(self.isDbExist(dbName) is False):
+        if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All Elements in {0}".format(dbName))
         return list(self.elemName[dbName])
 
     @saveTrigger
     def increaseElem(self, elemName, dbName):
-        if(self.elemLockDict[dbName][elemName] is True): # element is locked
-            self.logger.warning("Increase Element Locked {0}->{1}".format(dbName, elemName))
+        if self.elemLockDict[dbName][elemName] is True: # element is locked
+            self.logger.warning("Increase Element Locked "
+                                "{0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_IS_LOCKED
         else:
             self.lock("ELEM", dbName, elemName)
             self.elemDict[dbName][elemName] += 1
             self.unlock("ELEM", dbName, elemName)
-            self.logger.info("Increase Element Success {0}->{1}".format(dbName, elemName))
+            self.logger.info("Increase Element Success "
+                             "{0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_INCR_SUCCESS
 
     @saveTrigger
     def decreaseElem(self, elemName, dbName):
-        if(self.elemLockDict[dbName][elemName] is True): # element is locked
-            self.logger.warning("Decrease Element Locked {0}->{1}".format(dbName, elemName))
+        if self.elemLockDict[dbName][elemName] is True: # element is locked
+            self.logger.warning("Decrease Element Locked "
+                                "{0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_IS_LOCKED
         else:
             self.lock("ELEM", dbName, elemName)
             self.elemDict[dbName][elemName] -= 1
             self.unlock("ELEM", dbName, elemName)
-            self.logger.info("Decrease Element Success {0}->{1}".format(dbName, elemName))
+            self.logger.info("Decrease Element Success "
+                             "{0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_DECR_SUCCESS
 
     @saveTrigger
     def deleteElem(self, elemName, dbName):
-        if (self.elemLockDict[dbName][elemName] is True):  # element is locked
-            self.logger.warning("Delete Element Locked {0}->{1}".format(dbName, elemName))
+        if self.elemLockDict[dbName][elemName] is True:  # element is locked
+            self.logger.warning("Delete Element Locked "
+                                "{0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_IS_LOCKED
         else:
             self.lock("ELEM", dbName, elemName)
@@ -337,7 +347,8 @@ class NoSqlDb:
             except:
                 pass
             self.elemLockDict[dbName].pop(elemName)
-            self.logger.info("Delete Element Success {0}->{1}".format(dbName, elemName))
+            self.logger.info("Delete Element Success "
+                             "{0}->{1}".format(dbName, elemName))
             return responseCode.ELEM_DELETE_SUCCESS
 
     @keyNameValidity
@@ -348,49 +359,54 @@ class NoSqlDb:
         self.listDict[dbName][listName] = list()
         self.invertedTypeDict[dbName][listName] = responseCode.LIST_TYPE
         self.unlock("LIST", dbName, listName)
-        self.logger.info("Create List Success {0}->{1}".format(dbName, listName))
+        self.logger.info("Create List Success "
+                         "{0}->{1}".format(dbName, listName))
         return responseCode.LIST_CREATE_SUCCESS
 
     def getList(self, listName, dbName, start=None, end=None):
         try:
-            if(start is None and end is None):
+            if start is None and end is None:
                 listValue = self.listDict[dbName][listName]
-            elif(start is not None and end is not None):
+            elif start is not None and end is not None:
                 listValue = self.listDict[dbName][listName][start:end]
-            elif(start is not None and end is None):
+            elif start is not None and end is None:
                 listValue = self.listDict[dbName][listName][start:]
             else:
                 listValue = None
         except:
             listValue = None
-        self.logger.info("Get List Success {0}->{1}".format(dbName, listName))
+        self.logger.info("Get List Success "
+                         "{0}->{1}".format(dbName, listName))
         return listValue
 
     def getListRandom(self, dbName, listName, numRand):
-        if(len(self.listDict[dbName][listName]) < numRand):
+        if len(self.listDict[dbName][listName]) < numRand:
             return responseCode.LIST_LENGTH_TOO_SHORT, None
         result = random.sample(self.listDict[dbName][listName], numRand)
         return responseCode.LIST_GET_SUCCESS, result
 
     @saveTrigger
     def insertList(self, listName, value, dbName, isLeft=None):
-        if(self.listLockDict[dbName][listName] is True):
-            self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
+        if self.listLockDict[dbName][listName] is True:
+            self.logger.warning("Insert List Locked "
+                                "{0}->{1}->{2}".format(dbName, listName, value))
             return responseCode.LIST_IS_LOCKED
         else:
             self.lock("LIST", dbName, listName)
-            if(isLeft is None):
+            if isLeft is None:
                 self.listDict[dbName][listName].append(value)
             else:
                 self.listDict[dbName][listName].insert(0, value)
             self.unlock("LIST", dbName, listName)
-            self.logger.info("Insert List Success {0}->{1}->{2}".format(dbName, listName, value))
+            self.logger.info("Insert List Success "
+                             "{0}->{1}->{2}".format(dbName, listName, value))
             return responseCode.LIST_INSERT_SUCCESS
 
     @saveTrigger
     def deleteList(self, listName, dbName):
-        if(self.listLockDict[dbName][listName] is True):
-            self.logger.warning("Delete List Locked {0}->{1}".format(dbName, listName))
+        if self.listLockDict[dbName][listName] is True:
+            self.logger.warning("Delete List Locked "
+                                "{0}->{1}".format(dbName, listName))
             return responseCode.LIST_IS_LOCKED
         else:
             self.lock("LIST", dbName, listName)
@@ -403,75 +419,86 @@ class NoSqlDb:
                 pass
             self.unlock("LIST", dbName, listName)
             self.listLockDict[dbName].pop(listName)
-            self.logger.info("Delete List Success {0}->{1}".format(dbName, listName))
+            self.logger.info("Delete List Success "
+                             "{0}->{1}".format(dbName, listName))
             return responseCode.LIST_DELETE_SUCCESS
 
     @saveTrigger
     def rmFromList(self, dbName, listName, value):
-        if (self.listLockDict[dbName][listName] is True):
-            self.logger.warning("Insert List Locked {0}->{1}->{2}".format(dbName, listName, value))
+        if self.listLockDict[dbName][listName] is True:
+            self.logger.warning("Insert List Locked "
+                                "{0}->{1}->{2}".format(dbName, listName, value))
             return responseCode.LIST_IS_LOCKED
         else:
-            if(value not in self.listDict[dbName][listName]):
+            if value not in self.listDict[dbName][listName]:
                 return responseCode.LIST_NOT_CONTAIN_VALUE
             else:
                 self.lock("LIST", dbName, listName)
                 self.listDict[dbName][listName].remove(value)
                 self.unlock("LIST", dbName, listName)
-                self.logger.info("Remove From List Success {0}->{1}->{2}".format(dbName, listName, value))
+                self.logger.info("Remove From List Success "
+                                 "{0}->{1}->{2}".format(dbName, listName, value))
                 return responseCode.LIST_REMOVE_SUCCESS
 
     def searchAllList(self, dbName):
-        if(self.isDbExist(dbName) is False):
+        if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All List Success {0}".format(dbName))
         return list(self.listName[dbName])
 
     @saveTrigger
     def clearList(self, dbName, listName):
-        if(self.listLockDict[dbName][listName] is True):
+        if self.listLockDict[dbName][listName] is True:
             self.logger.warning("Clear List Locked {0}->{1}")
             return responseCode.LIST_IS_LOCKED
         else:
             self.lock("LIST", dbName, listName)
             self.listDict[dbName][listName] = []
             self.unlock("LIST", dbName, listName)
-            self.logger.info("List Clear Success {}->{}".format(dbName, listName))
+            self.logger.info("List Clear Success "
+                             "{}->{}".format(dbName, listName))
             return responseCode.LIST_CLEAR_SUCCESS
 
     @saveTrigger
     def mergeLists(self, dbName, listName1, listName2, resultListName=None):
-        if(resultListName is not None):
+        if resultListName is not None:
             self.createList(dbName, resultListName)
             self.lock("LIST", dbName, resultListName)
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName1])
             self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName2])
             self.unlock("LIST", dbName, resultListName)
-            self.logger.info("Lists Merge Success {} merges {}->{}".format(dbName, listName1, listName2, resultListName))
+            self.logger.info("Lists Merge Success "
+                             "{} merges {}->{}".
+                             format(dbName, listName1, listName2, resultListName))
             return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][resultListName]
         else:
-            if(self.listLockDict[dbName][listName1] is False):
+            if self.listLockDict[dbName][listName1] is False:
                 self.lock("LIST", dbName, listName1)
                 self.listDict[dbName][listName1].extend(self.listDict[dbName][listName2])
-                self.logger.info("Lists Merge Success {} merges {}->{}".format(dbName, listName1, listName2, listName1))
+                self.logger.info("Lists Merge Success "
+                                 "{} merges {}->{}".
+                                 format(dbName, listName1, listName2, listName1))
                 return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][listName1]
             else:
-                self.logger.info("List Locked {}->{}".format(dbName, listName1))
+                self.logger.info("List Locked "
+                                 "{}->{}".format(dbName, listName1))
                 return responseCode.LIST_IS_LOCKED, []
 
     @keyNameValidity
     @saveTrigger
     def createHash(self, dbName, hashName):
-        if(self.isExist("HASH", dbName, hashName) is False):
+        if self.isExist("HASH", dbName, hashName) is False:
             self.hashName[dbName].add(hashName)
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName] = dict()
             self.invertedTypeDict[dbName][hashName] = responseCode.HASH_TYPE
             self.unlock("HASH", dbName, hashName)
-            self.logger.info("Hash Create Success {}->{}".format(dbName, hashName))
+            self.logger.info("Hash Create Success "
+                             "{}->{}".format(dbName, hashName))
             return responseCode.HASH_CREATE_SUCCESS
         else:
-            self.logger.warning("Hash Create Fail(Hash Exists) {}->{}".format(dbName, hashName))
+            self.logger.warning("Hash Create Fail(Hash Exists) "
+                                "{}->{}".format(dbName, hashName))
             return responseCode.HASH_EXISTED
 
     def getHash(self, dbName, hashName):
@@ -494,27 +521,31 @@ class NoSqlDb:
 
     @saveTrigger
     def insertHash(self, dbName, hashName, keyName, value):
-        if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
+        if self.hashLockDict[dbName][hashName] is True:
+            self.logger.warning("Hash Is Locked "
+                                "{}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName][keyName] = value
             self.unlock("HASH", dbName, hashName)
-            self.logger.info("Hash Insert Success {}->{} {}:{}".format(dbName, hashName, keyName, value))
+            self.logger.info("Hash Insert Success "
+                             "{}->{} {}:{}".
+                             format(dbName, hashName, keyName, value))
             return responseCode.HASH_INSERT_SUCCESS
 
     def isKeyExist(self, dbName, hashName, keyName):
-        if(dbName not in self.dbNameSet):
+        if dbName not in self.dbNameSet:
             return False
-        elif(hashName not in self.hashDict[dbName].keys()):
+        elif hashName not in self.hashDict[dbName].keys():
             return False
         return keyName in list(self.hashDict[dbName][hashName].keys())
 
     @saveTrigger
     def deleteHash(self, dbName, hashName):
-        if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
+        if self.hashLockDict[dbName][hashName] is True:
+            self.logger.warning("Hash Is Locked "
+                                "{}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
@@ -527,108 +558,126 @@ class NoSqlDb:
                 pass
             self.unlock("HASH", dbName, hashName)
             self.hashLockDict[dbName].pop(hashName)
-            self.logger.info("Hash Delete Success {}->{}".format(dbName, hashName))
+            self.logger.info("Hash Delete Success "
+                             "{}->{}".format(dbName, hashName))
             return responseCode.HASH_DELETE_SUCCESS
 
     @saveTrigger
     def rmFromHash(self, dbName, hashName, keyName):
-        if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
+        if self.hashLockDict[dbName][hashName] is True:
+            self.logger.warning("Hash Is Locked "
+                                "{}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName].pop(keyName)
             self.unlock("HASH", dbName, hashName)
-            self.logger.info("Hash Value Remove Success {}->{}:{}".format(dbName, hashName, keyName))
+            self.logger.info("Hash Value Remove Success "
+                             "{}->{}:{}".format(dbName, hashName, keyName))
             return responseCode.HASH_REMOVE_SUCCESS
 
     @saveTrigger
     def clearHash(self, dbName, hashName):
-        if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
+        if self.hashLockDict[dbName][hashName] is True:
+            self.logger.warning("Hash Is Locked "
+                                "{}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName].clear()
             self.unlock("HASH", dbName, hashName)
-            self.logger.info("Hash Clear Success {}->{}".format(dbName, hashName))
+            self.logger.info("Hash Clear Success "
+                             "{}->{}".format(dbName, hashName))
             return responseCode.HASH_CLEAR_SUCCESS
 
     @saveTrigger
     def replaceHash(self, dbName, hashName, hashValue):
-        if(self.hashLockDict[dbName][hashName] is True):
-            self.logger.warning("Hash Is Locked {}->{}".format(dbName, hashName))
+        if self.hashLockDict[dbName][hashName] is True:
+            self.logger.warning("Hash Is Locked "
+                                "{}->{}".format(dbName, hashName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, hashName)
             self.hashDict[dbName][hashName] = hashValue
             self.unlock("HASH", dbName, hashName)
-            self.logger.info("Hash Replace Success {}->{}".format(dbName, hashName))
+            self.logger.info("Hash Replace Success "
+                             "{}->{}".format(dbName, hashName))
             return responseCode.HASH_REPLACE_SUCCESS
 
     @saveTrigger
     def mergeHashs(self, dbName, hashName1, hashName2, resultHashName=None, mergeMode=0):
-        if (mergeMode == 0):
+        if mergeMode == 0:
             baseDictName = hashName1
             otherDictName = hashName2
         else:
             baseDictName = hashName2
             otherDictName = hashName1
 
-        if (resultHashName is not None):
+        if resultHashName is not None:
             self.createHash(dbName, resultHashName)
             self.lock("HASH", dbName, resultHashName)
             baseKeys = self.hashDict[dbName][baseDictName].keys()
             otherKeys = self.hashDict[dbName][otherDictName].keys()
             self.hashDict[dbName][resultHashName] = self.hashDict[dbName][baseDictName].copy()
             for key in otherKeys:
-                if(key not in baseKeys):
+                if key not in baseKeys:
                     self.hashDict[dbName][resultHashName][key] = self.hashDict[dbName][otherDictName][key]
             self.unlock("HASH", dbName, resultHashName)
-            self.logger.info("Hash Merge Success {} merges {} -> {}".format(hashName1, hashName2, resultHashName))
+            self.logger.info("Hash Merge Success "
+                             "{} merges {} -> {}".
+                             format(hashName1, hashName2, resultHashName))
 
         else:
-            if (self.hashLockDict[dbName][baseDictName] is False):
+            if self.hashLockDict[dbName][baseDictName] is False:
                 self.lock("HASH", dbName, baseDictName)
                 baseKeys = self.hashDict[dbName][baseDictName].keys()
                 otherKeys = self.hashDict[dbName][otherDictName].keys()
                 for key in otherKeys:
-                    if(key not in baseKeys):
+                    if key not in baseKeys:
                         self.hashDict[dbName][baseDictName][key] = self.hashDict[dbName][otherDictName][key]
-                self.logger.info("Hash Merge Success {} merges {} -> {}".format(hashName1, hashName2, hashName1))
+                self.logger.info("Hash Merge Success "
+                                 "{} merges {} -> {}".
+                                 format(hashName1, hashName2, hashName1))
             else:
-                self.logger.warning("Hash Is Locked {}->{} or {}->{}".format(dbName, hashName1, dbName, hashName2))
+                self.logger.warning("Hash Is Locked "
+                                    "{}->{} or {}->{}".
+                                    format(dbName, hashName1, dbName, hashName2))
                 return responseCode.HASH_IS_LOCKED
         return responseCode.HASH_MERGE_SUCCESS
 
     def searchAllHash(self, dbName):
-        if(self.isDbExist(dbName) is False):
+        if self.isDbExist(dbName) is False:
             return []
-        self.logger.info("Search All Hash Success {0}".format(dbName))
+        self.logger.info("Search All Hash Success "
+                         "{0}".format(dbName))
         return list(self.hashName[dbName])
 
     @saveTrigger
     def increaseHash(self, dbName, hashName, keyName):
-        if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
-            self.logger.warning("Hash Value Type Is Not Integer {}->{}:{}".format(dbName, hashName, keyName))
+        if isinstance(self.hashDict[dbName][hashName][keyName], int) is False:
+            self.logger.warning("Hash Value Type Is Not Integer "
+                                "{}->{}:{}".format(dbName, hashName, keyName))
             return responseCode.ELEM_TYPE_ERROR, None
 
         self.lock("HASH", dbName, hashName)
         self.hashDict[dbName][hashName][keyName] += 1
         self.unlock("HASH", dbName, hashName)
-        self.logger.info("Hash Value Increase Success {}->{}:{}".format(dbName, hashName, keyName))
+        self.logger.info("Hash Value Increase Success "
+                         "{}->{}:{}".format(dbName, hashName, keyName))
         return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][hashName][keyName]
 
     @saveTrigger
     def decreaseHash(self, dbName, hashName, keyName):
-        if(isinstance(self.hashDict[dbName][hashName][keyName], int) is False):
-            self.logger.warning("Hash Value Type Is Not Integer {}->{}:{}".format(dbName, hashName, keyName))
+        if isinstance(self.hashDict[dbName][hashName][keyName], int) is False:
+            self.logger.warning("Hash Value Type Is Not Integer "
+                                "{}->{}:{}".format(dbName, hashName, keyName))
             return responseCode.ELEM_TYPE_ERROR, None
 
         self.lock("HASH", dbName, hashName)
         self.hashDict[dbName][hashName][keyName] -= 1
         self.unlock("HASH", dbName, hashName)
-        self.logger.info("Hash Value Decrease Success {}->{}:{}".format(dbName, hashName, keyName))
+        self.logger.info("Hash Value Decrease Success "
+                         "{}->{}:{}".format(dbName, hashName, keyName))
         return responseCode.HASH_DECR_SUCCESS, self.hashDict[dbName][hashName][keyName]
 
     @keyNameValidity
@@ -639,7 +688,8 @@ class NoSqlDb:
         self.setDict[dbName][setName] = set()
         self.invertedTypeDict[dbName][setName] = responseCode.SET_TYPE
         self.unlock("SET", dbName, setName)
-        self.logger.info("Set Create Success {0}->{1}".format(dbName, setName))
+        self.logger.info("Set Create Success "
+                         "{0}->{1}".format(dbName, setName))
         return responseCode.SET_CREATE_SUCCESS
 
     def getSet(self, dbName, setName):

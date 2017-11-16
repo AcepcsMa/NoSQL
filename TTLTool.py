@@ -1,7 +1,7 @@
 __author__ = 'Ma Haoxiang'
 
 import time
-from decorator import *
+from Decorator import *
 
 # class of TTL tools
 class TTLTool:

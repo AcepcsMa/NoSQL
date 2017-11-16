@@ -3,17 +3,17 @@ __author__ = 'Ma Haoxiang'
 # import
 import flask
 import db
-from configParser import configParser
-import timer
-import ttlTimer
+from ConfigParser import configParser
+import Timer
+import TTLTimer
 from TTLTool import TTLTool
-from response import responseCode
-from dbHandler import dbHandler
-from elemHandler import elemHandler
-from listHandler import listHandler
-from hashHandler import hashHandler
-from setHandler import setHandler
-from zsetHandler import zsetHandler
+from Response import responseCode
+from DbHandler import DbHandler
+from ElemHandler import elemHandler
+from ListHandler import listHandler
+from HashHandler import hashHandler
+from SetHandler import setHandler
+from ZSetHandler import zsetHandler
 
 app = flask.Flask(__name__)
 
@@ -632,7 +632,7 @@ def rmFromZSetByScore():
 
 @app.route("/addDatabase",methods=["POST"])
 def addDatabase():
-    myHandler = dbHandler(database)
+    myHandler = DbHandler(database)
     try:
         dbName = flask.request.json["dbName"]
     except:
@@ -642,19 +642,19 @@ def addDatabase():
 
 @app.route("/getAllDatabase",methods=["GET"])
 def getAllDatabase():
-    myHandler = dbHandler(database)
+    myHandler = DbHandler(database)
     result = myHandler.getAllDatabase()
     return flask.jsonify(result)
 
 @app.route("/delDatabase/<string:dbName>",methods=["DELETE"])
 def delDatabase(dbName):
-    myHandler = dbHandler(database)
+    myHandler = DbHandler(database)
     result = myHandler.delDatabase(dbName)
     return flask.jsonify(result)
 
 @app.route("/save",methods=["PUT"])
 def saveDb():
-    myHandler = dbHandler(database)
+    myHandler = DbHandler(database)
     result = myHandler.saveDb()
     return flask.jsonify(result)
 
@@ -674,11 +674,11 @@ if __name__ == '__main__':
     databaseList.append(database)
 
     # init the save timer
-    saveTimer = timer.timer(databaseList, serverConfig["SAVE_INTERVAL"])
+    saveTimer = Timer.timer(databaseList, serverConfig["SAVE_INTERVAL"])
     saveTimer.start()
 
     # init the ttl timer
-    TTLTimer = ttlTimer.ttlTimer(databaseList, serverConfig["TTL_CHECK_INTERVAL"])
+    TTLTimer = TTLTimer.ttlTimer(databaseList, serverConfig["TTL_CHECK_INTERVAL"])
     TTLTimer.setDaemon(True)
 
     # init ttl tool

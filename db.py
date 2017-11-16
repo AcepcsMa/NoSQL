@@ -6,7 +6,7 @@ import os
 import json
 import logging
 import random
-from zset import zset
+from ZSet import zset
 from TTLTool import *
 
 class NoSqlDb:

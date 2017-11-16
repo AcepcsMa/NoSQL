@@ -156,6 +156,11 @@ class responseCode:
         ELEM_TTL_SET_SUCCESS:"Element TTL Set Success",
         ELEM_TTL_CLEAR_SUCCESS:"Element TTL Clear Success",
         ELEM_NOT_SET_TTL:"Element Is Not Set TTL",
+        ELEM_ALREADY_EXIST:"Element Already Exists",
+        ELEM_EXPIRED:"Elem Is Expired",
+        ELEM_NOT_EXIST:"Element Does Not Exist",
+        ELEM_GET_SUCCESS:"Element Get Success",
+        ELEM_SEARCH_SUCCESS:"Search Element Success",
         LIST_CREATE_SUCCESS:"List Create Success",
         LIST_IS_LOCKED:"List Is Locked",
         LIST_INSERT_SUCCESS:"List Insert Success",
@@ -208,5 +213,13 @@ class responseCode:
         LIST_LENGTH_TOO_SHORT:"List Length Is Too Short",
         LIST_GET_SUCCESS:"List Value Get Success",
         SET_LENGTH_TOO_SHORT:"Set Length Is Too Short",
-        SET_GET_SUCCESS:"Set Value Get Success"
+        SET_GET_SUCCESS:"Set Value Get Success",
+        DB_EXISTED:"Database Already Exists",
+        DB_CREATE_SUCCESS:"Database Create Success",
+        DB_SAVE_LOCKED:"Database Is Locked",
+        DB_ERROR:"Database Error",
+        DB_GET_SUCCESS:"Database Get Success",
+        DB_DELETE_SUCCESS:"Database Delete Success",
+        DB_NOT_EXIST:"Database Does Not Exist",
+        DB_SAVE_SUCCESS:"Database Save Success"
     }

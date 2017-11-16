@@ -10,7 +10,7 @@ class hashHandler:
     # check if the type of elem is valid (string or int)
     def isValidType(self, *elems):
         for elem in elems:
-            if(isinstance(elem,str) is False and isinstance(elem,int) is False):
+            if isinstance(elem,str) is False and isinstance(elem,int) is False:
                 return False
         return True
 
@@ -34,78 +34,114 @@ class hashHandler:
     # create a hash
     @validTypeCheck
     def createHash(self, dbName, hashName):
-        if(self.database.isDbExist(dbName)):
+        if self.database.isDbExist(dbName):
             result = self.database.createHash(dbName, hashName)
-            msg = self.makeMessage(responseCode.detail[result], result, hashName)
+            msg = self.makeMessage(responseCode.detail[result],
+                                   result,
+                                   hashName)
         else:
-            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+            msg = self.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
+                                   responseCode.DB_NOT_EXIST,
+                                   dbName)
         return msg
 
     # get hash
     @validTypeCheck
     def getHash(self, dbName, hashName):
-        if(self.database.isExist("HASH", dbName, hashName)):
-            if(self.database.isExpired("HASH", dbName, hashName) is False):
+        if self.database.isExist("HASH", dbName, hashName):
+            if self.database.isExpired("HASH", dbName, hashName) is False:
                 hashValue = self.database.getHash(dbName, hashName)
-                msg = self.makeMessage("Hash Get Success", responseCode.HASH_GET_SUCCESS, hashValue)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_GET_SUCCESS],
+                                       responseCode.HASH_GET_SUCCESS,
+                                       hashValue)
             else:
-                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
+                                       responseCode.HASH_EXPIRED,
+                                       hashName)
         else:
-            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+            msg = self.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
+                                   responseCode.HASH_NOT_EXISTED,
+                                   hashName)
         return msg
 
     # get keyset of the given hash
     @validTypeCheck
     def getKeySet(self, dbName, hashName):
-        if(self.database.isExist("HASH", dbName, hashName)):
-            if(self.database.isExpired("HASH", dbName, hashName) is False):
+        if self.database.isExist("HASH", dbName, hashName):
+            if self.database.isExpired("HASH", dbName, hashName) is False:
                 keySet = self.database.getHashKeySet(dbName, hashName)
-                msg = self.makeMessage("Hash Key Set Get Success", responseCode.HASH_KEYSET_GET_SUCCESS, keySet)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_KEYSET_GET_SUCCESS],
+                                       responseCode.HASH_KEYSET_GET_SUCCESS,
+                                       keySet)
             else:
-                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
+                                       responseCode.HASH_EXPIRED,
+                                       hashName)
         else:
-            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+            msg = self.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
+                                   responseCode.HASH_NOT_EXISTED,
+                                   hashName)
         return msg
 
     @validTypeCheck
     def getValues(self, dbName, hashName):
-        if(self.database.isExist("HASH", dbName, hashName)):
-            if(self.database.isExpired("HASH", dbName, hashName) is False):
+        if self.database.isExist("HASH", dbName, hashName):
+            if self.database.isExpired("HASH", dbName, hashName) is False:
                 valueList = self.database.getHashValues(dbName, hashName)
-                msg = self.makeMessage("Hash Get Success", responseCode.HASH_VALUES_GET_SUCCESS, valueList)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_GET_SUCCESS],
+                                       responseCode.HASH_VALUES_GET_SUCCESS,
+                                       valueList)
             else:
-                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
+                                       responseCode.HASH_EXPIRED,
+                                       hashName)
         else:
-            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+            msg = self.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
+                                   responseCode.HASH_NOT_EXISTED,
+                                   hashName)
         return msg
 
     @validTypeCheck
     def getMultipleValues(self, dbName, hashName, keyNames):
-        if(self.database.isExist("HASH", dbName, hashName)):
-            if(self.database.isExpired("HASH", dbName, hashName) is False):
+        if self.database.isExist("HASH", dbName, hashName):
+            if self.database.isExpired("HASH", dbName, hashName) is False:
                 valueList = self.database.getMultipleHashValues(dbName, hashName, keyNames)
-                msg = self.makeMessage("Hash Get Success", responseCode.HASH_VALUES_GET_SUCCESS, valueList)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_VALUES_GET_SUCCESS],
+                                       responseCode.HASH_VALUES_GET_SUCCESS,
+                                       valueList)
             else:
-                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
+                                       responseCode.HASH_EXPIRED,
+                                       hashName)
         else:
-            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+            msg = self.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
+                                   responseCode.HASH_NOT_EXISTED,
+                                   hashName)
         return msg
 
     # insert a key-value data into the given hash
     @validTypeCheck
     def insertHash(self, dbName, hashName, keyName, value):
-        if(self.isValidType(keyName) is False):
-            msg = self.makeMessage("Element Type Error", responseCode.ELEM_TYPE_ERROR, hashName)
+        if self.isValidType(keyName) is False:
+            msg = self.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
+                                   responseCode.ELEM_TYPE_ERROR,
+                                   hashName)
             return msg
 
-        if(self.database.isExist("HASH", dbName, hashName)):
-            if(self.database.isExpired("HASH", dbName, hashName) is False):
+        if self.database.isExist("HASH", dbName, hashName):
+            if self.database.isExpired("HASH", dbName, hashName) is False:
                 result = self.database.insertHash(dbName, hashName, keyName, value)
-                msg = self.makeMessage(responseCode.detail[result], result, hashName)
+                msg = self.makeMessage(responseCode.detail[result],
+                                       result,
+                                       hashName)
             else:
-                msg = self.makeMessage("Hash Is Expired", responseCode.HASH_EXPIRED, hashName)
+                msg = self.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
+                                       responseCode.HASH_EXPIRED,
+                                       hashName)
         else:
-            msg = self.makeMessage("Hash Does Not Exist", responseCode.HASH_NOT_EXISTED, hashName)
+            msg = self.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
+                                   responseCode.HASH_NOT_EXISTED,
+                                   hashName)
         return msg
 
     # check if a key exists in the given hash

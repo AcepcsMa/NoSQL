@@ -6,7 +6,7 @@ import os
 import json
 import logging
 import random
-from zset import zset
+from ZSet import zset
 from TTLTool import *
 
 class NoSqlDb:
@@ -230,7 +230,7 @@ class NoSqlDb:
         ttlDict = self.getTTLDict(dataType)[dbName]
 
         if keyName in ttlDict.keys():
-            if ttlDict[keyName]["status"] == False:
+            if ttlDict[keyName]["status"] is False:
                 return responseCode.TTL_EXPIRED, None
             else:
                 curTime = int(time.time())
@@ -696,57 +696,64 @@ class NoSqlDb:
         return list(self.setDict[dbName][setName])
 
     def getSetRandom(self, dbName, setName, numRand):
-        if(len(self.setDict[dbName][setName]) < numRand):
+        if len(self.setDict[dbName][setName]) < numRand:
             return responseCode.SET_LENGTH_TOO_SHORT, None
         result = random.sample(self.setDict[dbName][setName], numRand)
         return responseCode.SET_GET_SUCCESS, result
 
     @saveTrigger
     def insertSet(self, dbName, setName, setValue):
-        if(self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+        if self.setLockDict[dbName][setName] is True:
+            self.logger.warning("Set Is Locked "
+                                "{0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
-            if(setValue not in self.setDict[dbName][setName]):
+            if setValue not in self.setDict[dbName][setName]:
                 self.lock("SET", dbName, setName)
                 self.setDict[dbName][setName].add(setValue)
                 self.unlock("SET", dbName, setName)
-                self.logger.info("Set Insert Success {0}->{1}->{2}".format(dbName, setName, setValue))
+                self.logger.info("Set Insert Success "
+                                 "0}->{1}->{2}".format(dbName, setName, setValue))
                 return responseCode.SET_INSERT_SUCCESS
             else:
                 return responseCode.SET_VALUE_ALREADY_EXIST
 
     @saveTrigger
     def rmFromSet(self, dbName, setName, setValue):
-        if(self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+        if self.setLockDict[dbName][setName] is True:
+            self.logger.warning("Set Is Locked "
+                                "{0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
-            if(setValue in self.setDict[dbName][setName]):
+            if setValue in self.setDict[dbName][setName]:
                 self.lock("SET", dbName, setName)
                 self.setDict[dbName][setName].discard(setValue)
                 self.unlock("SET", dbName, setName)
-                self.logger.info("Set Remove Success {0}->{1}->{2}".format(dbName, setName, setValue))
+                self.logger.info("Set Remove Success "
+                                 "{0}->{1}->{2}".format(dbName, setName, setValue))
                 return responseCode.SET_REMOVE_SUCCESS
             else:
                 return responseCode.SET_VALUE_NOT_EXIST
 
     @saveTrigger
     def clearSet(self, dbName, setName):
-        if(self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+        if self.setLockDict[dbName][setName] is True:
+            self.logger.warning("Set Is Locked "
+                                "{0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName)
             self.setDict[dbName][setName].clear()
             self.unlock("SET", dbName, setName)
-            self.logger.info("Set Clear Success {0}->{1}".format(dbName, setName))
+            self.logger.info("Set Clear Success "
+                             "{0}->{1}".format(dbName, setName))
             return responseCode.SET_CLEAR_SUCCESS
 
     @saveTrigger
     def deleteSet(self, dbName, setName):
-        if (self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {0}->{1}".format(dbName, setName))
+        if self.setLockDict[dbName][setName] is True:
+            self.logger.warning("Set Is Locked "
+                                "{0}->{1}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName)
@@ -755,73 +762,89 @@ class NoSqlDb:
             self.invertedTypeDict[dbName].pop(setName)
             self.unlock("SET", dbName, setName)
             self.setLockDict[dbName].pop(setName)
-            self.logger.info("Set Delete Success {0}->{1}".format(dbName, setName))
+            self.logger.info("Set Delete Success "
+                             "{0}->{1}".format(dbName, setName))
             return responseCode.SET_DELETE_SUCCESS
 
     def searchAllSet(self, dbName):
-        if(self.isDbExist(dbName) is False):
+        if self.isDbExist(dbName) is False:
             return []
-        self.logger.info("Search All Set Success {0}".format(dbName))
+        self.logger.info("Search All Set Success "
+                         "{0}".format(dbName))
         return list(self.setName[dbName])
 
     @saveTrigger
     def unionSet(self, dbName, setName1, setName2, unionResult):
-        if(self.setLockDict[dbName][setName1] is True
-           or self.setLockDict[dbName][setName2] is True):
-            self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
+        if (self.setLockDict[dbName][setName1] is True
+                or self.setLockDict[dbName][setName2] is True):
+            self.logger.warning("Set Is Locked "
+                                "{0}->{1} or {2}->{3}".
+                                format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
             self.lock("SET", dbName, setName2)
-            unionResult.append(list(self.setDict[dbName][setName1].union(self.setDict[dbName][setName2])))
+            unionResult.append(list(self.setDict[dbName][setName1].
+                                    union(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
-            self.logger.info("Set Union Success {}->{} unions {}->{} to {}->{}"
-                             .format(dbName, setName1, dbName, setName2, dbName, unionResult))
+            self.logger.info("Set Union Success "
+                             "{}->{} unions {}->{} to {}->{}".
+                             format(dbName, setName1, dbName, setName2, dbName, unionResult))
             return responseCode.SET_UNION_SUCCESS
 
     @saveTrigger
     def intersectSet(self, dbName, setName1, setName2, intersectResult):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
-            self.logger.warning("Set Is Locked {0}->{1} or {2}->{3}".format(dbName, setName1, dbName, setName2))
+            self.logger.warning("Set Is Locked "
+                                "{0}->{1} or {2}->{3}".
+                                format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
             self.lock("SET", dbName, setName2)
-            intersectResult.append(list(self.setDict[dbName][setName1].intersection(self.setDict[dbName][setName2])))
+            intersectResult.append(list(self.setDict[dbName][setName1].
+                                        intersection(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
-            self.logger.info("Set Intersect Success {}->{} intersects {}->{} to {}->{}"
-                             .format(dbName, setName1, dbName, setName2, dbName, intersectResult))
+            self.logger.info("Set Intersect Success "
+                             "{}->{} intersects {}->{} to {}->{}".
+                             format(dbName, setName1, dbName, setName2, dbName, intersectResult))
             return responseCode.SET_INTERSECT_SUCCESS
 
     @saveTrigger
     def diffSet(self, dbName, setName1, setName2, diffResult):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
-            self.logger.warning("Set Is Locked {}->{} or {}->{}".format(dbName, setName1, dbName, setName2))
+            self.logger.warning("Set Is Locked "
+                                "{}->{} or {}->{}".
+                                format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
             self.lock("SET", dbName, setName2)
-            diffResult.append(list(self.setDict[dbName][setName1].difference(self.setDict[dbName][setName2])))
+            diffResult.append(list(self.setDict[dbName][setName1].
+                                   difference(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
-            self.logger.info("Set Diff Success {}->{} unions {}->{} to {}->{}"
-                             .format(dbName, setName1, dbName, setName2, dbName, diffResult))
+            self.logger.info("Set Diff Success "
+                             "{}->{} unions {}->{} to {}->{}".
+                             format(dbName, setName1, dbName, setName2, dbName, diffResult))
             return responseCode.SET_DIFF_SUCCESS
 
     @saveTrigger
     def replaceSet(self, dbName, setName, setValue):
-        if (self.setLockDict[dbName][setName] is True):
-            self.logger.warning("Set Is Locked {}->{}".format(dbName, setName))
+        if self.setLockDict[dbName][setName] is True:
+            self.logger.warning("Set Is Locked "
+                                "{}->{}".format(dbName, setName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName)
             self.setDict[dbName][setName] = setValue
             self.unlock("SET", dbName, setName)
-            self.logger.info("Set Replace Success {}->{}".format(dbName, setName))
+            self.logger.info("Set Replace Success "
+                             "{}->{}".format(dbName, setName))
             return responseCode.SET_REPLACE_SUCCESS
 
     @keyNameValidity
@@ -832,7 +855,8 @@ class NoSqlDb:
         self.zsetDict[dbName][zsetName] = zset()
         self.invertedTypeDict[dbName][zsetName] = responseCode.ZSET_TYPE
         self.unlock("ZSET", dbName, zsetName)
-        self.logger.info("ZSet Create Success {0}->{1}".format(dbName, zsetName))
+        self.logger.info("ZSet Create Success "
+                         "{0}->{1}".format(dbName, zsetName))
         return responseCode.ZSET_CREATE_SUCCESS
 
     def getZSet(self, dbName, zsetName):
@@ -840,52 +864,65 @@ class NoSqlDb:
 
     @saveTrigger
     def insertZSet(self, dbName, zsetName, value, score):
-        if(self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {0}->{1}".format(dbName, zsetName))
+        if self.zsetLockDict[dbName][zsetName] is True:
+            self.logger.warning("ZSet Is Locked "
+                                "{0}->{1}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
             try:
                 self.lock("ZSET", dbName, zsetName)
-                if(self.zsetDict[dbName][zsetName].add(value, score) is True):
-                    self.logger.info("ZSet Insert Success {0}->{1}->{2}:{3}".format(dbName, zsetName, value, score))
+                if self.zsetDict[dbName][zsetName].add(value, score) is True:
+                    self.logger.info("ZSet Insert Success "
+                                     "{0}->{1}->{2}:{3}".
+                                     format(dbName, zsetName, value, score))
                     return responseCode.ZSET_INSERT_SUCCESS
                 else:
-                    self.logger.warning("ZSet Insert Fail(Value Existed) {}->{}:{}".format(dbName, zsetName, value))
+                    self.logger.warning("ZSet Insert Fail(Value Existed) "
+                                        "{}->{}:{}".
+                                        format(dbName, zsetName, value))
                     return responseCode.ZSET_VALUE_ALREADY_EXIST
             finally:
                 self.unlock("ZSET", dbName, zsetName)
 
     @saveTrigger
     def rmFromZSet(self, dbName, zsetName, value):
-        if (self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {}->{}".format(dbName, zsetName))
+        if self.zsetLockDict[dbName][zsetName] is True:
+            self.logger.warning("ZSet Is Locked "
+                                "{}->{}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
             self.lock("ZSET", dbName, zsetName)
             result = self.zsetDict[dbName][zsetName].remove(value)
             self.unlock("ZSET", dbName, zsetName)
             if(result is True):
-                self.logger.info("ZSet Remove Success {}->{}:{}".format(dbName, zsetName, value))
+                self.logger.info("ZSet Remove Success "
+                                 "{}->{}:{}".
+                                 format(dbName, zsetName, value))
             else:
-                self.logger.info("ZSet Remove Fail(Value Not Existed) {}->{}:{}".format(dbName, zsetName, value))
+                self.logger.info("ZSet Remove Fail(Value Not Existed) "
+                                 "{}->{}:{}".
+                                 format(dbName, zsetName, value))
             return responseCode.ZSET_REMOVE_SUCCESS if result is True else responseCode.ZSET_NOT_CONTAIN_VALUE
 
     @saveTrigger
     def clearZSet(self, dbName, zsetName):
-        if (self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {}->{}".format(dbName, zsetName))
+        if self.zsetLockDict[dbName][zsetName] is True:
+            self.logger.warning("ZSet Is Locked "
+                                "{}->{}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
             self.lock("ZSET", dbName, zsetName)
             self.zsetDict[dbName][zsetName].clear()
             self.unlock("ZSET", dbName, zsetName)
-            self.logger.info("ZSet Clear Success {}->{}".format(dbName, zsetName))
+            self.logger.info("ZSet Clear Success "
+                             "{}->{}".format(dbName, zsetName))
             return responseCode.ZSET_CLEAR_SUCCESS
 
     @saveTrigger
     def deleteZSet(self, dbName, zsetName):
-        if (self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {}->{}".format(dbName, zsetName))
+        if self.zsetLockDict[dbName][zsetName] is True:
+            self.logger.warning("ZSet Is Locked "
+                                "{}->{}".format(dbName, zsetName))
             return responseCode.ZSET_IS_LOCKED
         else:
             self.lock("ZSET", dbName, zsetName)
@@ -894,13 +931,15 @@ class NoSqlDb:
             self.invertedTypeDict[dbName].pop(zsetName)
             self.unlock("ZSET", dbName, zsetName)
             self.zsetLockDict[dbName].pop(zsetName)
-            self.logger.info("ZSet Delete Success {}->{}".format(dbName, zsetName))
+            self.logger.info("ZSet Delete Success "
+                             "{}->{}".format(dbName, zsetName))
             return responseCode.ZSET_DELETE_SUCCESS
 
     def searchAllZSet(self, dbName):
-        if(self.isDbExist(dbName) is False):
+        if self.isDbExist(dbName) is False:
             return []
-        self.logger.info("Search All ZSet Success {}".format(dbName))
+        self.logger.info("Search All ZSet Success "
+                         "{}".format(dbName))
         return list(self.zsetName[dbName])
 
     def findMinFromZSet(self, dbName, zsetName):
@@ -915,12 +954,13 @@ class NoSqlDb:
 
     def getValuesByRange(self, dbName, zsetName, start, end):
         traverseResult = self.zsetDict[dbName][zsetName].get()
-        traverseResult = [result for result in traverseResult if result[1] >= start and result[1] < end]
+        traverseResult = [result for result in traverseResult
+                          if result[1] >= start and result[1] < end]
         return traverseResult
 
     def getSize(self, dbName, keyName, type):
-        if(type == "ZSET"):
-            return (responseCode.GET_SIZE_SUCCESS,self.zsetDict[dbName][keyName].size())
+        if type == "ZSET":
+            return (responseCode.GET_SIZE_SUCCESS, self.zsetDict[dbName][keyName].size())
         data = self.getValueDict(type)[dbName][keyName]
         return (responseCode.GET_SIZE_SUCCESS, len(data))
 
@@ -929,23 +969,27 @@ class NoSqlDb:
 
     @saveTrigger
     def rmByScore(self, dbName, zsetName, start, end):
-        if(self.zsetLockDict[dbName][zsetName] is True):
-            self.logger.warning("ZSet Is Locked {}->{}".format(dbName, zsetName))
+        if self.zsetLockDict[dbName][zsetName] is True:
+            self.logger.warning("ZSet Is Locked "
+                                "{}->{}".format(dbName, zsetName))
             return (responseCode.ZSET_IS_LOCKED, 0)
         else:
             self.lock("ZSET", dbName, zsetName)
             result = self.zsetDict[dbName][zsetName].removeByScore(start, end)
             self.unlock("ZSET", dbName, zsetName)
-            self.logger.info("ZSet Remove By Score Success {}->{} [{},{})".format(dbName, zsetName, start, end))
+            self.logger.info("ZSet Remove By Score Success "
+                             "{}->{} [{},{})".
+                             format(dbName, zsetName, start, end))
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
 
     @saveTrigger
     def addDb(self, dbName):
-        if(self.saveLock is True):
-            self.logger.warning("Database Save Locked {0}".format(dbName))
+        if self.saveLock is True:
+            self.logger.warning("Database Save Locked "
+                                "{0}".format(dbName))
             return responseCode.DB_SAVE_LOCKED
         else:
-            if(dbName not in self.dbNameSet):
+            if dbName not in self.dbNameSet:
                 self.dbNameSet.add(dbName)
                 self.elemName[dbName] = set()
                 self.elemDict[dbName] = dict()
@@ -953,10 +997,12 @@ class NoSqlDb:
                 self.listName[dbName] = set()
                 self.listDict[dbName] = dict()
                 self.elemLockDict[dbName] = dict()
-                self.logger.info("Database Add Success {0}".format(dbName))
+                self.logger.info("Database Add Success "
+                                 "{}".format(dbName))
                 return responseCode.DB_CREATE_SUCCESS
             else:
-                self.logger.warning("Database Already Exists {0}".format(dbName))
+                self.logger.warning("Database Already Exists "
+                                    "{}".format(dbName))
                 return responseCode.DB_EXISTED
 
     def getAllDatabase(self):
@@ -965,8 +1011,8 @@ class NoSqlDb:
 
     @saveTrigger
     def delDatabase(self, dbName):
-        if(self.isDbExist(dbName) is True):
-            if(self.saveLock is False):
+        if self.isDbExist(dbName) is True:
+            if self.saveLock is False:
                 self.saveLock = True
                 self.dbNameSet.remove(dbName)
                 for root, dirs, files in os.walk("data"+os.sep+dbName, topdown=False):
@@ -976,13 +1022,16 @@ class NoSqlDb:
                         os.rmdir(os.path.join(root, name))
                 os.rmdir("data"+os.sep+dbName)
                 self.saveLock = False
-                self.logger.info("Database Delete Success {}".format(dbName))
+                self.logger.info("Database Delete Success "
+                                 "{}".format(dbName))
                 return responseCode.DB_DELETE_SUCCESS
             else:
-                self.logger.warning("Database Delete Fail(Save Locked) {}".format(dbName))
+                self.logger.warning("Database Delete Fail(Save Locked) "
+                                    "{}".format(dbName))
                 return responseCode.DB_SAVE_LOCKED
         else:
-            self.logger.warning("Database Delete Fail(Not Existed) {}".format(dbName))
+            self.logger.warning("Database Delete Fail(Not Existed) "
+                                "{}".format(dbName))
             return responseCode.DB_NOT_EXIST
 
     def saveZSet(self, dbName, dataFileName, valueFileName, TTLFileName):
@@ -1005,7 +1054,7 @@ class NoSqlDb:
         with open("data" + os.sep + dbName + os.sep + dataFileName, "w") as nameFile:
             nameFile.write(json.dumps(list(names[dbName])))
         with open("data" + os.sep + dbName + os.sep + valueFileName, "w") as valueFile:
-            if(dataType == "SET"):
+            if dataType == "SET":
                 setValue = values[dbName].copy()
                 for key in setValue.keys():
                     setValue[key] = list(setValue[key])
@@ -1016,13 +1065,13 @@ class NoSqlDb:
             TTLFile.write(json.dumps(ttl[dbName]))
 
     def saveDb(self):
-        if(self.saveLock is False):
+        if self.saveLock is False:
             # check if the data directory exists
-            if(os.path.exists("./data/") is False):
+            if os.path.exists("./data/") is False:
                 os.makedirs("data")
 
             for dbName in self.dbNameSet:
-                if(os.path.exists("data{}{}".format(os.sep,dbName)) is False):
+                if os.path.exists("data{}{}".format(os.sep,dbName)) is False:
                     os.makedirs("data{}{}".format(os.sep,dbName))
 
             self.saveLock = True
@@ -1080,7 +1129,7 @@ class NoSqlDb:
 
         # load values
         with open("data" + os.sep + dbName + os.sep + valueFileName, "r") as valueFile:
-            if(dataType == "SET"):
+            if dataType == "SET":
                 setValue = json.loads(valueFile.read())
                 for key in setValue.keys():
                     setValue[key] = set(setValue[key])
@@ -1093,7 +1142,7 @@ class NoSqlDb:
 
     def loadDb(self):
         try:
-            if(os.path.exists("data") is False):
+            if os.path.exists("data") is False:
                 os.mkdir("data")
                 for dbName in self.dbNameSet:
                     os.mkdir("data/{}".format(dbName))

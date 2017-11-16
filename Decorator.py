@@ -1,7 +1,7 @@
 __author__ = "Ma Haoxiang"
 
 # import
-from response import responseCode
+from Response import responseCode
 
 # a decorator for save trigger
 def saveTrigger(func):
@@ -10,7 +10,7 @@ def saveTrigger(func):
         self = args[0]
         self.opCount += 1
         # when opCounts reach the trigger, save automatically
-        if(self.opCount == self.saveTrigger):
+        if self.opCount == self.saveTrigger:
             self.opCount = 0
             self.saveDb()
             self.logger.info("Auto Save Triggers")
@@ -24,8 +24,9 @@ def keyNameValidity(func):
         uppercase = [chr(i) for i in range(65,91)]
         underline = ["_"]
         keyName = args[2]
-        if(keyName[0] not in lowercase and keyName[0] not in uppercase
-             and keyName[0] not in underline):
+        if(keyName[0] not in lowercase
+           and keyName[0] not in uppercase
+           and keyName[0] not in underline):
             return responseCode.KEY_NAME_INVALID
         else:
             result = func(*args, **kwargs)

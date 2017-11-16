@@ -3,7 +3,7 @@ __author__ = 'Ma Haoxiang'
 # import
 import time
 import threading
-from response import responseCode
+from Response import responseCode
 
 
 class timer(threading.Thread):

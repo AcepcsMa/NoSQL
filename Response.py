@@ -149,6 +149,8 @@ class responseCode:
         HASH_NOT_EXISTED:"Hash Does Not Exist",
         HASH_KEYSET_GET_SUCCESS:"Hash Key Set Get Success",
         HASH_VALUES_GET_SUCCESS:"Hash Values Get Success",
+        MERGE_RESULT_EXIST:"Merge Result Exists",
+        HASH_SEARCH_SUCCESS:"Search Hash Success",
         TTL_NO_RECORD:"TTL No Record",
         TTL_EXPIRED:"TTL Expired",
         TTL_SHOW_SUCCESS:"TTL Show Success",

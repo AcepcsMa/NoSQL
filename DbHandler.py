@@ -4,7 +4,7 @@ __author__ = 'Ma Haoxiang'
 import time
 from Response import responseCode
 
-class DbHandler:
+class DbHandler(object):
     def __init__(self, database):
         self.database = database
 

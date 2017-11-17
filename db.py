@@ -9,7 +9,7 @@ import random
 from ZSet import zset
 from TTLTool import *
 
-class NoSqlDb:
+class NoSqlDb(object):
 
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initialize databases

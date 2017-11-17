@@ -3,7 +3,7 @@ __author__ = 'Ma Haoxiang'
 # import
 from Decorator import *
 
-class elemHandler:
+class elemHandler(object):
     def __init__(self, database):
         self.database = database
 
@@ -173,34 +173,6 @@ class elemHandler:
                                    elemName)
         else:
             result = self.database.deleteElem(elemName, dbName)
-            msg = self.makeMessage(responseCode.detail[result],
-                                   result,
-                                   elemName)
-        return msg
-
-    # set TTL for an element
-    @validTypeCheck
-    def setTTL(self, dbName, elemName, ttl):
-        if self.database.isExist("ELEM", dbName, elemName) is False:
-            msg = self.makeMessage(responseCode.detail[responseCode.ELEM_NOT_EXIST],
-                                   responseCode.ELEM_NOT_EXIST,
-                                   elemName)
-        else:
-            result = self.database.setElemTTL(dbName, elemName, ttl)
-            msg = self.makeMessage(responseCode.detail[result],
-                                   result,
-                                   elemName)
-        return msg
-
-    # clear TTL for an element
-    @validTypeCheck
-    def clearTTL(self, dbName, elemName):
-        if self.database.isExist("ELEM", dbName, elemName) is False:
-            msg = self.makeMessage(responseCode.detail[responseCode.ELEM_NOT_EXIST],
-                                   responseCode.ELEM_NOT_EXIST,
-                                   elemName)
-        else:
-            result = self.database.clearElemTTL(dbName, elemName)
             msg = self.makeMessage(responseCode.detail[result],
                                    result,
                                    elemName)

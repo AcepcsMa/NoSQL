@@ -3,20 +3,20 @@ __author__ = 'Ma Haoxiang'
 # import
 from Decorator import *
 
-class listHandler:
+class listHandler(object):
     def __init__(self, database):
         self.database = database
 
     # check if the type of elem is valid (string or int)
     def isValidType(self, *elems):
         for elem in elems:
-            if(isinstance(elem,str) is False and isinstance(elem,int) is False):
+            if isinstance(elem, str) is False and isinstance(elem, int) is False:
                 return False
         return True
 
     # check if the type of an elem is INT
     def isInt(self, elem):
-        return isinstance(elem,int)
+        return isinstance(elem, int)
 
     # make the response message
     def makeMessage(self, msg, typeCode, data):
@@ -30,82 +30,124 @@ class listHandler:
     # create a list in the database
     @validTypeCheck
     def createList(self, dbName, listName):
-        if(self.database.isDbExist(dbName)):
-            if(self.database.isExist("LIST", dbName, listName) is False):
+        if self.database.isDbExist(dbName):
+            if self.database.isExist("LIST", dbName, listName) is False:
                 result = self.database.createList(dbName, listName)
-                msg = self.makeMessage(responseCode.detail[result],result,listName)
+                msg = self.makeMessage(responseCode.detail[result],
+                                       result,
+                                       listName)
             else:
-                msg = self.makeMessage("List Already Exists", responseCode.LIST_ALREADY_EXIST, listName)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_ALREADY_EXIST],
+                                       responseCode.LIST_ALREADY_EXIST,
+                                       listName)
         else:
-            msg = self.makeMessage("Database Does Not Exist", responseCode.DB_NOT_EXIST, dbName)
+            msg = self.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
+                                   responseCode.DB_NOT_EXIST,
+                                   dbName)
         return msg
 
     # get the value of a given list
     @validTypeCheck
     def getList(self, dbName, listName):
-        if(self.database.isExist("LIST", dbName, listName) is True):
-            if(self.database.isExpired("LIST", dbName, listName) is False):
+        if self.database.isExist("LIST", dbName, listName) is True:
+            if self.database.isExpired("LIST", dbName, listName) is False:
                 listValue = self.database.getList(listName, dbName)
-                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
+                                       responseCode.LIST_GET_SUCCESS,
+                                       listValue)
             else:
-                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
+                                       responseCode.LIST_EXPIRED,
+                                       listName)
         else:
-            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+            msg = self.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
+                                   responseCode.LIST_NOT_EXIST,
+                                   listName)
         return msg
 
     # get values of a given list from start index to end index
     @validTypeCheck
     def getListByRange(self, dbName, listName, start, end):
-        if(start > end):
-            msg = self.makeMessage("Start Should Be Smaller Than End", responseCode.LIST_RANGE_ERROR, listName)
+        if start > end:
+            msg = self.makeMessage(responseCode.detail[responseCode.LIST_RANGE_ERROR],
+                                   responseCode.LIST_RANGE_ERROR,
+                                   listName)
             return msg
-        if(self.database.isExist("LIST", dbName, listName) is True):
-            if(self.database.isExpired("LIST", dbName, listName) is False):
+
+        if self.database.isExist("LIST", dbName, listName) is True:
+            if self.database.isExpired("LIST", dbName, listName) is False:
                 listValue = self.database.getList(listName, dbName, start, end)
-                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
+                                       responseCode.LIST_GET_SUCCESS,
+                                       listValue)
             else:
-                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
+                                       responseCode.LIST_EXPIRED,
+                                       listName)
         else:
-            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+            msg = self.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
+                                   responseCode.LIST_NOT_EXIST,
+                                   listName)
         return msg
 
+    # left get from list
     @validTypeCheck
     def getListL(self, dbName, listName, count):
-        if(self.database.isExist("LIST", dbName, listName) is True):
-            if(self.database.isExpired("LIST", dbName, listName) is False):
+        if self.database.isExist("LIST", dbName, listName) is True:
+            if self.database.isExpired("LIST", dbName, listName) is False:
                 listValue = self.database.getList(listName, dbName, 0, count)
-                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
+                                       responseCode.LIST_GET_SUCCESS,
+                                       listValue)
             else:
-                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
+                                       responseCode.LIST_EXPIRED,
+                                       listName)
         else:
-            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+            msg = self.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
+                                   responseCode.LIST_NOT_EXIST,
+                                   listName)
         return msg
 
     @validTypeCheck
     def getListR(self, dbName, listName, count):
-        if (self.database.isExist("LIST", dbName, listName) is True):
-            if (self.database.isExpired("LIST", dbName, listName) is False):
+        if self.database.isExist("LIST", dbName, listName) is True:
+            if self.database.isExpired("LIST", dbName, listName) is False:
                 listValue = self.database.getList(listName, dbName, -count)
-                msg = self.makeMessage("Get List Success", responseCode.LIST_GET_SUCCESS, listValue)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
+                                       responseCode.LIST_GET_SUCCESS,
+                                       listValue)
             else:
-                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
+                                       responseCode.LIST_EXPIRED,
+                                       listName)
         else:
-            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+            msg = self.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
+                                   responseCode.LIST_NOT_EXIST,
+                                   listName)
         return msg
 
     @validTypeCheck
     def getListRandom(self, dbName, listName, numRand):
-        if(numRand <= 0):
-            msg = self.makeMessage("Invalid Random Number", responseCode.INVALID_NUMBER, numRand)
+        if numRand <= 0:
+            msg = self.makeMessage(responseCode.detail[responseCode.INVALID_NUMBER],
+                                   responseCode.INVALID_NUMBER,
+                                   numRand)
             return msg
-        if(self.database.isExist("LIST", dbName, listName) is True):
-            if(self.database.isExpired("LIST", dbName, listName) is False):
+        if self.database.isExist("LIST", dbName, listName) is True:
+            if self.database.isExpired("LIST", dbName, listName) is False:
                 code, listValue = self.database.getListRandom(dbName, listName, numRand)
-                msg = self.makeMessage(responseCode.detail[code], code, listValue)
+                msg = self.makeMessage(responseCode.detail[code],
+                                       code,
+                                       listValue)
             else:
-                msg = self.makeMessage("List Is Expired", responseCode.LIST_EXPIRED, listName)
+                msg = self.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
+                                       responseCode.LIST_EXPIRED,
+                                       listName)
         else:
-            msg = self.makeMessage("List Does Not Exist", responseCode.LIST_NOT_EXIST, listName)
+            msg = self.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
+                                   responseCode.LIST_NOT_EXIST,
+                                   listName)
         return msg
 
     # insert a value into the given list

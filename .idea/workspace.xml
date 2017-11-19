@@ -17,11 +17,21 @@
           <file leaf-file-name="Server.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="253">
-                  <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+                <state relative-caret-position="309">
+                  <caret line="664" column="0" lean-forward="true" selection-start-line="664" selection-start-column="0" selection-end-line="664" selection-end-column="0" />
                   <folding>
                     <element signature="e#37#49#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="SetHandler.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/SetHandler.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="683">
+                  <caret line="324" column="35" lean-forward="false" selection-start-line="324" selection-start-column="35" selection-end-line="324" selection-end-column="35" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -38,11 +48,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ListHandler.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="ListHandler.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/ListHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2533">
-                  <caret line="149" column="35" lean-forward="false" selection-start-line="149" selection-start-column="35" selection-end-line="149" selection-end-column="35" />
+                <state relative-caret-position="666">
+                  <caret line="320" column="35" lean-forward="false" selection-start-line="320" selection-start-column="35" selection-end-line="320" selection-end-column="35" />
                   <folding />
                 </state>
               </provider>
@@ -65,8 +75,8 @@
           <file leaf-file-name="Response.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Response.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="408">
-                  <caret line="184" column="47" lean-forward="false" selection-start-line="184" selection-start-column="47" selection-end-line="184" selection-end-column="47" />
+                <state relative-caret-position="417">
+                  <caret line="202" column="48" lean-forward="false" selection-start-line="202" selection-start-column="48" selection-end-line="202" selection-end-column="48" />
                   <folding />
                 </state>
               </provider>
@@ -85,16 +95,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>isHashExist(dbName, hashName)</find>
-      <find>isHashExist</find>
-      <find>isListExist</find>
-      <find>isSetExist</find>
-      <find>isZSetExist(dbName, zsetName)</find>
-      <find>lockZSet(dbName, zsetName)</find>
-      <find>lockSet(dbName, setName1)</find>
-      <find>(type</find>
-      <find>getList</find>
-      <find>increase</find>
       <find>isKeyExist</find>
       <find>loadData</find>
       <find>LIST_GET_SUCCESS</find>
@@ -115,6 +115,16 @@
       <find>DB_NOT</find>
       <find>HASH_GET_SU</find>
       <find>ELEM_TYPE_</find>
+      <find>&quot;List Does Not Exist&quot;</find>
+      <find>MERGE_RESULT_E</find>
+      <find>LIST_SEARCH</find>
+      <find>&quot;Element Type Error&quot;</find>
+      <find>&quot;Database Does Not Exist&quot;</find>
+      <find>&quot;Set Already Exists&quot;</find>
+      <find>&quot;Set Get Success&quot;</find>
+      <find>&quot;Set Is Expired&quot;</find>
+      <find>INVALID_N</find>
+      <find>SET_SEARCH</find>
     </findStrings>
     <replaceStrings>
       <replace>self.msg[</replace>
@@ -135,7 +145,12 @@
       <replace>lock(&quot;SET&quot;, dbName, setName1)</replace>
       <replace>keyName</replace>
       <replace>if</replace>
-      <replace>if</replace>
+      <replace>responseCode.detail[responseCode.LIST_NOT_EXIST]</replace>
+      <replace>responseCode.detail[responseCode.ELEM_TYPE_ERROR]</replace>
+      <replace>responseCode.detail[responseCode.DB_NOT_EXIST]</replace>
+      <replace>responseCode.detail[responseCode.SET_ALREADY_EXIST]</replace>
+      <replace>responseCode.detail[responseCode.SET_GET_SUCCESS]</replace>
+      <replace>responseCode.detail[responseCode.SET_EXPIRED]</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -185,8 +200,9 @@
         <option value="$PROJECT_DIR$/ElemHandler.py" />
         <option value="$PROJECT_DIR$/DbHandler.py" />
         <option value="$PROJECT_DIR$/db.py" />
-        <option value="$PROJECT_DIR$/Response.py" />
         <option value="$PROJECT_DIR$/ListHandler.py" />
+        <option value="$PROJECT_DIR$/Response.py" />
+        <option value="$PROJECT_DIR$/SetHandler.py" />
       </list>
     </option>
   </component>
@@ -772,14 +788,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SetHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="71" column="0" lean-forward="false" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testcases/listTest.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="310">
@@ -814,14 +822,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Decorator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="530">
@@ -835,16 +835,6 @@
         <state relative-caret-position="255">
           <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding>
-            <element signature="e#37#49#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -892,18 +882,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Response.py">
+    <entry file="file://$PROJECT_DIR$/server.conf">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="184" column="47" lean-forward="false" selection-start-line="184" selection-start-column="47" selection-end-line="184" selection-end-column="47" />
+        <state relative-caret-position="51">
+          <caret line="3" column="19" lean-forward="false" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ListHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2533">
-          <caret line="149" column="35" lean-forward="false" selection-start-line="149" selection-start-column="35" selection-end-line="149" selection-end-column="35" />
+        <state relative-caret-position="666">
+          <caret line="320" column="35" lean-forward="false" selection-start-line="320" selection-start-column="35" selection-end-line="320" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="664" column="0" lean-forward="true" selection-start-line="664" selection-start-column="0" selection-end-line="664" selection-end-column="0" />
+          <folding>
+            <element signature="e#37#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Response.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="417">
+          <caret line="202" column="48" lean-forward="false" selection-start-line="202" selection-start-column="48" selection-end-line="202" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SetHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="683">
+          <caret line="324" column="35" lean-forward="false" selection-start-line="324" selection-start-column="35" selection-end-line="324" selection-end-column="35" />
           <folding />
         </state>
       </provider>

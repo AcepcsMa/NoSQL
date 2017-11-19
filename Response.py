@@ -182,6 +182,7 @@ class responseCode:
         LIST_EXPIRED:"List Is Expired",
         LIST_NOT_EXIST:"List Does Not Exist",
         LIST_RANGE_ERROR:"Start Should Be Smaller Than End",
+        LIST_SEARCH_SUCCESS:"Search List Success",
         INVALID_NUMBER:"Invalid Random Number",
         SET_CREATE_SUCCESS:"Set Create Success",
         SET_IS_LOCKED:"Set Is Locked",

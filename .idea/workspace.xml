@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="" />
+    <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ListHandler.py" afterPath="$PROJECT_DIR$/ListHandler.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Response.py" afterPath="$PROJECT_DIR$/Response.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,7 +21,7 @@
             <entry file="file://$PROJECT_DIR$/Server.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="253">
-                  <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+                  <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
                   <folding>
                     <element signature="e#37#49#0" expanded="true" />
                   </folding>
@@ -41,8 +44,8 @@
           <file leaf-file-name="ListHandler.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/ListHandler.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2533">
-                  <caret line="149" column="35" lean-forward="false" selection-start-line="149" selection-start-column="35" selection-end-line="149" selection-end-column="35" />
+                <state relative-caret-position="666">
+                  <caret line="320" column="35" lean-forward="false" selection-start-line="320" selection-start-column="35" selection-end-line="320" selection-end-column="35" />
                   <folding />
                 </state>
               </provider>
@@ -65,8 +68,8 @@
           <file leaf-file-name="Response.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Response.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="408">
-                  <caret line="184" column="47" lean-forward="false" selection-start-line="184" selection-start-column="47" selection-end-line="184" selection-end-column="47" />
+                <state relative-caret-position="405">
+                  <caret line="184" column="50" lean-forward="false" selection-start-line="184" selection-start-column="50" selection-end-line="184" selection-end-column="50" />
                   <folding />
                 </state>
               </provider>
@@ -85,10 +88,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>isHashExist(dbName, hashName)</find>
-      <find>isHashExist</find>
-      <find>isListExist</find>
-      <find>isSetExist</find>
       <find>isZSetExist(dbName, zsetName)</find>
       <find>lockZSet(dbName, zsetName)</find>
       <find>lockSet(dbName, setName1)</find>
@@ -115,6 +114,10 @@
       <find>DB_NOT</find>
       <find>HASH_GET_SU</find>
       <find>ELEM_TYPE_</find>
+      <find>&quot;List Does Not Exist&quot;</find>
+      <find>MERGE_RESULT_E</find>
+      <find>LIST_SEARCH</find>
+      <find>&quot;Element Type Error&quot;</find>
     </findStrings>
     <replaceStrings>
       <replace>self.msg[</replace>
@@ -135,7 +138,8 @@
       <replace>lock(&quot;SET&quot;, dbName, setName1)</replace>
       <replace>keyName</replace>
       <replace>if</replace>
-      <replace>if</replace>
+      <replace>responseCode.detail[responseCode.LIST_NOT_EXIST]</replace>
+      <replace>responseCode.detail[responseCode.ELEM_TYPE_ERROR]</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -841,7 +845,7 @@
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding>
             <element signature="e#37#49#0" expanded="true" />
           </folding>
@@ -894,16 +898,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Response.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="184" column="47" lean-forward="false" selection-start-line="184" selection-start-column="47" selection-end-line="184" selection-end-column="47" />
+        <state relative-caret-position="405">
+          <caret line="184" column="50" lean-forward="false" selection-start-line="184" selection-start-column="50" selection-end-line="184" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ListHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2533">
-          <caret line="149" column="35" lean-forward="false" selection-start-line="149" selection-start-column="35" selection-end-line="149" selection-end-column="35" />
+        <state relative-caret-position="666">
+          <caret line="320" column="35" lean-forward="false" selection-start-line="320" selection-start-column="35" selection-end-line="320" selection-end-column="35" />
           <folding />
         </state>
       </provider>

@@ -9,7 +9,7 @@ from Response import responseCode
 class timer(threading.Thread):
 
     def __init__(self, database, saveInterval=60):
-        super(timer,self).__init__()
+        super(timer, self).__init__()
         self.saveInterval = saveInterval
         self.database = database[0]
 
@@ -25,10 +25,12 @@ class timer(threading.Thread):
     def setInterval(self, interval):
         self.saveInterval = interval
         self.database.saveDb()
-        msg = self.makeMessage("Change Save Interval Success", responseCode.SAVE_INTERVAL_CHANGE_SUCCESS, interval)
+        msg = self.makeMessage(responseCode.detail[responseCode.SAVE_INTERVAL_CHANGE_SUCCESS],
+                               responseCode.SAVE_INTERVAL_CHANGE_SUCCESS,
+                               interval)
         return msg
 
     def run(self):
-        while(True):
+        while True:
             self.database.saveDb()
             time.sleep(self.saveInterval)

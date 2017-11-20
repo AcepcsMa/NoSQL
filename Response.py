@@ -238,5 +238,6 @@ class responseCode:
         DB_GET_SUCCESS:"Database Get Success",
         DB_DELETE_SUCCESS:"Database Delete Success",
         DB_NOT_EXIST:"Database Does Not Exist",
-        DB_SAVE_SUCCESS:"Database Save Success"
+        DB_SAVE_SUCCESS:"Database Save Success",
+        SAVE_INTERVAL_CHANGE_SUCCESS:"Change Save Interval Success"
     }

@@ -19,21 +19,21 @@ class BSTree:
 
     def insert(self, value, score):
         newNode = TreeNode(value, score)
-        if(self.root is None):
+        if self.root is None:
             self.root = newNode
         else:
             current = self.root
             parent = self.root
-            while(True):
+            while True:
                 parent = current
-                if(current.score <= score):
+                if current.score <= score:
                     current = current.right
-                    if(current is None):
+                    if current is None:
                         parent.right = newNode
                         break
                 else:
                     current = current.left
-                    if(current is None):
+                    if current is None:
                         parent.left = newNode
                         break
 
@@ -42,21 +42,21 @@ class BSTree:
         return result
 
     def inOrderSearch(self, current, key):
-        if(current is not None):
+        if current is not None:
             result = self.inOrderSearch(current.left, key)
-            if(result is not None):
+            if result is not None:
                 return result
-            if(current.value == key):
+            if current.value == key:
                 return current
             result = self.inOrderSearch(current.right, key)
-            if (result is not None):
+            if result is not None:
                 return result
         return None
 
     def findMin(self):
         current = self.root
         parent = self.root
-        while(current is not None):
+        while current is not None:
             parent = current
             current = current.left
         return parent
@@ -64,7 +64,7 @@ class BSTree:
     def findMax(self):
         current = self.root
         parent = self.root
-        while(current is not None):
+        while current is not None:
             parent = current
             current = current.right
         return parent
@@ -81,12 +81,10 @@ class BSTree:
         internal function for in-order traverse
     '''
     def internalInOrder(self, current, traverseResult=None):
-        if(current is not None):
+        if current is not None:
             self.internalInOrder(current.left, traverseResult)
-            if(traverseResult is not None):
+            if traverseResult is not None:
                 traverseResult.append((current.value, current.score))
-            else:
-                print (current.value, current.score)
             self.internalInOrder(current.right, traverseResult)
 
     def clear(self):
@@ -96,59 +94,59 @@ class BSTree:
         a delete function for binary search tree
     '''
     def delete(self, key):
-        if(self.root is None):
+        if self.root is None:
             return False
         result = self.find(key)
-        if(result is None):
+        if result is None:
             return False
         score = result.score
 
         current = self.root
         parent = self.root
-        while(current.score != score):
+        while current.score != score:
             parent = current
-            if(current.score < score):
+            if current.score < score:
                 current = current.right
             else:
                 current = current.left
 
         # case1 leaf node
-        if(current.left is None and current.right is None):
-            if(current == self.root):
+        if current.left is None and current.right is None:
+            if current == self.root:
                 self.root = None
             else:
-                if(current == parent.left):
+                if current == parent.left:
                     parent.left = None
                 else:
                     parent.right = None
 
         # case2 del node has a left child
-        elif(current.left is not None and current.right is None):
-            if(current == self.root):
+        elif current.left is not None and current.right is None:
+            if current == self.root:
                 self.root = current.left
             else:
-                if(current == parent.left):
+                if current == parent.left:
                     parent.left = current.left
                 else:
                     parent.right = current.left
 
         # case3 del node has a right child
-        elif(current.left is None and current.right is not None):
-            if(current == self.root):
+        elif current.left is None and current.right is not None:
+            if current == self.root:
                 self.root = current.right
             else:
-                if(current == parent.left):
+                if current == parent.left:
                     parent.left = current.right
                 else:
                     parent.right = current.right
 
         # case4 del node has two children
-        elif(current.left is not None and current.right is not None):
+        elif current.left is not None and current.right is not None:
             successor = self.getSuccessor(current)
-            if(current == self.root):
+            if current == self.root:
                 self.root = successor
             else:
-                if(current == parent.left):
+                if current == parent.left:
                     parent.left = successor
                 else:
                     parent.right = successor
@@ -161,12 +159,12 @@ class BSTree:
         successorParent = delNode
         current = delNode.right
 
-        while(current is not None):
+        while current is not None:
             successorParent = successor
             successor = current
             current = current.left
 
-        if(successor != delNode.right):
+        if successor != delNode.right:
             successorParent.left = successor.right
             successor.right = delNode.right
         return successor
@@ -177,15 +175,14 @@ class BSTree:
             return -1
         return self.rank(self.root, node.value, node.score)
 
-
     def rank(self, current, key, score):
         count = 0
-        if(current is None):
+        if current is None:
             return 0
-        if(current.score < score):
+        if current.score < score:
             count += 1
-        return count + self.rank(current.left, key, score) + self.rank(current.right, key, score)
-
+        return count + self.rank(current.left, key, score) + \
+               self.rank(current.right, key, score)
 
 class zset:
     '''
@@ -196,7 +193,7 @@ class zset:
         self.valueDict = {}
 
     def add(self, value, score):
-        if(value in self.valueDict.keys()):
+        if value in self.valueDict.keys():
             return False
         else:
             self.BSTree.insert(value, score)
@@ -211,21 +208,21 @@ class zset:
 
     def findMin(self):
         result = self.BSTree.findMin()
-        if(result is None):
+        if result is None:
             return (None, None)
         else:
             return (result.value, result.score)
 
     def findMax(self):
         result = self.BSTree.findMax()
-        if(result is None):
+        if result is None:
             return (None, None)
         else:
             return (result.value, result.score)
 
     def remove(self, key):
         result = self.BSTree.delete(key)
-        if(result is True):
+        if result is True:
             self.valueDict.pop(key)
         return result
 
@@ -255,15 +252,3 @@ class zset:
         for key in deleteKeys:
             self.remove(key)
         return len(deleteKeys)
-
-
-if __name__ == "__main__":
-    z = zset()
-    z.add("hh",1)
-    z.add("gg",5)
-    z.add("pp",-3)
-    z.add("qq",2)
-
-    print (z.getRank("ggh"))
-    print (z.getRank("hh"))
-    print (z.getRank("gg"))

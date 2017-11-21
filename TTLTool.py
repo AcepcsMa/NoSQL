@@ -22,9 +22,11 @@ class TTLTool:
         lockDict = self.database.getLockDict(dataType)
         ttlDict = self.database.getTTLDict(dataType)
 
-        if (lockDict[dbName][keyName] is True):
-            self.database.logger.warning("{} Is Locked {}->{}".format(dataType, dbName, keyName))
-            msg = self.makeMessage("{} Is Locked".format(dataType), responseCode.LOCKED, keyName)
+        if lockDict[dbName][keyName] is True:
+            self.database.logger.warning("{} Is Locked {}->{}".
+                                         format(dataType, dbName, keyName))
+            msg = self.makeMessage("{} Is Locked".format(dataType),
+                                   responseCode.LOCKED, keyName)
             return msg
         else:
             self.database.lock(dataType, dbName, keyName)
@@ -32,8 +34,10 @@ class TTLTool:
                                               "ttl": int(ttl),
                                               "status": True}
             self.database.unlock(dataType, dbName, keyName)
-            self.database.logger.info("TTL Set Success {}->{}:{}".format(dbName, keyName, ttl))
-            msg = self.makeMessage("TTL Set Success", responseCode.TTL_SET_SUCCESS, keyName)
+            self.database.logger.info("TTL Set Success {}->{}:{}"
+                                      .format(dbName, keyName, ttl))
+            msg = self.makeMessage(responseCode.detail[responseCode.TTL_SET_SUCCESS],
+                                   responseCode.TTL_SET_SUCCESS, keyName)
             self.database.opCount += 1
             return msg
 
@@ -41,20 +45,25 @@ class TTLTool:
         lockDict = self.database.getLockDict(dataType)
         ttlDict = self.database.getTTLDict(dataType)
 
-        if (lockDict[dbName][keyName] is True):
-            self.database.logger.warning("{} Locked {}->{}".format(dataType, dbName, keyName))
-            msg = self.makeMessage("{} Is Locked".format(dataType), responseCode.LOCKED, keyName)
+        if lockDict[dbName][keyName] is True:
+            self.database.logger.warning("{} Locked {}->{}".
+                                         format(dataType, dbName, keyName))
+            msg = self.makeMessage("{} Is Locked".format(dataType),
+                                   responseCode.LOCKED, keyName)
             return msg
         else:
             self.database.lock(dataType, dbName, keyName)
             try:
                 ttlDict[dbName].pop(keyName)
             except:
-                msg = self.makeMessage("{} Is Not Set TTL".format(dataType), responseCode.NOT_SET_TTL, keyName)
+                msg = self.makeMessage("{} Is Not Set TTL".format(dataType),
+                                       responseCode.NOT_SET_TTL, keyName)
                 return msg
             finally:
                 self.database.unlock(dataType, dbName, keyName)
-            self.database.logger.info("{} TTL Clear Success {}->{}".format(dataType, dbName, keyName))
-            msg = self.makeMessage("TTL Clear Success", responseCode.TTL_CLEAR_SUCCESS, keyName)
+            self.database.logger.info("{} TTL Clear Success {}->{}".
+                                      format(dataType, dbName, keyName))
+            msg = self.makeMessage("TTL Clear Success",
+                                   responseCode.TTL_CLEAR_SUCCESS, keyName)
             self.database.opCount += 1
             return msg

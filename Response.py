@@ -208,6 +208,7 @@ class responseCode:
         SET_DIFF_SUCCESS:"Set Diff Success",
         SET_NOT_SET_TTL:"Set Is Not Set TTL",
         ZSET_CREATE_SUCCESS:"ZSet Create Success",
+        ZSET_GET_SUCCESS:"ZSet Get Success",
         ZSET_IS_LOCKED:"ZSet Is Locked",
         ZSET_INSERT_SUCCESS:"ZSet Insert Success",
         ZSET_VALUE_ALREADY_EXIST:"ZSet Value Already Exists",
@@ -220,6 +221,11 @@ class responseCode:
         ZSET_TTL_SET_SUCCESS:"ZSet TTL Set Success",
         ZSET_NOT_SET_TTL:"ZSet Is Not Set TTL",
         ZSET_TTL_CLEAR_SUCCESS:"ZSet TTL Clear Success",
+        ZSET_ALREADY_EXIST:"ZSet Already Exists",
+        ZSET_EXPIRED:"ZSet Is Expired",
+        ZSET_NOT_EXIST:"ZSet Does Not Exist",
+        ZSET_FIND_MIN_SUCCESS:"Find Min Element Success",
+        ZSET_FIND_MAX_SUCCESS:"Find Max Element Success",
         GET_SIZE_SUCCESS:"Get Size Success",
         ELEM_TYPE:"Element",
         LIST_TYPE:"List",
@@ -239,5 +245,6 @@ class responseCode:
         DB_DELETE_SUCCESS:"Database Delete Success",
         DB_NOT_EXIST:"Database Does Not Exist",
         DB_SAVE_SUCCESS:"Database Save Success",
-        SAVE_INTERVAL_CHANGE_SUCCESS:"Change Save Interval Success"
+        SAVE_INTERVAL_CHANGE_SUCCESS:"Change Save Interval Success",
+        TTL_SET_SUCCESS:"TTL Set Success"
     }

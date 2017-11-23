@@ -3,7 +3,7 @@ __author__ = 'Ma Haoxiang'
 # import
 import json
 
-class configParser:
+class ConfigParser(object):
 
     def __init__(self, configPath=None):
         self.configPath = configPath

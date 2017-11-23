@@ -4,7 +4,8 @@ __author__ = 'Ma Haoxiang'
 from Decorator import *
 
 
-class zsetHandler:
+class ZSetHandler(object):
+
     def __init__(self, database):
         self.database = database
 

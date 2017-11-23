@@ -4,7 +4,7 @@ import time
 from Decorator import *
 
 # class of TTL tools
-class TTLTool:
+class TTLTool(object):
 
     def __init__(self, databaseList):
         self.database = databaseList[0]

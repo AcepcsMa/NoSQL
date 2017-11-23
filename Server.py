@@ -3,17 +3,17 @@ __author__ = 'Ma Haoxiang'
 # import
 import flask
 import db
-from ConfigParser import configParser
+from ConfigParser import ConfigParser
 import Timer
 import TTLTimer
 from TTLTool import TTLTool
 from Response import responseCode
 from DbHandler import DbHandler
-from ElemHandler import elemHandler
-from ListHandler import listHandler
-from HashHandler import hashHandler
-from SetHandler import setHandler
-from ZSetHandler import zsetHandler
+from ElemHandler import ElemHandler
+from ListHandler import ListHandler
+from HashHandler import HashHandler
+from SetHandler import SetHandler
+from ZSetHandler import ZSetHandler
 
 app = flask.Flask(__name__)
 
@@ -47,7 +47,7 @@ def clearTTL():
 
 @app.route("/makeElem",methods=["POST"])
 def makeElem():
-    myHandler = elemHandler(database)
+    myHandler = ElemHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         elemName = flask.request.json["elemName"]
@@ -59,13 +59,13 @@ def makeElem():
 
 @app.route("/getElem/<string:dbName>/<string:elemName>",methods=["GET"])
 def getElem(dbName, elemName):
-    myHandler = elemHandler(database)
+    myHandler = ElemHandler(database)
     result = myHandler.getElem(dbName, elemName)
     return flask.jsonify(result)
 
 @app.route("/updateElem",methods=["PUT"])
 def updateElem():
-    myHandler = elemHandler(database)
+    myHandler = ElemHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         elemName = flask.request.json["elemName"]
@@ -77,37 +77,37 @@ def updateElem():
 
 @app.route("/searchElem/<string:dbName>/<string:expression>",methods=["GET"])
 def searchElem(dbName,expression):
-    myHandler = elemHandler(database)
+    myHandler = ElemHandler(database)
     result = myHandler.searchElem(dbName, expression)
     return flask.jsonify(result)
 
 @app.route("/getAllElem/<dbName>",methods=["GET"])
 def searchAllElem(dbName):
-    myHandler = elemHandler(database)
+    myHandler = ElemHandler(database)
     result = myHandler.searchAllElem(dbName)
     return flask.jsonify(result)
 
 @app.route("/increaseElem/<string:dbName>/<string:elemName>",methods=["PUT"])
 def increaseElem(dbName, elemName):
-    myHandler = elemHandler(database)
+    myHandler = ElemHandler(database)
     result = myHandler.increaseElem(dbName, elemName)
     return flask.jsonify(result)
 
 @app.route("/decreaseElem/<string:dbName>/<string:elemName>",methods=["PUT"])
 def decreaseElem(dbName, elemName):
-    myHandler = elemHandler(database)
+    myHandler = ElemHandler(database)
     result = myHandler.decreaseElem(dbName, elemName)
     return flask.jsonify(result)
 
 @app.route("/deleteElem/<string:dbName>/<string:elemName>",methods=["DELETE"])
 def deleteElem(dbName, elemName):
-    myHandler = elemHandler(database)
+    myHandler = ElemHandler(database)
     result = myHandler.deleteElem(dbName, elemName)
     return flask.jsonify(result)
 
 @app.route("/makeList",methods=["POST"])
 def makeList():
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         listName = flask.request.json["listName"]
@@ -118,37 +118,37 @@ def makeList():
 
 @app.route("/getList/<string:dbName>/<string:listName>",methods=["GET"])
 def getList(dbName, listName):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.getList(dbName, listName)
     return flask.jsonify(result)
 
 @app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>",methods=["GET"])
 def leftGetList(dbName, listName, count):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.getListL(dbName, listName, count)
     return flask.jsonify(result)
 
 @app.route("/rightGetList/<string:dbName>/<string:listName>/<int:count>",methods=["GET"])
 def rightGetList(dbName, listName, count):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.getListR(dbName, listName, count)
     return flask.jsonify(result)
 
 @app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>",methods=["GET"])
 def getListByRange(dbName, listName, start, end):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.getListByRange(dbName, listName, start, end)
     return flask.jsonify(result)
 
 @app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>",methods=["GET"])
 def getListRandom(dbName, listName, numRand):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.getListRandom(dbName, listName, numRand)
     return flask.jsonify(result)
 
 @app.route("/insertList",methods=["PUT"])
 def insertList():
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         listName = flask.request.json["listName"]
@@ -160,7 +160,7 @@ def insertList():
 
 @app.route("/leftInsertList",methods=["PUT"])
 def leftInsertList():
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         listName = flask.request.json["listName"]
@@ -172,13 +172,13 @@ def leftInsertList():
 
 @app.route("/deleteList/<string:dbName>/<string:listName>",methods=["DELETE"])
 def deleteList(dbName, listName):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.deleteList(dbName, listName)
     return flask.jsonify(result)
 
 @app.route("/rmFromList",methods=["PUT"])
 def rmFromList():
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         listName = flask.request.json["listName"]
@@ -190,13 +190,13 @@ def rmFromList():
 
 @app.route("/clearList/<dbName>/<listName>",methods=["PUT"])
 def clearList(dbName, listName):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.clearList(dbName, listName)
     return flask.jsonify(result)
 
 @app.route("/mergeLists",methods=["PUT"])
 def mergeLists():
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         listName1 = flask.request.json["list1"]
@@ -210,25 +210,25 @@ def mergeLists():
 
 @app.route("/searchList/<string:dbName>/<string:expression>",methods=["GET"])
 def searchList(dbName, expression):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.searchList(dbName, expression)
     return flask.jsonify(result)
 
 @app.route("/searchAllList/<string:dbName>",methods=["GET"])
 def searchAllList(dbName):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.searchAllList(dbName)
     return flask.jsonify(result)
 
 @app.route("/getListSize/<string:dbName>/<string:listName>",methods=["GET"])
 def getListSize(dbName, listName):
-    myHandler = listHandler(database)
+    myHandler = ListHandler(database)
     result = myHandler.getSize(dbName, listName)
     return flask.jsonify(result)
 
 @app.route("/makeHash",methods=["POST"])
 def makeHash():
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         hashName = flask.request.json["hashName"]
@@ -239,25 +239,25 @@ def makeHash():
 
 @app.route("/getHash/<string:dbName>/<string:hashName>",methods=["GET"])
 def getHash(dbName, hashName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.getHash(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/getHashKeySet/<string:dbName>/<string:hashName>",methods=["GET"])
 def getHashKeySet(dbName, hashName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.getKeySet(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/getHashValues/<string:dbName>/<string:hashName>",methods=["GET"])
 def getHashValues(dbName, hashName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.getValues(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/getMultipleHashValues",methods=["POST"])
 def getMultipleHashValues():
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         hashName = flask.request.json["hashName"]
@@ -269,7 +269,7 @@ def getMultipleHashValues():
 
 @app.route("/insertHash",methods=["PUT"])
 def insertHash():
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         hashName = flask.request.json["hashName"]
@@ -282,19 +282,19 @@ def insertHash():
 
 @app.route("/isHashKeyExist/<string:dbName>/<string:hashName>/<string:keyName>",methods=["GET"])
 def isHashKeyExist(dbName, hashName, keyName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.isKeyExist(dbName, hashName, keyName)
     return flask.jsonify(result)
 
 @app.route("/deleteHash/<dbName>/<hashName>",methods=["DELETE"])
 def deleteHash(dbName, hashName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.deleteHash(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/rmFromHash",methods=["PUT"])
 def rmFromHash():
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         hashName = flask.request.json["hashName"]
@@ -306,13 +306,13 @@ def rmFromHash():
 
 @app.route("/clearHash/<string:dbName>/<string:hashName>",methods=["GET"])
 def clearHash(dbName, hashName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.clearHash(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/replaceHash",methods=["PUT"])
 def replaceHash():
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         hashName = flask.request.json["hashName"]
@@ -324,7 +324,7 @@ def replaceHash():
 
 @app.route("/mergeHashs",methods=["PUT"])
 def mergeHashs():
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     try:
         mergeMode = flask.request.json["mode"]
         dbName = flask.request.json["dbName"]
@@ -339,37 +339,37 @@ def mergeHashs():
 
 @app.route("/searchHash/<dbName>/<string:expression>",methods=["GET"])
 def searchHash(dbName, expression):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.searchHash(dbName, expression)
     return flask.jsonify(result)
 
 @app.route("/searchAllHash/<dbName>",methods=["GET"])
 def searchAllHash(dbName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.searchAllHash(dbName)
     return flask.jsonify(result)
 
 @app.route("/getHashSize/<string:dbName>/<string:hashName>",methods=["GET"])
 def getHashSize(dbName, hashName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.getSize(dbName, hashName)
     return flask.jsonify(result)
 
 @app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>",methods=["PUT"])
 def increaseHash(dbName, hashName, keyName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.increaseHash(dbName, hashName, keyName)
     return flask.jsonify(result)
 
 @app.route("/decreaseHash/<string:dbName>/<string:hashName>/<string:keyName>",methods=["PUT"])
 def decreaseHash(dbName, hashName, keyName):
-    myHandler = hashHandler(database)
+    myHandler = HashHandler(database)
     result = myHandler.decreaseHash(dbName, hashName, keyName)
     return flask.jsonify(result)
 
 @app.route("/makeSet",methods=["POST"])
 def makeSet():
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         setName = flask.request.json["setName"]
@@ -380,19 +380,19 @@ def makeSet():
 
 @app.route("/getSet/<string:dbName>/<string:setName>",methods=["GET"])
 def getSet(dbName, setName):
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     result = myHandler.getSet(dbName, setName)
     return flask.jsonify(result)
 
 @app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>",methods=["GET"])
 def getSetRandom(dbName, setName, numRand):
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     result = myHandler.getSetRandom(dbName, setName, numRand)
     return flask.jsonify(result)
 
 @app.route("/insertSet",methods=["PUT"])
 def insertSet():
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         setName = flask.request.json["setName"]
@@ -404,7 +404,7 @@ def insertSet():
 
 @app.route("/rmFromSet",methods=["PUT"])
 def rmFromSet():
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         setName = flask.request.json["setName"]
@@ -416,31 +416,31 @@ def rmFromSet():
 
 @app.route("/clearSet/<string:dbName>/<string:setName>",methods=["PUT"])
 def clearSet(dbName, setName):
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     result = myHandler.clearSet(dbName, setName)
     return flask.jsonify(result)
 
 @app.route("/deleteSet/<string:dbName>/<string:setName>",methods=["DELETE"])
 def deleteSet(dbName, setName):
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     result = myHandler.deleteSet(dbName, setName)
     return flask.jsonify(result)
 
 @app.route("/searchSet/<string:dbName>/<string:expression>",methods=["GET"])
 def searchSet(dbName, expression):
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     result = myHandler.searchSet(dbName, expression)
     return flask.jsonify(result)
 
 @app.route("/searchAllSet/<string:dbName>",methods=["GET"])
 def searchAllSet(dbName):
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     result = myHandler.searchAllSet(dbName)
     return flask.jsonify(result)
 
 @app.route("/unionSet",methods=["PUT"])
 def unionSet():
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         setName1 = flask.request.json["setName1"]
@@ -452,7 +452,7 @@ def unionSet():
 
 @app.route("/intersectSet",methods=["PUT"])
 def intersectSet():
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         setName1 = flask.request.json["setName1"]
@@ -464,7 +464,7 @@ def intersectSet():
 
 @app.route("/diffSet",methods=["PUT"])
 def diffSet():
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         setName1 = flask.request.json["setName1"]
@@ -476,7 +476,7 @@ def diffSet():
 
 @app.route("/replaceSet",methods=["PUT"])
 def replaceSet():
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         setName = flask.request.json["setName"]
@@ -488,22 +488,22 @@ def replaceSet():
 
 @app.route("/getSetSize/<string:dbName>/<string:setName>",methods=["GET"])
 def getSetSize(dbName, setName):
-    myHandler = setHandler(database)
+    myHandler = SetHandler(database)
     result = myHandler.getSize(dbName, setName)
     return flask.jsonify(result)
 
 @app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",methods=["PUT"])
 def showTTL(dbName, dataType, keyName):
     if(dataType == "ELEM"):
-        myHandler = elemHandler(database)
+        myHandler = ElemHandler(database)
     elif(dataType == "LIST"):
-        myHandler = listHandler(database)
+        myHandler = ListHandler(database)
     elif(dataType == "HASH"):
-        myHandler = hashHandler(database)
+        myHandler = HashHandler(database)
     elif(dataType == "SET"):
-        myHandler = setHandler(database)
+        myHandler = SetHandler(database)
     elif(dataType == "ZSET"):
-        myHandler = zsetHandler(database)
+        myHandler = ZSetHandler(database)
     else:
         myHandler = None
     try:
@@ -517,7 +517,7 @@ def showTTL(dbName, dataType, keyName):
 
 @app.route("/makeZSet",methods=["POST"])
 def makeZSet():
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         zsetName = flask.request.json["zsetName"]
@@ -528,13 +528,13 @@ def makeZSet():
 
 @app.route("/getZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
 def getZSet(dbName, zsetName):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.getZSet(dbName, zsetName)
     return flask.jsonify(result)
 
 @app.route("/insertZSet",methods=["PUT"])
 def insertZSet():
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         zsetName = flask.request.json["zsetName"]
@@ -547,7 +547,7 @@ def insertZSet():
 
 @app.route("/rmFromZSet",methods=["PUT"])
 def rmFromZSet():
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         zsetName = flask.request.json["zsetName"]
@@ -559,67 +559,67 @@ def rmFromZSet():
 
 @app.route("/clearZSet/<string:dbName>/<string:zsetName>",methods=["PUT"])
 def clearZSet(dbName, zsetName):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.clearZSet(dbName, zsetName)
     return flask.jsonify(result)
 
 @app.route("/deleteZSet/<string:dbName>/<string:zsetName>",methods=["DELETE"])
 def deleteZSet(dbName, zsetName):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.deleteZSet(dbName, zsetName)
     return flask.jsonify(result)
 
 @app.route("/searchZSet/<string:dbName>/<string:expression>",methods=["GET"])
 def searchZSet(dbName, expression):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.searchZSet(dbName, expression)
     return flask.jsonify(result)
 
 @app.route("/searchAllZSet/<string:dbName>",methods=["GET"])
 def searchAllZSet(dbName):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.searchAllZSet(dbName)
     return flask.jsonify(result)
 
 @app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
 def findMinFromZSet(dbName, zsetName):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.findMin(dbName, zsetName)
     return flask.jsonify(result)
 
 @app.route("/findMaxFromZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
 def findMaxFromZSet(dbName, zsetName):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.findMax(dbName, zsetName)
     return flask.jsonify(result)
 
 @app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>",methods=["GET"])
 def getScore(dbName, zsetName,valueName):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.getScore(dbName, zsetName, valueName)
     return flask.jsonify(result)
 
 @app.route("/getValuesByRange/<string:dbName>/<string:zsetName>/<int:start>/<int:end>",methods=["GET"])
 def getValuesByRange(dbName, zsetName, start, end):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.getValuesByRange(dbName, zsetName, start, end)
     return flask.jsonify(result)
 
 @app.route("/getZSetSize/<string:dbName>/<string:zsetName>",methods=["GET"])
 def getZSetSize(dbName, zsetName):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.getSize(dbName, zsetName)
     return flask.jsonify(result)
 
 @app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>",methods=["GET"])
 def getRank(dbName, zsetName, value):
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     result = myHandler.getRank(dbName, zsetName, value)
     return flask.jsonify(result)
 
 @app.route("/rmFromZSetByScore",methods=["PUT"])
 def rmFromZSetByScore():
-    myHandler = zsetHandler(database)
+    myHandler = ZSetHandler(database)
     try:
         dbName = flask.request.json["dbName"]
         zsetName = flask.request.json["zsetName"]
@@ -664,8 +664,9 @@ def changeSaveInterval(interval):
     return flask.jsonify(result)
 
 if __name__ == '__main__':
+
     # init the config parser and read the server config
-    confParser = configParser()
+    confParser = ConfigParser()
     serverConfig = confParser.getServerConfig("server.conf")
 
     # init the database

@@ -4,7 +4,7 @@ __author__ = 'Ma Haoxiang'
 from Decorator import *
 
 
-class setHandler:
+class SetHandler(object):
     def __init__(self, database):
         self.database = database
 

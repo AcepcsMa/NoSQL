@@ -3,7 +3,7 @@ __author__ = 'Ma Haoxiang'
 # import
 from Decorator import *
 
-class hashHandler(object):
+class HashHandler(object):
     def __init__(self, database):
         self.database = database
 

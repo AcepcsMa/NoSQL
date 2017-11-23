@@ -3,7 +3,8 @@ __author__ = 'Ma Haoxiang'
 # import
 from Decorator import *
 
-class elemHandler(object):
+class ElemHandler(object):
+
     def __init__(self, database):
         self.database = database
 

@@ -3,7 +3,7 @@ __author__ = 'Ma Haoxiang'
 # import
 from Decorator import *
 
-class listHandler(object):
+class ListHandler(object):
     def __init__(self, database):
         self.database = database
 

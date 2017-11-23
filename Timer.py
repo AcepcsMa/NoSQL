@@ -4,28 +4,19 @@ __author__ = 'Ma Haoxiang'
 import time
 import threading
 from Response import responseCode
+from Utils import Utils
 
-
-class timer(threading.Thread):
+class Timer(threading.Thread):
 
     def __init__(self, database, saveInterval=60):
-        super(timer, self).__init__()
+        super(Timer, self).__init__()
         self.saveInterval = saveInterval
         self.database = database[0]
-
-    # make the response message
-    def makeMessage(self, msg, typeCode, data):
-        message = {
-            "msg": msg,
-            "typeCode": typeCode,
-            "data": data
-        }
-        return message
 
     def setInterval(self, interval):
         self.saveInterval = interval
         self.database.saveDb()
-        msg = self.makeMessage(responseCode.detail[responseCode.SAVE_INTERVAL_CHANGE_SUCCESS],
+        msg = Utils.makeMessage(responseCode.detail[responseCode.SAVE_INTERVAL_CHANGE_SUCCESS],
                                responseCode.SAVE_INTERVAL_CHANGE_SUCCESS,
                                interval)
         return msg

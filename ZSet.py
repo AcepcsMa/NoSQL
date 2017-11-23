@@ -1,6 +1,6 @@
 __author__ = 'Ma Haoxiang'
 
-class TreeNode:
+class TreeNode(object):
     '''
         basic class of tree node in a binary search tree
     '''
@@ -10,7 +10,7 @@ class TreeNode:
         self.left = None
         self.right = None
 
-class BSTree:
+class BSTree(object):
     '''
         basic class of a binary search tree (BST)
     '''
@@ -184,7 +184,7 @@ class BSTree:
         return count + self.rank(current.left, key, score) + \
                self.rank(current.right, key, score)
 
-class zset:
+class ZSet(object):
     '''
         a class of sorted set (implemented by binary search tree)
     '''

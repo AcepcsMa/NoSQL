@@ -675,7 +675,7 @@ if __name__ == '__main__':
     databaseList.append(database)
 
     # init the save timer
-    saveTimer = Timer.timer(databaseList, serverConfig["SAVE_INTERVAL"])
+    saveTimer = Timer.Timer(databaseList, serverConfig["SAVE_INTERVAL"])
     saveTimer.start()
 
     # init the ttl timer

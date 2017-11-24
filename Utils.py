@@ -29,3 +29,10 @@ class Utils(object):
             "data":data
         }
         return message
+
+
+
+if __name__ == "__main__":
+    import hashlib
+
+    print(hashlib.md5("admin".encode()).hexdigest())

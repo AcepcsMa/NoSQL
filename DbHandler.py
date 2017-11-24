@@ -45,3 +45,16 @@ class DbHandler(object):
         result = self.database.saveDb()
         msg = Utils.makeMessage(responseCode.detail[result], result, time.time())
         return msg
+
+    # set password for db
+    def setPwdForDb(self, adminKey, dbName, password):
+        if self.database.isDbExist(dbName) is False:
+            return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
+                                    responseCode.DB_NOT_EXIST,
+                                    dbName)
+
+        result = self.database.setPwdForDb(adminKey, dbName, password)
+        msg = Utils.makeMessage(responseCode.detail[result],
+                                result,
+                                dbName)
+        return msg

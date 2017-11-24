@@ -2,7 +2,7 @@ __author__ = 'Ma Haoxiang'
 
 # import
 import flask
-import db
+import Database
 from ConfigParser import ConfigParser
 import Timer
 import TTLTimer
@@ -16,6 +16,18 @@ from SetHandler import SetHandler
 from ZSetHandler import ZSetHandler
 
 app = flask.Flask(__name__)
+
+@app.route("/setDbPassword",methods=["POST"])
+def setDbPassword():
+    myHandler = DbHandler(database)
+    try:
+        adminKey = flask.request.json["adminKey"]
+        dbName = flask.request.json["dbName"]
+        password = flask.request.json["password"]
+    except:
+        adminKey = dbName = password = None
+    result = myHandler.setPwdForDb(adminKey, dbName, password)
+    return flask.jsonify(result)
 
 @app.route("/getType/<string:dbName>/<string:keyName>",methods=["GET"])
 def getType(dbName, keyName):
@@ -665,13 +677,14 @@ def changeSaveInterval(interval):
 
 if __name__ == '__main__':
 
+
     # init the config parser and read the server config
     confParser = ConfigParser()
     serverConfig = confParser.getServerConfig("server.conf")
 
     # init the database
     databaseList = []
-    database = db.NoSqlDb(serverConfig)
+    database = Database.NoSqlDb(serverConfig)
     databaseList.append(database)
 
     # init the save timer

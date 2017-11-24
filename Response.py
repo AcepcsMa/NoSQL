@@ -130,6 +130,9 @@ class responseCode:
     TTL_SET_SUCCESS = 122
     NOT_SET_TTL = 123
     TTL_CLEAR_SUCCESS = 124
+    ADMIN_KEY_ERROR = 125
+    DB_PASSWORD_EXIST = 126
+    DB_PASSWORD_SET_SUCCESS = 127
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -246,5 +249,8 @@ class responseCode:
         DB_NOT_EXIST:"Database Does Not Exist",
         DB_SAVE_SUCCESS:"Database Save Success",
         SAVE_INTERVAL_CHANGE_SUCCESS:"Change Save Interval Success",
-        TTL_SET_SUCCESS:"TTL Set Success"
+        TTL_SET_SUCCESS:"TTL Set Success",
+        ADMIN_KEY_ERROR:"Admin Key Is Error",
+        DB_PASSWORD_EXIST:"Database Password Exists",
+        DB_PASSWORD_SET_SUCCESS:"Database Password Set Success"
     }

@@ -6,7 +6,7 @@ import os
 import json
 import logging
 import random
-from ZSet import zset
+from ZSet import ZSet
 from TTLTool import *
 
 class NoSqlDb(object):
@@ -14,6 +14,7 @@ class NoSqlDb(object):
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initialize databases
         self.saveTrigger = config["SAVE_TRIGGER"]
+        self.adminKey = config["ADMIN_KEY"]
         self.opCount = 0
 
         self.initDb()
@@ -57,6 +58,8 @@ class NoSqlDb(object):
         self.hashTTL = dict()
         self.setTTL = dict()
         self.zsetTTL = dict()
+
+        self.dbPassword = dict()
 
         for dbName in self.dbNameSet:
             self.invertedTypeDict[dbName] = dict()
@@ -852,7 +855,7 @@ class NoSqlDb(object):
     def createZSet(self, dbName, zsetName):
         self.lock("ZSET", dbName, zsetName)
         self.zsetName[dbName].add(zsetName)
-        self.zsetDict[dbName][zsetName] = zset()
+        self.zsetDict[dbName][zsetName] = ZSet()
         self.invertedTypeDict[dbName][zsetName] = responseCode.ZSET_TYPE
         self.unlock("ZSET", dbName, zsetName)
         self.logger.info("ZSet Create Success "
@@ -1104,7 +1107,7 @@ class NoSqlDb(object):
         with open("data" + os.sep + dbName + os.sep + valueFileName, "r") as valueFile:
             data = json.loads(valueFile.read())
             for zsetName in data.keys():
-                self.zsetDict[dbName][zsetName] = zset()
+                self.zsetDict[dbName][zsetName] = ZSet()
                 values = data[zsetName]
                 for key in values.keys():
                     self.zsetDict[dbName][zsetName].add(key, values[key])
@@ -1187,3 +1190,13 @@ class NoSqlDb(object):
 
         except Exception as e:
             self.logger.warning("Database Load Fail {0}".format(str(e)))
+
+    def setPwdForDb(self, adminKey, dbName, password):
+        if adminKey != self.adminKey:
+            return responseCode.ADMIN_KEY_ERROR
+
+        if dbName in self.dbPassword.keys():
+            return responseCode.DB_PASSWORD_EXIST
+
+        self.dbPassword[dbName] = password
+        return responseCode.DB_PASSWORD_SET_SUCCESS

@@ -133,6 +133,9 @@ class responseCode:
     ADMIN_KEY_ERROR = 125
     DB_PASSWORD_EXIST = 126
     DB_PASSWORD_SET_SUCCESS = 127
+    DB_PASSWORD_ERROR = 128
+    DB_PASSWORD_CHANGE_SUCCESS = 129
+    DB_PASSWORD_NOT_EXIST = 130
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -252,5 +255,8 @@ class responseCode:
         TTL_SET_SUCCESS:"TTL Set Success",
         ADMIN_KEY_ERROR:"Admin Key Is Error",
         DB_PASSWORD_EXIST:"Database Password Exists",
-        DB_PASSWORD_SET_SUCCESS:"Database Password Set Success"
+        DB_PASSWORD_NOT_EXIST:"Database Password Does Not Exist",
+        DB_PASSWORD_SET_SUCCESS:"Database Password Set Success",
+        DB_PASSWORD_ERROR:"Database Password Error",
+        DB_PASSWORD_CHANGE_SUCCESS:"Database Password Change Success"
     }

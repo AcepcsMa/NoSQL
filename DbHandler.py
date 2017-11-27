@@ -47,13 +47,26 @@ class DbHandler(object):
         return msg
 
     # set password for db
-    def setPwdForDb(self, adminKey, dbName, password):
+    def setDbPassword(self, adminKey, dbName, password):
         if self.database.isDbExist(dbName) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
                                     responseCode.DB_NOT_EXIST,
                                     dbName)
 
-        result = self.database.setPwdForDb(adminKey, dbName, password)
+        result = self.database.setDbPassword(adminKey, dbName, password)
+        msg = Utils.makeMessage(responseCode.detail[result],
+                                result,
+                                dbName)
+        return msg
+
+    # change password for db
+    def changeDbPassword(self, adminKey, dbName, originalPwd, newPwd):
+        if self.database.isDbExist(dbName) is False:
+            return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
+                                     responseCode.DB_NOT_EXIST,
+                                     dbName)
+
+        result = self.database.changeDbPassword(adminKey, dbName, originalPwd, newPwd)
         msg = Utils.makeMessage(responseCode.detail[result],
                                 result,
                                 dbName)

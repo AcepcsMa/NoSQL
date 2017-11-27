@@ -1191,7 +1191,7 @@ class NoSqlDb(object):
         except Exception as e:
             self.logger.warning("Database Load Fail {0}".format(str(e)))
 
-    def setPwdForDb(self, adminKey, dbName, password):
+    def setDbPassword(self, adminKey, dbName, password):
         if adminKey != self.adminKey:
             return responseCode.ADMIN_KEY_ERROR
 
@@ -1200,3 +1200,16 @@ class NoSqlDb(object):
 
         self.dbPassword[dbName] = password
         return responseCode.DB_PASSWORD_SET_SUCCESS
+
+    def changeDbPassword(self, adminKey, dbName, originalPwd, newPwd):
+        if adminKey != self.adminKey:
+            return responseCode.ADMIN_KEY_ERROR
+
+        if dbName not in self.dbPassword.keys():
+            return responseCode.DB_PASSWORD_NOT_EXIST
+
+        if self.dbPassword[dbName] != originalPwd:
+            return responseCode.DB_PASSWORD_ERROR
+
+        self.dbPassword[dbName] = newPwd
+        return responseCode.DB_PASSWORD_CHANGE_SUCCESS

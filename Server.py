@@ -26,7 +26,32 @@ def setDbPassword():
         password = flask.request.json["password"]
     except:
         adminKey = dbName = password = None
-    result = myHandler.setPwdForDb(adminKey, dbName, password)
+    result = myHandler.setDbPassword(adminKey, dbName, password)
+    return flask.jsonify(result)
+
+@app.route("/changeDbPassword",methods=["PUT"])
+def changeadDbPassword():
+    myHandler = DbHandler(database)
+    try:
+        adminKey = flask.request.json["adminKey"]
+        dbName = flask.request.json["dbName"]
+        originalPwd = flask.request.json["originalPwd"]
+        newPwd = flask.request.json["newPwd"]
+
+    except:
+        adminKey = dbName = originalPwd = newPwd = None
+    result = myHandler.changeDbPassword(adminKey, dbName, originalPwd, newPwd)
+    return flask.jsonify(result)
+
+@app.route("/removeDbPassword",methods=["DELETE"])
+def removeDbPassword():
+    myHandler = DbHandler(database)
+    try:
+        adminKey = flask.request.json["adminKey"]
+        dbName = flask.request.json["dbName"]
+    except:
+        adminKey = dbName = None
+    result = myHandler.removeDbPassword(adminKey, dbName)
     return flask.jsonify(result)
 
 @app.route("/getType/<string:dbName>/<string:keyName>",methods=["GET"])

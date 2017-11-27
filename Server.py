@@ -43,6 +43,17 @@ def changeadDbPassword():
     result = myHandler.changeDbPassword(adminKey, dbName, originalPwd, newPwd)
     return flask.jsonify(result)
 
+@app.route("/removeDbPassword",methods=["DELETE"])
+def removeDbPassword():
+    myHandler = DbHandler(database)
+    try:
+        adminKey = flask.request.json["adminKey"]
+        dbName = flask.request.json["dbName"]
+    except:
+        adminKey = dbName = None
+    result = myHandler.removeDbPassword(adminKey, dbName)
+    return flask.jsonify(result)
+
 @app.route("/getType/<string:dbName>/<string:keyName>",methods=["GET"])
 def getType(dbName, keyName):
     result = database.getType(dbName, keyName)

@@ -136,6 +136,8 @@ class responseCode:
     DB_PASSWORD_ERROR = 128
     DB_PASSWORD_CHANGE_SUCCESS = 129
     DB_PASSWORD_NOT_EXIST = 130
+    DB_PASSWORD_REMOVE_SUCCESS = 131
+    DB_PASSWORD_LENGTH_ERROR = 132
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -258,5 +260,7 @@ class responseCode:
         DB_PASSWORD_NOT_EXIST:"Database Password Does Not Exist",
         DB_PASSWORD_SET_SUCCESS:"Database Password Set Success",
         DB_PASSWORD_ERROR:"Database Password Error",
-        DB_PASSWORD_CHANGE_SUCCESS:"Database Password Change Success"
+        DB_PASSWORD_CHANGE_SUCCESS:"Database Password Change Success",
+        DB_PASSWORD_REMOVE_SUCCESS:"Database Password Remove Success",
+        DB_PASSWORD_LENGTH_ERROR:"Password Length should be 6 to 12"
     }

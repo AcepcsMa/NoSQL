@@ -11,6 +11,9 @@ from TTLTool import *
 
 class NoSqlDb(object):
 
+    DB_PASSWORD_MAX_LENGTH = 12
+    DB_PASSWORD_MIN_LENGTH = 6
+
     def __init__(self, config):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initialize databases
         self.saveTrigger = config["SAVE_TRIGGER"]
@@ -1198,6 +1201,10 @@ class NoSqlDb(object):
         if dbName in self.dbPassword.keys():
             return responseCode.DB_PASSWORD_EXIST
 
+        if (len(password) < NoSqlDb.DB_PASSWORD_MIN_LENGTH or
+            len(password) > NoSqlDb.DB_PASSWORD_MAX_LENGTH):
+            return responseCode.DB_PASSWORD_LENGTH_ERROR
+
         self.dbPassword[dbName] = password
         return responseCode.DB_PASSWORD_SET_SUCCESS
 
@@ -1211,5 +1218,20 @@ class NoSqlDb(object):
         if self.dbPassword[dbName] != originalPwd:
             return responseCode.DB_PASSWORD_ERROR
 
+        if (Utils.isInt(newPwd) or
+            len(newPwd) < NoSqlDb.DB_PASSWORD_MIN_LENGTH or
+            len(newPwd) > NoSqlDb.DB_PASSWORD_MAX_LENGTH):
+            return responseCode.ELEM_TYPE_ERROR
+
         self.dbPassword[dbName] = newPwd
         return responseCode.DB_PASSWORD_CHANGE_SUCCESS
+
+    def removeDbPassword(self, adminKey, dbName):
+        if adminKey != self.adminKey:
+            return responseCode.ADMIN_KEY_ERROR
+
+        if dbName not in self.dbPassword.keys():
+            return responseCode.DB_PASSWORD_NOT_EXIST
+
+        self.dbPassword.pop(dbName)
+        return responseCode.DB_PASSWORD_REMOVE_SUCCESS

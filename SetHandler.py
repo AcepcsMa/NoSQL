@@ -11,140 +11,140 @@ class SetHandler(object):
 
     # create a set
     @validTypeCheck
-    def createSet(self, dbName, setName):
+    def createSet(self, dbName, keyName):
         if self.database.isDbExist(dbName) is False:
             msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                   responseCode.DB_NOT_EXIST,
-                                   dbName)
+                                    responseCode.DB_NOT_EXIST,
+                                    dbName)
             return msg
 
-        if self.database.isExist("SET", dbName, setName) is False:
-            result = self.database.createSet(dbName, setName)
+        if self.database.isExist("SET", dbName, keyName) is False:
+            result = self.database.createSet(dbName, keyName)
             msg = Utils.makeMessage(responseCode.detail[result],
-                                   result,
-                                   setName)
+                                    result,
+                                    keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_ALREADY_EXIST],
-                                   responseCode.SET_ALREADY_EXIST,
-                                   setName)
+                                    responseCode.SET_ALREADY_EXIST,
+                                    keyName)
         return msg
 
     # get set value
     @validTypeCheck
-    def getSet(self, dbName, setName):
-        if self.database.isExist("SET", dbName, setName) is True:
-            if self.database.isExpired("SET", dbName, setName) is False:
-                setValue = self.database.getSet(dbName, setName)
+    def getSet(self, dbName, keyName):
+        if self.database.isExist("SET", dbName, keyName) is True:
+            if self.database.isExpired("SET", dbName, keyName) is False:
+                setValue = self.database.getSet(dbName, keyName)
                 msg = Utils.makeMessage(responseCode.detail[responseCode.SET_GET_SUCCESS],
-                                       responseCode.SET_GET_SUCCESS,
-                                       setValue)
+                                        responseCode.SET_GET_SUCCESS,
+                                        setValue)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       setName)
+                                        responseCode.SET_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   setName)
+                                    responseCode.SET_NOT_EXIST,
+                                    keyName)
         return msg
 
     @validTypeCheck
-    def getSetRandom(self, dbName, setName, numRand):
+    def getSetRandom(self, dbName, keyName, numRand):
         if numRand <= 0:
             return Utils.makeMessage(responseCode.detail[responseCode.INVALID_NUMBER],
                                    responseCode.INVALID_NUMBER,
                                    numRand)
 
-        if self.database.isExist("SET", dbName, setName) is True:
-            if self.database.isExpired("SET", dbName, setName) is False:
-                code, listValue = self.database.getSetRandom(dbName, setName, numRand)
+        if self.database.isExist("SET", dbName, keyName) is True:
+            if self.database.isExpired("SET", dbName, keyName) is False:
+                code, listValue = self.database.getSetRandom(dbName, keyName, numRand)
                 msg = Utils.makeMessage(responseCode.detail[code],
-                                       code,
-                                       listValue)
+                                        code,
+                                        listValue)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       setName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   setName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # insert a value into the given set
     @validTypeCheck
-    def insertSet(self, dbName, setName, setValue):
-        if self.database.isExist("SET", dbName, setName):
-            if self.database.isExpired("SET", dbName, setName) is False:
-                result = self.database.insertSet(dbName, setName, setValue)
+    def insertSet(self, dbName, keyName, setValue):
+        if self.database.isExist("SET", dbName, keyName):
+            if self.database.isExpired("SET", dbName, keyName) is False:
+                result = self.database.insertSet(dbName, keyName, setValue)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       setName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       setName)
+                                        responseCode.SET_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   setName)
+                                    responseCode.SET_NOT_EXIST,
+                                    keyName)
         return msg
 
     # remove the given value from a set
     @validTypeCheck
-    def rmFromSet(self, dbName, setName, setValue):
-        if self.database.isExist("SET", dbName, setName):
-            if self.database.isExpired("SET", dbName, setName) is False:
-                result = self.database.rmFromSet(dbName, setName, setValue)
+    def rmFromSet(self, dbName, keyName, setValue):
+        if self.database.isExist("SET", dbName, keyName):
+            if self.database.isExpired("SET", dbName, keyName) is False:
+                result = self.database.rmFromSet(dbName, keyName, setValue)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       setName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       setName)
+                                        responseCode.SET_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   setName)
+                                    responseCode.SET_NOT_EXIST,
+                                    keyName)
         return msg
 
     # clear the given set
     @validTypeCheck
-    def clearSet(self, dbName, setName):
-        if self.database.isExist("SET", dbName, setName):
-            if self.database.isExpired("SET", dbName, setName) is False:
-                result = self.database.clearSet(dbName, setName)
+    def clearSet(self, dbName, keyName):
+        if self.database.isExist("SET", dbName, keyName):
+            if self.database.isExpired("SET", dbName, keyName) is False:
+                result = self.database.clearSet(dbName, keyName)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       setName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       setName)
+                                        responseCode.SET_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   setName)
+                                    responseCode.SET_NOT_EXIST,
+                                    keyName)
         return msg
 
     # delete the given set
     @validTypeCheck
-    def deleteSet(self, dbName, setName):
-        if self.database.isExist("SET", dbName, setName):
-            if self.database.isExpired("SET", dbName, setName) is False:
-                result = self.database.deleteSet(dbName, setName)
+    def deleteSet(self, dbName, keyName):
+        if self.database.isExist("SET", dbName, keyName):
+            if self.database.isExpired("SET", dbName, keyName) is False:
+                result = self.database.deleteSet(dbName, keyName)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       setName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       setName)
+                                        responseCode.SET_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   setName)
+                                    responseCode.SET_NOT_EXIST,
+                                    keyName)
         return msg
 
     # search set names using regular expression
@@ -257,26 +257,26 @@ class SetHandler(object):
 
     # replace the existed set with a new set
     @validTypeCheck
-    def replaceSet(self, dbName, setName, setValue):
-        if self.isSet(setValue) is False:
+    def replaceSet(self, dbName, keyName, value):
+        if Utils.isSet(value) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   setName)
+                                     responseCode.ELEM_TYPE_ERROR,
+                                     keyName)
 
-        if self.database.isExist("SET", dbName, setName):
-            if self.database.isExpired("SET", dbName, setName) is False:
-                result = self.database.replaceSet(dbName, setName, setValue)
+        if self.database.isExist("SET", dbName, keyName):
+            if self.database.isExpired("SET", dbName, keyName) is False:
+                result = self.database.replaceSet(dbName, keyName, value)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       setName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       setName)
+                                        responseCode.SET_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   setName)
+                                    responseCode.SET_NOT_EXIST,
+                                    keyName)
         return msg
 
     # show TTL for a set
@@ -294,14 +294,14 @@ class SetHandler(object):
         return msg
 
     @validTypeCheck
-    def getSize(self, dbName, setName):
-        if self.database.isExist("SET", dbName, setName) is False:
+    def getSize(self, dbName, keyName):
+        if self.database.isExist("SET", dbName, keyName) is False:
             msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   setName)
+                                    responseCode.SET_NOT_EXIST,
+                                    keyName)
         else:
-            code, result = self.database.getSize(dbName, setName, "SET")
+            code, result = self.database.getSize(dbName, keyName, "SET")
             msg = Utils.makeMessage(responseCode.detail[code],
-                                   code,
-                                   result)
+                                    code,
+                                    result)
         return msg

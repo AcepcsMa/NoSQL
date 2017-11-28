@@ -392,7 +392,7 @@ class NoSqlDb(object):
         return responseCode.LIST_GET_SUCCESS, result
 
     @saveTrigger
-    def insertList(self, listName, value, dbName, isLeft=None):
+    def insertList(self, dbName, listName, value, isLeft=None):
         if self.listLockDict[dbName][listName] is True:
             self.logger.warning("Insert List Locked "
                                 "{0}->{1}->{2}".format(dbName, listName, value))

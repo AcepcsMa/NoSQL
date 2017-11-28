@@ -33,7 +33,7 @@ class TTLTool(object):
             self.database.opCount += 1
             return msg
 
-    def clearListTTL(self, dbName, keyName, dataType):
+    def clearTTL(self, dbName, keyName, dataType):
         lockDict = self.database.getLockDict(dataType)
         ttlDict = self.database.getTTLDict(dataType)
 

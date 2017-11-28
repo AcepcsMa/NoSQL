@@ -15,9 +15,9 @@ class ListHandler(object):
         if self.database.isDbExist(dbName):
             if self.database.isExist("LIST", dbName, listName) is False:
                 result = self.database.createList(dbName, listName)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       listName)
+                msg = Utils.makeMessage(responseCode.detail[result], 
+                                        result, 
+                                        listName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_ALREADY_EXIST],
                                        responseCode.LIST_ALREADY_EXIST,

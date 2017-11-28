@@ -7,7 +7,8 @@ from Response import responseCode
 def saveTrigger(func):
     def trigger(*args, **kwargs):
         result = func(*args, **kwargs)
-        self = args[0]
+        #self = args[0]
+        self = kwargs["self"]
         self.opCount += 1
         # when opCounts reach the trigger, save automatically
         if self.opCount == self.saveTrigger:
@@ -23,7 +24,8 @@ def keyNameValidity(func):
         lowercase = [chr(i) for i in range(97,123)]
         uppercase = [chr(i) for i in range(65,91)]
         underline = ["_"]
-        keyName = args[2]
+        #keyName = args[2]
+        keyName = kwargs["keyName"]
         if(keyName[0] not in lowercase
            and keyName[0] not in uppercase
            and keyName[0] not in underline):

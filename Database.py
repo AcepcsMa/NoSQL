@@ -270,14 +270,14 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createElem(self, dbName, elemName, value):
-        self.lock("ELEM", dbName, elemName) # lock this element avoiding r/w implements
-        self.elemName[dbName].add(elemName)
-        self.elemDict[dbName][elemName] = value
-        self.invertedTypeDict[dbName][elemName] = responseCode.ELEM_TYPE
-        self.unlock("ELEM", dbName, elemName)
+    def createElem(self, dbName, keyName, value):
+        self.lock("ELEM", dbName, keyName) # lock this element avoiding r/w implements
+        self.elemName[dbName].add(keyName)
+        self.elemDict[dbName][keyName] = value
+        self.invertedTypeDict[dbName][keyName] = responseCode.ELEM_TYPE
+        self.unlock("ELEM", dbName, keyName)
         self.logger.info("Create Element Success "
-                         "{0}->{1}->{2}".format(dbName, elemName, value))
+                         "{0}->{1}->{2}".format(dbName, keyName, value))
         return responseCode.ELEM_CREATE_SUCCESS
 
     def updateElem(self, dbName, elemName, value):
@@ -310,7 +310,7 @@ class NoSqlDb(object):
         return list(self.elemName[dbName])
 
     @saveTrigger
-    def increaseElem(self, elemName, dbName):
+    def increaseElem(self, dbName, elemName):
         if self.elemLockDict[dbName][elemName] is True: # element is locked
             self.logger.warning("Increase Element Locked "
                                 "{0}->{1}".format(dbName, elemName))
@@ -324,7 +324,7 @@ class NoSqlDb(object):
             return responseCode.ELEM_INCR_SUCCESS
 
     @saveTrigger
-    def decreaseElem(self, elemName, dbName):
+    def decreaseElem(self, dbName, elemName):
         if self.elemLockDict[dbName][elemName] is True: # element is locked
             self.logger.warning("Decrease Element Locked "
                                 "{0}->{1}".format(dbName, elemName))
@@ -359,14 +359,14 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createList(self, dbName, listName):
-        self.lock("LIST", dbName, listName)
-        self.listName[dbName].add(listName)
-        self.listDict[dbName][listName] = list()
-        self.invertedTypeDict[dbName][listName] = responseCode.LIST_TYPE
-        self.unlock("LIST", dbName, listName)
+    def createList(self, dbName, keyName):
+        self.lock("LIST", dbName, keyName)
+        self.listName[dbName].add(keyName)
+        self.listDict[dbName][keyName] = list()
+        self.invertedTypeDict[dbName][keyName] = responseCode.LIST_TYPE
+        self.unlock("LIST", dbName, keyName)
         self.logger.info("Create List Success "
-                         "{0}->{1}".format(dbName, listName))
+                         "{0}->{1}".format(dbName, keyName))
         return responseCode.LIST_CREATE_SUCCESS
 
     def getList(self, listName, dbName, start=None, end=None):
@@ -392,7 +392,7 @@ class NoSqlDb(object):
         return responseCode.LIST_GET_SUCCESS, result
 
     @saveTrigger
-    def insertList(self, listName, value, dbName, isLeft=None):
+    def insertList(self, dbName, listName, value, isLeft=None):
         if self.listLockDict[dbName][listName] is True:
             self.logger.warning("Insert List Locked "
                                 "{0}->{1}->{2}".format(dbName, listName, value))
@@ -492,15 +492,15 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createHash(self, dbName, hashName):
-        if self.isExist("HASH", dbName, hashName) is False:
-            self.hashName[dbName].add(hashName)
-            self.lock("HASH", dbName, hashName)
-            self.hashDict[dbName][hashName] = dict()
-            self.invertedTypeDict[dbName][hashName] = responseCode.HASH_TYPE
-            self.unlock("HASH", dbName, hashName)
+    def createHash(self, dbName, keyName):
+        if self.isExist("HASH", dbName, keyName) is False:
+            self.hashName[dbName].add(keyName)
+            self.lock("HASH", dbName, keyName)
+            self.hashDict[dbName][keyName] = dict()
+            self.invertedTypeDict[dbName][keyName] = responseCode.HASH_TYPE
+            self.unlock("HASH", dbName, keyName)
             self.logger.info("Hash Create Success "
-                             "{}->{}".format(dbName, hashName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.HASH_CREATE_SUCCESS
         else:
             self.logger.warning("Hash Create Fail(Hash Exists) "
@@ -688,14 +688,14 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createSet(self, dbName, setName):
-        self.lock("SET", dbName, setName)
-        self.setName[dbName].add(setName)
-        self.setDict[dbName][setName] = set()
-        self.invertedTypeDict[dbName][setName] = responseCode.SET_TYPE
-        self.unlock("SET", dbName, setName)
+    def createSet(self, dbName, keyName):
+        self.lock("SET", dbName, keyName)
+        self.setName[dbName].add(keyName)
+        self.setDict[dbName][keyName] = set()
+        self.invertedTypeDict[dbName][keyName] = responseCode.SET_TYPE
+        self.unlock("SET", dbName, keyName)
         self.logger.info("Set Create Success "
-                         "{0}->{1}".format(dbName, setName))
+                         "{0}->{1}".format(dbName, keyName))
         return responseCode.SET_CREATE_SUCCESS
 
     def getSet(self, dbName, setName):
@@ -855,14 +855,14 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createZSet(self, dbName, zsetName):
-        self.lock("ZSET", dbName, zsetName)
-        self.zsetName[dbName].add(zsetName)
-        self.zsetDict[dbName][zsetName] = ZSet()
-        self.invertedTypeDict[dbName][zsetName] = responseCode.ZSET_TYPE
-        self.unlock("ZSET", dbName, zsetName)
+    def createZSet(self, dbName, keyName):
+        self.lock("ZSET", dbName, keyName)
+        self.zsetName[dbName].add(keyName)
+        self.zsetDict[dbName][keyName] = ZSet()
+        self.invertedTypeDict[dbName][keyName] = responseCode.ZSET_TYPE
+        self.unlock("ZSET", dbName, keyName)
         self.logger.info("ZSet Create Success "
-                         "{0}->{1}".format(dbName, zsetName))
+                         "{0}->{1}".format(dbName, keyName))
         return responseCode.ZSET_CREATE_SUCCESS
 
     def getZSet(self, dbName, zsetName):

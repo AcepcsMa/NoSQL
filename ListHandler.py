@@ -11,246 +11,246 @@ class ListHandler(object):
 
     # create a list in the database
     @validTypeCheck
-    def createList(self, dbName, listName):
+    def createList(self, dbName, keyName):
         if self.database.isDbExist(dbName):
-            if self.database.isExist("LIST", dbName, listName) is False:
-                result = self.database.createList(dbName, listName)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       listName)
+            if self.database.isExist("LIST", dbName, keyName) is False:
+                result = self.database.createList(dbName, keyName)
+                msg = Utils.makeMessage(responseCode.detail[result], 
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_ALREADY_EXIST],
-                                       responseCode.LIST_ALREADY_EXIST,
-                                       listName)
+                                        responseCode.LIST_ALREADY_EXIST,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                   responseCode.DB_NOT_EXIST,
-                                   dbName)
+                                    responseCode.DB_NOT_EXIST,
+                                    dbName)
         return msg
 
     # get the value of a given list
     @validTypeCheck
-    def getList(self, dbName, listName):
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                listValue = self.database.getList(listName, dbName)
+    def getList(self, dbName, keyName):
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                listValue = self.database.getList(keyName, dbName)
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
-                                       responseCode.LIST_GET_SUCCESS,
-                                       listValue)
+                                        responseCode.LIST_GET_SUCCESS,
+                                        listValue)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # get values of a given list from start index to end index
     @validTypeCheck
-    def getListByRange(self, dbName, listName, start, end):
+    def getListByRange(self, dbName, keyName, start, end):
         if start > end:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_RANGE_ERROR],
-                                   responseCode.LIST_RANGE_ERROR,
-                                   listName)
+                                    responseCode.LIST_RANGE_ERROR,
+                                    keyName)
             return msg
 
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                listValue = self.database.getList(listName, dbName, start, end)
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                listValue = self.database.getList(keyName, dbName, start, end)
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
-                                       responseCode.LIST_GET_SUCCESS,
-                                       listValue)
+                                        responseCode.LIST_GET_SUCCESS,
+                                        listValue)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # left get from list
     @validTypeCheck
-    def getListL(self, dbName, listName, count):
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                listValue = self.database.getList(listName, dbName, 0, count)
+    def getListL(self, dbName, keyName, count):
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                listValue = self.database.getList(keyName, dbName, 0, count)
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
-                                       responseCode.LIST_GET_SUCCESS,
-                                       listValue)
+                                        responseCode.LIST_GET_SUCCESS,
+                                        listValue)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     @validTypeCheck
-    def getListR(self, dbName, listName, count):
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                listValue = self.database.getList(listName, dbName, -count)
+    def getListR(self, dbName, keyName, count):
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                listValue = self.database.getList(keyName, dbName, -count)
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
-                                       responseCode.LIST_GET_SUCCESS,
-                                       listValue)
+                                        responseCode.LIST_GET_SUCCESS,
+                                        listValue)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     @validTypeCheck
-    def getListRandom(self, dbName, listName, numRand):
+    def getListRandom(self, dbName, keyName, numRand):
         if numRand <= 0:
             msg = Utils.makeMessage(responseCode.detail[responseCode.INVALID_NUMBER],
-                                   responseCode.INVALID_NUMBER,
-                                   numRand)
+                                    responseCode.INVALID_NUMBER,
+                                    numRand)
             return msg
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                code, listValue = self.database.getListRandom(dbName, listName, numRand)
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                code, listValue = self.database.getListRandom(dbName, keyName, numRand)
                 msg = Utils.makeMessage(responseCode.detail[code],
-                                       code,
-                                       listValue)
+                                        code,
+                                        listValue)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # insert a value into the given list
     @validTypeCheck
-    def insertList(self, dbName, listName, listValue):
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                result = self.database.insertList(listName, listValue, dbName)
+    def insertList(self, dbName, keyName, value):
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                result = self.database.insertList(dbName, keyName, value)
                 msg = Utils.makeMessage(responseCode.detail[result], 
-                                       result, 
-                                       listName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED], 
-                                       responseCode.LIST_EXPIRED, 
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST], 
-                                   responseCode.LIST_NOT_EXIST, 
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # insert a value into the given list
     @validTypeCheck
-    def insertListL(self, dbName, listName, listValue):
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                result = self.database.insertList(listName, listValue, dbName, True)
+    def insertListL(self, dbName, keyName, value):
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                result = self.database.insertList(keyName, value, dbName, True)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       listName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # delete a list in the database
     @validTypeCheck
-    def deleteList(self, dbName, listName):
-        if self.database.isExist("LIST", dbName, listName) is True:
-            result = self.database.deleteList(listName, dbName)
+    def deleteList(self, dbName, keyName):
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            result = self.database.deleteList(keyName, dbName)
             msg = Utils.makeMessage(responseCode.detail[result],
-                                   result,
-                                   listName)
+                                    result,
+                                    keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # remove a value from the given list
     @validTypeCheck
-    def rmFromList(self, dbName, listName, value):
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                result = self.database.rmFromList(dbName, listName, value)
+    def rmFromList(self, dbName, keyName, value):
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                result = self.database.rmFromList(dbName, keyName, value)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       listName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:   # if list does not exist
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # clear the given list
     @validTypeCheck
-    def clearList(self, dbName, listName):
-        if self.database.isExist("LIST", dbName, listName) is True:
-            if self.database.isExpired("LIST", dbName, listName) is False:
-                result = self.database.clearList(dbName, listName)
+    def clearList(self, dbName, keyName):
+        if self.database.isExist("LIST", dbName, keyName) is True:
+            if self.database.isExpired("LIST", dbName, keyName) is False:
+                result = self.database.clearList(dbName, keyName)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       listName)
+                                        result,
+                                        keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       listName)
+                                        responseCode.LIST_EXPIRED,
+                                        keyName)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         return msg
 
     # merge two lists
-    def mergeLists(self, dbName, listName1, listName2, resultListName=None):
-        if Utils.isValidType(dbName, listName1, listName2) is False:
+    def mergeLists(self, dbName, keyName1, keyName2, resultKeyName=None):
+        if Utils.isValidType(dbName, keyName1, keyName2) is False:
             msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+                                    responseCode.ELEM_TYPE_ERROR,
+                                    dbName)
             return msg
 
-        if resultListName is not None:
-            if self.database.isExist("LIST", dbName, resultListName) is True:
+        if resultKeyName is not None:
+            if self.database.isExist("LIST", dbName, resultKeyName) is True:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.MERGE_RESULT_EXIST],
-                                       responseCode.MERGE_RESULT_EXIST,
-                                       resultListName)
+                                        responseCode.MERGE_RESULT_EXIST,
+                                        resultKeyName)
                 return msg
 
-        if self.database.isExist("LIST", dbName, listName1, listName2):
-            if self.database.isExpired("LIST", dbName, listName1, listName2) is False:
-                code, result = self.database.mergeLists(dbName, listName1, listName2, resultListName)
+        if self.database.isExist("LIST", dbName, keyName1, keyName2):
+            if self.database.isExpired("LIST", dbName, keyName1, keyName2) is False:
+                code, result = self.database.mergeLists(dbName, keyName1, keyName2, resultKeyName)
                 msg = Utils.makeMessage(responseCode.detail[code],
-                                       code,
-                                       result)
+                                        code,
+                                        result)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                       responseCode.LIST_EXPIRED,
-                                       "{} or {}".format(listName1, listName2))
+                                        responseCode.LIST_EXPIRED,
+                                        "{} or {}".format(keyName1, keyName2))
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   "{} or {}".format(listName1, listName2))
+                                    responseCode.LIST_NOT_EXIST,
+                                    "{} or {}".format(keyName1, keyName2))
         return msg
 
     # search list names using regular expression
@@ -291,14 +291,14 @@ class ListHandler(object):
         return msg
 
     @validTypeCheck
-    def getSize(self, dbName, listName):
-        if self.database.isExist("LIST", dbName, listName) is False:
+    def getSize(self, dbName, keyName):
+        if self.database.isExist("LIST", dbName, keyName) is False:
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                   responseCode.LIST_NOT_EXIST,
-                                   listName)
+                                    responseCode.LIST_NOT_EXIST,
+                                    keyName)
         else:
-            code, result = self.database.getSize(dbName, listName, "LIST")
+            code, result = self.database.getSize(dbName, keyName, "LIST")
             msg = Utils.makeMessage(responseCode.detail[code],
-                                   code,
-                                   result)
+                                    code,
+                                    result)
         return msg

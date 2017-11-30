@@ -215,6 +215,11 @@ class NoSqlDb(object):
                 return False
         return True
 
+    def verifyPassword(self, dbName, password):
+        if dbName not in self.dbPassword:
+            return False
+        return password == self.dbPassword[dbName]
+
     def searchByRE(self, dbName, expression, dataType):
         if self.isDbExist(dbName) is False:
             return []

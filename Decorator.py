@@ -2,6 +2,7 @@ __author__ = "Ma Haoxiang"
 
 # import
 from Response import responseCode
+from Utils import *
 
 # a decorator for save trigger
 def saveTrigger(func):
@@ -38,10 +39,12 @@ def keyNameValidity(func):
 # a decorator which checks the type of args
 def validTypeCheck(func):
     def check(*args, **kwargs):
-        dbName = args[1]
-        keyName = args[2]
-        if((isinstance(dbName,int) is False and isinstance(dbName,str) is False)
-           or (isinstance(keyName,str) is False and isinstance(keyName,int) is False)):
+        #dbName = args[1]
+        #keyName = args[2]
+        dbName = kwargs["dbName"]
+        keyName = kwargs["keyName"]
+        if((isinstance(dbName, int) is False and isinstance(dbName, str) is False)
+           or (isinstance(keyName, str) is False and isinstance(keyName, int) is False)):
             return {
                 "msg":"Element Type Error",
                 "typeCode":responseCode.ELEM_TYPE_ERROR,
@@ -50,4 +53,18 @@ def validTypeCheck(func):
         else:
             result = func(*args,**kwargs)
             return result
+    return check
+
+# Password check decorator
+def passwordCheck(func):
+    def check(*args, **kwargs):
+        dbName = kwargs["dbName"]
+        password = kwargs["password"]
+        database = kwargs["self"]
+        if database.verifyPassword(dbName, password) is False:
+            return Utils.makeMessage(responseCode.detail[responseCode.DB_PASSWORD_ERROR],
+                                     responseCode.DB_PASSWORD_ERROR,
+                                     dbName)
+        else:
+            return func(*args, **kwargs)
     return check

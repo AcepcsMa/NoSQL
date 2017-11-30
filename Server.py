@@ -77,7 +77,7 @@ def clearTTL():
         dataType = flask.request.json["dataType"]
         dbName = flask.request.json["dbName"]
         keyName = flask.request.json["keyName"]
-    excep:
+    except:
         dataType = dbName = keyName = None
     result = ttlTool.clearTTL(dbName, keyName, dataType)
     return flask.jsonify(result)

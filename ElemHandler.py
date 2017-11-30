@@ -20,7 +20,10 @@ class ElemHandler(object):
 
         if Utils.isValidType(value): # check the type of elem name and elem value
             if self.database.isExist("ELEM", dbName, keyName) is False:
-                result = self.database.createElem(dbName=dbName, keyName=keyName, value=value, password=password)
+                result = self.database.createElem(dbName=dbName,
+                                                  keyName=keyName,
+                                                  value=value,
+                                                  password=password)
                 msg = Utils.makeMessage(responseCode.detail[result],
                                         result,
                                         keyName)
@@ -36,25 +39,25 @@ class ElemHandler(object):
 
     # update the value of an elem in the db
     @validTypeCheck
-    def updateElem(self, dbName, keyName, value):
+    def updateElem(self, dbName, keyName, value, password=None):
         if Utils.isValidType(value) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
+            return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
+                                    responseCode.ELEM_TYPE_ERROR,
                                     keyName)
-            return msg
 
         if self.database.isExist("ELEM", dbName, keyName):
             if self.database.isExpired("ELEM", dbName, keyName) is False:
-                result = self.database.updateElem(dbName, keyName, value)
-                msg = Utils.makeMessage(responseCode.detail[result], result, keyName)
+                result = self.database.updateElem(dbName=dbName,
+                                                  keyName=keyName,
+                                                  value=value,
+                                                  password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_EXPIRED],
-                                       responseCode.ELEM_EXPIRED,
-                                        keyName)
+                result = responseCode.ELEM_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_NOT_EXIST],
-                                   responseCode.ELEM_NOT_EXIST,
-                                    keyName)
+            result = responseCode.ELEM_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[result],
+                                        result,
+                                        keyName)
         return msg
 
     # get the value of existed elem

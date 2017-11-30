@@ -288,18 +288,20 @@ class NoSqlDb(object):
                          "{0}->{1}->{2}".format(dbName, keyName, value))
         return responseCode.ELEM_CREATE_SUCCESS
 
-    def updateElem(self, dbName, elemName, value):
-        if self.elemLockDict[dbName][elemName] is True: # element is locked
+    @saveTrigger
+    @passwordCheck
+    def updateElem(self, dbName, keyName, value, password=None):
+        if self.elemLockDict[dbName][keyName] is True: # element is locked
             self.logger.warning("Update Element Locked "
-                                "{0}->{1}->{2}".format(dbName, elemName, value))
+                                "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.ELEM_IS_LOCKED
 
         else:   # update the value
-            self.lock("ELEM", dbName, elemName)
-            self.elemDict[dbName][elemName] = value
-            self.unlock("ELEM", dbName, elemName)
+            self.lock("ELEM", dbName, keyName)
+            self.elemDict[dbName][keyName] = value
+            self.unlock("ELEM", dbName, keyName)
             self.logger.info("Update Element Success "
-                             "{0}->{1}->{2}".format(dbName, elemName, value))
+                             "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.ELEM_UPDATE_SUCCESS
 
     def getElem(self, elemName, dbName):

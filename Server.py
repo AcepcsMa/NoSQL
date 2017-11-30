@@ -85,13 +85,23 @@ def clearTTL():
 @app.route("/makeElem",methods=["POST"])
 def makeElem():
     myHandler = ElemHandler(database)
+    #params = {}
     try:
         dbName = flask.request.json["dbName"]
-        elemName = flask.request.json["elemName"]
-        elemValue = flask.request.json["elemValue"]
+        keyName = flask.request.json["elemName"]
+        value = flask.request.json["elemValue"]
     except:
-        dbName = elemName = elemValue = None
-    result = myHandler.createElem(dbName, elemName, elemValue)
+        dbName = keyName = value = None
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+
+    result = myHandler.createElem(dbName=dbName,
+                                  keyName=keyName,
+                                  value=value,
+                                  password=password)
+    #result = myHandler.createElem(**params)
     return flask.jsonify(result)
 
 @app.route("/getElem/<string:dbName>/<string:elemName>",methods=["GET"])

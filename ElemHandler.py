@@ -11,7 +11,7 @@ class ElemHandler(object):
 
     # create an element in the db
     @validTypeCheck
-    def createElem(self, dbName, keyName, value):
+    def createElem(self, dbName, keyName, value, password=None):
         if self.database.isDbExist(dbName) is False:
             msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
                                    responseCode.DB_NOT_EXIST,
@@ -20,9 +20,9 @@ class ElemHandler(object):
 
         if Utils.isValidType(value): # check the type of elem name and elem value
             if self.database.isExist("ELEM", dbName, keyName) is False:
-                result = self.database.createElem(dbName, keyName, value)
+                result = self.database.createElem(dbName=dbName, keyName=keyName, value=value, password=password)
                 msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
+                                        result,
                                         keyName)
             else:
                 msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_ALREADY_EXIST],

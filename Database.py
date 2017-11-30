@@ -217,6 +217,8 @@ class NoSqlDb(object):
 
     def verifyPassword(self, dbName, password):
         if dbName not in self.dbPassword:
+            if password is None:
+                return True
             return False
         return password == self.dbPassword[dbName]
 
@@ -275,7 +277,8 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createElem(self, dbName, keyName, value):
+    @passwordCheck
+    def createElem(self, dbName, keyName, value, password=None):
         self.lock("ELEM", dbName, keyName) # lock this element avoiding r/w implements
         self.elemName[dbName].add(keyName)
         self.elemDict[dbName][keyName] = value

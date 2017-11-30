@@ -102,11 +102,13 @@ def makeElem():
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/getElem/<string:dbName>/<string:elemName>",methods=["GET"])
-def getElem(dbName, elemName):
+@app.route("/getElem/<string:dbName>/<string:elemName>", defaults={"password": None})
+@app.route("/getElem/<string:dbName>/<string:elemName>/<string:password>",methods=["GET"])
+def getElem(dbName, elemName, password):
     myHandler = ElemHandler(database)
     result = myHandler.getElem(dbName=dbName,
-                               keyName=elemName)
+                               keyName=elemName,
+                               password=password)
     return flask.jsonify(result)
 
 @app.route("/updateElem",methods=["PUT"])

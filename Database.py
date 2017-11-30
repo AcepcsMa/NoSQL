@@ -222,7 +222,8 @@ class NoSqlDb(object):
             return False
         return password == self.dbPassword[dbName]
 
-    def searchByRE(self, dbName, expression, dataType):
+    @passwordCheck
+    def searchByRE(self, dbName, expression, dataType, password=None):
         if self.isDbExist(dbName) is False:
             return []
         searchResult = set()
@@ -304,14 +305,15 @@ class NoSqlDb(object):
                              "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.ELEM_UPDATE_SUCCESS
 
-    def getElem(self, elemName, dbName):
+    @passwordCheck
+    def getElem(self, dbName, keyName, password=None):
         try:
-            elemValue = self.elemDict[dbName][elemName]
+            elemValue = self.elemDict[dbName][keyName]
         except:
             elemValue = None
         self.logger.info("Get Element Success "
-                         "{0}->{1}".format(dbName, elemName))
-        return elemValue
+                         "{0}->{1}".format(dbName, keyName))
+        return (responseCode.ELEM_GET_SUCCESS, elemValue)
 
     def searchAllElem(self, dbName):
         if self.isDbExist(dbName) is False:

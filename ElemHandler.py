@@ -13,10 +13,9 @@ class ElemHandler(object):
     @validTypeCheck
     def createElem(self, dbName, keyName, value, password=None):
         if self.database.isDbExist(dbName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
+            return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
                                    responseCode.DB_NOT_EXIST,
                                    dbName)
-            return msg
 
         if Utils.isValidType(value): # check the type of elem name and elem value
             if self.database.isExist("ELEM", dbName, keyName) is False:
@@ -24,17 +23,14 @@ class ElemHandler(object):
                                                   keyName=keyName,
                                                   value=value,
                                                   password=password)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = result
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_ALREADY_EXIST],
-                                       responseCode.ELEM_ALREADY_EXIST,
-                                        keyName)
+                code = responseCode.ELEM_ALREADY_EXIST
         else:   # the type of elem name or elem value is invalid
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                    keyName)
+            code = responseCode.ELEM_TYPE_ERROR
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # update the value of an elem in the db
@@ -62,31 +58,36 @@ class ElemHandler(object):
 
     # get the value of existed elem
     @validTypeCheck
-    def getElem(self, dbName, keyName):
+    def getElem(self, dbName, keyName, password):
         if self.database.isDbExist(dbName):
             if self.database.isExist("ELEM", dbName, keyName) is False:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_NOT_EXIST],
-                                       responseCode.ELEM_NOT_EXIST,
-                                        keyName)
+                code = responseCode.ELEM_NOT_EXIST
+                result = keyName
             else:
                 if self.database.isExpired("ELEM", dbName, keyName) is False:
-                    msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_GET_SUCCESS],
-                                           responseCode.ELEM_GET_SUCCESS,
-                                           self.database.getElem(keyName, dbName))
+                    result = self.database.getElem(dbName=dbName,
+                                                   keyName=keyName,
+                                                   password=password)
+                    code = result if result == responseCode.DB_PASSWORD_ERROR else result[0]
+                    result = dbName if result == responseCode.DB_PASSWORD_ERROR else result[1]
                 else:
-                    msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_EXPIRED],
-                                           responseCode.ELEM_EXPIRED,
-                                            keyName)
+                    code = responseCode.ELEM_EXPIRED
+                    result = keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                   responseCode.DB_NOT_EXIST,
-                                   dbName)
+            code = responseCode.DB_NOT_EXIST
+            result = dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # search element using regular expression
-    def searchElem(self, dbName, expression):
+    def searchElem(self, dbName, expression, password=None):
         if Utils.isValidType(dbName):
-            searchResult = self.database.searchByRE(dbName, expression, "ELEM")
+            searchResult = self.database.searchByRE(dbName=dbName,
+                                                    expression=expression,
+                                                    dataType="ELEM",
+                                                    password=password)
             msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_SEARCH_SUCCESS],
                                    responseCode.ELEM_SEARCH_SUCCESS,
                                    searchResult)

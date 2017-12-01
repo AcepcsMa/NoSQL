@@ -86,17 +86,17 @@ def clearTTL():
 @app.route("/makeElem",methods=["POST"])
 def makeElem():
     myHandler = ElemHandler(database)
+    dataJson = json.loads(flask.request.get_data())
     try:
-        dbName = flask.request.json["dbName"]
-        keyName = flask.request.json["elemName"]
-        value = flask.request.json["elemValue"]
+        dbName = dataJson["dbName"]
+        keyName = dataJson["elemName"]
+        value = dataJson["elemValue"]
     except:
         dbName = keyName = value = None
     try:
-        password = flask.request.json["password"]
+        password = dataJson["password"]
     except:
         password = None
-
     result = myHandler.createElem(dbName=dbName,
                                   keyName=keyName,
                                   value=value,
@@ -137,28 +137,47 @@ def updateElem():
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/searchElem/<string:dbName>/<string:expression>",methods=["GET"])
-def searchElem(dbName,expression):
+@app.route("/searchElem/<string:dbName>/<string:expression>",
+           defaults={"password": None})
+@app.route("/searchElem/<string:dbName>/<string:expression>/<string:password>",
+           methods=["GET"])
+def searchElem(dbName, expression, password):
     myHandler = ElemHandler(database)
-    result = myHandler.searchElem(dbName, expression)
+    result = myHandler.searchElem(dbName=dbName,
+                                  expression=expression,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/getAllElem/<dbName>",methods=["GET"])
-def searchAllElem(dbName):
+@app.route("/getAllElem/<dbName>", defaults={"password": None})
+@app.route("/getAllElem/<string:dbName>/<string:password>", methods=["GET"])
+def searchAllElem(dbName, password):
     myHandler = ElemHandler(database)
-    result = myHandler.searchAllElem(dbName)
+    result = myHandler.searchAllElem(dbName=dbName,
+                                     password=password)
     return flask.jsonify(result)
 
-@app.route("/increaseElem/<string:dbName>/<string:elemName>",methods=["PUT"])
-def increaseElem(dbName, elemName):
+@app.route("/increaseElem/<string:dbName>/<string:elemName>",
+           defaults={"password": None},
+           methods=["PUT"])
+@app.route("/increaseElem/<string:dbName>/<string:elemName>/<string:password>",
+           methods=["PUT"])
+def increaseElem(dbName, elemName, password):
     myHandler = ElemHandler(database)
-    result = myHandler.increaseElem(dbName, elemName)
+    result = myHandler.increaseElem(dbName=dbName,
+                                    keyName=elemName,
+                                    password=password)
     return flask.jsonify(result)
 
-@app.route("/decreaseElem/<string:dbName>/<string:elemName>",methods=["PUT"])
-def decreaseElem(dbName, elemName):
+@app.route("/decreaseElem/<string:dbName>/<string:elemName>",
+           defaults={"password": None},
+           methods=["PUT"])
+@app.route("/decreaseElem/<string:dbName>/<string:elemName>/<string:password>",
+           methods=["PUT"])
+def decreaseElem(dbName, elemName, password):
     myHandler = ElemHandler(database)
-    result = myHandler.decreaseElem(dbName, elemName)
+    result = myHandler.decreaseElem(dbName=dbName,
+                                    keyName=elemName,
+                                    password=password)
     return flask.jsonify(result)
 
 @app.route("/deleteElem/<string:dbName>/<string:elemName>",methods=["DELETE"])

@@ -14,6 +14,7 @@ from ListHandler import ListHandler
 from HashHandler import HashHandler
 from SetHandler import SetHandler
 from ZSetHandler import ZSetHandler
+import json
 
 app = flask.Flask(__name__)
 
@@ -100,7 +101,10 @@ def makeElem():
                                   keyName=keyName,
                                   value=value,
                                   password=password)
-    return flask.jsonify(result)
+
+    resp = flask.make_response(flask.jsonify(result))
+    resp.headers['Access-Control-Allow-Origin'] = "*"
+    return resp
 
 @app.route("/getElem/<string:dbName>/<string:elemName>", defaults={"password": None})
 @app.route("/getElem/<string:dbName>/<string:elemName>/<string:password>",methods=["GET"])
@@ -109,7 +113,10 @@ def getElem(dbName, elemName, password):
     result = myHandler.getElem(dbName=dbName,
                                keyName=elemName,
                                password=password)
-    return flask.jsonify(result)
+
+    resp = flask.make_response(flask.jsonify(result))
+    resp.headers['Access-Control-Allow-Origin'] = "*"
+    return resp
 
 @app.route("/updateElem",methods=["PUT"])
 def updateElem():

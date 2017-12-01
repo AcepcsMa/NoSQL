@@ -88,66 +88,69 @@ class ElemHandler(object):
                                                     expression=expression,
                                                     dataType="ELEM",
                                                     password=password)
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_SEARCH_SUCCESS],
-                                   responseCode.ELEM_SEARCH_SUCCESS,
-                                   searchResult)
+            code = searchResult if searchResult == responseCode.DB_PASSWORD_ERROR \
+                                else responseCode.ELEM_SEARCH_SUCCESS
+            result = dbName if searchResult == responseCode.DB_PASSWORD_ERROR \
+                            else searchResult
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+            code = responseCode.ELEM_TYPE_ERROR
+            result = dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # get all element names in the db
-    def searchAllElem(self, dbName):
-        msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_SEARCH_SUCCESS],
-                               responseCode.ELEM_SEARCH_SUCCESS,
-                               self.database.searchAllElem(dbName))
+    def searchAllElem(self, dbName, password=None):
+        searchResult = self.database.searchAllElem(dbName=dbName,
+                                                   password=password)
+        code = searchResult if searchResult == responseCode.DB_PASSWORD_ERROR \
+            else responseCode.ELEM_SEARCH_SUCCESS
+        result = dbName if searchResult == responseCode.DB_PASSWORD_ERROR \
+            else searchResult
+        msg = Utils.makeMessage(responseCode.detail[code],
+                               code,
+                               result)
         return msg
 
     # increase the value of an element
     @validTypeCheck
-    def increaseElem(self, dbName, keyName):
+    def increaseElem(self, dbName, keyName, password=None):
         if self.database.isExist("ELEM", dbName, keyName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_NOT_EXIST],
-                                    responseCode.ELEM_NOT_EXIST,
-                                    keyName)
+            code = responseCode.ELEM_NOT_EXIST
         else:
             if self.database.isExpired("ELEM", dbName, keyName) is False:
                 if Utils.isInt(self.database.getElem(keyName, dbName)): # check if the element can be increased
-                    result = self.database.increaseElem(dbName, keyName)
-                    msg = Utils.makeMessage(responseCode.detail[result],
-                                            result,
-                                            keyName)
+                    code = self.database.increaseElem(dbName=dbName,
+                                                      keyName=keyName,
+                                                      password=password)
                 else:
-                    msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                            responseCode.ELEM_TYPE_ERROR,
-                                            keyName)
+                    code = responseCode.ELEM_TYPE_ERROR
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_EXPIRED],
-                                        responseCode.ELEM_EXPIRED,
-                                        keyName)
+                code = responseCode.ELEM_EXPIRED
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # decrease the value of an element
     @validTypeCheck
-    def decreaseElem(self, dbName, keyName):
+    def decreaseElem(self, dbName, keyName, password=None):
         if self.database.isExist("ELEM", dbName, keyName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_NOT_EXIST],
-                                    responseCode.ELEM_NOT_EXIST,
-                                    keyName)
+            code = responseCode.ELEM_NOT_EXIST
         else:
             if self.database.isExpired("ELEM", dbName, keyName) is False:
                 if Utils.isInt(self.database.getElem(keyName, dbName)): # check if the element can be increased
-                    result = self.database.decreaseElem(dbName, keyName)
-                    msg = Utils.makeMessage(responseCode.detail[result], result, keyName)
+                    code = self.database.decreaseElem(dbName=dbName,
+                                                      keyName=keyName,
+                                                      password=password)
                 else:
-                    msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                            responseCode.ELEM_TYPE_ERROR,
-                                            keyName)
+                    code = responseCode.ELEM_TYPE_ERROR
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_EXPIRED],
-                                        responseCode.ELEM_EXPIRED,
-                                        keyName)
+                code = responseCode.ELEM_EXPIRED
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # delete an element in the database

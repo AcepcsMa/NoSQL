@@ -315,38 +315,41 @@ class NoSqlDb(object):
                          "{0}->{1}".format(dbName, keyName))
         return (responseCode.ELEM_GET_SUCCESS, elemValue)
 
-    def searchAllElem(self, dbName):
+    @passwordCheck
+    def searchAllElem(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All Elements in {0}".format(dbName))
         return list(self.elemName[dbName])
 
     @saveTrigger
-    def increaseElem(self, dbName, elemName):
-        if self.elemLockDict[dbName][elemName] is True: # element is locked
+    @passwordCheck
+    def increaseElem(self, dbName, keyName, password=None):
+        if self.elemLockDict[dbName][keyName] is True: # element is locked
             self.logger.warning("Increase Element Locked "
-                                "{0}->{1}".format(dbName, elemName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lock("ELEM", dbName, elemName)
-            self.elemDict[dbName][elemName] += 1
-            self.unlock("ELEM", dbName, elemName)
+            self.lock("ELEM", dbName, keyName)
+            self.elemDict[dbName][keyName] += 1
+            self.unlock("ELEM", dbName, keyName)
             self.logger.info("Increase Element Success "
-                             "{0}->{1}".format(dbName, elemName))
+                             "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_INCR_SUCCESS
 
     @saveTrigger
-    def decreaseElem(self, dbName, elemName):
-        if self.elemLockDict[dbName][elemName] is True: # element is locked
+    @passwordCheck
+    def decreaseElem(self, dbName, keyName, password=None):
+        if self.elemLockDict[dbName][keyName] is True: # element is locked
             self.logger.warning("Decrease Element Locked "
-                                "{0}->{1}".format(dbName, elemName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lock("ELEM", dbName, elemName)
-            self.elemDict[dbName][elemName] -= 1
-            self.unlock("ELEM", dbName, elemName)
+            self.lock("ELEM", dbName, keyName)
+            self.elemDict[dbName][keyName] -= 1
+            self.unlock("ELEM", dbName, keyName)
             self.logger.info("Decrease Element Success "
-                             "{0}->{1}".format(dbName, elemName))
+                             "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_DECR_SUCCESS
 
     @saveTrigger

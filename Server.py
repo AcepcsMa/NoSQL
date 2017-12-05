@@ -200,13 +200,26 @@ def makeList():
         listName = flask.request.json["listName"]
     except:
         dbName = listName = None
-    result = myHandler.createList(dbName, listName)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+
+    result = myHandler.createList(dbName=dbName,
+                                  keyName=listName,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/getList/<string:dbName>/<string:listName>",methods=["GET"])
-def getList(dbName, listName):
+@app.route("/getList/<string:dbName>/<string:listName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getList/<string:dbName>/<string:listName>/<string:password>",
+           methods=["GET"])
+def getList(dbName, listName, password):
     myHandler = ListHandler(database)
-    result = myHandler.getList(dbName, listName)
+    result = myHandler.getList(dbName=dbName,
+                               keyName=listName,
+                               password=password)
     return flask.jsonify(result)
 
 @app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>",methods=["GET"])

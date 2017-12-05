@@ -375,7 +375,8 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createList(self, dbName, keyName):
+    @passwordCheck
+    def createList(self, dbName, keyName, password=None):
         self.lock("LIST", dbName, keyName)
         self.listName[dbName].add(keyName)
         self.listDict[dbName][keyName] = list()
@@ -385,21 +386,22 @@ class NoSqlDb(object):
                          "{0}->{1}".format(dbName, keyName))
         return responseCode.LIST_CREATE_SUCCESS
 
-    def getList(self, listName, dbName, start=None, end=None):
+    @passwordCheck
+    def getList(self, dbName, keyName, start=None, end=None, password=None):
         try:
             if start is None and end is None:
-                listValue = self.listDict[dbName][listName]
+                listValue = self.listDict[dbName][keyName]
             elif start is not None and end is not None:
-                listValue = self.listDict[dbName][listName][start:end]
+                listValue = self.listDict[dbName][keyName][start:end]
             elif start is not None and end is None:
-                listValue = self.listDict[dbName][listName][start:]
+                listValue = self.listDict[dbName][keyName][start:]
             else:
                 listValue = None
         except:
             listValue = None
         self.logger.info("Get List Success "
-                         "{0}->{1}".format(dbName, listName))
-        return listValue
+                         "{0}->{1}".format(dbName, keyName))
+        return (responseCode.LIST_GET_SUCCESS, listValue)
 
     def getListRandom(self, dbName, listName, numRand):
         if len(self.listDict[dbName][listName]) < numRand:

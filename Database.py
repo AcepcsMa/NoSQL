@@ -353,23 +353,24 @@ class NoSqlDb(object):
             return responseCode.ELEM_DECR_SUCCESS
 
     @saveTrigger
-    def deleteElem(self, elemName, dbName):
-        if self.elemLockDict[dbName][elemName] is True:  # element is locked
+    @passwordCheck
+    def deleteElem(self, dbName, keyName, password=None):
+        if self.elemLockDict[dbName][keyName] is True:  # element is locked
             self.logger.warning("Delete Element Locked "
-                                "{0}->{1}".format(dbName, elemName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lock("ELEM", dbName, elemName)
-            self.elemName[dbName].remove(elemName)
-            self.elemDict[dbName].pop(elemName)
+            self.lock("ELEM", dbName, keyName)
+            self.elemName[dbName].remove(keyName)
+            self.elemDict[dbName].pop(keyName)
             try:
-                self.elemTTL[dbName].pop(elemName)
-                self.invertedTypeDict[dbName].pop(elemName)
+                self.elemTTL[dbName].pop(keyName)
+                self.invertedTypeDict[dbName].pop(keyName)
             except:
                 pass
-            self.elemLockDict[dbName].pop(elemName)
+            self.elemLockDict[dbName].pop(keyName)
             self.logger.info("Delete Element Success "
-                             "{0}->{1}".format(dbName, elemName))
+                             "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_DELETE_SUCCESS
 
     @keyNameValidity

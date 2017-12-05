@@ -180,10 +180,16 @@ def decreaseElem(dbName, elemName, password):
                                     password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteElem/<string:dbName>/<string:elemName>",methods=["DELETE"])
-def deleteElem(dbName, elemName):
+@app.route("/deleteElem/<string:dbName>/<string:keyName>",
+           defaults={"password":None},
+           methods=["DELETE"])
+@app.route("/deleteElem/<string:dbName>/<string:keyName>/<string:password>",
+           methods=["DELETE"])
+def deleteElem(dbName, keyName, password):
     myHandler = ElemHandler(database)
-    result = myHandler.deleteElem(dbName, elemName)
+    result = myHandler.deleteElem(dbName=dbName,
+                                  keyName=keyName,
+                                  password=password)
     return flask.jsonify(result)
 
 @app.route("/makeList",methods=["POST"])

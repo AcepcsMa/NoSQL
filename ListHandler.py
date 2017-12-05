@@ -11,40 +11,42 @@ class ListHandler(object):
 
     # create a list in the database
     @validTypeCheck
-    def createList(self, dbName, keyName):
+    def createList(self, dbName, keyName, password=None):
         if self.database.isDbExist(dbName):
             if self.database.isExist("LIST", dbName, keyName) is False:
-                result = self.database.createList(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[result], 
-                                        result,
-                                        keyName)
+                code = self.database.createList(dbName=dbName,
+                                                  keyName=keyName,
+                                                  password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_ALREADY_EXIST],
-                                        responseCode.LIST_ALREADY_EXIST,
-                                        keyName)
+                code = responseCode.LIST_ALREADY_EXIST
+            result = keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                    responseCode.DB_NOT_EXIST,
-                                    dbName)
+            code = responseCode.DB_NOT_EXIST
+            result = dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # get the value of a given list
     @validTypeCheck
-    def getList(self, dbName, keyName):
+    def getList(self, dbName, keyName, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                listValue = self.database.getList(keyName, dbName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
-                                        responseCode.LIST_GET_SUCCESS,
-                                        listValue)
+                result = self.database.getList(dbName=dbName,
+                                               keyName=keyName,
+                                               password=password)
+                code = result if result == responseCode.DB_PASSWORD_ERROR else result[0]
+                result = dbName if result == responseCode.DB_PASSWORD_ERROR else result[1]
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code = responseCode.LIST_EXPIRED
+                result = keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code = responseCode.LIST_NOT_EXIST
+            result = keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # get values of a given list from start index to end index

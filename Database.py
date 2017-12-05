@@ -353,28 +353,30 @@ class NoSqlDb(object):
             return responseCode.ELEM_DECR_SUCCESS
 
     @saveTrigger
-    def deleteElem(self, elemName, dbName):
-        if self.elemLockDict[dbName][elemName] is True:  # element is locked
+    @passwordCheck
+    def deleteElem(self, dbName, keyName, password=None):
+        if self.elemLockDict[dbName][keyName] is True:  # element is locked
             self.logger.warning("Delete Element Locked "
-                                "{0}->{1}".format(dbName, elemName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
-            self.lock("ELEM", dbName, elemName)
-            self.elemName[dbName].remove(elemName)
-            self.elemDict[dbName].pop(elemName)
+            self.lock("ELEM", dbName, keyName)
+            self.elemName[dbName].remove(keyName)
+            self.elemDict[dbName].pop(keyName)
             try:
-                self.elemTTL[dbName].pop(elemName)
-                self.invertedTypeDict[dbName].pop(elemName)
+                self.elemTTL[dbName].pop(keyName)
+                self.invertedTypeDict[dbName].pop(keyName)
             except:
                 pass
-            self.elemLockDict[dbName].pop(elemName)
+            self.elemLockDict[dbName].pop(keyName)
             self.logger.info("Delete Element Success "
-                             "{0}->{1}".format(dbName, elemName))
+                             "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_DELETE_SUCCESS
 
     @keyNameValidity
     @saveTrigger
-    def createList(self, dbName, keyName):
+    @passwordCheck
+    def createList(self, dbName, keyName, password=None):
         self.lock("LIST", dbName, keyName)
         self.listName[dbName].add(keyName)
         self.listDict[dbName][keyName] = list()
@@ -384,21 +386,22 @@ class NoSqlDb(object):
                          "{0}->{1}".format(dbName, keyName))
         return responseCode.LIST_CREATE_SUCCESS
 
-    def getList(self, listName, dbName, start=None, end=None):
+    @passwordCheck
+    def getList(self, dbName, keyName, start=None, end=None, password=None):
         try:
             if start is None and end is None:
-                listValue = self.listDict[dbName][listName]
+                listValue = self.listDict[dbName][keyName]
             elif start is not None and end is not None:
-                listValue = self.listDict[dbName][listName][start:end]
+                listValue = self.listDict[dbName][keyName][start:end]
             elif start is not None and end is None:
-                listValue = self.listDict[dbName][listName][start:]
+                listValue = self.listDict[dbName][keyName][start:]
             else:
                 listValue = None
         except:
             listValue = None
         self.logger.info("Get List Success "
-                         "{0}->{1}".format(dbName, listName))
-        return listValue
+                         "{0}->{1}".format(dbName, keyName))
+        return (responseCode.LIST_GET_SUCCESS, listValue)
 
     def getListRandom(self, dbName, listName, numRand):
         if len(self.listDict[dbName][listName]) < numRand:

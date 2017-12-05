@@ -155,13 +155,15 @@ class ElemHandler(object):
 
     # delete an element in the database
     @validTypeCheck
-    def deleteElem(self, dbName, keyName):
+    def deleteElem(self, dbName, keyName, password=None):
         if self.database.isExist("ELEM", dbName, keyName) is False:
             msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_NOT_EXIST],
                                     responseCode.ELEM_NOT_EXIST,
                                     keyName)
         else:
-            result = self.database.deleteElem(keyName, dbName)
+            result = self.database.deleteElem(dbName=dbName,
+                                              keyName=keyName,
+                                              password=password)
             msg = Utils.makeMessage(responseCode.detail[result],
                                     result,
                                     keyName)

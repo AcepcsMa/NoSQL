@@ -222,16 +222,30 @@ def getList(dbName, listName, password):
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>",methods=["GET"])
-def leftGetList(dbName, listName, count):
+@app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>/<string:password>",
+           methods=["GET"])
+def leftGetList(dbName, listName, count, password):
     myHandler = ListHandler(database)
-    result = myHandler.getListL(dbName, listName, count)
+    result = myHandler.getListL(dbName=dbName,
+                                keyName=listName,
+                                count=count,
+                                password=password)
     return flask.jsonify(result)
 
-@app.route("/rightGetList/<string:dbName>/<string:listName>/<int:count>",methods=["GET"])
-def rightGetList(dbName, listName, count):
+@app.route("/rightGetList/<string:dbName>/<string:listName>/<int:count>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/rightGetList/<string:dbName>/<string:listName>/<int:count>/<string:password>",
+           methods=["GET"])
+def rightGetList(dbName, listName, count, password):
     myHandler = ListHandler(database)
-    result = myHandler.getListR(dbName, listName, count)
+    result = myHandler.getListR(dbName=dbName,
+                                keyName=listName,
+                                count=count,
+                                password=password)
     return flask.jsonify(result)
 
 @app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>",methods=["GET"])

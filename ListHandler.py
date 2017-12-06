@@ -76,39 +76,42 @@ class ListHandler(object):
 
     # left get from list
     @validTypeCheck
-    def getListL(self, dbName, keyName, count):
+    def getListL(self, dbName, keyName, count, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                listValue = self.database.getList(keyName, dbName, 0, count)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
-                                        responseCode.LIST_GET_SUCCESS,
-                                        listValue)
+                result = self.database.getList(dbName=dbName,
+                                               keyName=keyName,
+                                               start=0,
+                                               end=count,
+                                               password=password)
+                code = result if result == responseCode.DB_PASSWORD_ERROR else result[0]
+                result = dbName if result == responseCode.DB_PASSWORD_ERROR else result[1]
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code, result = responseCode.LIST_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.LIST_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck
-    def getListR(self, dbName, keyName, count):
+    def getListR(self, dbName, keyName, count, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                listValue = self.database.getList(keyName, dbName, -count)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
-                                        responseCode.LIST_GET_SUCCESS,
-                                        listValue)
+                result = self.database.getList(dbName=dbName,
+                                               keyName=keyName,
+                                               start=-count,
+                                               password=password)
+                code = result if result == responseCode.DB_PASSWORD_ERROR else result[0]
+                result = dbName if result == responseCode.DB_PASSWORD_ERROR else result[1]
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code, result = responseCode.LIST_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.LIST_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck

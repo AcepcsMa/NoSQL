@@ -248,16 +248,28 @@ def rightGetList(dbName, listName, count, password):
                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>",methods=["GET"])
-def getListByRange(dbName, listName, start, end):
+@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>/<string:password>",
+           methods=["GET"])
+def getListByRange(dbName, listName, start, end, password):
     myHandler = ListHandler(database)
-    result = myHandler.getListByRange(dbName, listName, start, end)
+    result = myHandler.getListByRange(dbName=dbName, keyName=listName,
+                                      start=start, end=end,
+                                      password=password)
     return flask.jsonify(result)
 
-@app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>",methods=["GET"])
-def getListRandom(dbName, listName, numRand):
+@app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>/<string:password>",
+           methods=["GET"])
+def getListRandom(dbName, listName, numRand, password):
     myHandler = ListHandler(database)
-    result = myHandler.getListRandom(dbName, listName, numRand)
+    result = myHandler.getListRandom(dbName=dbName,
+                                     keyName=listName,
+                                     numRand=numRand)
     return flask.jsonify(result)
 
 @app.route("/insertList",methods=["PUT"])
@@ -269,7 +281,12 @@ def insertList():
         listValue = flask.request.json["listValue"]
     except:
         dbName = listName = listValue = None
-    result = myHandler.insertList(dbName, listName, listValue)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.insertList(dbName=dbName, keyName=listName,
+                                  value=listValue, password=password)
     return flask.jsonify(result)
 
 @app.route("/leftInsertList",methods=["PUT"])

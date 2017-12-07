@@ -21,8 +21,7 @@ class ListHandler(object):
                 code = responseCode.LIST_ALREADY_EXIST
             result = keyName
         else:
-            code = responseCode.DB_NOT_EXIST
-            result = dbName
+            code, result = responseCode.DB_NOT_EXIST, dbName
         msg = Utils.makeMessage(responseCode.detail[code],
                                 code,
                                 result)
@@ -39,11 +38,9 @@ class ListHandler(object):
                 code = result if result == responseCode.DB_PASSWORD_ERROR else result[0]
                 result = dbName if result == responseCode.DB_PASSWORD_ERROR else result[1]
             else:
-                code = responseCode.LIST_EXPIRED
-                result = keyName
+                code, result = responseCode.LIST_EXPIRED, keyName
         else:
-            code = responseCode.LIST_NOT_EXIST
-            result = keyName
+            code, result = responseCode.LIST_NOT_EXIST, keyName
         msg = Utils.makeMessage(responseCode.detail[code],
                                 code,
                                 result)
@@ -51,27 +48,26 @@ class ListHandler(object):
 
     # get values of a given list from start index to end index
     @validTypeCheck
-    def getListByRange(self, dbName, keyName, start, end):
+    def getListByRange(self, dbName, keyName, start, end, password=None):
         if start > end:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_RANGE_ERROR],
+            return Utils.makeMessage(responseCode.detail[responseCode.LIST_RANGE_ERROR],
                                     responseCode.LIST_RANGE_ERROR,
                                     keyName)
-            return msg
 
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                listValue = self.database.getList(keyName, dbName, start, end)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_GET_SUCCESS],
-                                        responseCode.LIST_GET_SUCCESS,
-                                        listValue)
+                result = self.database.getList(dbName=dbName, keyName=keyName,
+                                               start=start, end=end,
+                                               password=password)
+                code = result if result == responseCode.DB_PASSWORD_ERROR else result[0]
+                result = dbName if result == responseCode.DB_PASSWORD_ERROR else result[1]
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code, result = responseCode.LIST_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.LIST_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # left get from list
@@ -115,7 +111,7 @@ class ListHandler(object):
         return msg
 
     @validTypeCheck
-    def getListRandom(self, dbName, keyName, numRand):
+    def getListRandom(self, dbName, keyName, numRand, password=None):
         if numRand <= 0:
             msg = Utils.makeMessage(responseCode.detail[responseCode.INVALID_NUMBER],
                                     responseCode.INVALID_NUMBER,
@@ -123,37 +119,31 @@ class ListHandler(object):
             return msg
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                code, listValue = self.database.getListRandom(dbName, keyName, numRand)
-                msg = Utils.makeMessage(responseCode.detail[code],
-                                        code,
-                                        listValue)
+                code, result = self.database.getListRandom(dbName=dbName, keyName=keyName,
+                                                              numRand=numRand, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code, result = responseCode.LIST_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.LIST_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # insert a value into the given list
     @validTypeCheck
-    def insertList(self, dbName, keyName, value):
+    def insertList(self, dbName, keyName, value, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                result = self.database.insertList(dbName, keyName, value)
-                msg = Utils.makeMessage(responseCode.detail[result], 
-                                        result,
-                                        keyName)
+                code = self.database.insertList(dbName=dbName, keyName=keyName,
+                                                value=value, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED], 
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code = responseCode.LIST_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST], 
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code = responseCode.LIST_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # insert a value into the given list

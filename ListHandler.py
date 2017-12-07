@@ -111,7 +111,7 @@ class ListHandler(object):
         return msg
 
     @validTypeCheck
-    def getListRandom(self, dbName, keyName, numRand):
+    def getListRandom(self, dbName, keyName, numRand, password=None):
         if numRand <= 0:
             msg = Utils.makeMessage(responseCode.detail[responseCode.INVALID_NUMBER],
                                     responseCode.INVALID_NUMBER,
@@ -119,37 +119,31 @@ class ListHandler(object):
             return msg
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                code, listValue = self.database.getListRandom(dbName, keyName, numRand)
-                msg = Utils.makeMessage(responseCode.detail[code],
-                                        code,
-                                        listValue)
+                code, result = self.database.getListRandom(dbName=dbName, keyName=keyName,
+                                                              numRand=numRand, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code, result = responseCode.LIST_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.LIST_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # insert a value into the given list
     @validTypeCheck
-    def insertList(self, dbName, keyName, value):
+    def insertList(self, dbName, keyName, value, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                result = self.database.insertList(dbName, keyName, value)
-                msg = Utils.makeMessage(responseCode.detail[result], 
-                                        result,
-                                        keyName)
+                code = self.database.insertList(dbName=dbName, keyName=keyName,
+                                                value=value, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED], 
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code = responseCode.LIST_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST], 
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code = responseCode.LIST_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # insert a value into the given list

@@ -403,27 +403,29 @@ class NoSqlDb(object):
                          "{0}->{1}".format(dbName, keyName))
         return (responseCode.LIST_GET_SUCCESS, listValue)
 
-    def getListRandom(self, dbName, listName, numRand):
-        if len(self.listDict[dbName][listName]) < numRand:
+    @passwordCheck
+    def getListRandom(self, dbName, keyName, numRand, password=None):
+        if len(self.listDict[dbName][keyName]) < numRand:
             return responseCode.LIST_LENGTH_TOO_SHORT, None
-        result = random.sample(self.listDict[dbName][listName], numRand)
+        result = random.sample(self.listDict[dbName][keyName], numRand)
         return responseCode.LIST_GET_SUCCESS, result
 
     @saveTrigger
-    def insertList(self, dbName, listName, value, isLeft=None):
-        if self.listLockDict[dbName][listName] is True:
+    @passwordCheck
+    def insertList(self, dbName, keyName, value, isLeft=None, password=None):
+        if self.listLockDict[dbName][keyName] is True:
             self.logger.warning("Insert List Locked "
-                                "{0}->{1}->{2}".format(dbName, listName, value))
+                                "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lock("LIST", dbName, listName)
+            self.lock("LIST", dbName, keyName)
             if isLeft is None:
-                self.listDict[dbName][listName].append(value)
+                self.listDict[dbName][keyName].append(value)
             else:
-                self.listDict[dbName][listName].insert(0, value)
-            self.unlock("LIST", dbName, listName)
+                self.listDict[dbName][keyName].insert(0, value)
+            self.unlock("LIST", dbName, keyName)
             self.logger.info("Insert List Success "
-                             "{0}->{1}->{2}".format(dbName, listName, value))
+                             "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.LIST_INSERT_SUCCESS
 
     @saveTrigger

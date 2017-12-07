@@ -248,10 +248,16 @@ def rightGetList(dbName, listName, count, password):
                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>",methods=["GET"])
-def getListByRange(dbName, listName, start, end):
+@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>/<string:password>",
+           methods=["GET"])
+def getListByRange(dbName, listName, start, end, password):
     myHandler = ListHandler(database)
-    result = myHandler.getListByRange(dbName, listName, start, end)
+    result = myHandler.getListByRange(dbName=dbName, keyName=listName,
+                                      start=start, end=end,
+                                      password=password)
     return flask.jsonify(result)
 
 @app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>",methods=["GET"])

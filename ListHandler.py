@@ -148,35 +148,33 @@ class ListHandler(object):
 
     # insert a value into the given list
     @validTypeCheck
-    def insertListL(self, dbName, keyName, value):
+    def insertListL(self, dbName, keyName, value, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                result = self.database.insertList(keyName, value, dbName, True)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.insertList(dbName=dbName, keyName=keyName,
+                                                value=value, isLeft=True,
+                                                password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code = responseCode.LIST_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code = responseCode.LIST_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # delete a list in the database
     @validTypeCheck
-    def deleteList(self, dbName, keyName):
+    def deleteList(self, dbName, keyName, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
-            result = self.database.deleteList(keyName, dbName)
-            msg = Utils.makeMessage(responseCode.detail[result],
-                                    result,
-                                    keyName)
+            code = self.database.deleteList(dbName=dbName,
+                                            keyName=keyName,
+                                            password=password)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code = responseCode.LIST_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # remove a value from the given list

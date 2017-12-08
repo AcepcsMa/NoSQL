@@ -298,13 +298,24 @@ def leftInsertList():
         listValue = flask.request.json["listValue"]
     except:
         dbName = listName = listValue = None
-    result = myHandler.insertListL(dbName, listName, listValue)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.insertListL(dbName=dbName, keyName=listName,
+                                   value=listValue, password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteList/<string:dbName>/<string:listName>",methods=["DELETE"])
-def deleteList(dbName, listName):
+@app.route("/deleteList/<string:dbName>/<string:listName>",
+           defaults={"password": None},
+           methods=["DELETE"])
+@app.route("/deleteList/<string:dbName>/<string:listName>/<string:password>",
+           methods=["DELETE"])
+def deleteList(dbName, listName, password):
     myHandler = ListHandler(database)
-    result = myHandler.deleteList(dbName, listName)
+    result = myHandler.deleteList(dbName=dbName,
+                                  keyName=listName,
+                                  password=password)
     return flask.jsonify(result)
 
 @app.route("/rmFromList",methods=["PUT"])

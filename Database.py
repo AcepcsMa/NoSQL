@@ -429,24 +429,25 @@ class NoSqlDb(object):
             return responseCode.LIST_INSERT_SUCCESS
 
     @saveTrigger
-    def deleteList(self, listName, dbName):
-        if self.listLockDict[dbName][listName] is True:
+    @passwordCheck
+    def deleteList(self, dbName, keyName, password=None):
+        if self.listLockDict[dbName][keyName] is True:
             self.logger.warning("Delete List Locked "
-                                "{0}->{1}".format(dbName, listName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lock("LIST", dbName, listName)
-            self.listName[dbName].remove(listName)
-            self.listDict[dbName].pop(listName)
+            self.lock("LIST", dbName, keyName)
+            self.listName[dbName].remove(keyName)
+            self.listDict[dbName].pop(keyName)
             try:
-                self.listTTL[dbName].pop(listName)
-                self.invertedTypeDict[dbName].pop(listName)
+                self.listTTL[dbName].pop(keyName)
+                self.invertedTypeDict[dbName].pop(keyName)
             except:
                 pass
-            self.unlock("LIST", dbName, listName)
-            self.listLockDict[dbName].pop(listName)
+            self.unlock("LIST", dbName, keyName)
+            self.listLockDict[dbName].pop(keyName)
             self.logger.info("Delete List Success "
-                             "{0}->{1}".format(dbName, listName))
+                             "{0}->{1}".format(dbName, keyName))
             return responseCode.LIST_DELETE_SUCCESS
 
     @saveTrigger

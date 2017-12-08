@@ -327,13 +327,24 @@ def rmFromList():
         listValue = flask.request.json["listValue"]
     except:
         dbName = listName = listValue = None
-    result = myHandler.rmFromList(dbName, listName, listValue)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.rmFromList(dbName=dbName, keyName=listName,
+                                  value=listValue, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearList/<dbName>/<listName>",methods=["PUT"])
-def clearList(dbName, listName):
+@app.route("/clearList/<dbName>/<listName>",
+           defaults={"password": None},
+           methods=["PUT"])
+@app.route("/clearList/<dbName>/<listName>/<string:password>",
+           methods=["PUT"])
+def clearList(dbName, listName, password):
     myHandler = ListHandler(database)
-    result = myHandler.clearList(dbName, listName)
+    result = myHandler.clearList(dbName=dbName,
+                                 keyName=listName,
+                                 password=password)
     return flask.jsonify(result)
 
 @app.route("/mergeLists",methods=["PUT"])
@@ -347,19 +358,36 @@ def mergeLists():
         resultListName = None if len(resultListName) == 0 else resultListName
     except:
         dbName = listName1 = listName2 = resultListName = None
-    result = myHandler.mergeLists(dbName, listName1, listName2, resultListName)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.mergeLists(dbName=dbName, keyName1=listName1,
+                                  keyName2=listName2, resultKeyName=resultListName,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/searchList/<string:dbName>/<string:expression>",methods=["GET"])
-def searchList(dbName, expression):
+@app.route("/searchList/<string:dbName>/<string:expression>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchList/<string:dbName>/<string:expression>/<string:password>",
+           methods=["GET"])
+def searchList(dbName, expression, password):
     myHandler = ListHandler(database)
-    result = myHandler.searchList(dbName, expression)
+    result = myHandler.searchList(dbName=dbName,
+                                  expression=expression,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllList/<string:dbName>",methods=["GET"])
-def searchAllList(dbName):
+@app.route("/searchAllList/<string:dbName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchAllList/<string:dbName>/<string:password>",
+           methods=["GET"])
+def searchAllList(dbName, password):
     myHandler = ListHandler(database)
-    result = myHandler.searchAllList(dbName)
+    result = myHandler.searchAllList(dbName=dbName,
+                                     password=password)
     return flask.jsonify(result)
 
 @app.route("/getListSize/<string:dbName>/<string:listName>",methods=["GET"])

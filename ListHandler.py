@@ -179,49 +179,43 @@ class ListHandler(object):
 
     # remove a value from the given list
     @validTypeCheck
-    def rmFromList(self, dbName, keyName, value):
+    def rmFromList(self, dbName, keyName, value, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                result = self.database.rmFromList(dbName, keyName, value)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.rmFromList(dbName=dbName, keyName=keyName,
+                                                value=value, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code = responseCode.LIST_EXPIRED
         else:   # if list does not exist
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code = responseCode.LIST_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # clear the given list
     @validTypeCheck
-    def clearList(self, dbName, keyName):
+    def clearList(self, dbName, keyName, password=None):
         if self.database.isExist("LIST", dbName, keyName) is True:
             if self.database.isExpired("LIST", dbName, keyName) is False:
-                result = self.database.clearList(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.clearList(dbName=dbName,
+                                               keyName=keyName,
+                                               password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code = responseCode.LIST_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code = responseCode.LIST_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # merge two lists
-    def mergeLists(self, dbName, keyName1, keyName2, resultKeyName=None):
+    def mergeLists(self, dbName, keyName1, keyName2, resultKeyName=None, password=None):
         if Utils.isValidType(dbName, keyName1, keyName2) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
+            return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
                                     responseCode.ELEM_TYPE_ERROR,
                                     dbName)
-            return msg
 
         if resultKeyName is not None:
             if self.database.isExist("LIST", dbName, resultKeyName) is True:
@@ -232,7 +226,9 @@ class ListHandler(object):
 
         if self.database.isExist("LIST", dbName, keyName1, keyName2):
             if self.database.isExpired("LIST", dbName, keyName1, keyName2) is False:
-                code, result = self.database.mergeLists(dbName, keyName1, keyName2, resultKeyName)
+                code, result = self.database.mergeLists(dbName=dbName, keyName1=keyName1,
+                                                        keyName2=keyName2, resultKeyName=resultKeyName,
+                                                        password=password)
                 msg = Utils.makeMessage(responseCode.detail[code],
                                         code,
                                         result)
@@ -247,27 +243,31 @@ class ListHandler(object):
         return msg
 
     # search list names using regular expression
-    def searchList(self, dbName, expression):
+    def searchList(self, dbName, expression, password=None):
         if Utils.isValidType(dbName):
-            searchResult = self.database.searchByRE(dbName, expression, "LIST")
+            searchResult = self.database.searchByRE(dbName=dbName, expression=expression,
+                                                    dataType="LIST", password=password)
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_SEARCH_SUCCESS], 
                                    responseCode.LIST_SEARCH_SUCCESS, 
                                    searchResult)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR], responseCode.ELEM_TYPE_ERROR, dbName)
+            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
+                                    responseCode.ELEM_TYPE_ERROR,
+                                    dbName)
         return msg
 
     # get all list names in the given database
-    def searchAllList(self, dbName):
+    def searchAllList(self, dbName, password=None):
         if Utils.isValidType(dbName):
-            searchResult = self.database.searchAllList(dbName)
+            searchResult = self.database.searchAllList(dbName=dbName,
+                                                       password=password)
             msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_SEARCH_SUCCESS],
-                                   responseCode.LIST_SEARCH_SUCCESS,
-                                   searchResult)
+                                    responseCode.LIST_SEARCH_SUCCESS,
+                                    searchResult)
         else:
             msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+                                    responseCode.ELEM_TYPE_ERROR,
+                                    dbName)
         return msg
     
     @validTypeCheck

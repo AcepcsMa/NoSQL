@@ -429,51 +429,55 @@ class NoSqlDb(object):
             return responseCode.LIST_INSERT_SUCCESS
 
     @saveTrigger
-    def deleteList(self, listName, dbName):
-        if self.listLockDict[dbName][listName] is True:
+    @passwordCheck
+    def deleteList(self, dbName, keyName, password=None):
+        if self.listLockDict[dbName][keyName] is True:
             self.logger.warning("Delete List Locked "
-                                "{0}->{1}".format(dbName, listName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lock("LIST", dbName, listName)
-            self.listName[dbName].remove(listName)
-            self.listDict[dbName].pop(listName)
+            self.lock("LIST", dbName, keyName)
+            self.listName[dbName].remove(keyName)
+            self.listDict[dbName].pop(keyName)
             try:
-                self.listTTL[dbName].pop(listName)
-                self.invertedTypeDict[dbName].pop(listName)
+                self.listTTL[dbName].pop(keyName)
+                self.invertedTypeDict[dbName].pop(keyName)
             except:
                 pass
-            self.unlock("LIST", dbName, listName)
-            self.listLockDict[dbName].pop(listName)
+            self.unlock("LIST", dbName, keyName)
+            self.listLockDict[dbName].pop(keyName)
             self.logger.info("Delete List Success "
-                             "{0}->{1}".format(dbName, listName))
+                             "{0}->{1}".format(dbName, keyName))
             return responseCode.LIST_DELETE_SUCCESS
 
     @saveTrigger
-    def rmFromList(self, dbName, listName, value):
-        if self.listLockDict[dbName][listName] is True:
+    @passwordCheck
+    def rmFromList(self, dbName, keyName, value, password=None):
+        if self.listLockDict[dbName][keyName] is True:
             self.logger.warning("Insert List Locked "
-                                "{0}->{1}->{2}".format(dbName, listName, value))
+                                "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.LIST_IS_LOCKED
         else:
-            if value not in self.listDict[dbName][listName]:
+            if value not in self.listDict[dbName][keyName]:
                 return responseCode.LIST_NOT_CONTAIN_VALUE
             else:
-                self.lock("LIST", dbName, listName)
-                self.listDict[dbName][listName].remove(value)
-                self.unlock("LIST", dbName, listName)
+                self.lock("LIST", dbName, keyName)
+                self.listDict[dbName][keyName].remove(value)
+                self.unlock("LIST", dbName, keyName)
                 self.logger.info("Remove From List Success "
-                                 "{0}->{1}->{2}".format(dbName, listName, value))
+                                 "{0}->{1}->{2}".format(dbName, keyName, value))
                 return responseCode.LIST_REMOVE_SUCCESS
 
-    def searchAllList(self, dbName):
+    @passwordCheck
+    def searchAllList(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All List Success {0}".format(dbName))
         return list(self.listName[dbName])
 
     @saveTrigger
-    def clearList(self, dbName, listName):
+    @passwordCheck
+    def clearList(self, dbName, listName, password=None):
         if self.listLockDict[dbName][listName] is True:
             self.logger.warning("Clear List Locked {0}->{1}")
             return responseCode.LIST_IS_LOCKED
@@ -486,7 +490,8 @@ class NoSqlDb(object):
             return responseCode.LIST_CLEAR_SUCCESS
 
     @saveTrigger
-    def mergeLists(self, dbName, listName1, listName2, resultListName=None):
+    @passwordCheck
+    def mergeLists(self, dbName, listName1, listName2, resultListName=None, password=None):
         if resultListName is not None:
             self.createList(dbName, resultListName)
             self.lock("LIST", dbName, resultListName)

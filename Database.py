@@ -517,7 +517,8 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createHash(self, dbName, keyName):
+    @passwordCheck
+    def createHash(self, dbName, keyName, password=None):
         if self.isExist("HASH", dbName, keyName) is False:
             self.hashName[dbName].add(keyName)
             self.lock("HASH", dbName, keyName)
@@ -529,11 +530,12 @@ class NoSqlDb(object):
             return responseCode.HASH_CREATE_SUCCESS
         else:
             self.logger.warning("Hash Create Fail(Hash Exists) "
-                                "{}->{}".format(dbName, hashName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.HASH_EXISTED
 
-    def getHash(self, dbName, hashName):
-        return self.hashDict[dbName][hashName]
+    @passwordCheck
+    def getHash(self, dbName, keyName, password=None):
+        return responseCode.HASH_GET_SUCCESS, self.hashDict[dbName][keyName]
 
     def getHashKeySet(self, dbName, hashName):
         return list(self.hashDict[dbName][hashName].keys())
@@ -989,7 +991,8 @@ class NoSqlDb(object):
                           if result[1] >= start and result[1] < end]
         return traverseResult
 
-    def getSize(self, dbName, keyName, type):
+    @passwordCheck
+    def getSize(self, dbName, keyName, type, password=None):
         if type == "ZSET":
             return (responseCode.GET_SIZE_SUCCESS, self.zsetDict[dbName][keyName].size())
         data = self.getValueDict(type)[dbName][keyName]

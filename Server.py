@@ -390,10 +390,16 @@ def searchAllList(dbName, password):
                                      password=password)
     return flask.jsonify(result)
 
-@app.route("/getListSize/<string:dbName>/<string:listName>",methods=["GET"])
-def getListSize(dbName, listName):
+@app.route("/getListSize/<string:dbName>/<string:listName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getListSize/<string:dbName>/<string:listName>/<string:password>",
+           methods=["GET"])
+def getListSize(dbName, listName, password):
     myHandler = ListHandler(database)
-    result = myHandler.getSize(dbName, listName)
+    result = myHandler.getSize(dbName=dbName,
+                               keyName=listName,
+                               password=password)
     return flask.jsonify(result)
 
 @app.route("/makeHash",methods=["POST"])
@@ -404,13 +410,25 @@ def makeHash():
         hashName = flask.request.json["hashName"]
     except:
         dbName = hashName = None
-    result = myHandler.createHash(dbName, hashName)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.createHash(dbName=dbName,
+                                  keyName=hashName,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/getHash/<string:dbName>/<string:hashName>",methods=["GET"])
-def getHash(dbName, hashName):
+@app.route("/getHash/<string:dbName>/<string:hashName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getHash/<string:dbName>/<string:hashName>/<string:password>",
+           methods=["GET"])
+def getHash(dbName, hashName, password):
     myHandler = HashHandler(database)
-    result = myHandler.getHash(dbName, hashName)
+    result = myHandler.getHash(dbName=dbName,
+                               keyName=hashName,
+                               password=password)
     return flask.jsonify(result)
 
 @app.route("/getHashKeySet/<string:dbName>/<string:hashName>",methods=["GET"])

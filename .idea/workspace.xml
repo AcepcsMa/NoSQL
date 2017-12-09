@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database.py" afterPath="$PROJECT_DIR$/Database.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HashHandler.py" afterPath="$PROJECT_DIR$/HashHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ListHandler.py" afterPath="$PROJECT_DIR$/ListHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
     </list>
@@ -22,8 +24,8 @@
       <file leaf-file-name="Database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="471" column="49" lean-forward="false" selection-start-line="471" selection-start-column="49" selection-end-line="471" selection-end-column="49" />
+            <state relative-caret-position="312">
+              <caret line="537" column="75" lean-forward="false" selection-start-line="537" selection-start-column="75" selection-end-line="537" selection-end-column="75" />
               <folding>
                 <element signature="e#37#46#0" expanded="true" />
               </folding>
@@ -31,11 +33,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ListHandler.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ListHandler.py">
+      <file leaf-file-name="HashHandler.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/HashHandler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
-              <caret line="269" column="36" lean-forward="false" selection-start-line="269" selection-start-column="36" selection-end-line="269" selection-end-column="36" />
+            <state relative-caret-position="541">
+              <caret line="42" column="0" lean-forward="true" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -54,8 +56,8 @@
       <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="391" column="0" lean-forward="true" selection-start-line="391" selection-start-column="0" selection-end-line="391" selection-end-column="0" />
+            <state relative-caret-position="465">
+              <caret line="430" column="31" lean-forward="false" selection-start-line="430" selection-start-column="31" selection-end-line="430" selection-end-column="31" />
               <folding>
                 <element signature="e#37#49#0" expanded="true" />
               </folding>
@@ -187,15 +189,15 @@
         <option value="$PROJECT_DIR$/db.py" />
         <option value="$PROJECT_DIR$/Response.py" />
         <option value="$PROJECT_DIR$/DbHandler.py" />
-        <option value="$PROJECT_DIR$/HashHandler.py" />
         <option value="$PROJECT_DIR$/SetHandler.py" />
         <option value="$PROJECT_DIR$/ZSetHandler.py" />
         <option value="$PROJECT_DIR$/TTLTool.py" />
         <option value="$PROJECT_DIR$/Decorator.py" />
         <option value="$PROJECT_DIR$/ElemHandler.py" />
-        <option value="$PROJECT_DIR$/Database.py" />
-        <option value="$PROJECT_DIR$/Server.py" />
         <option value="$PROJECT_DIR$/ListHandler.py" />
+        <option value="$PROJECT_DIR$/Database.py" />
+        <option value="$PROJECT_DIR$/HashHandler.py" />
+        <option value="$PROJECT_DIR$/Server.py" />
       </list>
     </option>
   </component>
@@ -238,7 +240,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/marco/Code/Python_code/NoSQL/elemHandler.py" />
     <property name="FullScreen" value="true" />
@@ -729,13 +731,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HashHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5221">
-          <caret line="228" column="0" lean-forward="false" selection-start-line="228" selection-start-column="0" selection-end-line="228" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SetHandler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6992">
@@ -833,7 +828,7 @@
         <state relative-caret-position="1173">
           <caret line="51" column="16" lean-forward="false" selection-start-line="51" selection-start-column="16" selection-end-line="51" selection-end-column="16" />
           <folding>
-            <element signature="e#37#70#0" expanded="true" />
+            <element signature="e#37#70#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -854,28 +849,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ListHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="285" column="19" lean-forward="true" selection-start-line="285" selection-start-column="19" selection-end-line="285" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Database.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="471" column="49" lean-forward="false" selection-start-line="471" selection-start-column="49" selection-end-line="471" selection-end-column="49" />
+        <state relative-caret-position="312">
+          <caret line="537" column="75" lean-forward="false" selection-start-line="537" selection-start-column="75" selection-end-line="537" selection-end-column="75" />
           <folding>
             <element signature="e#37#46#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ListHandler.py">
+    <entry file="file://$PROJECT_DIR$/HashHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="269" column="36" lean-forward="false" selection-start-line="269" selection-start-column="36" selection-end-line="269" selection-end-column="36" />
+        <state relative-caret-position="541">
+          <caret line="42" column="0" lean-forward="true" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="391" column="0" lean-forward="true" selection-start-line="391" selection-start-column="0" selection-end-line="391" selection-end-column="0" />
+        <state relative-caret-position="465">
+          <caret line="430" column="31" lean-forward="false" selection-start-line="430" selection-start-column="31" selection-end-line="430" selection-end-column="31" />
           <folding>
             <element signature="e#37#49#0" expanded="true" />
           </folding>

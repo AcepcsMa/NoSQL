@@ -284,14 +284,13 @@ class ListHandler(object):
         return msg
 
     @validTypeCheck
-    def getSize(self, dbName, keyName):
+    def getSize(self, dbName, keyName, password=None):
         if self.database.isExist("LIST", dbName, keyName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.LIST_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.LIST_NOT_EXIST, keyName
         else:
-            code, result = self.database.getSize(dbName, keyName, "LIST")
-            msg = Utils.makeMessage(responseCode.detail[code],
-                                    code,
-                                    result)
+            code, result = self.database.getSize(dbName=dbName, keyName=keyName,
+                                                 type="LIST", password=password)
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg

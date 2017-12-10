@@ -537,23 +537,27 @@ class NoSqlDb(object):
     def getHash(self, dbName, keyName, password=None):
         return responseCode.HASH_GET_SUCCESS, self.hashDict[dbName][keyName]
 
-    def getHashKeySet(self, dbName, hashName):
-        return list(self.hashDict[dbName][hashName].keys())
+    @passwordCheck
+    def getHashKeySet(self, dbName, keyName, password=None):
+        return responseCode.HASH_KEYSET_GET_SUCCESS, list(self.hashDict[dbName][keyName].keys())
 
-    def getHashValues(self, dbName, hashName):
-        return list(self.hashDict[dbName][hashName].values())
+    @passwordCheck
+    def getHashValues(self, dbName, keyName, password=None):
+        return responseCode.HASH_VALUES_GET_SUCCESS, list(self.hashDict[dbName][keyName].values())
 
-    def getMultipleHashValues(self, dbName, hashName, keyNames):
+    @passwordCheck
+    def getMultipleHashValues(self, dbName, keyName, keys, password=None):
         result = list()
-        for keyName in keyNames:
+        for key in keys:
             try:
-                result.append(self.hashDict[dbName][hashName][keyName])
+                result.append(self.hashDict[dbName][keyName][key])
             except:
                 result.append(None)
-        return result
+        return responseCode.HASH_VALUES_GET_SUCCESS, result
 
     @saveTrigger
-    def insertHash(self, dbName, hashName, keyName, value):
+    @passwordCheck
+    def insertHash(self, dbName, hashName, keyName, value, password=None):
         if self.hashLockDict[dbName][hashName] is True:
             self.logger.warning("Hash Is Locked "
                                 "{}->{}".format(dbName, hashName))
@@ -567,12 +571,13 @@ class NoSqlDb(object):
                              format(dbName, hashName, keyName, value))
             return responseCode.HASH_INSERT_SUCCESS
 
-    def isKeyExist(self, dbName, hashName, keyName):
+    @passwordCheck
+    def isKeyExist(self, dbName, keyName, key, password=None):
         if dbName not in self.dbNameSet:
             return False
-        elif hashName not in self.hashDict[dbName].keys():
+        elif keyName not in self.hashDict[dbName].keys():
             return False
-        return keyName in list(self.hashDict[dbName][hashName].keys())
+        return key in list(self.hashDict[dbName][keyName].keys())
 
     @saveTrigger
     def deleteHash(self, dbName, hashName):

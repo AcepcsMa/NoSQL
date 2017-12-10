@@ -431,16 +431,28 @@ def getHash(dbName, hashName, password):
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/getHashKeySet/<string:dbName>/<string:hashName>",methods=["GET"])
-def getHashKeySet(dbName, hashName):
+@app.route("/getHashKeySet/<string:dbName>/<string:hashName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getHashKeySet/<string:dbName>/<string:hashName>/<string:password>",
+           methods=["GET"])
+def getHashKeySet(dbName, hashName, password):
     myHandler = HashHandler(database)
-    result = myHandler.getKeySet(dbName, hashName)
+    result = myHandler.getKeySet(dbName=dbName,
+                                 keyName=hashName,
+                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/getHashValues/<string:dbName>/<string:hashName>",methods=["GET"])
-def getHashValues(dbName, hashName):
+@app.route("/getHashValues/<string:dbName>/<string:hashName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getHashValues/<string:dbName>/<string:hashName>/<string:password>",
+           methods=["GET"])
+def getHashValues(dbName, hashName, password):
     myHandler = HashHandler(database)
-    result = myHandler.getValues(dbName, hashName)
+    result = myHandler.getValues(dbName=dbName,
+                                 keyName=hashName,
+                                 password=password)
     return flask.jsonify(result)
 
 @app.route("/getMultipleHashValues",methods=["POST"])
@@ -449,10 +461,15 @@ def getMultipleHashValues():
     try:
         dbName = flask.request.json["dbName"]
         hashName = flask.request.json["hashName"]
-        keyNames = flask.request.json["keyNames"]
+        keys = flask.request.json["keyNames"]
     except:
-        dbName = hashName = keyNames = None
-    result = myHandler.getMultipleValues(dbName, hashName, keyNames)
+        dbName = hashName = keys = None
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.getMultipleValues(dbName=dbName, keyName=hashName,
+                                         keys=keys, password=password)
     return flask.jsonify(result)
 
 @app.route("/insertHash",methods=["PUT"])

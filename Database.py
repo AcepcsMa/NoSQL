@@ -537,20 +537,23 @@ class NoSqlDb(object):
     def getHash(self, dbName, keyName, password=None):
         return responseCode.HASH_GET_SUCCESS, self.hashDict[dbName][keyName]
 
-    def getHashKeySet(self, dbName, hashName):
-        return list(self.hashDict[dbName][hashName].keys())
+    @passwordCheck
+    def getHashKeySet(self, dbName, keyName, password=None):
+        return responseCode.HASH_KEYSET_GET_SUCCESS, list(self.hashDict[dbName][keyName].keys())
 
-    def getHashValues(self, dbName, hashName):
-        return list(self.hashDict[dbName][hashName].values())
+    @passwordCheck
+    def getHashValues(self, dbName, keyName, password=None):
+        return responseCode.HASH_VALUES_GET_SUCCESS, list(self.hashDict[dbName][keyName].values())
 
-    def getMultipleHashValues(self, dbName, hashName, keyNames):
+    @passwordCheck
+    def getMultipleHashValues(self, dbName, keyName, keys, password=None):
         result = list()
-        for keyName in keyNames:
+        for key in keys:
             try:
-                result.append(self.hashDict[dbName][hashName][keyName])
+                result.append(self.hashDict[dbName][keyName][key])
             except:
                 result.append(None)
-        return result
+        return responseCode.HASH_VALUES_GET_SUCCESS, result
 
     @saveTrigger
     def insertHash(self, dbName, hashName, keyName, value):

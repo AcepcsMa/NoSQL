@@ -43,57 +43,50 @@ class HashHandler(object):
 
     # get keyset of the given hash
     @validTypeCheck
-    def getKeySet(self, dbName, keyName):
+    def getKeySet(self, dbName, keyName, password=None):
         if self.database.isExist("HASH", dbName, keyName):
             if self.database.isExpired("HASH", dbName, keyName) is False:
-                keySet = self.database.getHashKeySet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_KEYSET_GET_SUCCESS],
-                                        responseCode.HASH_KEYSET_GET_SUCCESS,
-                                        keySet)
+                code, result = self.database.getHashKeySet(dbName=dbName,
+                                                           keyName=keyName,
+                                                           password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                        responseCode.HASH_EXPIRED,
-                                        keyName)
+                code, result = responseCode.HASH_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                    responseCode.HASH_NOT_EXISTED,
-                                    keyName)
+            code, result = responseCode.HASH_NOT_EXISTED, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck
-    def getValues(self, dbName, keyName):
+    def getValues(self, dbName, keyName, password=None):
         if self.database.isExist("HASH", dbName, keyName):
             if self.database.isExpired("HASH", dbName, keyName) is False:
-                valueList = self.database.getHashValues(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_GET_SUCCESS],
-                                        responseCode.HASH_VALUES_GET_SUCCESS,
-                                        valueList)
+                code, result = self.database.getHashValues(dbName=dbName,
+                                                           keyName=keyName,
+                                                           password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                        responseCode.HASH_EXPIRED,
-                                        keyName)
+                code, result = responseCode.HASH_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                    responseCode.HASH_NOT_EXISTED,
-                                    keyName)
+            code, result = responseCode.HASH_NOT_EXISTED, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck
-    def getMultipleValues(self, dbName, keyName, keys):
+    def getMultipleValues(self, dbName, keyName, keys, password=None):
         if self.database.isExist("HASH", dbName, keyName):
             if self.database.isExpired("HASH", dbName, keyName) is False:
-                valueList = self.database.getMultipleHashValues(dbName, keyName, keys)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_VALUES_GET_SUCCESS],
-                                        responseCode.HASH_VALUES_GET_SUCCESS,
-                                        valueList)
+                code, result = self.database.getMultipleHashValues(dbName=dbName, keyName=keyName,
+                                                                   keys=keys, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                        responseCode.HASH_EXPIRED,
-                                        keyName)
+                code, result = responseCode.HASH_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                    responseCode.HASH_NOT_EXISTED,
-                                    keyName)
+            code, result = responseCode.HASH_NOT_EXISTED, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # insert a key-value data into the given hash

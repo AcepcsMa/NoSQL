@@ -91,47 +91,42 @@ class HashHandler(object):
 
     # insert a key-value data into the given hash
     @validTypeCheck
-    def insertHash(self, dbName, keyName, key, value):
+    def insertHash(self, dbName, keyName, key, value, password=None):
         if Utils.isValidType(keyName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   keyName)
-            return msg
+            return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
+                                     responseCode.ELEM_TYPE_ERROR,
+                                     keyName)
 
         if self.database.isExist("HASH", dbName, keyName):
             if self.database.isExpired("HASH", dbName, keyName) is False:
-                result = self.database.insertHash(dbName, keyName, key, value)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.insertHash(dbName=dbName, keyName=keyName,
+                                                key=key, value=value,
+                                                password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                        responseCode.HASH_EXPIRED,
-                                        keyName)
+                code = responseCode.HASH_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                    responseCode.HASH_NOT_EXISTED,
-                                    keyName)
+            code = responseCode.HASH_NOT_EXISTED
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # check if a key exists in the given hash
     @validTypeCheck
-    def isKeyExist(self, dbName, keyName, key):
+    def isKeyExist(self, dbName, keyName, key, password=None):
         if self.database.isExist("HASH", dbName, keyName):
             if self.database.isExpired("HASH", dbName, keyName) is False:
-                result = self.database.isKeyExist(dbName, keyName, key)
-                result = responseCode.HASH_KEY_EXIST if result is True else responseCode.HASH_KEY_NOT_EXIST
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        key)
+                result = self.database.isKeyExist(dbName=dbName, keyName=keyName,
+                                                  key=key, password=password)
+                code = responseCode.HASH_KEY_EXIST if result is True else responseCode.HASH_KEY_NOT_EXIST
+                result = key
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                        responseCode.HASH_EXPIRED,
-                                        keyName)
+                code, result = responseCode.HASH_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                    responseCode.HASH_NOT_EXISTED,
-                                    keyName)
+            code, result = responseCode.HASH_NOT_EXISTED, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # delete the given hash

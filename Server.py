@@ -482,13 +482,24 @@ def insertHash():
         value = flask.request.json["value"]
     except:
         dbName = hashName = keyName = value = None
-    result = myHandler.insertHash(dbName, hashName, keyName, value)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.insertHash(dbName=dbName, keyName=hashName,
+                                  key=keyName, value=value,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/isHashKeyExist/<string:dbName>/<string:hashName>/<string:keyName>",methods=["GET"])
-def isHashKeyExist(dbName, hashName, keyName):
+@app.route("/isHashKeyExist/<string:dbName>/<string:hashName>/<string:keyName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/isHashKeyExist/<string:dbName>/<string:hashName>/<string:keyName>/<string:password>",
+           methods=["GET"])
+def isHashKeyExist(dbName, hashName, keyName, password):
     myHandler = HashHandler(database)
-    result = myHandler.isKeyExist(dbName, hashName, keyName)
+    result = myHandler.isKeyExist(dbName=dbName, keyName=hashName,
+                                  key=keyName, password=password)
     return flask.jsonify(result)
 
 @app.route("/deleteHash/<dbName>/<hashName>",methods=["DELETE"])

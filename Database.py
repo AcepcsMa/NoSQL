@@ -580,66 +580,70 @@ class NoSqlDb(object):
         return key in list(self.hashDict[dbName][keyName].keys())
 
     @saveTrigger
-    def deleteHash(self, dbName, hashName):
-        if self.hashLockDict[dbName][hashName] is True:
+    @passwordCheck
+    def deleteHash(self, dbName, keyName, password=None):
+        if self.hashLockDict[dbName][keyName] is True:
             self.logger.warning("Hash Is Locked "
-                                "{}->{}".format(dbName, hashName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lock("HASH", dbName, hashName)
-            self.hashDict[dbName].pop(hashName)
-            self.hashName[dbName].remove(hashName)
+            self.lock("HASH", dbName, keyName)
+            self.hashDict[dbName].pop(keyName)
+            self.hashName[dbName].remove(keyName)
             try:
-                self.hashTTL[dbName].pop(hashName)
-                self.invertedTypeDict[dbName].pop(hashName)
+                self.hashTTL[dbName].pop(keyName)
+                self.invertedTypeDict[dbName].pop(keyName)
             except:
                 pass
-            self.unlock("HASH", dbName, hashName)
-            self.hashLockDict[dbName].pop(hashName)
+            self.unlock("HASH", dbName, keyName)
+            self.hashLockDict[dbName].pop(keyName)
             self.logger.info("Hash Delete Success "
-                             "{}->{}".format(dbName, hashName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.HASH_DELETE_SUCCESS
 
     @saveTrigger
-    def rmFromHash(self, dbName, hashName, keyName):
-        if self.hashLockDict[dbName][hashName] is True:
+    @passwordCheck
+    def rmFromHash(self, dbName, keyName, key, password=None):
+        if self.hashLockDict[dbName][keyName] is True:
             self.logger.warning("Hash Is Locked "
-                                "{}->{}".format(dbName, hashName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lock("HASH", dbName, hashName)
-            self.hashDict[dbName][hashName].pop(keyName)
-            self.unlock("HASH", dbName, hashName)
+            self.lock("HASH", dbName, keyName)
+            self.hashDict[dbName][keyName].pop(key)
+            self.unlock("HASH", dbName, keyName)
             self.logger.info("Hash Value Remove Success "
-                             "{}->{}:{}".format(dbName, hashName, keyName))
+                             "{}->{}:{}".format(dbName, keyName, key))
             return responseCode.HASH_REMOVE_SUCCESS
 
     @saveTrigger
-    def clearHash(self, dbName, hashName):
-        if self.hashLockDict[dbName][hashName] is True:
+    @passwordCheck
+    def clearHash(self, dbName, keyName, password=None):
+        if self.hashLockDict[dbName][keyName] is True:
             self.logger.warning("Hash Is Locked "
-                                "{}->{}".format(dbName, hashName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lock("HASH", dbName, hashName)
-            self.hashDict[dbName][hashName].clear()
-            self.unlock("HASH", dbName, hashName)
+            self.lock("HASH", dbName, keyName)
+            self.hashDict[dbName][keyName].clear()
+            self.unlock("HASH", dbName, keyName)
             self.logger.info("Hash Clear Success "
-                             "{}->{}".format(dbName, hashName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.HASH_CLEAR_SUCCESS
 
     @saveTrigger
-    def replaceHash(self, dbName, hashName, hashValue):
-        if self.hashLockDict[dbName][hashName] is True:
+    @passwordCheck
+    def replaceHash(self, dbName, keyName, hashValue, password=None):
+        if self.hashLockDict[dbName][keyName] is True:
             self.logger.warning("Hash Is Locked "
-                                "{}->{}".format(dbName, hashName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lock("HASH", dbName, hashName)
-            self.hashDict[dbName][hashName] = hashValue
-            self.unlock("HASH", dbName, hashName)
+            self.lock("HASH", dbName, keyName)
+            self.hashDict[dbName][keyName] = hashValue
+            self.unlock("HASH", dbName, keyName)
             self.logger.info("Hash Replace Success "
-                             "{}->{}".format(dbName, hashName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.HASH_REPLACE_SUCCESS
 
     @saveTrigger

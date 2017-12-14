@@ -131,78 +131,69 @@ class HashHandler(object):
 
     # delete the given hash
     @validTypeCheck
-    def deleteHash(self, dbName, keyName):
+    def deleteHash(self, dbName, keyName, password=None):
         if self.database.isExist("HASH", dbName, keyName):
-            result = self.database.deleteHash(dbName, keyName)
-            msg = Utils.makeMessage(responseCode.detail[result],
-                                    result,
-                                    keyName)
+            code = self.database.deleteHash(dbName=dbName,
+                                            keyName=keyName,
+                                            password=password)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                    responseCode.HASH_NOT_EXISTED,
-                                    keyName)
+            code = responseCode.HASH_NOT_EXISTED
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # remove a key-value data from the given hash
     @validTypeCheck
-    def rmFromHash(self, dbName, keyName, key):
+    def rmFromHash(self, dbName, keyName, key, password=None):
         if self.database.isKeyExist(dbName, keyName, key):
             if self.database.isExpired("HASH", dbName, keyName) is False:
-                result = self.database.rmFromHash(dbName, keyName, key)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.rmFromHash(dbName=dbName, keyName=keyName,
+                                                key=key, password=password)
+                result = key
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                        responseCode.HASH_EXPIRED,
-                                        keyName)
+                code, result = responseCode.HASH_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_KEY_NOT_EXIST],
-                                    responseCode.HASH_KEY_NOT_EXIST,
-                                    key)
+            code, result = responseCode.HASH_KEY_NOT_EXIST, key
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # clear the entire hash
     @validTypeCheck
-    def clearHash(self, dbName, keyName):
+    def clearHash(self, dbName, keyName, password=None):
         if self.database.isExist("HASH", dbName, keyName) is True:
             if self.database.isExpired("HASH", dbName, keyName) is False:
-                result = self.database.clearHash(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.clearHash(dbName=dbName,
+                                               keyName=keyName,
+                                               password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                        responseCode.HASH_EXPIRED,
-                                        keyName)
+                code = responseCode.HASH_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                    responseCode.HASH_NOT_EXISTED,
-                                    keyName)
+            code = responseCode.HASH_NOT_EXISTED
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # replace the existed hash with a new value
     @validTypeCheck
-    def replaceHash(self, dbName, keyName, value):
+    def replaceHash(self, dbName, keyName, value, password=None):
         if Utils.isDict(value) is False :
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                    responseCode.ELEM_TYPE_ERROR,
-                                    keyName)
+            code = responseCode.ELEM_TYPE_ERROR
         else:
             if self.database.isExist("HASH", dbName, keyName) is True:
                 if self.database.isExpired("HASH", dbName, keyName) is False:
-                    result = self.database.replaceHash(dbName, keyName, value)
-                    msg = Utils.makeMessage(responseCode.detail[result],
-                                            result,
-                                            keyName)
+                    code = self.database.replaceHash(dbName=dbName, keyName=keyName,
+                                                     hashValue=value, password=password)
                 else:
-                    msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                            responseCode.HASH_EXPIRED,
-                                            keyName)
+                    code = responseCode.HASH_EXPIRED
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                        responseCode.HASH_NOT_EXISTED,
-                                        keyName)
+                code = responseCode.HASH_NOT_EXISTED
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # merge two hashs

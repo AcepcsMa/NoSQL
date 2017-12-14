@@ -502,10 +502,16 @@ def isHashKeyExist(dbName, hashName, keyName, password):
                                   key=keyName, password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteHash/<dbName>/<hashName>",methods=["DELETE"])
-def deleteHash(dbName, hashName):
+@app.route("/deleteHash/<dbName>/<hashName>",
+           defaults={"password": None},
+           methods=["DELETE"])
+@app.route("/deleteHash/<dbName>/<hashName>/<string:password>",
+           methods=["DELETE"])
+def deleteHash(dbName, hashName, password):
     myHandler = HashHandler(database)
-    result = myHandler.deleteHash(dbName, hashName)
+    result = myHandler.deleteHash(dbName=dbName,
+                                  keyName=hashName,
+                                  password=password)
     return flask.jsonify(result)
 
 @app.route("/rmFromHash",methods=["PUT"])
@@ -517,13 +523,24 @@ def rmFromHash():
         keyName = flask.request.json["keyName"]
     except:
         dbName = hashName = keyName = None
-    result = myHandler.rmFromHash(dbName, hashName, keyName)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.rmFromHash(dbName=dbName, keyName=hashName,
+                                  key=keyName, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearHash/<string:dbName>/<string:hashName>",methods=["GET"])
-def clearHash(dbName, hashName):
+@app.route("/clearHash/<string:dbName>/<string:hashName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/clearHash/<string:dbName>/<string:hashName>/<string:password>",
+           methods=["GET"])
+def clearHash(dbName, hashName, password):
     myHandler = HashHandler(database)
-    result = myHandler.clearHash(dbName, hashName)
+    result = myHandler.clearHash(dbName=dbName,
+                                 keyName=hashName,
+                                 password=password)
     return flask.jsonify(result)
 
 @app.route("/replaceHash",methods=["PUT"])
@@ -535,7 +552,12 @@ def replaceHash():
         hashValue = flask.request.json["hashValue"]
     except:
         dbName = hashName = hashValue = None
-    result = myHandler.replaceHash(dbName, hashName, hashValue)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.replaceHash(dbName=dbName, keyName=hashName,
+                                   value=hashValue, password=password)
     return flask.jsonify(result)
 
 @app.route("/mergeHashs",methods=["PUT"])

@@ -572,19 +572,31 @@ def mergeHashs():
         resultHashName = None if len(resultHashName) == 0 else resultHashName
     except:
         mergeMode = dbName = hashName1 = hashName2 = resultHashName = None
-    result = myHandler.mergeHashs(dbName, hashName1, hashName2, resultHashName, mergeMode)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.mergeHashs(dbName=dbName, keyName1=hashName1,
+                                  keyName2=hashName2, resultKeyName=resultHashName,
+                                  mergeMode=mergeMode, password=password)
     return flask.jsonify(result)
 
-@app.route("/searchHash/<dbName>/<string:expression>",methods=["GET"])
-def searchHash(dbName, expression):
+@app.route("/searchHash/<dbName>/<string:expression>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchHash/<dbName>/<string:expression>/<string:password>", methods=["GET"])
+def searchHash(dbName, expression, password):
     myHandler = HashHandler(database)
-    result = myHandler.searchHash(dbName, expression)
+    result = myHandler.searchHash(dbName=dbName, expression=expression, password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllHash/<dbName>",methods=["GET"])
-def searchAllHash(dbName):
+@app.route("/searchAllHash/<dbName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchAllHash/<string:dbName>/<string:password>", methods=["GET"])
+def searchAllHash(dbName, password):
     myHandler = HashHandler(database)
-    result = myHandler.searchAllHash(dbName)
+    result = myHandler.searchAllHash(dbName=dbName, password=password)
     return flask.jsonify(result)
 
 @app.route("/getHashSize/<string:dbName>/<string:hashName>",methods=["GET"])

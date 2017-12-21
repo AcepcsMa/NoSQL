@@ -647,27 +647,25 @@ class NoSqlDb(object):
             return responseCode.HASH_REPLACE_SUCCESS
 
     @saveTrigger
-    def mergeHashs(self, dbName, hashName1, hashName2, resultHashName=None, mergeMode=0):
-        if mergeMode == 0:
-            baseDictName = hashName1
-            otherDictName = hashName2
-        else:
-            baseDictName = hashName2
-            otherDictName = hashName1
+    @passwordCheck
+    def mergeHashs(self, dbName, keyName1, keyName2, resultKeyName=None, mergeMode=0, password=None):
 
-        if resultHashName is not None:
-            self.createHash(dbName, resultHashName)
-            self.lock("HASH", dbName, resultHashName)
+        baseDictName = keyName1 if mergeMode == 0 else keyName2
+        otherDictName = keyName2 if mergeMode == 0 else keyName1
+
+        if resultKeyName is not None:
+            self.createHash(dbName, resultKeyName)
+            self.lock("HASH", dbName, resultKeyName)
             baseKeys = self.hashDict[dbName][baseDictName].keys()
             otherKeys = self.hashDict[dbName][otherDictName].keys()
-            self.hashDict[dbName][resultHashName] = self.hashDict[dbName][baseDictName].copy()
+            self.hashDict[dbName][resultKeyName] = self.hashDict[dbName][baseDictName].copy()
             for key in otherKeys:
                 if key not in baseKeys:
-                    self.hashDict[dbName][resultHashName][key] = self.hashDict[dbName][otherDictName][key]
-            self.unlock("HASH", dbName, resultHashName)
+                    self.hashDict[dbName][resultKeyName][key] = self.hashDict[dbName][otherDictName][key]
+            self.unlock("HASH", dbName, resultKeyName)
             self.logger.info("Hash Merge Success "
                              "{} merges {} -> {}".
-                             format(hashName1, hashName2, resultHashName))
+                             format(keyName1, keyName2, resultKeyName))
 
         else:
             if self.hashLockDict[dbName][baseDictName] is False:
@@ -679,15 +677,16 @@ class NoSqlDb(object):
                         self.hashDict[dbName][baseDictName][key] = self.hashDict[dbName][otherDictName][key]
                 self.logger.info("Hash Merge Success "
                                  "{} merges {} -> {}".
-                                 format(hashName1, hashName2, hashName1))
+                                 format(keyName1, keyName2, keyName1))
             else:
                 self.logger.warning("Hash Is Locked "
                                     "{}->{} or {}->{}".
-                                    format(dbName, hashName1, dbName, hashName2))
+                                    format(dbName, keyName1, dbName, keyName2))
                 return responseCode.HASH_IS_LOCKED
         return responseCode.HASH_MERGE_SUCCESS
 
-    def searchAllHash(self, dbName):
+    @passwordCheck
+    def searchAllHash(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All Hash Success "

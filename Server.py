@@ -572,7 +572,13 @@ def mergeHashs():
         resultHashName = None if len(resultHashName) == 0 else resultHashName
     except:
         mergeMode = dbName = hashName1 = hashName2 = resultHashName = None
-    result = myHandler.mergeHashs(dbName, hashName1, hashName2, resultHashName, mergeMode)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.mergeHashs(dbName=dbName, keyName1=hashName1,
+                                  keyName2=hashName2, resultKeyName=resultHashName,
+                                  mergeMode=mergeMode, password=password)
     return flask.jsonify(result)
 
 @app.route("/searchHash/<dbName>/<string:expression>",methods=["GET"])

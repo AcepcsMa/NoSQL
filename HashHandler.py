@@ -198,36 +198,31 @@ class HashHandler(object):
 
     # merge two hashs
     @validTypeCheck
-    def mergeHashs(self, dbName, keyName1, keyName2, resultKeyName=None, mergeMode=0):
+    def mergeHashs(self, dbName, keyName1, keyName2, resultKeyName=None, mergeMode=0, password=None):
         if Utils.isValidType(keyName2) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
+            return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
                                     responseCode.ELEM_TYPE_ERROR,
                                     keyName2)
-            return msg
 
         if resultKeyName is not None:
             if self.database.isExist("HASH", dbName, resultKeyName) is True:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.MERGE_RESULT_EXIST],
+                return Utils.makeMessage(responseCode.detail[responseCode.MERGE_RESULT_EXIST],
                                         responseCode.MERGE_RESULT_EXIST,
                                         resultKeyName)
-                return msg
 
         if self.database.isExist("HASH", dbName, keyName1, keyName2):
             if self.database.isExpired("HASH", dbName, keyName1, keyName2) is False:
-                result = self.database.mergeHashs(dbName, keyName1,
-                                                  keyName2, resultKeyName,
-                                                  mergeMode)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        resultKeyName)
+                code = self.database.mergeHashs(dbName=dbName, keyName1=keyName1,
+                                                keyName2=keyName2, resultKeyName=resultKeyName,
+                                                mergeMode=mergeMode, password=password)
+                result = resultKeyName
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                       responseCode.HASH_EXPIRED,
-                                       "{} or {}".format(keyName1, keyName2))
+                code, result = responseCode.HASH_EXPIRED, "{} or {}".format(keyName1, keyName2)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                   responseCode.HASH_NOT_EXISTED,
-                                   "{} or {}".format(keyName1, keyName2))
+            code, result = responseCode.HASH_NOT_EXISTED, "{} or {}".format(keyName1, keyName2)
+        msg = Utils.makeMessage(responseCode.detail[code],
+                               code,
+                               result)
         return msg
 
     # search hash names using regular expression

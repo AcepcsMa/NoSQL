@@ -581,16 +581,22 @@ def mergeHashs():
                                   mergeMode=mergeMode, password=password)
     return flask.jsonify(result)
 
-@app.route("/searchHash/<dbName>/<string:expression>",methods=["GET"])
-def searchHash(dbName, expression):
+@app.route("/searchHash/<dbName>/<string:expression>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchHash/<dbName>/<string:expression>/<string:password>", methods=["GET"])
+def searchHash(dbName, expression, password):
     myHandler = HashHandler(database)
-    result = myHandler.searchHash(dbName, expression)
+    result = myHandler.searchHash(dbName=dbName, expression=expression, password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllHash/<dbName>",methods=["GET"])
-def searchAllHash(dbName):
+@app.route("/searchAllHash/<dbName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchAllHash/<string:dbName>/<string:password>", methods=["GET"])
+def searchAllHash(dbName, password):
     myHandler = HashHandler(database)
-    result = myHandler.searchAllHash(dbName)
+    result = myHandler.searchAllHash(dbName=dbName, password=password)
     return flask.jsonify(result)
 
 @app.route("/getHashSize/<string:dbName>/<string:hashName>",methods=["GET"])

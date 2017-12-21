@@ -226,40 +226,37 @@ class HashHandler(object):
         return msg
 
     # search hash names using regular expression
-    def searchHash(self, dbName, expression):
+    def searchHash(self, dbName, expression, password=None):
         if self.database.isDbExist(dbName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
+            return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
                                    responseCode.DB_NOT_EXIST,
                                    dbName)
-            return msg
 
         if Utils.isValidType(dbName):
-            searchResult = self.database.searchByRE(dbName, expression, "HASH")
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_SEARCH_SUCCESS],
-                                   responseCode.HASH_SEARCH_SUCCESS,
-                                   searchResult)
+            result = self.database.searchByRE(dbName=dbName, expression=expression,
+                                              dataType="HASH", password=password)
+            code = responseCode.HASH_SEARCH_SUCCESS
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+            code, result = responseCode.ELEM_TYPE_ERROR, dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                               code,
+                               result)
         return msg
 
     # return all hash names in the given database
-    def searchAllHash(self, dbName):
+    def searchAllHash(self, dbName, password=None):
         if Utils.isValidType(dbName):
             if self.database.isDbExist(dbName):
-                searchResult = self.database.searchAllHash(dbName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_SEARCH_SUCCESS],
-                                       responseCode.HASH_SEARCH_SUCCESS,
-                                       searchResult)
+                result = self.database.searchAllHash(dbName=dbName,
+                                                     password=password)
+                code = responseCode.HASH_SEARCH_SUCCESS
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                       responseCode.DB_NOT_EXIST,
-                                       dbName)
+                code, result = responseCode.DB_NOT_EXIST, dbName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+            code, result = responseCode.ELEM_TYPE_ERROR, dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                               code,
+                               result)
         return msg
 
     @validTypeCheck

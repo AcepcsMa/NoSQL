@@ -685,7 +685,8 @@ class NoSqlDb(object):
                 return responseCode.HASH_IS_LOCKED
         return responseCode.HASH_MERGE_SUCCESS
 
-    def searchAllHash(self, dbName):
+    @passwordCheck
+    def searchAllHash(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All Hash Success "

@@ -19,11 +19,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Database.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Database.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="688" column="49" lean-forward="false" selection-start-line="688" selection-start-column="49" selection-end-line="688" selection-end-column="49" />
+            <state relative-caret-position="266">
+              <caret line="712" column="8" lean-forward="false" selection-start-line="712" selection-start-column="8" selection-end-line="712" selection-end-column="8" />
               <folding>
                 <element signature="e#37#46#0" expanded="true" />
               </folding>
@@ -34,28 +34,18 @@
       <file leaf-file-name="HashHandler.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HashHandler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="358">
-              <caret line="250" column="53" lean-forward="false" selection-start-line="250" selection-start-column="53" selection-end-line="250" selection-end-column="53" />
+            <state relative-caret-position="455">
+              <caret line="306" column="58" lean-forward="false" selection-start-line="306" selection-start-column="58" selection-end-line="306" selection-end-column="58" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Response.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Response.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6072">
-              <caret line="264" column="64" lean-forward="false" selection-start-line="264" selection-start-column="64" selection-end-line="264" selection-end-column="64" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Server.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
-              <caret line="600" column="0" lean-forward="true" selection-start-line="600" selection-start-column="0" selection-end-line="600" selection-end-column="0" />
+            <state relative-caret-position="393">
+              <caret line="623" column="0" lean-forward="true" selection-start-line="623" selection-start-column="0" selection-end-line="623" selection-end-column="0" />
               <folding>
                 <element signature="e#37#49#0" expanded="true" />
               </folding>
@@ -219,7 +209,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -234,7 +224,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -850,30 +840,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="688" column="49" lean-forward="false" selection-start-line="688" selection-start-column="49" selection-end-line="688" selection-end-column="49" />
-          <folding>
-            <element signature="e#37#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/HashHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="250" column="53" lean-forward="false" selection-start-line="250" selection-start-column="53" selection-end-line="250" selection-end-column="53" />
+        <state relative-caret-position="455">
+          <caret line="306" column="58" lean-forward="false" selection-start-line="306" selection-start-column="58" selection-end-line="306" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="600" column="0" lean-forward="true" selection-start-line="600" selection-start-column="0" selection-end-line="600" selection-end-column="0" />
+        <state relative-caret-position="393">
+          <caret line="623" column="0" lean-forward="true" selection-start-line="623" selection-start-column="0" selection-end-line="623" selection-end-column="0" />
           <folding>
             <element signature="e#37#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="712" column="8" lean-forward="false" selection-start-line="712" selection-start-column="8" selection-end-line="712" selection-end-column="8" />
+          <folding>
+            <element signature="e#37#46#0" expanded="true" />
           </folding>
         </state>
       </provider>

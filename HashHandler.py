@@ -300,19 +300,16 @@ class HashHandler(object):
         return msg
 
     @validTypeCheck
-    def decreaseHash(self, dbName, keyName, key):
+    def decreaseHash(self, dbName, keyName, key, password=None):
         if self.database.isKeyExist(dbName, keyName, key):
             if self.database.isExpired("HASH", dbName, keyName) is False:
-                code, value = self.database.decreaseHash(dbName, keyName, key)
-                msg = Utils.makeMessage(responseCode.detail[code],
-                                        code,
-                                        value)
+                code, result = self.database.decreaseHash(dbName=dbName, keyName=keyName,
+                                                          key=key, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_EXPIRED],
-                                        responseCode.HASH_EXPIRED,
-                                        keyName)
+                code, result = responseCode.HASH_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.HASH_NOT_EXISTED],
-                                    responseCode.HASH_NOT_EXISTED,
-                                    keyName)
+            code, result = responseCode.HASH_NOT_EXISTED, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg

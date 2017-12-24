@@ -641,19 +641,36 @@ def makeSet():
         setName = flask.request.json["setName"]
     except:
         dbName = setName = None
-    result = myHandler.createSet(dbName, setName)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.createSet(dbName=dbName,
+                                 keyName=setName,
+                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/getSet/<string:dbName>/<string:setName>",methods=["GET"])
-def getSet(dbName, setName):
+@app.route("/getSet/<string:dbName>/<string:setName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getSet/<string:dbName>/<string:setName>/<string:password>",
+           methods=["GET"])
+def getSet(dbName, setName, password):
     myHandler = SetHandler(database)
-    result = myHandler.getSet(dbName, setName)
+    result = myHandler.getSet(dbName=dbName,
+                              keyName=setName,
+                              password=password)
     return flask.jsonify(result)
 
-@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>",methods=["GET"])
-def getSetRandom(dbName, setName, numRand):
+@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>/<string:password>",
+           methods=["GET"])
+def getSetRandom(dbName, setName, numRand, password):
     myHandler = SetHandler(database)
-    result = myHandler.getSetRandom(dbName, setName, numRand)
+    result = myHandler.getSetRandom(dbName=dbName, keyName=setName,
+                                    numRand=numRand, password=password)
     return flask.jsonify(result)
 
 @app.route("/insertSet",methods=["PUT"])
@@ -665,7 +682,12 @@ def insertSet():
         setValue = flask.request.json["setValue"]
     except:
         dbName = setName = setValue = None
-    result = myHandler.insertSet(dbName, setName, setValue)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.insertSet(dbName=dbName, keyName=setName,
+                                 setValue=setValue, password=password)
     return flask.jsonify(result)
 
 @app.route("/rmFromSet",methods=["PUT"])
@@ -677,19 +699,36 @@ def rmFromSet():
         setValue = flask.request.json["setValue"]
     except:
         dbName = setName = setValue = None
-    result = myHandler.rmFromSet(dbName, setName, setValue)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.rmFromSet(dbName=dbName, keyName=setName,
+                                 setValue=setValue, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearSet/<string:dbName>/<string:setName>",methods=["PUT"])
-def clearSet(dbName, setName):
+@app.route("/clearSet/<string:dbName>/<string:setName>",
+           defaults={"password": None},
+           methods=["PUT"])
+@app.route("/clearSet/<string:dbName>/<string:setName>/<string:password>",
+           methods=["PUT"])
+def clearSet(dbName, setName, password):
     myHandler = SetHandler(database)
-    result = myHandler.clearSet(dbName, setName)
+    result = myHandler.clearSet(dbName=dbName,
+                                keyName=setName,
+                                password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteSet/<string:dbName>/<string:setName>",methods=["DELETE"])
-def deleteSet(dbName, setName):
+@app.route("/deleteSet/<string:dbName>/<string:setName>",
+           defaults={"password": None},
+           methods=["DELETE"])
+@app.route("/deleteSet/<string:dbName>/<string:setName>/<string:password>",
+           methods=["DELETE"])
+def deleteSet(dbName, setName, password):
     myHandler = SetHandler(database)
-    result = myHandler.deleteSet(dbName, setName)
+    result = myHandler.deleteSet(dbName=dbName,
+                                 keyName=setName,
+                                 password=password)
     return flask.jsonify(result)
 
 @app.route("/searchSet/<string:dbName>/<string:expression>",methods=["GET"])

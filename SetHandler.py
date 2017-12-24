@@ -68,78 +68,68 @@ class SetHandler(object):
 
     # insert a value into the given set
     @validTypeCheck
-    def insertSet(self, dbName, keyName, setValue):
+    def insertSet(self, dbName, keyName, setValue, password=None):
         if self.database.isExist("SET", dbName, keyName):
             if self.database.isExpired("SET", dbName, keyName) is False:
-                result = self.database.insertSet(dbName, keyName, setValue)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.insertSet(dbName=dbName, keyName=keyName,
+                                               value=setValue, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                        responseCode.SET_EXPIRED,
-                                        keyName)
+                code = responseCode.SET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                    responseCode.SET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.SET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # remove the given value from a set
     @validTypeCheck
-    def rmFromSet(self, dbName, keyName, setValue):
+    def rmFromSet(self, dbName, keyName, setValue, password=None):
         if self.database.isExist("SET", dbName, keyName):
             if self.database.isExpired("SET", dbName, keyName) is False:
-                result = self.database.rmFromSet(dbName, keyName, setValue)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.rmFromSet(dbName=dbName, keyName=keyName,
+                                               value=setValue, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                        responseCode.SET_EXPIRED,
-                                        keyName)
+                code = responseCode.SET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                    responseCode.SET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.SET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # clear the given set
     @validTypeCheck
-    def clearSet(self, dbName, keyName):
+    def clearSet(self, dbName, keyName, password=None):
         if self.database.isExist("SET", dbName, keyName):
             if self.database.isExpired("SET", dbName, keyName) is False:
-                result = self.database.clearSet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.clearSet(dbName=dbName,
+                                              keyName=keyName,
+                                              password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                        responseCode.SET_EXPIRED,
-                                        keyName)
+                code = responseCode.SET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                    responseCode.SET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.SET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # delete the given set
     @validTypeCheck
-    def deleteSet(self, dbName, keyName):
+    def deleteSet(self, dbName, keyName, password=None):
         if self.database.isExist("SET", dbName, keyName):
             if self.database.isExpired("SET", dbName, keyName) is False:
-                result = self.database.deleteSet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.deleteSet(dbName=dbName,
+                                               keyName=keyName,
+                                               password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                        responseCode.SET_EXPIRED,
-                                        keyName)
+                code = responseCode.SET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                    responseCode.SET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.SET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # search set names using regular expression

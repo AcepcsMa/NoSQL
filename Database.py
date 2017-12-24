@@ -748,68 +748,72 @@ class NoSqlDb(object):
         return responseCode.SET_GET_SUCCESS, result
 
     @saveTrigger
-    def insertSet(self, dbName, setName, setValue):
-        if self.setLockDict[dbName][setName] is True:
+    @passwordCheck
+    def insertSet(self, dbName, keyName, value, password=None):
+        if self.setLockDict[dbName][keyName] is True:
             self.logger.warning("Set Is Locked "
-                                "{0}->{1}".format(dbName, setName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
-            if setValue not in self.setDict[dbName][setName]:
-                self.lock("SET", dbName, setName)
-                self.setDict[dbName][setName].add(setValue)
-                self.unlock("SET", dbName, setName)
+            if value not in self.setDict[dbName][keyName]:
+                self.lock("SET", dbName, keyName)
+                self.setDict[dbName][keyName].add(value)
+                self.unlock("SET", dbName, keyName)
                 self.logger.info("Set Insert Success "
-                                 "0}->{1}->{2}".format(dbName, setName, setValue))
+                                 "0}->{1}->{2}".format(dbName, keyName, value))
                 return responseCode.SET_INSERT_SUCCESS
             else:
                 return responseCode.SET_VALUE_ALREADY_EXIST
 
     @saveTrigger
-    def rmFromSet(self, dbName, setName, setValue):
-        if self.setLockDict[dbName][setName] is True:
+    @passwordCheck
+    def rmFromSet(self, dbName, keyName, value, password=None):
+        if self.setLockDict[dbName][keyName] is True:
             self.logger.warning("Set Is Locked "
-                                "{0}->{1}".format(dbName, setName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
-            if setValue in self.setDict[dbName][setName]:
-                self.lock("SET", dbName, setName)
-                self.setDict[dbName][setName].discard(setValue)
-                self.unlock("SET", dbName, setName)
+            if value in self.setDict[dbName][keyName]:
+                self.lock("SET", dbName, keyName)
+                self.setDict[dbName][keyName].discard(value)
+                self.unlock("SET", dbName, keyName)
                 self.logger.info("Set Remove Success "
-                                 "{0}->{1}->{2}".format(dbName, setName, setValue))
+                                 "{0}->{1}->{2}".format(dbName, keyName, value))
                 return responseCode.SET_REMOVE_SUCCESS
             else:
                 return responseCode.SET_VALUE_NOT_EXIST
 
     @saveTrigger
-    def clearSet(self, dbName, setName):
-        if self.setLockDict[dbName][setName] is True:
+    @passwordCheck
+    def clearSet(self, dbName, keyName, password=None):
+        if self.setLockDict[dbName][keyName] is True:
             self.logger.warning("Set Is Locked "
-                                "{0}->{1}".format(dbName, setName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lock("SET", dbName, setName)
-            self.setDict[dbName][setName].clear()
-            self.unlock("SET", dbName, setName)
+            self.lock("SET", dbName, keyName)
+            self.setDict[dbName][keyName].clear()
+            self.unlock("SET", dbName, keyName)
             self.logger.info("Set Clear Success "
-                             "{0}->{1}".format(dbName, setName))
+                             "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_CLEAR_SUCCESS
 
     @saveTrigger
-    def deleteSet(self, dbName, setName):
-        if self.setLockDict[dbName][setName] is True:
+    @passwordCheck
+    def deleteSet(self, dbName, keyName, password=None):
+        if self.setLockDict[dbName][keyName] is True:
             self.logger.warning("Set Is Locked "
-                                "{0}->{1}".format(dbName, setName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lock("SET", dbName, setName)
-            self.setName[dbName].discard(setName)
-            self.setDict[dbName].pop(setName)
-            self.invertedTypeDict[dbName].pop(setName)
-            self.unlock("SET", dbName, setName)
-            self.setLockDict[dbName].pop(setName)
+            self.lock("SET", dbName, keyName)
+            self.setName[dbName].discard(keyName)
+            self.setDict[dbName].pop(keyName)
+            self.invertedTypeDict[dbName].pop(keyName)
+            self.unlock("SET", dbName, keyName)
+            self.setLockDict[dbName].pop(keyName)
             self.logger.info("Set Delete Success "
-                             "{0}->{1}".format(dbName, setName))
+                             "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_DELETE_SUCCESS
 
     def searchAllSet(self, dbName):

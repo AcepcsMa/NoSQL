@@ -641,19 +641,36 @@ def makeSet():
         setName = flask.request.json["setName"]
     except:
         dbName = setName = None
-    result = myHandler.createSet(dbName, setName)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.createSet(dbName=dbName,
+                                 keyName=setName,
+                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/getSet/<string:dbName>/<string:setName>",methods=["GET"])
-def getSet(dbName, setName):
+@app.route("/getSet/<string:dbName>/<string:setName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getSet/<string:dbName>/<string:setName>/<string:password>",
+           methods=["GET"])
+def getSet(dbName, setName, password):
     myHandler = SetHandler(database)
-    result = myHandler.getSet(dbName, setName)
+    result = myHandler.getSet(dbName=dbName,
+                              keyName=setName,
+                              password=password)
     return flask.jsonify(result)
 
-@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>",methods=["GET"])
-def getSetRandom(dbName, setName, numRand):
+@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>/<string:password>",
+           methods=["GET"])
+def getSetRandom(dbName, setName, numRand, password):
     myHandler = SetHandler(database)
-    result = myHandler.getSetRandom(dbName, setName, numRand)
+    result = myHandler.getSetRandom(dbName=dbName, keyName=setName,
+                                    numRand=numRand, password=password)
     return flask.jsonify(result)
 
 @app.route("/insertSet",methods=["PUT"])

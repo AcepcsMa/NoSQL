@@ -725,7 +725,8 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createSet(self, dbName, keyName):
+    @passwordCheck
+    def createSet(self, dbName, keyName, password=None):
         self.lock("SET", dbName, keyName)
         self.setName[dbName].add(keyName)
         self.setDict[dbName][keyName] = set()
@@ -735,10 +736,12 @@ class NoSqlDb(object):
                          "{0}->{1}".format(dbName, keyName))
         return responseCode.SET_CREATE_SUCCESS
 
-    def getSet(self, dbName, setName):
-        return list(self.setDict[dbName][setName])
+    @passwordCheck
+    def getSet(self, dbName, keyName, password=None):
+        return list(self.setDict[dbName][keyName])
 
-    def getSetRandom(self, dbName, setName, numRand):
+    @passwordCheck
+    def getSetRandom(self, dbName, setName, numRand, password=None):
         if len(self.setDict[dbName][setName]) < numRand:
             return responseCode.SET_LENGTH_TOO_SHORT, None
         result = random.sample(self.setDict[dbName][setName], numRand)

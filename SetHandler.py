@@ -11,45 +11,43 @@ class SetHandler(object):
 
     # create a set
     @validTypeCheck
-    def createSet(self, dbName, keyName):
+    def createSet(self, dbName, keyName, password=None):
         if self.database.isDbExist(dbName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
+            return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
                                     responseCode.DB_NOT_EXIST,
                                     dbName)
-            return msg
 
         if self.database.isExist("SET", dbName, keyName) is False:
-            result = self.database.createSet(dbName, keyName)
-            msg = Utils.makeMessage(responseCode.detail[result],
-                                    result,
-                                    keyName)
+            code = self.database.createSet(dbName=dbName,
+                                           keyName=keyName,
+                                           password=password)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_ALREADY_EXIST],
-                                    responseCode.SET_ALREADY_EXIST,
-                                    keyName)
+            code = responseCode.SET_ALREADY_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # get set value
     @validTypeCheck
-    def getSet(self, dbName, keyName):
+    def getSet(self, dbName, keyName, password=None):
         if self.database.isExist("SET", dbName, keyName) is True:
             if self.database.isExpired("SET", dbName, keyName) is False:
-                setValue = self.database.getSet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_GET_SUCCESS],
-                                        responseCode.SET_GET_SUCCESS,
-                                        setValue)
+                result = self.database.getSet(dbName=dbName,
+                                              keyName=keyName,
+                                              password=password)
+                code = responseCode.SET_GET_SUCCESS
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                        responseCode.SET_EXPIRED,
-                                        keyName)
+                code, result = responseCode.SET_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                    responseCode.SET_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.SET_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck
-    def getSetRandom(self, dbName, keyName, numRand):
+    def getSetRandom(self, dbName, keyName, numRand, password=None):
         if numRand <= 0:
             return Utils.makeMessage(responseCode.detail[responseCode.INVALID_NUMBER],
                                    responseCode.INVALID_NUMBER,
@@ -57,18 +55,15 @@ class SetHandler(object):
 
         if self.database.isExist("SET", dbName, keyName) is True:
             if self.database.isExpired("SET", dbName, keyName) is False:
-                code, listValue = self.database.getSetRandom(dbName, keyName, numRand)
-                msg = Utils.makeMessage(responseCode.detail[code],
-                                        code,
-                                        listValue)
+                code, result = self.database.getSetRandom(dbName=dbName, keyName=keyName,
+                                                          numRand=numRand, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                        responseCode.LIST_EXPIRED,
-                                        keyName)
+                code, result = responseCode.LIST_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                    responseCode.LIST_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.LIST_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # insert a value into the given set

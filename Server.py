@@ -780,7 +780,12 @@ def intersectSet():
         setName2 = flask.request.json["setName2"]
     except:
         dbName = setName1 = setName2 = None
-    result = myHandler.intersectSet(dbName, setName1, setName2)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.intersectSet(dbName=dbName, setName1=setName1,
+                                    setName2=setName2, password=password)
     return flask.jsonify(result)
 
 @app.route("/diffSet",methods=["PUT"])
@@ -792,7 +797,12 @@ def diffSet():
         setName2 = flask.request.json["setName2"]
     except:
         dbName = setName1 = setName2 = None
-    result = myHandler.diffSet(dbName, setName1, setName2)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.diffSet(dbName=dbName, setName1=setName1,
+                               setName2=setName2, password=password)
     return flask.jsonify(result)
 
 @app.route("/replaceSet",methods=["PUT"])
@@ -804,13 +814,24 @@ def replaceSet():
         setValue = set(flask.request.json["setValue"])
     except:
         dbName = setName = setValue = None
-    result = myHandler.replaceSet(dbName, setName, setValue)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.replaceSet(dbName=dbName, keyName=setName,
+                                  value=setValue, password=password)
     return flask.jsonify(result)
 
-@app.route("/getSetSize/<string:dbName>/<string:setName>",methods=["GET"])
-def getSetSize(dbName, setName):
+@app.route("/getSetSize/<string:dbName>/<string:setName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getSetSize/<string:dbName>/<string:setName>/<string:password>",
+           methods=["GET"])
+def getSetSize(dbName, setName, password):
     myHandler = SetHandler(database)
-    result = myHandler.getSize(dbName, setName)
+    result = myHandler.getSize(dbName=dbName,
+                               keyName=setName,
+                               password=password)
     return flask.jsonify(result)
 
 @app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",methods=["PUT"])

@@ -846,7 +846,8 @@ class NoSqlDb(object):
             return responseCode.SET_UNION_SUCCESS
 
     @saveTrigger
-    def intersectSet(self, dbName, setName1, setName2, intersectResult):
+    @passwordCheck
+    def intersectSet(self, dbName, setName1, setName2, intersectResult, password=None):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
             self.logger.warning("Set Is Locked "
@@ -866,7 +867,8 @@ class NoSqlDb(object):
             return responseCode.SET_INTERSECT_SUCCESS
 
     @saveTrigger
-    def diffSet(self, dbName, setName1, setName2, diffResult):
+    @passwordCheck
+    def diffSet(self, dbName, setName1, setName2, diffResult, password=None):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
             self.logger.warning("Set Is Locked "
@@ -886,17 +888,18 @@ class NoSqlDb(object):
             return responseCode.SET_DIFF_SUCCESS
 
     @saveTrigger
-    def replaceSet(self, dbName, setName, setValue):
-        if self.setLockDict[dbName][setName] is True:
+    @passwordCheck
+    def replaceSet(self, dbName, keyName, value, password=None):
+        if self.setLockDict[dbName][keyName] is True:
             self.logger.warning("Set Is Locked "
-                                "{}->{}".format(dbName, setName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lock("SET", dbName, setName)
-            self.setDict[dbName][setName] = setValue
-            self.unlock("SET", dbName, setName)
+            self.lock("SET", dbName, keyName)
+            self.setDict[dbName][keyName] = value
+            self.unlock("SET", dbName, keyName)
             self.logger.info("Set Replace Success "
-                             "{}->{}".format(dbName, setName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.SET_REPLACE_SUCCESS
 
     @keyNameValidity

@@ -11,7 +11,7 @@ class Utils(object):
         return isinstance(elem, dict)
 
     @staticmethod
-    def isSet(self, elem):
+    def isSet(elem):
         return isinstance(elem, set)
 
     @staticmethod

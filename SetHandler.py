@@ -133,67 +133,64 @@ class SetHandler(object):
         return msg
 
     # search set names using regular expression
-    def searchSet(self, dbName, expression):
+    def searchSet(self, dbName, expression, password=None):
         if self.database.isDbExist(dbName) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                   responseCode.DB_NOT_EXIST,
-                                   dbName)
+                                     responseCode.DB_NOT_EXIST,
+                                     dbName)
 
         if Utils.isValidType(dbName):
-            searchResult = self.database.searchByRE(dbName, expression, "SET")
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_SEARCH_SUCCESS],
-                                   responseCode.SET_SEARCH_SUCCESS,
-                                   searchResult)
+            result = self.database.searchByRE(dbName=dbName, expression=expression,
+                                              dataType="SET", password=password)
+            code = responseCode.SET_SEARCH_SUCCESS
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+            code, result = responseCode.ELEM_TYPE_ERROR, dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # return all set names in the given database
-    def searchAllSet(self, dbName):
+    def searchAllSet(self, dbName, password=None):
         if Utils.isValidType(dbName):
             if self.database.isDbExist(dbName):
-                searchResult = self.database.searchAllSet(dbName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_SEARCH_SUCCESS],
-                                       responseCode.SET_SEARCH_SUCCESS,
-                                       searchResult)
+                result = self.database.searchAllSet(dbName=dbName,
+                                                    password=password)
+                code = responseCode.SET_SEARCH_SUCCESS
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                       responseCode.DB_NOT_EXIST,
-                                       dbName)
+                code, result = responseCode.DB_NOT_EXIST, dbName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+            code, result = responseCode.ELEM_TYPE_ERROR, dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # set union operation
-    def unionSet(self, dbName, setName1, setName2):
+    def unionSet(self, dbName, setName1, setName2, password=None):
         if Utils.isValidType(dbName, setName1, setName2) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+                                     responseCode.ELEM_TYPE_ERROR,
+                                     dbName)
 
         if self.database.isExist("SET", dbName, setName1, setName2):
             if self.database.isExpired("SET", dbName,setName1, setName2) is False:
                 unionResult = [None]
-                result = self.database.unionSet(dbName, setName1, setName2, unionResult)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       unionResult[1])
+                code = self.database.unionSet(dbName=dbName, setName1=setName1,
+                                              setName2=setName2, unionResult=unionResult,
+                                              password=password)
+                result = unionResult[1]
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       "{} or {}".format(setName1, setName2))
+                code, result = responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   "{0} or {1}".format(setName1, setName2))
+            code, result = responseCode.SET_NOT_EXIST, "{} or {}".format(setName1, setName2)
+        msg = Utils.makeMessage(responseCode.detail[code],
+                               code,
+                               result)
         return msg
 
     # set intersect operation
-    def intersectSet(self, dbName, setName1, setName2):
+    def intersectSet(self, dbName, setName1, setName2, password=None):
         if Utils.isValidType(dbName, setName1, setName2) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
                                    responseCode.ELEM_TYPE_ERROR,
@@ -202,22 +199,21 @@ class SetHandler(object):
         if self.database.isExist("SET", dbName, setName1, setName2):
             if self.database.isExpired("SET", dbName, setName1, setName2) is False:
                 intersectResult = [None]
-                result = self.database.intersectSet(dbName, setName1, setName2, intersectResult)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       intersectResult[1])
+                code = self.database.intersectSet(dbName=dbName, setName1=setName1,
+                                                  setName2=setName2, intersectResult=intersectResult,
+                                                  password=password)
+                result = intersectResult[1]
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       "{} or {}".format(setName1, setName2))
+                code, result = responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   "{} or {}".format(setName1, setName2))
+            code, result = responseCode.SET_NOT_EXIST, "{} or {}".format(setName1, setName2)
+        msg = Utils.makeMessage(responseCode.detail[code],
+                               code,
+                               result)
         return msg
 
     # set difference operation
-    def diffSet(self, dbName, setName1, setName2):
+    def diffSet(self, dbName, setName1, setName2, password=None):
         if Utils.isValidType(dbName, setName1, setName2) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
                                    responseCode.ELEM_TYPE_ERROR,
@@ -226,23 +222,22 @@ class SetHandler(object):
         if self.database.isExist("SET", dbName, setName1, setName2):
             if self.database.isExpired("SET", dbName, setName1, setName2) is False:
                 diffResult = [None]
-                result = self.database.diffSet(dbName, setName1, setName2, diffResult)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                       result,
-                                       diffResult[1])
+                code = self.database.diffSet(dbName=dbName, setName1=setName1,
+                                             setName2=setName2, diffResult=diffResult,
+                                             password=password)
+                result = diffResult[1]
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                       responseCode.SET_EXPIRED,
-                                       "{} or {}".format(setName1, setName2))
+                code, result = responseCode.SET_EXPIRED, "{} or {}".format(setName1, setName2)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                   responseCode.SET_NOT_EXIST,
-                                   "{} or {}".format(setName1, setName2))
+            code, result = responseCode.SET_NOT_EXIST, "{} or {}".format(setName1, setName2)
+        msg = Utils.makeMessage(responseCode.detail[code],
+                               code,
+                               result)
         return msg
 
     # replace the existed set with a new set
     @validTypeCheck
-    def replaceSet(self, dbName, keyName, value):
+    def replaceSet(self, dbName, keyName, value, password=None):
         if Utils.isSet(value) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
                                      responseCode.ELEM_TYPE_ERROR,
@@ -250,18 +245,15 @@ class SetHandler(object):
 
         if self.database.isExist("SET", dbName, keyName):
             if self.database.isExpired("SET", dbName, keyName) is False:
-                result = self.database.replaceSet(dbName, keyName, value)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.replaceSet(dbName=dbName, keyName=keyName,
+                                                value=value, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.SET_EXPIRED],
-                                        responseCode.SET_EXPIRED,
-                                        keyName)
+                code = responseCode.SET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                    responseCode.SET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.SET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     # show TTL for a set
@@ -279,14 +271,13 @@ class SetHandler(object):
         return msg
 
     @validTypeCheck
-    def getSize(self, dbName, keyName):
+    def getSize(self, dbName, keyName, password=None):
         if self.database.isExist("SET", dbName, keyName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.SET_NOT_EXIST],
-                                    responseCode.SET_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.SET_NOT_EXIST, keyName
         else:
-            code, result = self.database.getSize(dbName, keyName, "SET")
-            msg = Utils.makeMessage(responseCode.detail[code],
-                                    code,
-                                    result)
+            code, result = self.database.getSize(dbName=dbName, keyName=keyName,
+                                                 type="SET", password=password)
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg

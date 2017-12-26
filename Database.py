@@ -816,7 +816,8 @@ class NoSqlDb(object):
                              "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_DELETE_SUCCESS
 
-    def searchAllSet(self, dbName):
+    @passwordCheck
+    def searchAllSet(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All Set Success "
@@ -824,7 +825,8 @@ class NoSqlDb(object):
         return list(self.setName[dbName])
 
     @saveTrigger
-    def unionSet(self, dbName, setName1, setName2, unionResult):
+    @passwordCheck
+    def unionSet(self, dbName, setName1, setName2, unionResult, password=None):
         if (self.setLockDict[dbName][setName1] is True
                 or self.setLockDict[dbName][setName2] is True):
             self.logger.warning("Set Is Locked "

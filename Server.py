@@ -731,16 +731,27 @@ def deleteSet(dbName, setName, password):
                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/searchSet/<string:dbName>/<string:expression>",methods=["GET"])
-def searchSet(dbName, expression):
+@app.route("/searchSet/<string:dbName>/<string:expression>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchSet/<string:dbName>/<string:expression>/<string:password>",
+           methods=["GET"])
+def searchSet(dbName, expression, password):
     myHandler = SetHandler(database)
-    result = myHandler.searchSet(dbName, expression)
+    result = myHandler.searchSet(dbName=dbName,
+                                 expression=expression,
+                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllSet/<string:dbName>",methods=["GET"])
-def searchAllSet(dbName):
+@app.route("/searchAllSet/<string:dbName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchAllSet/<string:dbName>/<string:password>",
+           methods=["GET"])
+def searchAllSet(dbName, password):
     myHandler = SetHandler(database)
-    result = myHandler.searchAllSet(dbName)
+    result = myHandler.searchAllSet(dbName=dbName,
+                                    password=password)
     return flask.jsonify(result)
 
 @app.route("/unionSet",methods=["PUT"])
@@ -752,7 +763,12 @@ def unionSet():
         setName2 = flask.request.json["setName2"]
     except:
         dbName = setName1 = setName2 = None
-    result = myHandler.unionSet(dbName, setName1, setName2)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.unionSet(dbName=dbName, setName1=setName1,
+                                setName2=setName2, password=password)
     return flask.jsonify(result)
 
 @app.route("/intersectSet",methods=["PUT"])

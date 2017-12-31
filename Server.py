@@ -834,8 +834,13 @@ def getSetSize(dbName, setName, password):
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",methods=["PUT"])
-def showTTL(dbName, dataType, keyName):
+
+@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",
+           defaults={"password": None},
+           methods=["PUT"])
+@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>/<string:password>",
+           methods=["PUT"])
+def showTTL(dbName, dataType, keyName, password):
     if(dataType == "ELEM"):
         myHandler = ElemHandler(database)
     elif(dataType == "LIST"):
@@ -849,7 +854,9 @@ def showTTL(dbName, dataType, keyName):
     else:
         myHandler = None
     try:
-        result = myHandler.showTTL(dbName, keyName)
+        result = myHandler.showTTL(dbName=dbName,
+                                   keyName=keyName,
+                                   password=password)
         return flask.jsonify(result)
     except:
         msg = {"msg":"Data Type Error",
@@ -865,13 +872,25 @@ def makeZSet():
         zsetName = flask.request.json["zsetName"]
     except:
         dbName = zsetName = None
-    result = myHandler.createZSet(dbName, zsetName)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.createZSet(dbName=dbName,
+                                  keyName=zsetName,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/getZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
-def getZSet(dbName, zsetName):
+@app.route("/getZSet/<string:dbName>/<string:zsetName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getZSet/<string:dbName>/<string:zsetName>/<string:password>",
+           methods=["GET"])
+def getZSet(dbName, zsetName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.getZSet(dbName, zsetName)
+    result = myHandler.getZSet(dbName=dbName,
+                               keyName=zsetName,
+                               password=password)
     return flask.jsonify(result)
 
 @app.route("/insertZSet",methods=["PUT"])
@@ -884,7 +903,13 @@ def insertZSet():
         score = flask.request.json["score"]
     except:
         dbName = zsetName = value = score = None
-    result = myHandler.insertZSet(dbName, zsetName, value, score)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.insertZSet(dbName=dbName, keyName=zsetName,
+                                  value=value, score=score,
+                                  password=password)
     return flask.jsonify(result)
 
 @app.route("/rmFromZSet",methods=["PUT"])

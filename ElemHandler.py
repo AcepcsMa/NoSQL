@@ -170,14 +170,13 @@ class ElemHandler(object):
         return msg
 
     @validTypeCheck
-    def showTTL(self, dbName, keyName):
+    def showTTL(self, dbName, keyName, password=None):
         if self.database.isDbExist(dbName):
-            code, result = self.database.showTTL(dbName, keyName, "ELEM")
-            msg = Utils.makeMessage(responseCode.detail[code],
-                                   code,
-                                   result)
+            code, result = self.database.showTTL(dbName=dbName, keyName=keyName,
+                                                 dataType="ELEM", password=password)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                   responseCode.DB_NOT_EXIST,
-                                   dbName)
+            code, result = responseCode.DB_NOT_EXIST, dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg

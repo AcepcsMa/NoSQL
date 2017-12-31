@@ -10,63 +10,58 @@ class ZSetHandler(object):
         self.database = database
 
     @validTypeCheck
-    def createZSet(self, dbName, keyName):
+    def createZSet(self, dbName, keyName, password=None):
         if self.database.isDbExist(dbName) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
+            return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
                                    responseCode.DB_NOT_EXIST,
                                    dbName)
-            return msg
 
         if self.database.isExist("ZSET", dbName, keyName) is False:
-            result = self.database.createZSet(dbName, keyName)
-            msg = Utils.makeMessage(responseCode.detail[result], result, keyName)
+            code = self.database.createZSet(dbName, keyName)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_ALREADY_EXIST],
-                                    responseCode.ZSET_ALREADY_EXIST,
-                                    keyName)
+            code = responseCode.ZSET_ALREADY_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     @validTypeCheck
-    def getZSet(self, dbName, keyName):
+    def getZSet(self, dbName, keyName, password=None):
         if self.database.isExist("ZSET", dbName, keyName) is True:
             if self.database.isExpired("ZSET", dbName, keyName) is False:
-                zsetValue = self.database.getZSet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_GET_SUCCESS],
-                                        responseCode.ZSET_GET_SUCCESS,
-                                        zsetValue)
+                code, result = responseCode.ZSET_GET_SUCCESS, \
+                               self.database.getZSet(dbName=dbName,
+                                                     keyName=keyName,
+                                                     password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code, result = responseCode.ZSET_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.ZSET_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck
-    def insertZSet(self, dbName, keyName, value, score):
+    def insertZSet(self, dbName, keyName, value, score, password=None):
         # score must be int type
         if isinstance(score, int) is False:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
+            return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
                                    responseCode.ELEM_TYPE_ERROR,
                                    score)
-            return msg
 
         if self.database.isExist("ZSET", dbName, keyName):
             if self.database.isExpired("ZSET", dbName, keyName) is False:
-                result = self.database.insertZSet(dbName, keyName, value, score)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.insertZSet(dbName=dbName, keyName=keyName,
+                                                value=value, score=score,
+                                                password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code = responseCode.ZSET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.ZSET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     @validTypeCheck
@@ -291,14 +286,13 @@ class ZSetHandler(object):
         return msg
 
     @validTypeCheck
-    def showTTL(self, dbName, keyName):
+    def showTTL(self, dbName, keyName, password=None):
         if (self.database.isDbExist(dbName)):
-            code, result = self.database.showTTL(dbName, keyName, "ZSET")
-            msg = Utils.makeMessage(responseCode.detail[code],
-                                    code,
-                                    result)
+            code, result = self.database.showTTL(dbName=dbName, keyName=keyName,
+                                                 dataType="ZSET", password=password)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                    responseCode.DB_NOT_EXIST,
-                                    dbName)
+            code, result = responseCode.DB_NOT_EXIST, dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg

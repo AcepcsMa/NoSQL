@@ -240,7 +240,8 @@ class NoSqlDb(object):
         self.logger.info(logInfo.format(dbName, expression))
         return list(searchResult)
 
-    def showTTL(self, dbName, keyName, dataType):
+    @passwordCheck
+    def showTTL(self, dbName, keyName, dataType, password=None):
         ttlDict = self.getTTLDict(dataType)[dbName]
 
         if keyName in ttlDict.keys():
@@ -904,7 +905,8 @@ class NoSqlDb(object):
 
     @keyNameValidity
     @saveTrigger
-    def createZSet(self, dbName, keyName):
+    @passwordCheck
+    def createZSet(self, dbName, keyName, password=None):
         self.lock("ZSET", dbName, keyName)
         self.zsetName[dbName].add(keyName)
         self.zsetDict[dbName][keyName] = ZSet()
@@ -914,30 +916,32 @@ class NoSqlDb(object):
                          "{0}->{1}".format(dbName, keyName))
         return responseCode.ZSET_CREATE_SUCCESS
 
-    def getZSet(self, dbName, zsetName):
-        return self.zsetDict[dbName][zsetName].get()
+    @passwordCheck
+    def getZSet(self, dbName, keyName, password=None):
+        return self.zsetDict[dbName][keyName].get()
 
     @saveTrigger
-    def insertZSet(self, dbName, zsetName, value, score):
-        if self.zsetLockDict[dbName][zsetName] is True:
+    @passwordCheck
+    def insertZSet(self, dbName, keyName, value, score, password=None):
+        if self.zsetLockDict[dbName][keyName] is True:
             self.logger.warning("ZSet Is Locked "
-                                "{0}->{1}".format(dbName, zsetName))
+                                "{0}->{1}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
             try:
-                self.lock("ZSET", dbName, zsetName)
-                if self.zsetDict[dbName][zsetName].add(value, score) is True:
+                self.lock("ZSET", dbName, keyName)
+                if self.zsetDict[dbName][keyName].add(value, score) is True:
                     self.logger.info("ZSet Insert Success "
                                      "{0}->{1}->{2}:{3}".
-                                     format(dbName, zsetName, value, score))
+                                     format(dbName, keyName, value, score))
                     return responseCode.ZSET_INSERT_SUCCESS
                 else:
                     self.logger.warning("ZSet Insert Fail(Value Existed) "
                                         "{}->{}:{}".
-                                        format(dbName, zsetName, value))
+                                        format(dbName, keyName, value))
                     return responseCode.ZSET_VALUE_ALREADY_EXIST
             finally:
-                self.unlock("ZSET", dbName, zsetName)
+                self.unlock("ZSET", dbName, keyName)
 
     @saveTrigger
     def rmFromZSet(self, dbName, zsetName, value):

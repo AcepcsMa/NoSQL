@@ -240,7 +240,8 @@ class NoSqlDb(object):
         self.logger.info(logInfo.format(dbName, expression))
         return list(searchResult)
 
-    def showTTL(self, dbName, keyName, dataType):
+    @passwordCheck
+    def showTTL(self, dbName, keyName, dataType, password=None):
         ttlDict = self.getTTLDict(dataType)[dbName]
 
         if keyName in ttlDict.keys():

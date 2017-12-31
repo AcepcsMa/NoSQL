@@ -834,8 +834,13 @@ def getSetSize(dbName, setName, password):
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",methods=["PUT"])
-def showTTL(dbName, dataType, keyName):
+
+@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",
+           defaults={"password": None},
+           methods=["PUT"])
+@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>/<string:password>",
+           methods=["PUT"])
+def showTTL(dbName, dataType, keyName, password):
     if(dataType == "ELEM"):
         myHandler = ElemHandler(database)
     elif(dataType == "LIST"):
@@ -849,7 +854,9 @@ def showTTL(dbName, dataType, keyName):
     else:
         myHandler = None
     try:
-        result = myHandler.showTTL(dbName, keyName)
+        result = myHandler.showTTL(dbName=dbName,
+                                   keyName=keyName,
+                                   password=password)
         return flask.jsonify(result)
     except:
         msg = {"msg":"Data Type Error",

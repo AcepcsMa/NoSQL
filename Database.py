@@ -981,23 +981,25 @@ class NoSqlDb(object):
             return responseCode.ZSET_CLEAR_SUCCESS
 
     @saveTrigger
-    def deleteZSet(self, dbName, zsetName):
-        if self.zsetLockDict[dbName][zsetName] is True:
+    @passwordCheck
+    def deleteZSet(self, dbName, keyName, password=None):
+        if self.zsetLockDict[dbName][keyName] is True:
             self.logger.warning("ZSet Is Locked "
-                                "{}->{}".format(dbName, zsetName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lock("ZSET", dbName, zsetName)
-            self.zsetName[dbName].discard(zsetName)
-            self.zsetDict[dbName].pop(zsetName)
-            self.invertedTypeDict[dbName].pop(zsetName)
-            self.unlock("ZSET", dbName, zsetName)
-            self.zsetLockDict[dbName].pop(zsetName)
+            self.lock("ZSET", dbName, keyName)
+            self.zsetName[dbName].discard(keyName)
+            self.zsetDict[dbName].pop(keyName)
+            self.invertedTypeDict[dbName].pop(keyName)
+            self.unlock("ZSET", dbName, keyName)
+            self.zsetLockDict[dbName].pop(keyName)
             self.logger.info("ZSet Delete Success "
-                             "{}->{}".format(dbName, zsetName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_DELETE_SUCCESS
 
-    def searchAllZSet(self, dbName):
+    @passwordCheck
+    def searchAllZSet(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All ZSet Success "

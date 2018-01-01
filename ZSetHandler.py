@@ -96,31 +96,30 @@ class ZSetHandler(object):
         return msg
 
     @validTypeCheck
-    def deleteZSet(self, dbName, keyName):
+    def deleteZSet(self, dbName, keyName, password=None):
         if self.database.isExist("ZSET", dbName, keyName):
             if self.database.isExpired("ZSET", dbName, keyName) is False:
-                result = self.database.deleteZSet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.deleteZSet(dbName=dbName,
+                                                keyName=keyName,
+                                                password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code = responseCode.ZSET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.ZSET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
-    def searchZSet(self, dbName, expression):
+    def searchZSet(self, dbName, expression, password=None):
         if self.database.isDbExist(dbName) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
                                    responseCode.DB_NOT_EXIST,
                                    dbName)
 
         if Utils.isValidType(dbName):
-            searchResult = self.database.searchByRE(dbName, expression, "ZSET")
+            searchResult = self.database.searchByRE(dbName=dbName, expression=expression,
+                                                    dataType="ZSET", password=password)
             msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_SEARCH_SUCCESS], 
                                    responseCode.ZSET_SEARCH_SUCCESS, 
                                    searchResult)
@@ -130,21 +129,19 @@ class ZSetHandler(object):
                                    dbName)
         return msg
 
-    def searchAllZSet(self, dbName):
+    def searchAllZSet(self, dbName, password=None):
         if Utils.isValidType(dbName):
             if self.database.isDbExist(dbName):
-                searchResult = self.database.searchAllZSet(dbName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_SEARCH_SUCCESS],
-                                       responseCode.ZSET_SEARCH_SUCCESS,
-                                       searchResult)
+                code, result = responseCode.ZSET_SEARCH_SUCCESS, \
+                               self.database.searchAllZSet(dbName=dbName,
+                                                           password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.DB_NOT_EXIST],
-                                       responseCode.DB_NOT_EXIST,
-                                       dbName)
+                code, result = responseCode.DB_NOT_EXIST, dbName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+            code, result = responseCode.ELEM_TYPE_ERROR, dbName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck

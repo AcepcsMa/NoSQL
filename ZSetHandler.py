@@ -65,39 +65,34 @@ class ZSetHandler(object):
         return msg
 
     @validTypeCheck
-    def rmFromZSet(self, dbName, keyName, value):
+    def rmFromZSet(self, dbName, keyName, value, password=None):
         if self.database.isExist("ZSET", dbName, keyName):
             if self.database.isExpired("ZSET", dbName, keyName) is False:
-                result = self.database.rmFromZSet(dbName, keyName, value)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.rmFromZSet(dbName=dbName, keyName=keyName,
+                                                value=value, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code = responseCode.ZSET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.ZSET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     @validTypeCheck
-    def clearZSet(self, dbName, keyName):
+    def clearZSet(self, dbName, keyName, password=None):
         if self.database.isExist("ZSET", dbName, keyName):
             if self.database.isExpired("ZSET", dbName, keyName) is False:
-                result = self.database.clearZSet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[result],
-                                        result,
-                                        keyName)
+                code = self.database.clearZSet(dbName=dbName,
+                                               keyName=keyName,
+                                               password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code = responseCode.ZSET_EXPIRED
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code = responseCode.ZSET_NOT_EXIST
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     @validTypeCheck

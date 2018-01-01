@@ -921,13 +921,24 @@ def rmFromZSet():
         value = flask.request.json["value"]
     except:
         dbName = zsetName = value = None
-    result = myHandler.rmFromZSet(dbName, zsetName, value)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.rmFromZSet(dbName=dbName, keyName=zsetName,
+                                  value=value, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearZSet/<string:dbName>/<string:zsetName>",methods=["PUT"])
-def clearZSet(dbName, zsetName):
+@app.route("/clearZSet/<string:dbName>/<string:zsetName>",
+           defaults={"password": None},
+           methods=["PUT"])
+@app.route("/clearZSet/<string:dbName>/<string:zsetName>/<string:password>",
+           methods=["PUT"])
+def clearZSet(dbName, zsetName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.clearZSet(dbName, zsetName)
+    result = myHandler.clearZSet(dbName=dbName,
+                                 keyName=zsetName,
+                                 password=password)
     return flask.jsonify(result)
 
 @app.route("/deleteZSet/<string:dbName>/<string:zsetName>",methods=["DELETE"])

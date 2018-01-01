@@ -944,57 +944,62 @@ class NoSqlDb(object):
                 self.unlock("ZSET", dbName, keyName)
 
     @saveTrigger
-    def rmFromZSet(self, dbName, zsetName, value):
-        if self.zsetLockDict[dbName][zsetName] is True:
+    @passwordCheck
+    def rmFromZSet(self, dbName, keyName, value, password=None):
+        if self.zsetLockDict[dbName][keyName] is True:
             self.logger.warning("ZSet Is Locked "
-                                "{}->{}".format(dbName, zsetName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lock("ZSET", dbName, zsetName)
-            result = self.zsetDict[dbName][zsetName].remove(value)
-            self.unlock("ZSET", dbName, zsetName)
+            self.lock("ZSET", dbName, keyName)
+            result = self.zsetDict[dbName][keyName].remove(value)
+            self.unlock("ZSET", dbName, keyName)
             if(result is True):
                 self.logger.info("ZSet Remove Success "
                                  "{}->{}:{}".
-                                 format(dbName, zsetName, value))
+                                 format(dbName, keyName, value))
             else:
                 self.logger.info("ZSet Remove Fail(Value Not Existed) "
                                  "{}->{}:{}".
-                                 format(dbName, zsetName, value))
-            return responseCode.ZSET_REMOVE_SUCCESS if result is True else responseCode.ZSET_NOT_CONTAIN_VALUE
+                                 format(dbName, keyName, value))
+            return responseCode.ZSET_REMOVE_SUCCESS if result is True \
+                else responseCode.ZSET_NOT_CONTAIN_VALUE
 
     @saveTrigger
-    def clearZSet(self, dbName, zsetName):
-        if self.zsetLockDict[dbName][zsetName] is True:
+    @passwordCheck
+    def clearZSet(self, dbName, keyName, password=None):
+        if self.zsetLockDict[dbName][keyName] is True:
             self.logger.warning("ZSet Is Locked "
-                                "{}->{}".format(dbName, zsetName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lock("ZSET", dbName, zsetName)
-            self.zsetDict[dbName][zsetName].clear()
-            self.unlock("ZSET", dbName, zsetName)
+            self.lock("ZSET", dbName, keyName)
+            self.zsetDict[dbName][keyName].clear()
+            self.unlock("ZSET", dbName, keyName)
             self.logger.info("ZSet Clear Success "
-                             "{}->{}".format(dbName, zsetName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_CLEAR_SUCCESS
 
     @saveTrigger
-    def deleteZSet(self, dbName, zsetName):
-        if self.zsetLockDict[dbName][zsetName] is True:
+    @passwordCheck
+    def deleteZSet(self, dbName, keyName, password=None):
+        if self.zsetLockDict[dbName][keyName] is True:
             self.logger.warning("ZSet Is Locked "
-                                "{}->{}".format(dbName, zsetName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
-            self.lock("ZSET", dbName, zsetName)
-            self.zsetName[dbName].discard(zsetName)
-            self.zsetDict[dbName].pop(zsetName)
-            self.invertedTypeDict[dbName].pop(zsetName)
-            self.unlock("ZSET", dbName, zsetName)
-            self.zsetLockDict[dbName].pop(zsetName)
+            self.lock("ZSET", dbName, keyName)
+            self.zsetName[dbName].discard(keyName)
+            self.zsetDict[dbName].pop(keyName)
+            self.invertedTypeDict[dbName].pop(keyName)
+            self.unlock("ZSET", dbName, keyName)
+            self.zsetLockDict[dbName].pop(keyName)
             self.logger.info("ZSet Delete Success "
-                             "{}->{}".format(dbName, zsetName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_DELETE_SUCCESS
 
-    def searchAllZSet(self, dbName):
+    @passwordCheck
+    def searchAllZSet(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
         self.logger.info("Search All ZSet Success "

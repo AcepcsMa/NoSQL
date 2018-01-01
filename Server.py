@@ -921,31 +921,59 @@ def rmFromZSet():
         value = flask.request.json["value"]
     except:
         dbName = zsetName = value = None
-    result = myHandler.rmFromZSet(dbName, zsetName, value)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.rmFromZSet(dbName=dbName, keyName=zsetName,
+                                  value=value, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearZSet/<string:dbName>/<string:zsetName>",methods=["PUT"])
-def clearZSet(dbName, zsetName):
+@app.route("/clearZSet/<string:dbName>/<string:zsetName>",
+           defaults={"password": None},
+           methods=["PUT"])
+@app.route("/clearZSet/<string:dbName>/<string:zsetName>/<string:password>",
+           methods=["PUT"])
+def clearZSet(dbName, zsetName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.clearZSet(dbName, zsetName)
+    result = myHandler.clearZSet(dbName=dbName,
+                                 keyName=zsetName,
+                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteZSet/<string:dbName>/<string:zsetName>",methods=["DELETE"])
-def deleteZSet(dbName, zsetName):
+@app.route("/deleteZSet/<string:dbName>/<string:zsetName>",
+           defaults={"password": None},
+           methods=["DELETE"])
+@app.route("/deleteZSet/<string:dbName>/<string:zsetName>/<string:password>",
+           methods=["DELETE"])
+def deleteZSet(dbName, zsetName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.deleteZSet(dbName, zsetName)
+    result = myHandler.deleteZSet(dbName=dbName,
+                                  keyName=zsetName,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/searchZSet/<string:dbName>/<string:expression>",methods=["GET"])
-def searchZSet(dbName, expression):
+@app.route("/searchZSet/<string:dbName>/<string:expression>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchZSet/<string:dbName>/<string:expression>/<string:password>",
+           methods=["GET"])
+def searchZSet(dbName, expression, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.searchZSet(dbName, expression)
+    result = myHandler.searchZSet(dbName=dbName,
+                                  expression=expression,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllZSet/<string:dbName>",methods=["GET"])
-def searchAllZSet(dbName):
+@app.route("/searchAllZSet/<string:dbName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/searchAllZSet/<string:dbName>/<string:password>",
+           methods=["GET"])
+def searchAllZSet(dbName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.searchAllZSet(dbName)
+    result = myHandler.searchAllZSet(dbName=dbName,
+                                     password=password)
     return flask.jsonify(result)
 
 @app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>",methods=["GET"])

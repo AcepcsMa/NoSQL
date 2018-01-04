@@ -1006,11 +1006,13 @@ class NoSqlDb(object):
                          "{}".format(dbName))
         return list(self.zsetName[dbName])
 
-    def findMinFromZSet(self, dbName, zsetName):
-        return self.zsetDict[dbName][zsetName].findMin()
+    @passwordCheck
+    def findMinFromZSet(self, dbName, keyName, password=None):
+        return self.zsetDict[dbName][keyName].findMin()
 
-    def findMaxFromZSet(self, dbName, zsetName):
-        return self.zsetDict[dbName][zsetName].findMax()
+    @passwordCheck
+    def findMaxFromZSet(self, dbName, keyName, password=None):
+        return self.zsetDict[dbName][keyName].findMax()
 
     def getScoreFromZSet(self, dbName, zsetName, valueName):
         result = self.zsetDict[dbName][zsetName].find(valueName)

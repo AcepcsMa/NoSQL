@@ -145,39 +145,37 @@ class ZSetHandler(object):
         return msg
 
     @validTypeCheck
-    def findMin(self, dbName, keyName):
+    def findMin(self, dbName, keyName, password=None):
         if self.database.isExist("ZSET", dbName, keyName):
             if self.database.isExpired("ZSET", dbName, keyName) is False:
-                result = self.database.findMinFromZSet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_FIND_MIN_SUCCESS],
-                                        responseCode.ZSET_FIND_MIN_SUCCESS,
-                                        list(result))
+                code, result = responseCode.ZSET_FIND_MIN_SUCCESS, \
+                               list(self.database.findMinFromZSet(dbName=dbName,
+                                                                  keyName=keyName,
+                                                                  password=password))
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code, result = responseCode.ZSET_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.ZSET_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck
-    def findMax(self, dbName, keyName):
+    def findMax(self, dbName, keyName, password=None):
         if self.database.isExist("ZSET", dbName, keyName):
             if self.database.isExpired("ZSET", dbName, keyName) is False:
-                result = self.database.findMaxFromZSet(dbName, keyName)
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_FIND_MAX_SUCCESS],
-                                        responseCode.ZSET_FIND_MAX_SUCCESS,
-                                        list(result))
+                code, result = responseCode.ZSET_FIND_MAX_SUCCESS, \
+                               list(self.database.findMaxFromZSet(dbName=dbName,
+                                                                  keyName=keyName,
+                                                                  password=password))
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code, result = responseCode.ZSET_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.ZSET_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck

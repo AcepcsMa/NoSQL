@@ -976,16 +976,28 @@ def searchAllZSet(dbName, password):
                                      password=password)
     return flask.jsonify(result)
 
-@app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
-def findMinFromZSet(dbName, zsetName):
+@app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>/<string:password>",
+           methods=["GET"])
+def findMinFromZSet(dbName, zsetName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.findMin(dbName, zsetName)
+    result = myHandler.findMin(dbName=dbName,
+                               keyName=zsetName,
+                               password=password)
     return flask.jsonify(result)
 
-@app.route("/findMaxFromZSet/<string:dbName>/<string:zsetName>",methods=["GET"])
-def findMaxFromZSet(dbName, zsetName):
+@app.route("/findMaxFromZSet/<string:dbName>/<string:zsetName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/findMaxFromZSet/<string:dbName>/<string:zsetName>/<string:password>",
+           methods=["GET"])
+def findMaxFromZSet(dbName, zsetName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.findMax(dbName, zsetName)
+    result = myHandler.findMax(dbName=dbName,
+                               keyName=zsetName,
+                               password=password)
     return flask.jsonify(result)
 
 @app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>",methods=["GET"])

@@ -1014,12 +1014,14 @@ class NoSqlDb(object):
     def findMaxFromZSet(self, dbName, keyName, password=None):
         return self.zsetDict[dbName][keyName].findMax()
 
-    def getScoreFromZSet(self, dbName, zsetName, valueName):
-        result = self.zsetDict[dbName][zsetName].find(valueName)
+    @passwordCheck
+    def getScoreFromZSet(self, dbName, keyName, valueName, password=None):
+        result = self.zsetDict[dbName][keyName].find(valueName)
         return result[1]
 
-    def getValuesByRange(self, dbName, zsetName, start, end):
-        traverseResult = self.zsetDict[dbName][zsetName].get()
+    @passwordCheck
+    def getValuesByRange(self, dbName, keyName, start, end, password=None):
+        traverseResult = self.zsetDict[dbName][keyName].get()
         traverseResult = [result for result in traverseResult
                           if result[1] >= start and result[1] < end]
         return traverseResult

@@ -262,5 +262,7 @@ class responseCode:
         DB_PASSWORD_ERROR:"Database Password Error",
         DB_PASSWORD_CHANGE_SUCCESS:"Database Password Change Success",
         DB_PASSWORD_REMOVE_SUCCESS:"Database Password Remove Success",
-        DB_PASSWORD_LENGTH_ERROR:"Password Length should be 6 to 12"
+        DB_PASSWORD_LENGTH_ERROR:"Password Length should be 6 to 12",
+        ZSET_GET_SCORE_SUCCESS:"Get Score Success",
+        ZSET_GET_VALUES_SUCCESS:"Get Value Success"
     }

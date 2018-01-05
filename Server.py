@@ -1000,16 +1000,27 @@ def findMaxFromZSet(dbName, zsetName, password):
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>",methods=["GET"])
-def getScore(dbName, zsetName,valueName):
+@app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>/<string:password>",
+           methods=["GET"])
+def getScore(dbName, zsetName,valueName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.getScore(dbName, zsetName, valueName)
+    result = myHandler.getScore(dbName=dbName, keyName=zsetName,
+                                value=valueName, password=password)
     return flask.jsonify(result)
 
-@app.route("/getValuesByRange/<string:dbName>/<string:zsetName>/<int:start>/<int:end>",methods=["GET"])
-def getValuesByRange(dbName, zsetName, start, end):
+@app.route("/getValuesByRange/<string:dbName>/<string:zsetName>/<int:start>/<int:end>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getValuesByRange/<string:dbName>/<string:zsetName>/<int:start>/<int:end>/<string:password>",
+           methods=["GET"])
+def getValuesByRange(dbName, zsetName, start, end, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.getValuesByRange(dbName, zsetName, start, end)
+    result = myHandler.getValuesByRange(dbName=dbName, keyName=zsetName,
+                                        start=start, end=end,
+                                        password=password)
     return flask.jsonify(result)
 
 @app.route("/getZSetSize/<string:dbName>/<string:zsetName>",methods=["GET"])

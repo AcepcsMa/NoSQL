@@ -179,41 +179,41 @@ class ZSetHandler(object):
         return msg
 
     @validTypeCheck
-    def getScore(self, dbName, keyName, value):
-        if(self.database.isExist("ZSET", dbName, keyName)):
-            if (self.database.isExpired("ZSET", dbName, keyName) is False):
-                result = self.database.getScoreFromZSet(dbName, keyName, value)
-                msg = Utils.makeMessage("Get Score Success", responseCode.ZSET_GET_SCORE_SUCCESS, result)
+    def getScore(self, dbName, keyName, value, password=None):
+        if self.database.isExist("ZSET", dbName, keyName):
+            if self.database.isExpired("ZSET", dbName, keyName) is False:
+                code, result = responseCode.ZSET_GET_SCORE_SUCCESS, \
+                               self.database.getScoreFromZSet(dbName=dbName, keyName=keyName,
+                                                              valueName=value, password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code, result = responseCode.ZSET_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.ZSET_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     @validTypeCheck
-    def getValuesByRange(self, dbName, keyName, start, end):
-        if(start >= end):
-            msg = Utils.makeMessage("Score Range Error", responseCode.ZSET_SCORE_RANGE_ERROR, "{}-{}".format(start,end))
-            return msg
+    def getValuesByRange(self, dbName, keyName, start, end, password=None):
+        if start >= end:
+            return Utils.makeMessage("Score Range Error",
+                                     responseCode.ZSET_SCORE_RANGE_ERROR,
+                                     "{}-{}".format(start,end))
 
-        if(self.database.isExist("ZSET", dbName, keyName)):
-            if (self.database.isExpired("ZSET", dbName, keyName) is False):
-                result = self.database.getValuesByRange(dbName, keyName, start, end)
-                msg = Utils.makeMessage("Get Values Success",
-                                        responseCode.ZSET_GET_VALUES_SUCCESS,
-                                        result)
+        if self.database.isExist("ZSET", dbName, keyName):
+            if self.database.isExpired("ZSET", dbName, keyName) is False:
+                code, result = responseCode.ZSET_GET_VALUES_SUCCESS, \
+                               self.database.getValuesByRange(dbName=dbName, keyName=keyName,
+                                                              start=start, end=end,
+                                                              password=password)
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code, result = responseCode.ZSET_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.ZSET_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                keyName)
         return msg
 
     @validTypeCheck

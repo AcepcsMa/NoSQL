@@ -1023,16 +1023,27 @@ def getValuesByRange(dbName, zsetName, start, end, password):
                                         password=password)
     return flask.jsonify(result)
 
-@app.route("/getZSetSize/<string:dbName>/<string:zsetName>",methods=["GET"])
-def getZSetSize(dbName, zsetName):
+@app.route("/getZSetSize/<string:dbName>/<string:zsetName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getZSetSize/<string:dbName>/<string:zsetName>/<string:password>",
+           methods=["GET"])
+def getZSetSize(dbName, zsetName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.getSize(dbName, zsetName)
+    result = myHandler.getSize(dbName=dbName,
+                               keyName=zsetName,
+                               password=password)
     return flask.jsonify(result)
 
-@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>",methods=["GET"])
-def getRank(dbName, zsetName, value):
+@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>/<string:password>",
+           methods=["GET"])
+def getRank(dbName, zsetName, value, password=None):
     myHandler = ZSetHandler(database)
-    result = myHandler.getRank(dbName, zsetName, value)
+    result = myHandler.getRank(dbName=dbName, keyName=zsetName,
+                               value=value, password=password)
     return flask.jsonify(result)
 
 @app.route("/rmFromZSetByScore",methods=["PUT"])

@@ -264,5 +264,6 @@ class responseCode:
         DB_PASSWORD_REMOVE_SUCCESS:"Database Password Remove Success",
         DB_PASSWORD_LENGTH_ERROR:"Password Length should be 6 to 12",
         ZSET_GET_SCORE_SUCCESS:"Get Score Success",
-        ZSET_GET_VALUES_SUCCESS:"Get Value Success"
+        ZSET_GET_VALUES_SUCCESS:"Get Value Success",
+        ZSET_GET_RANK_SUCCESS: "ZSet Get Rank Success"
     }

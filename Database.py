@@ -1033,8 +1033,9 @@ class NoSqlDb(object):
         data = self.getValueDict(type)[dbName][keyName]
         return (responseCode.GET_SIZE_SUCCESS, len(data))
 
-    def getRank(self, dbName, zsetName, value):
-        return self.zsetDict[dbName][zsetName].getRank(value)
+    @passwordCheck
+    def getRank(self, dbName, keyName, value, password=None):
+        return self.zsetDict[dbName][keyName].getRank(value)
 
     @saveTrigger
     def rmByScore(self, dbName, zsetName, start, end):

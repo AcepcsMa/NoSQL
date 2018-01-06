@@ -106,10 +106,13 @@ def makeElem():
     resp.headers['Access-Control-Allow-Origin'] = "*"
     return resp
 
-@app.route("/getElem/<string:dbName>/<string:elemName>", defaults={"password": None})
-@app.route("/getElem/<string:dbName>/<string:elemName>/<string:password>",methods=["GET"])
-def getElem(dbName, elemName, password):
+@app.route("/getElem/<string:dbName>/<string:elemName>", methods=["GET"])
+def getElem(dbName, elemName):
     myHandler = ElemHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getElem(dbName=dbName,
                                keyName=elemName,
                                password=password)
@@ -138,31 +141,36 @@ def updateElem():
     return flask.jsonify(result)
 
 @app.route("/searchElem/<string:dbName>/<string:expression>",
-           defaults={"password": None})
-@app.route("/searchElem/<string:dbName>/<string:expression>/<string:password>",
            methods=["GET"])
-def searchElem(dbName, expression, password):
+def searchElem(dbName, expression):
     myHandler = ElemHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.searchElem(dbName=dbName,
                                   expression=expression,
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/getAllElem/<dbName>", defaults={"password": None})
-@app.route("/getAllElem/<string:dbName>/<string:password>", methods=["GET"])
-def searchAllElem(dbName, password):
+@app.route("/getAllElem/<string:dbName>", methods=["GET"])
+def searchAllElem(dbName):
     myHandler = ElemHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.searchAllElem(dbName=dbName,
                                      password=password)
     return flask.jsonify(result)
 
-@app.route("/increaseElem/<string:dbName>/<string:elemName>",
-           defaults={"password": None},
-           methods=["PUT"])
-@app.route("/increaseElem/<string:dbName>/<string:elemName>/<string:password>",
-           methods=["PUT"])
-def increaseElem(dbName, elemName, password):
+@app.route("/increaseElem/<string:dbName>/<string:elemName>", methods=["PUT"])
+def increaseElem(dbName, elemName):
     myHandler = ElemHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.increaseElem(dbName=dbName,
                                     keyName=elemName,
                                     password=password)
@@ -1023,16 +1031,27 @@ def getValuesByRange(dbName, zsetName, start, end, password):
                                         password=password)
     return flask.jsonify(result)
 
-@app.route("/getZSetSize/<string:dbName>/<string:zsetName>",methods=["GET"])
-def getZSetSize(dbName, zsetName):
+@app.route("/getZSetSize/<string:dbName>/<string:zsetName>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getZSetSize/<string:dbName>/<string:zsetName>/<string:password>",
+           methods=["GET"])
+def getZSetSize(dbName, zsetName, password):
     myHandler = ZSetHandler(database)
-    result = myHandler.getSize(dbName, zsetName)
+    result = myHandler.getSize(dbName=dbName,
+                               keyName=zsetName,
+                               password=password)
     return flask.jsonify(result)
 
-@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>",methods=["GET"])
-def getRank(dbName, zsetName, value):
+@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>",
+           defaults={"password": None},
+           methods=["GET"])
+@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>/<string:password>",
+           methods=["GET"])
+def getRank(dbName, zsetName, value, password=None):
     myHandler = ZSetHandler(database)
-    result = myHandler.getRank(dbName, zsetName, value)
+    result = myHandler.getRank(dbName=dbName, keyName=zsetName,
+                               value=value, password=password)
     return flask.jsonify(result)
 
 @app.route("/rmFromZSetByScore",methods=["PUT"])

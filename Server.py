@@ -1066,7 +1066,13 @@ def rmFromZSetByScore():
         end = flask.request.json["end"]
     except:
         dbName = zsetName = start = end = None
-    result = myHandler.rmByScore(dbName, zsetName, start, end)
+    try:
+        password = flask.request.json["password"]
+    except:
+        password = None
+    result = myHandler.rmByScore(dbName=dbName, keyName=zsetName,
+                                 start=start, end=end,
+                                 password=password)
     return flask.jsonify(result)
 
 @app.route("/addDatabase",methods=["POST"])

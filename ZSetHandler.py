@@ -247,29 +247,25 @@ class ZSetHandler(object):
         return msg
 
     @validTypeCheck
-    def rmByScore(self, dbName, keyName, start, end):
+    def rmByScore(self, dbName, keyName, start, end, password=None):
         if(start >= end):
-            msg = Utils.makeMessage("Score Range Error",
+            return Utils.makeMessage("Score Range Error",
                                     responseCode.ZSET_SCORE_RANGE_ERROR,
                                     "{}-{}".format(start, end))
-            return msg
 
         if(self.database.isExist("ZSET", dbName, keyName)):
             if(self.database.isExpired("ZSET", dbName, keyName) is False):
-                result = self.database.rmByScore(dbName, keyName, start, end)
-                code = result[0]
-                removeCount = result[1]
-                msg = Utils.makeMessage(responseCode.detail[code],
-                                        code,
-                                        removeCount)
+                result = self.database.rmByScore(dbName=dbName, keyName=keyName,
+                                                 start=start, end=end,
+                                                 password=password)
+                code, result = result[0], result[1]
             else:
-                msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_EXPIRED],
-                                        responseCode.ZSET_EXPIRED,
-                                        keyName)
+                code, result = responseCode.ZSET_EXPIRED, keyName
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ZSET_NOT_EXIST],
-                                    responseCode.ZSET_NOT_EXIST,
-                                    keyName)
+            code, result = responseCode.ZSET_NOT_EXIST, keyName
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     @validTypeCheck

@@ -1038,18 +1038,19 @@ class NoSqlDb(object):
         return self.zsetDict[dbName][keyName].getRank(value)
 
     @saveTrigger
-    def rmByScore(self, dbName, zsetName, start, end):
-        if self.zsetLockDict[dbName][zsetName] is True:
+    @passwordCheck
+    def rmByScore(self, dbName, keyName, start, end, password=None):
+        if self.zsetLockDict[dbName][keyName] is True:
             self.logger.warning("ZSet Is Locked "
-                                "{}->{}".format(dbName, zsetName))
+                                "{}->{}".format(dbName, keyName))
             return (responseCode.ZSET_IS_LOCKED, 0)
         else:
-            self.lock("ZSET", dbName, zsetName)
-            result = self.zsetDict[dbName][zsetName].removeByScore(start, end)
-            self.unlock("ZSET", dbName, zsetName)
+            self.lock("ZSET", dbName, keyName)
+            result = self.zsetDict[dbName][keyName].removeByScore(start, end)
+            self.unlock("ZSET", dbName, keyName)
             self.logger.info("ZSet Remove By Score Success "
                              "{}->{} [{},{})".
-                             format(dbName, zsetName, start, end))
+                             format(dbName, keyName, start, end))
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
 
     @saveTrigger

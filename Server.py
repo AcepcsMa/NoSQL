@@ -176,25 +176,25 @@ def increaseElem(dbName, elemName):
                                     password=password)
     return flask.jsonify(result)
 
-@app.route("/decreaseElem/<string:dbName>/<string:elemName>",
-           defaults={"password": None},
-           methods=["PUT"])
-@app.route("/decreaseElem/<string:dbName>/<string:elemName>/<string:password>",
-           methods=["PUT"])
-def decreaseElem(dbName, elemName, password):
+@app.route("/decreaseElem/<string:dbName>/<string:elemName>", methods=["PUT"])
+def decreaseElem(dbName, elemName):
     myHandler = ElemHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.decreaseElem(dbName=dbName,
                                     keyName=elemName,
                                     password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteElem/<string:dbName>/<string:keyName>",
-           defaults={"password":None},
-           methods=["DELETE"])
-@app.route("/deleteElem/<string:dbName>/<string:keyName>/<string:password>",
-           methods=["DELETE"])
-def deleteElem(dbName, keyName, password):
+@app.route("/deleteElem/<string:dbName>/<string:keyName>", methods=["DELETE"])
+def deleteElem(dbName, keyName):
     myHandler = ElemHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.deleteElem(dbName=dbName,
                                   keyName=keyName,
                                   password=password)
@@ -218,63 +218,61 @@ def makeList():
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/getList/<string:dbName>/<string:listName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getList/<string:dbName>/<string:listName>/<string:password>",
-           methods=["GET"])
-def getList(dbName, listName, password):
+@app.route("/getList/<string:dbName>/<string:listName>", methods=["GET"])
+def getList(dbName, listName):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getList(dbName=dbName,
                                keyName=listName,
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>/<string:password>",
-           methods=["GET"])
-def leftGetList(dbName, listName, count, password):
+@app.route("/leftGetList/<string:dbName>/<string:listName>/<int:count>", methods=["GET"])
+def leftGetList(dbName, listName, count):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getListL(dbName=dbName,
                                 keyName=listName,
                                 count=count,
                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/rightGetList/<string:dbName>/<string:listName>/<int:count>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/rightGetList/<string:dbName>/<string:listName>/<int:count>/<string:password>",
-           methods=["GET"])
-def rightGetList(dbName, listName, count, password):
+@app.route("/rightGetList/<string:dbName>/<string:listName>/<int:count>", methods=["GET"])
+def rightGetList(dbName, listName, count):
     myHandler = ListHandler(database)
-    result = myHandler.getListR(dbName=dbName,
-                                keyName=listName,
-                                count=count,
-                                password=password)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
+    result = myHandler.getListR(dbName=dbName, keyName=listName,
+                                count=count, password=password)
     return flask.jsonify(result)
 
-@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>/<string:password>",
-           methods=["GET"])
-def getListByRange(dbName, listName, start, end, password):
+@app.route("/getListByRange/<string:dbName>/<string:listName>/<int:start>/<int:end>", methods=["GET"])
+def getListByRange(dbName, listName, start, end):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getListByRange(dbName=dbName, keyName=listName,
                                       start=start, end=end,
                                       password=password)
     return flask.jsonify(result)
 
-@app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>/<string:password>",
-           methods=["GET"])
-def getListRandom(dbName, listName, numRand, password):
+@app.route("/getListRandom/<string:dbName>/<string:listName>/<int:numRand>", methods=["GET"])
+def getListRandom(dbName, listName, numRand):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getListRandom(dbName=dbName,
                                      keyName=listName,
                                      numRand=numRand)
@@ -314,13 +312,13 @@ def leftInsertList():
                                    value=listValue, password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteList/<string:dbName>/<string:listName>",
-           defaults={"password": None},
-           methods=["DELETE"])
-@app.route("/deleteList/<string:dbName>/<string:listName>/<string:password>",
-           methods=["DELETE"])
-def deleteList(dbName, listName, password):
+@app.route("/deleteList/<string:dbName>/<string:listName>", methods=["DELETE"])
+def deleteList(dbName, listName):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.deleteList(dbName=dbName,
                                   keyName=listName,
                                   password=password)
@@ -343,13 +341,13 @@ def rmFromList():
                                   value=listValue, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearList/<dbName>/<listName>",
-           defaults={"password": None},
-           methods=["PUT"])
-@app.route("/clearList/<dbName>/<listName>/<string:password>",
-           methods=["PUT"])
-def clearList(dbName, listName, password):
+@app.route("/clearList/<dbName>/<listName>", methods=["PUT"])
+def clearList(dbName, listName):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.clearList(dbName=dbName,
                                  keyName=listName,
                                  password=password)
@@ -375,36 +373,36 @@ def mergeLists():
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/searchList/<string:dbName>/<string:expression>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/searchList/<string:dbName>/<string:expression>/<string:password>",
-           methods=["GET"])
-def searchList(dbName, expression, password):
+@app.route("/searchList/<string:dbName>/<string:expression>", methods=["GET"])
+def searchList(dbName, expression):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.searchList(dbName=dbName,
                                   expression=expression,
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllList/<string:dbName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/searchAllList/<string:dbName>/<string:password>",
-           methods=["GET"])
-def searchAllList(dbName, password):
+@app.route("/searchAllList/<string:dbName>", methods=["GET"])
+def searchAllList(dbName):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.searchAllList(dbName=dbName,
                                      password=password)
     return flask.jsonify(result)
 
-@app.route("/getListSize/<string:dbName>/<string:listName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getListSize/<string:dbName>/<string:listName>/<string:password>",
-           methods=["GET"])
-def getListSize(dbName, listName, password):
+@app.route("/getListSize/<string:dbName>/<string:listName>", methods=["GET"])
+def getListSize(dbName, listName):
     myHandler = ListHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getSize(dbName=dbName,
                                keyName=listName,
                                password=password)
@@ -427,37 +425,37 @@ def makeHash():
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/getHash/<string:dbName>/<string:hashName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getHash/<string:dbName>/<string:hashName>/<string:password>",
-           methods=["GET"])
-def getHash(dbName, hashName, password):
+@app.route("/getHash/<string:dbName>/<string:hashName>", methods=["GET"])
+def getHash(dbName, hashName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getHash(dbName=dbName,
                                keyName=hashName,
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/getHashKeySet/<string:dbName>/<string:hashName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getHashKeySet/<string:dbName>/<string:hashName>/<string:password>",
-           methods=["GET"])
-def getHashKeySet(dbName, hashName, password):
+@app.route("/getHashKeySet/<string:dbName>/<string:hashName>", methods=["GET"])
+def getHashKeySet(dbName, hashName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getKeySet(dbName=dbName,
                                  keyName=hashName,
                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/getHashValues/<string:dbName>/<string:hashName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getHashValues/<string:dbName>/<string:hashName>/<string:password>",
-           methods=["GET"])
-def getHashValues(dbName, hashName, password):
+@app.route("/getHashValues/<string:dbName>/<string:hashName>", methods=["GET"])
+def getHashValues(dbName, hashName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getValues(dbName=dbName,
                                  keyName=hashName,
                                  password=password)
@@ -499,24 +497,24 @@ def insertHash():
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/isHashKeyExist/<string:dbName>/<string:hashName>/<string:keyName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/isHashKeyExist/<string:dbName>/<string:hashName>/<string:keyName>/<string:password>",
-           methods=["GET"])
-def isHashKeyExist(dbName, hashName, keyName, password):
+@app.route("/isHashKeyExist/<string:dbName>/<string:hashName>/<string:keyName>", methods=["GET"])
+def isHashKeyExist(dbName, hashName, keyName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.isKeyExist(dbName=dbName, keyName=hashName,
                                   key=keyName, password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteHash/<dbName>/<hashName>",
-           defaults={"password": None},
-           methods=["DELETE"])
-@app.route("/deleteHash/<dbName>/<hashName>/<string:password>",
-           methods=["DELETE"])
-def deleteHash(dbName, hashName, password):
+@app.route("/deleteHash/<dbName>/<hashName>", methods=["DELETE"])
+def deleteHash(dbName, hashName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.deleteHash(dbName=dbName,
                                   keyName=hashName,
                                   password=password)
@@ -539,13 +537,13 @@ def rmFromHash():
                                   key=keyName, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearHash/<string:dbName>/<string:hashName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/clearHash/<string:dbName>/<string:hashName>/<string:password>",
-           methods=["GET"])
-def clearHash(dbName, hashName, password):
+@app.route("/clearHash/<string:dbName>/<string:hashName>", methods=["GET"])
+def clearHash(dbName, hashName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.clearHash(dbName=dbName,
                                  keyName=hashName,
                                  password=password)
@@ -589,54 +587,59 @@ def mergeHashs():
                                   mergeMode=mergeMode, password=password)
     return flask.jsonify(result)
 
-@app.route("/searchHash/<dbName>/<string:expression>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/searchHash/<dbName>/<string:expression>/<string:password>", methods=["GET"])
-def searchHash(dbName, expression, password):
+@app.route("/searchHash/<dbName>/<string:expression>", methods=["GET"])
+def searchHash(dbName, expression):
     myHandler = HashHandler(database)
-    result = myHandler.searchHash(dbName=dbName, expression=expression, password=password)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
+    result = myHandler.searchHash(dbName=dbName,
+                                  expression=expression,
+                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllHash/<dbName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/searchAllHash/<string:dbName>/<string:password>", methods=["GET"])
-def searchAllHash(dbName, password):
+@app.route("/searchAllHash/<string:dbName>", methods=["GET"])
+def searchAllHash(dbName):
     myHandler = HashHandler(database)
-    result = myHandler.searchAllHash(dbName=dbName, password=password)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
+    result = myHandler.searchAllHash(dbName=dbName,
+                                     password=password)
     return flask.jsonify(result)
 
-@app.route("/getHashSize/<string:dbName>/<string:hashName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getHashSize/<string:dbName>/<string:hashName>/<string:password>",
-           methods=["GET"])
-def getHashSize(dbName, hashName, password):
+@app.route("/getHashSize/<string:dbName>/<string:hashName>", methods=["GET"])
+def getHashSize(dbName, hashName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getSize(dbName=dbName,
                                keyName=hashName,
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>",
-           defaults={"password": None},
-           methods=["PUT"])
-@app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>/<string:password>",
-           methods=["PUT"])
-def increaseHash(dbName, hashName, keyName, password):
+@app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>", methods=["PUT"])
+def increaseHash(dbName, hashName, keyName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.increaseHash(dbName=dbName, keyName=hashName,
                                     key=keyName, password=password)
     return flask.jsonify(result)
 
-@app.route("/decreaseHash/<string:dbName>/<string:hashName>/<string:keyName>",
-           defaults={"password": None},
-           methods=["PUT"])
-@app.route("/decreaseHash/<string:dbName>/<string:hashName>/<string:keyName>/<string:password>",
-           methods=["PUT"])
-def decreaseHash(dbName, hashName, keyName, password):
+@app.route("/decreaseHash/<string:dbName>/<string:hashName>/<string:keyName>", methods=["PUT"])
+def decreaseHash(dbName, hashName, keyName):
     myHandler = HashHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.decreaseHash(dbName=dbName, keyName=hashName,
                                     key=keyName, password=password)
     return flask.jsonify(result)
@@ -658,25 +661,25 @@ def makeSet():
                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/getSet/<string:dbName>/<string:setName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getSet/<string:dbName>/<string:setName>/<string:password>",
-           methods=["GET"])
-def getSet(dbName, setName, password):
+@app.route("/getSet/<string:dbName>/<string:setName>", methods=["GET"])
+def getSet(dbName, setName):
     myHandler = SetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getSet(dbName=dbName,
                               keyName=setName,
                               password=password)
     return flask.jsonify(result)
 
-@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>/<string:password>",
-           methods=["GET"])
-def getSetRandom(dbName, setName, numRand, password):
+@app.route("/getSetRandom/<string:dbName>/<string:setName>/<int:numRand>", methods=["GET"])
+def getSetRandom(dbName, setName, numRand):
     myHandler = SetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getSetRandom(dbName=dbName, keyName=setName,
                                     numRand=numRand, password=password)
     return flask.jsonify(result)
@@ -715,49 +718,49 @@ def rmFromSet():
                                  setValue=setValue, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearSet/<string:dbName>/<string:setName>",
-           defaults={"password": None},
-           methods=["PUT"])
-@app.route("/clearSet/<string:dbName>/<string:setName>/<string:password>",
-           methods=["PUT"])
-def clearSet(dbName, setName, password):
+@app.route("/clearSet/<string:dbName>/<string:setName>", methods=["PUT"])
+def clearSet(dbName, setName):
     myHandler = SetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.clearSet(dbName=dbName,
                                 keyName=setName,
                                 password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteSet/<string:dbName>/<string:setName>",
-           defaults={"password": None},
-           methods=["DELETE"])
-@app.route("/deleteSet/<string:dbName>/<string:setName>/<string:password>",
-           methods=["DELETE"])
-def deleteSet(dbName, setName, password):
+@app.route("/deleteSet/<string:dbName>/<string:setName>", methods=["DELETE"])
+def deleteSet(dbName, setName):
     myHandler = SetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.deleteSet(dbName=dbName,
                                  keyName=setName,
                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/searchSet/<string:dbName>/<string:expression>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/searchSet/<string:dbName>/<string:expression>/<string:password>",
-           methods=["GET"])
-def searchSet(dbName, expression, password):
+@app.route("/searchSet/<string:dbName>/<string:expression>", methods=["GET"])
+def searchSet(dbName, expression):
     myHandler = SetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.searchSet(dbName=dbName,
                                  expression=expression,
                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllSet/<string:dbName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/searchAllSet/<string:dbName>/<string:password>",
-           methods=["GET"])
-def searchAllSet(dbName, password):
+@app.route("/searchAllSet/<string:dbName>", methods=["GET"])
+def searchAllSet(dbName):
     myHandler = SetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.searchAllSet(dbName=dbName,
                                     password=password)
     return flask.jsonify(result)
@@ -830,25 +833,20 @@ def replaceSet():
                                   value=setValue, password=password)
     return flask.jsonify(result)
 
-@app.route("/getSetSize/<string:dbName>/<string:setName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getSetSize/<string:dbName>/<string:setName>/<string:password>",
-           methods=["GET"])
-def getSetSize(dbName, setName, password):
+@app.route("/getSetSize/<string:dbName>/<string:setName>", methods=["GET"])
+def getSetSize(dbName, setName):
     myHandler = SetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getSize(dbName=dbName,
                                keyName=setName,
                                password=password)
     return flask.jsonify(result)
 
-
-@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>",
-           defaults={"password": None},
-           methods=["PUT"])
-@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>/<string:password>",
-           methods=["PUT"])
-def showTTL(dbName, dataType, keyName, password):
+@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>", methods=["PUT"])
+def showTTL(dbName, dataType, keyName):
     if(dataType == "ELEM"):
         myHandler = ElemHandler(database)
     elif(dataType == "LIST"):
@@ -861,6 +859,10 @@ def showTTL(dbName, dataType, keyName, password):
         myHandler = ZSetHandler(database)
     else:
         myHandler = None
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     try:
         result = myHandler.showTTL(dbName=dbName,
                                    keyName=keyName,
@@ -889,13 +891,13 @@ def makeZSet():
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/getZSet/<string:dbName>/<string:zsetName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getZSet/<string:dbName>/<string:zsetName>/<string:password>",
-           methods=["GET"])
-def getZSet(dbName, zsetName, password):
+@app.route("/getZSet/<string:dbName>/<string:zsetName>", methods=["GET"])
+def getZSet(dbName, zsetName):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getZSet(dbName=dbName,
                                keyName=zsetName,
                                password=password)
@@ -937,119 +939,119 @@ def rmFromZSet():
                                   value=value, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearZSet/<string:dbName>/<string:zsetName>",
-           defaults={"password": None},
-           methods=["PUT"])
-@app.route("/clearZSet/<string:dbName>/<string:zsetName>/<string:password>",
-           methods=["PUT"])
-def clearZSet(dbName, zsetName, password):
+@app.route("/clearZSet/<string:dbName>/<string:zsetName>", methods=["PUT"])
+def clearZSet(dbName, zsetName):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.clearZSet(dbName=dbName,
                                  keyName=zsetName,
                                  password=password)
     return flask.jsonify(result)
 
-@app.route("/deleteZSet/<string:dbName>/<string:zsetName>",
-           defaults={"password": None},
-           methods=["DELETE"])
-@app.route("/deleteZSet/<string:dbName>/<string:zsetName>/<string:password>",
-           methods=["DELETE"])
-def deleteZSet(dbName, zsetName, password):
+@app.route("/deleteZSet/<string:dbName>/<string:zsetName>", methods=["DELETE"])
+def deleteZSet(dbName, zsetName):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.deleteZSet(dbName=dbName,
                                   keyName=zsetName,
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/searchZSet/<string:dbName>/<string:expression>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/searchZSet/<string:dbName>/<string:expression>/<string:password>",
-           methods=["GET"])
-def searchZSet(dbName, expression, password):
+@app.route("/searchZSet/<string:dbName>/<string:expression>", methods=["GET"])
+def searchZSet(dbName, expression):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.searchZSet(dbName=dbName,
                                   expression=expression,
                                   password=password)
     return flask.jsonify(result)
 
-@app.route("/searchAllZSet/<string:dbName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/searchAllZSet/<string:dbName>/<string:password>",
-           methods=["GET"])
-def searchAllZSet(dbName, password):
+@app.route("/searchAllZSet/<string:dbName>", methods=["GET"])
+def searchAllZSet(dbName):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.searchAllZSet(dbName=dbName,
                                      password=password)
     return flask.jsonify(result)
 
-@app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>/<string:password>",
-           methods=["GET"])
-def findMinFromZSet(dbName, zsetName, password):
+@app.route("/findMinFromZSet/<string:dbName>/<string:zsetName>", methods=["GET"])
+def findMinFromZSet(dbName, zsetName):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.findMin(dbName=dbName,
                                keyName=zsetName,
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/findMaxFromZSet/<string:dbName>/<string:zsetName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/findMaxFromZSet/<string:dbName>/<string:zsetName>/<string:password>",
-           methods=["GET"])
-def findMaxFromZSet(dbName, zsetName, password):
+@app.route("/findMaxFromZSet/<string:dbName>/<string:zsetName>", methods=["GET"])
+def findMaxFromZSet(dbName, zsetName):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.findMax(dbName=dbName,
                                keyName=zsetName,
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>/<string:password>",
-           methods=["GET"])
-def getScore(dbName, zsetName,valueName, password):
+@app.route("/getScore/<string:dbName>/<string:zsetName>/<string:valueName>", methods=["GET"])
+def getScore(dbName, zsetName,valueName):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getScore(dbName=dbName, keyName=zsetName,
                                 value=valueName, password=password)
     return flask.jsonify(result)
 
-@app.route("/getValuesByRange/<string:dbName>/<string:zsetName>/<int:start>/<int:end>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getValuesByRange/<string:dbName>/<string:zsetName>/<int:start>/<int:end>/<string:password>",
-           methods=["GET"])
-def getValuesByRange(dbName, zsetName, start, end, password):
+@app.route("/getValuesByRange/<string:dbName>/<string:zsetName>/<int:start>/<int:end>", methods=["GET"])
+def getValuesByRange(dbName, zsetName, start, end):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getValuesByRange(dbName=dbName, keyName=zsetName,
                                         start=start, end=end,
                                         password=password)
     return flask.jsonify(result)
 
-@app.route("/getZSetSize/<string:dbName>/<string:zsetName>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getZSetSize/<string:dbName>/<string:zsetName>/<string:password>",
-           methods=["GET"])
-def getZSetSize(dbName, zsetName, password):
+@app.route("/getZSetSize/<string:dbName>/<string:zsetName>", methods=["GET"])
+def getZSetSize(dbName, zsetName):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getSize(dbName=dbName,
                                keyName=zsetName,
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>",
-           defaults={"password": None},
-           methods=["GET"])
-@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>/<string:password>",
-           methods=["GET"])
-def getRank(dbName, zsetName, value, password=None):
+@app.route("/getRank/<string:dbName>/<string:zsetName>/<string:value>", methods=["GET"])
+def getRank(dbName, zsetName, value):
     myHandler = ZSetHandler(database)
+    try:
+        password = flask.request.args.get("password")
+    except:
+        password = None
     result = myHandler.getRank(dbName=dbName, keyName=zsetName,
                                value=value, password=password)
     return flask.jsonify(result)

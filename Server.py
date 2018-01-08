@@ -1110,7 +1110,6 @@ def changeSaveInterval(interval):
 
 if __name__ == '__main__':
 
-
     # init the config parser and read the server config
     confParser = ConfigParser()
     serverConfig = confParser.getServerConfig("server.conf")

@@ -59,3 +59,23 @@ class TTLTool(object):
                                    responseCode.TTL_CLEAR_SUCCESS, keyName)
             self.database.opCount += 1
             return msg
+
+    def showTTL(self, dbName, keyName, dataType):
+        ttlDict = self.database.getTTLDict(dataType)
+
+        try:
+            curTime = int(time.time())
+            ttl = ttlDict[dbName][keyName]["ttl"]
+            restTime = ttl - (curTime - ttlDict[keyName]["createAt"])
+            if restTime <= 0:
+                ttlDict[keyName]["status"] = False
+                code, result = responseCode.TTL_EXPIRED, None
+            else:
+                code, result = responseCode.TTL_SHOW_SUCCESS, restTime
+            return Utils.makeMessage(responseCode.detail[code],
+                                     code,
+                                     result)
+        except:
+            return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
+                                     responseCode.ELEM_TYPE_ERROR,
+                                     keyName)

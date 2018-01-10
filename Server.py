@@ -845,36 +845,12 @@ def getSetSize(dbName, setName):
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>", methods=["PUT"])
+@app.route("/showTTL/<string:dbName>/<string:dataType>/<string:keyName>", methods=["GET"])
 def showTTL(dbName, dataType, keyName):
-    if(dataType == "ELEM"):
-        myHandler = ElemHandler(database)
-    elif(dataType == "LIST"):
-        myHandler = ListHandler(database)
-    elif(dataType == "HASH"):
-        myHandler = HashHandler(database)
-    elif(dataType == "SET"):
-        myHandler = SetHandler(database)
-    elif(dataType == "ZSET"):
-        myHandler = ZSetHandler(database)
-    else:
-        myHandler = None
-    try:
-        password = flask.request.args.get("password")
-    except:
-        password = None
-    try:
-        result = myHandler.showTTL(dbName=dbName,
-                                   keyName=keyName,
-                                   password=password)
-        return flask.jsonify(result)
-    except:
-        msg = {"msg":"Data Type Error",
-               "typeCode":responseCode.DATA_TYPE_ERROR,
-               "data":dataType}
-        return flask.jsonify(msg)
+    result = ttlTool.showTTL(dbName=dbName, dataType=dataType, keyName=keyName)
+    return flask.jsonify(result)
 
-@app.route("/makeZSet",methods=["POST"])
+@app.route("/makeZSet", methods=["POST"])
 def makeZSet():
     myHandler = ZSetHandler(database)
     try:

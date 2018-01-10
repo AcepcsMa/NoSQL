@@ -61,14 +61,13 @@ class TTLTool(object):
             return msg
 
     def showTTL(self, dbName, keyName, dataType):
-        ttlDict = self.database.getTTLDict(dataType)
-
         try:
+            ttlDict = self.database.getTTLDict(dataType)
             curTime = int(time.time())
             ttl = ttlDict[dbName][keyName]["ttl"]
-            restTime = ttl - (curTime - ttlDict[keyName]["createAt"])
+            restTime = ttl - (curTime - ttlDict[dbName][keyName]["createAt"])
             if restTime <= 0:
-                ttlDict[keyName]["status"] = False
+                ttlDict[dbName][keyName]["status"] = False
                 code, result = responseCode.TTL_EXPIRED, None
             else:
                 code, result = responseCode.TTL_SHOW_SUCCESS, restTime

@@ -1055,16 +1055,22 @@ def rmFromZSetByScore():
 def addDatabase():
     myHandler = DbHandler(database)
     try:
+        adminKey = flask.request.json["adminKey"]
         dbName = flask.request.json["dbName"]
     except:
-        dbName = None
-    result = myHandler.addDatabase(dbName)
+        dbName = adminKey = None
+    result = myHandler.addDatabase(adminKey=adminKey,
+                                   dbName=dbName)
     return flask.jsonify(result)
 
 @app.route("/getAllDatabase",methods=["GET"])
 def getAllDatabase():
     myHandler = DbHandler(database)
-    result = myHandler.getAllDatabase()
+    try:
+        adminKey = flask.request.args.get("adminKey")
+    except:
+        adminKey = None
+    result = myHandler.getAllDatabase(adminKey=adminKey)
     return flask.jsonify(result)
 
 @app.route("/delDatabase/<string:dbName>",methods=["DELETE"])

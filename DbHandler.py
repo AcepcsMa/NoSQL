@@ -11,22 +11,23 @@ class DbHandler(object):
         self.database = database
 
     # add a customized database
-    def addDatabase(self, dbName):
+    def addDatabase(self, adminKey, dbName):
         if Utils.isValidType(dbName):
-            result = self.database.addDb(dbName)
-            msg = Utils.makeMessage(responseCode.detail[result], result, dbName)
+            code = self.database.addDb(adminKey=adminKey,
+                                         dbName=dbName)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+            code = responseCode.ELEM_TYPE_ERROR
+        msg = Utils.makeMessage(responseCode.detail[code],
+                               code,
+                               dbName)
         return msg
 
     # get all database names
-    def getAllDatabase(self):
-        dbNameSet = self.database.getAllDatabase()
-        msg = Utils.makeMessage(responseCode.detail[responseCode.DB_GET_SUCCESS],
-                               responseCode.DB_GET_SUCCESS,
-                               dbNameSet)
+    def getAllDatabase(self, adminKey):
+        code, result = self.database.getAllDatabase(adminKey=adminKey)
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                result)
         return msg
 
     # delete the given database

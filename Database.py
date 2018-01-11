@@ -1054,7 +1054,10 @@ class NoSqlDb(object):
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
 
     @saveTrigger
-    def addDb(self, dbName):
+    def addDb(self, adminKey, dbName):
+        if adminKey != self.adminKey:
+            return responseCode.ADMIN_KEY_ERROR
+
         if self.saveLock is True:
             self.logger.warning("Database Save Locked "
                                 "{0}".format(dbName))
@@ -1076,9 +1079,12 @@ class NoSqlDb(object):
                                     "{}".format(dbName))
                 return responseCode.DB_EXISTED
 
-    def getAllDatabase(self):
-        self.logger.info("Get All Database Names Success")
-        return list(self.dbNameSet)
+    def getAllDatabase(self, adminKey):
+        if adminKey != self.adminKey:
+            return responseCode.ADMIN_KEY_ERROR, None
+        else:
+            self.logger.info("Get All Database Names Success")
+            return responseCode.DB_GET_SUCCESS, list(self.dbNameSet)
 
     @saveTrigger
     def delDatabase(self, dbName):

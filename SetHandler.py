@@ -256,19 +256,6 @@ class SetHandler(object):
                                 keyName)
         return msg
 
-    # show TTL for a set
-    @validTypeCheck
-    def showTTL(self, dbName, keyName, password=None):
-        if self.database.isDbExist(dbName):
-            code, result = self.database.showTTL(dbName=dbName, keyName=keyName,
-                                                 dataType="SET", password=password)
-        else:
-            code, result = responseCode.DB_NOT_EXIST, dbName
-        msg = Utils.makeMessage(responseCode.detail[code],
-                                code,
-                                result)
-        return msg
-
     @validTypeCheck
     def getSize(self, dbName, keyName, password=None):
         if self.database.isExist("SET", dbName, keyName) is False:

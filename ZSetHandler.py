@@ -267,15 +267,3 @@ class ZSetHandler(object):
                                 code,
                                 result)
         return msg
-
-    @validTypeCheck
-    def showTTL(self, dbName, keyName, password=None):
-        if (self.database.isDbExist(dbName)):
-            code, result = self.database.showTTL(dbName=dbName, keyName=keyName,
-                                                 dataType="ZSET", password=password)
-        else:
-            code, result = responseCode.DB_NOT_EXIST, dbName
-        msg = Utils.makeMessage(responseCode.detail[code],
-                                code,
-                                result)
-        return msg

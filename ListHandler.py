@@ -269,18 +269,6 @@ class ListHandler(object):
                                     responseCode.ELEM_TYPE_ERROR,
                                     dbName)
         return msg
-    
-    @validTypeCheck
-    def showTTL(self, dbName, keyName, password=None):
-        if self.database.isDbExist(dbName):
-            code, result = self.database.showTTL(dbName=dbName, keyName=keyName,
-                                                 dataType="LIST", password=password)
-        else:
-            code, result = responseCode.DB_NOT_EXIST, dbName
-        msg = Utils.makeMessage(responseCode.detail[code],
-                                code,
-                                result)
-        return msg
 
     @validTypeCheck
     def getSize(self, dbName, keyName, password=None):

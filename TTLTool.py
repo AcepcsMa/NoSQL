@@ -18,7 +18,8 @@ class TTLTool(object):
             self.database.logger.warning("{} Is Locked {}->{}".
                                          format(dataType, dbName, keyName))
             return Utils.makeMessage("{} Is Locked".format(dataType),
-                                   responseCode.LOCKED, keyName)
+                                     responseCode.LOCKED,
+                                     keyName)
         else:
             self.database.lock(dataType, dbName, keyName)
             ttlDict[dbName][keyName] = {"createAt": int(time.time()),
@@ -29,7 +30,8 @@ class TTLTool(object):
                                       .format(dbName, keyName, ttl))
             self.database.opCount += 1
             return Utils.makeMessage(responseCode.detail[responseCode.TTL_SET_SUCCESS],
-                                   responseCode.TTL_SET_SUCCESS, keyName)
+                                     responseCode.TTL_SET_SUCCESS,
+                                     keyName)
 
     def clearTTL(self, dbName, keyName, dataType):
         lockDict = self.database.getLockDict(dataType)
@@ -39,21 +41,24 @@ class TTLTool(object):
             self.database.logger.warning("{} Locked {}->{}".
                                          format(dataType, dbName, keyName))
             return Utils.makeMessage("{} Is Locked".format(dataType),
-                                   responseCode.LOCKED, keyName)
+                                     responseCode.LOCKED,
+                                     keyName)
         else:
             self.database.lock(dataType, dbName, keyName)
             try:
                 ttlDict[dbName].pop(keyName)
             except:
                 return Utils.makeMessage("{} Is Not Set TTL".format(dataType),
-                                       responseCode.NOT_SET_TTL, keyName)
+                                         responseCode.NOT_SET_TTL,
+                                         keyName)
             finally:
                 self.database.unlock(dataType, dbName, keyName)
             self.database.logger.info("{} TTL Clear Success {}->{}".
                                       format(dataType, dbName, keyName))
             self.database.opCount += 1
-            return Utils.makeMessage("TTL Clear Success",
-                                   responseCode.TTL_CLEAR_SUCCESS, keyName)
+            return Utils.makeMessage(responseCode.detail[responseCode.TTL_CLEAR_SUCCESS],
+                                     responseCode.TTL_CLEAR_SUCCESS,
+                                     keyName)
 
     def showTTL(self, dbName, keyName, dataType):
         try:

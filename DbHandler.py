@@ -14,12 +14,12 @@ class DbHandler(object):
     def addDatabase(self, adminKey, dbName):
         if Utils.isValidType(dbName):
             code = self.database.addDb(adminKey=adminKey,
-                                         dbName=dbName)
+                                       dbName=dbName)
         else:
             code = responseCode.ELEM_TYPE_ERROR
         msg = Utils.makeMessage(responseCode.detail[code],
-                               code,
-                               dbName)
+                                code,
+                                dbName)
         return msg
 
     # get all database names
@@ -33,19 +33,20 @@ class DbHandler(object):
     # delete the given database
     def delDatabase(self, dbName):
         if Utils.isValidType(dbName):
-            result = self.database.delDatabase(dbName)
-            msg = Utils.makeMessage(responseCode.detail[result], result, dbName)
+            code = self.database.delDatabase(dbName)
         else:
-            msg = Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                   responseCode.ELEM_TYPE_ERROR,
-                                   dbName)
+            code = responseCode.ELEM_TYPE_ERROR
+        msg = Utils.makeMessage(responseCode.detail[code],
+                                code,
+                                dbName)
         return msg
 
     # save the data into file
     def saveDb(self):
-        result = self.database.saveDb()
-        msg = Utils.makeMessage(responseCode.detail[result], result, time.time())
-        return msg
+        code = self.database.saveDb()
+        return Utils.makeMessage(responseCode.detail[code],
+                                 code,
+                                 time.time())
 
     # set db's password
     def setDbPassword(self, adminKey, dbName, password):
@@ -54,11 +55,10 @@ class DbHandler(object):
                                     responseCode.DB_NOT_EXIST,
                                     dbName)
 
-        result = self.database.setDbPassword(adminKey, dbName, password)
-        msg = Utils.makeMessage(responseCode.detail[result],
-                                result,
+        code = self.database.setDbPassword(adminKey, dbName, password)
+        return Utils.makeMessage(responseCode.detail[code],
+                                code,
                                 dbName)
-        return msg
 
     # change db's password
     def changeDbPassword(self, adminKey, dbName, originalPwd, newPwd):
@@ -67,11 +67,10 @@ class DbHandler(object):
                                      responseCode.DB_NOT_EXIST,
                                      dbName)
 
-        result = self.database.changeDbPassword(adminKey, dbName, originalPwd, newPwd)
-        msg = Utils.makeMessage(responseCode.detail[result],
-                                result,
-                                dbName)
-        return msg
+        code = self.database.changeDbPassword(adminKey, dbName, originalPwd, newPwd)
+        return Utils.makeMessage(responseCode.detail[code],
+                                 code,
+                                 dbName)
 
     # remove db's password
     def removeDbPassword(self, adminKey, dbName):
@@ -80,8 +79,7 @@ class DbHandler(object):
                                      responseCode.DB_NOT_EXIST,
                                      dbName)
 
-        result = self.database.removeDbPassword(adminKey, dbName)
-        msg = Utils.makeMessage(responseCode.detail[result],
-                                result,
+        code = self.database.removeDbPassword(adminKey, dbName)
+        return Utils.makeMessage(responseCode.detail[code],
+                                code,
                                 dbName)
-        return msg

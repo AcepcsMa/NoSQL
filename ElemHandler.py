@@ -120,7 +120,9 @@ class ElemHandler(object):
             code = responseCode.ELEM_NOT_EXIST
         else:
             if self.database.isExpired("ELEM", dbName, keyName) is False:
-                if Utils.isInt(self.database.getElem(keyName, dbName)): # check if the element can be increased
+                if Utils.isInt(self.database.getElem(dbName=dbName,
+                                                     keyName=keyName,
+                                                     password=password)[1]): # check if the element can be increased
                     code = self.database.increaseElem(dbName=dbName,
                                                       keyName=keyName,
                                                       password=password)

@@ -1,0 +1,44 @@
+DATE: 2018/01/16 12:52:48
+URL: http://localhost:3080/increaseElem/db0/incElem
+PARAMS: 
+RESPONSE: {
+  "data": "incElem", 
+  "msg": "Element Increase Success", 
+  "typeCode": 6
+}
+
+DATE: 2018/01/16 12:52:48
+URL: http://localhost:3080/increaseElem/db0/iElem
+PARAMS: 
+RESPONSE: {
+  "data": "iElem", 
+  "msg": "Element Does Not Exist", 
+  "typeCode": 3
+}
+
+DATE: 2018/01/16 12:52:48
+URL: http://localhost:3080/increaseElem/db100/incElem
+PARAMS: 
+RESPONSE: {
+  "data": "incElem", 
+  "msg": "Element Does Not Exist", 
+  "typeCode": 3
+}
+
+DATE: 2018/01/16 12:52:48
+URL: http://localhost:3080/increaseElem/db0/incElem1
+PARAMS: 
+RESPONSE: {
+  "data": "incElem1", 
+  "msg": "Element Type Error", 
+  "typeCode": 0
+}
+
+DATE: 2018/01/16 12:52:48
+URL: http://localhost:3080/increaseelem/db0/incElem
+PARAMS: 
+RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>
+

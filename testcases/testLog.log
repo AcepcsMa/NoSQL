@@ -1,41 +1,41 @@
-DATE: 2018/01/16 12:52:48
-URL: http://localhost:3080/increaseElem/db0/incElem
+DATE: 2018/01/16 12:58:11
+URL: http://localhost:3080/deleteElem/db0/elem1
 PARAMS: 
 RESPONSE: {
-  "data": "incElem", 
-  "msg": "Element Increase Success", 
-  "typeCode": 6
+  "data": "elem1", 
+  "msg": "Element Delete Success", 
+  "typeCode": 13
 }
 
-DATE: 2018/01/16 12:52:48
-URL: http://localhost:3080/increaseElem/db0/iElem
+DATE: 2018/01/16 12:58:11
+URL: http://localhost:3080/deleteElem/db0/elem1
 PARAMS: 
 RESPONSE: {
-  "data": "iElem", 
+  "data": "elem1", 
   "msg": "Element Does Not Exist", 
   "typeCode": 3
 }
 
-DATE: 2018/01/16 12:52:48
-URL: http://localhost:3080/increaseElem/db100/incElem
+DATE: 2018/01/16 12:58:11
+URL: http://localhost:3080/deleteElem/db100/elem1
 PARAMS: 
 RESPONSE: {
-  "data": "incElem", 
+  "data": "elem1", 
   "msg": "Element Does Not Exist", 
   "typeCode": 3
 }
 
-DATE: 2018/01/16 12:52:48
-URL: http://localhost:3080/increaseElem/db0/incElem1
+DATE: 2018/01/16 12:58:11
+URL: http://localhost:3080/deleteElem/db0/elem100
 PARAMS: 
 RESPONSE: {
-  "data": "incElem1", 
-  "msg": "Element Type Error", 
-  "typeCode": 0
+  "data": "elem100", 
+  "msg": "Element Does Not Exist", 
+  "typeCode": 3
 }
 
-DATE: 2018/01/16 12:52:48
-URL: http://localhost:3080/increaseelem/db0/incElem
+DATE: 2018/01/16 12:58:11
+URL: http://localhost:3080/deleteeelem/db0/elem1
 PARAMS: 
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>

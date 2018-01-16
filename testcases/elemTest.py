@@ -116,6 +116,17 @@ class elemTest:
 
     # test update element function
     def updateElemTest(self):
+
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeElem"
+
+        # case1 normally create new ELEMENT
+        params = {
+            "dbName": "db0",
+            "elemName": "elem1",
+            "elemValue": 1
+        }
+        response = requests.post(createUrl, json=params)
+
         url = "http://" + self.host + ":" + str(self.port) + "/updateElem"
 
         # case1 update an existed element
@@ -124,7 +135,7 @@ class elemTest:
             "elemName" : "elem1",
             "elemValue" : 2
         }
-        response = requests.post(url, json=params)
+        response = requests.put(url, json=params)
         self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case2 update a non-existed element
@@ -133,7 +144,7 @@ class elemTest:
             "elemName" : "elem2",
             "elemValue" : 2
         }
-        response = requests.post(url, json=params)
+        response = requests.put(url, json=params)
         self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case3 unknown database name
@@ -142,7 +153,7 @@ class elemTest:
             "elemName" : "elem1",
             "elemValue" : 1
         }
-        response = requests.post(url, json=params)
+        response = requests.put(url, json=params)
         self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case4 error value type
@@ -151,7 +162,7 @@ class elemTest:
             "elemName" : "elem1",
             "elemValue" : [1,2,3]
         }
-        response = requests.post(url, json=params)
+        response = requests.put(url, json=params)
         self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case5 error url
@@ -161,7 +172,7 @@ class elemTest:
             "elemValue" : 1
         }
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/updateelem"
-        response = requests.post(errorUrl, json=params)
+        response = requests.put(errorUrl, json=params)
         self.writeLog(errorUrl, json.dumps(params), response.content.decode())
 
     # test search element function
@@ -221,15 +232,15 @@ class elemTest:
             "elemValue": 1
         }
         response = requests.post(createUrl, json=params)
-        response = requests.get(url.format("db0","incElem"))
-        self.writeLog(url.format("db0","incElem"),"",response.content.decode())
+        response = requests.put(url.format("db0", "incElem"))
+        self.writeLog(url.format("db0", "incElem"), "", response.content.decode())
 
         # case2 unknown element name
-        response = requests.get(url.format("db0", "iElem"))
+        response = requests.put(url.format("db0", "iElem"))
         self.writeLog(url.format("db0","iElem"),"",response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db100", "incElem"))
+        response = requests.put(url.format("db100", "incElem"))
         self.writeLog(url.format("db100","incElem"),"",response.content.decode())
 
         # case4 error element value type (string)
@@ -239,12 +250,12 @@ class elemTest:
             "elemValue": "lol"
         }
         response = requests.post(createUrl, json=params)
-        response = requests.get(url.format("db0", "incElem1"))
+        response = requests.put(url.format("db0", "incElem1"))
         self.writeLog(url.format("db0","incElem1"),"",response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/increaseelem/{0}/{1}"
-        response = requests.get(errorUrl.format("db0", "incElem"))
+        response = requests.put(errorUrl.format("db0", "incElem"))
         self.writeLog(errorUrl.format("db0","incElem"),"",response.content.decode())
 
     # test decrease element function
@@ -259,15 +270,15 @@ class elemTest:
             "elemValue": 1
         }
         response = requests.post(createUrl, json=params)
-        response = requests.get(url.format("db0","decElem"))
+        response = requests.put(url.format("db0","decElem"))
         self.writeLog(url.format("db0","decElem"),"",response.content.decode())
 
         # case2 unknown element name
-        response = requests.get(url.format("db0", "dElem"))
+        response = requests.put(url.format("db0", "dElem"))
         self.writeLog(url.format("db0","dElem"),"",response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db88", "decElem"))
+        response = requests.put(url.format("db88", "decElem"))
         self.writeLog(url.format("db88","decElem"),"",response.content.decode())
 
         # case4 error element value type (string)
@@ -277,12 +288,12 @@ class elemTest:
             "elemValue": "abc"
         }
         response = requests.post(createUrl, json=params)
-        response = requests.get(url.format("db0", "decElem1"))
+        response = requests.put(url.format("db0", "decElem1"))
         self.writeLog(url.format("db0","decELem1"),"",response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/decreaseelem/{0}/{1}"
-        response = requests.get(errorUrl.format("db0", "decElem"))
+        response = requests.put(errorUrl.format("db0", "decElem"))
         self.writeLog(errorUrl.format("db0","decElem"),"",response.content.decode())
 
     # test delete element function
@@ -297,24 +308,24 @@ class elemTest:
             "elemValue": 1
         }
         response = requests.post(createUrl, json=params)
-        response = requests.get(url.format("db0","elem1"))
+        response = requests.delete(url.format("db0","elem1"))
         self.writeLog(url.format("db0","elem1"),"",response.content.decode())
 
         # case2 delete the same element repeatedly
-        response = requests.get(url.format("db0","elem1"))
+        response = requests.delete(url.format("db0","elem1"))
         self.writeLog(url.format("db0","elem1"),"",response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db100","elem1"))
+        response = requests.delete(url.format("db100","elem1"))
         self.writeLog(url.format("db100","elem1"),"",response.content.decode())
 
         # case4 unknown element name
-        response = requests.get(url.format("db0","elem100"))
+        response = requests.delete(url.format("db0","elem100"))
         self.writeLog(url.format("db0","elem100"),"",response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/deleteeelem/{0}/{1}"
-        response = requests.get(errorUrl.format("db0", "elem1"))
+        response = requests.delete(errorUrl.format("db0", "elem1"))
         self.writeLog(errorUrl.format("db0","elem1"),"",response.content.decode())
 
     # test set TTL function
@@ -403,19 +414,19 @@ if __name__ == "__main__":
     #test.getElemTest()
 
     # testing UPDATE function
-    #test.updateElemTest()
+    # test.updateElemTest()
 
     # testing SEARCH function
     #test.searchElemTest()
 
     # testing INCREASE function
-    #test.increaseElemTest()
+    # test.increaseElemTest()
 
     # testing DECREASE function
-    #test.decreaseElemTest()
+    # test.decreaseElemTest()
 
     # testing DELETE function
-    #test.deleteElemTest()
+    test.deleteElemTest()
 
     # testing set TTL function
     #test.setTTLTest()

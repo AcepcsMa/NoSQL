@@ -312,22 +312,26 @@ class listTest:
         url = "http://" + self.host + ":" + str(self.port) + "/rmFromList"
 
         # case1 create a list, insert some values and then remove
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
-        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertList"
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        createParams = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(createUrl, json=createParams)
 
-        response = requests.get(createUrl.format("db0", "list1"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertList"
         params = {
             "dbName":"db0",
             "listName":"list1",
             "listValue":"hello"
         }
-        response = requests.post(insertUrl,json=params)
+        response = requests.put(insertUrl, json=params)
         removeParams = params
-        response = requests.post(url,json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case2 remove repeatedly
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case3 unknown database name
@@ -336,7 +340,7 @@ class listTest:
             "listName":"list1",
             "listValue":"hello"
         }
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case4 unknown list name
@@ -345,7 +349,7 @@ class listTest:
             "listName": "list111",
             "listValue": "hello"
         }
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case5 non-existed value
@@ -354,7 +358,7 @@ class listTest:
             "listName": "list1",
             "listValue": [1,2,3]
         }
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case6 error url
@@ -364,7 +368,7 @@ class listTest:
             "listValue": "hello"
         }
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/rmfromlist"
-        response = requests.post(errorUrl, json=removeParams)
+        response = requests.put(errorUrl, json=removeParams)
         self.writeLog(errorUrl, json.dumps(removeParams), response.content.decode())
 
     def clearListTest(self):
@@ -640,10 +644,10 @@ if __name__ == "__main__":
     # test.leftInsertTest()
 
     # testing delete list function
-    test.deleteListTest()
+    # test.deleteListTest()
 
     # testing remove from list function
-    #test.rmListTest()
+    test.rmListTest()
 
     # testing clear list function
     #test.clearListTest()

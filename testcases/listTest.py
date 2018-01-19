@@ -282,27 +282,31 @@ class listTest:
         url = "http://" + self.host + ":" + str(self.port) + "/deleteList/{0}/{1}"
 
         # case1 create a list and then delete
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
-        response = requests.get(createUrl.format("db0", "list1"))
-        response = requests.get(url.format("db0","list1"))
-        self.writeLog(url.format("db0","list1"),"",response.content.decode())
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        createParams = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(createUrl, json=createParams)
+        response = requests.delete(url.format("db0","list1"))
+        self.writeLog(url.format("db0","list1"), "", response.content.decode())
 
         # case2 delete repeatedly
-        response = requests.get(url.format("db0","list1"))
-        self.writeLog(url.format("db0","list1"),"",response.content.decode())
+        response = requests.delete(url.format("db0","list1"))
+        self.writeLog(url.format("db0","list1"), "", response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db100","list1"))
-        self.writeLog(url.format("db100","list1"),"",response.content.decode())
+        response = requests.delete(url.format("db100","list1"))
+        self.writeLog(url.format("db100","list1"), "", response.content.decode())
 
         # case4 unknown list name
-        response = requests.get(url.format("db0","list111"))
-        self.writeLog(url.format("db0","list111"),"",response.content.decode())
+        response = requests.delete(url.format("db0","list111"))
+        self.writeLog(url.format("db0","list111"), "", response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/deletelist/{0}/{1}"
-        response = requests.get(errorUrl.format("db0","list1"))
-        self.writeLog(errorUrl.format("db0","list1"),"",response.content.decode())
+        response = requests.delete(errorUrl.format("db0","list1"))
+        self.writeLog(errorUrl.format("db0","list1"), "", response.content.decode())
 
     def rmListTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/rmFromList"
@@ -633,10 +637,10 @@ if __name__ == "__main__":
     # test.insertListTest()
 
     # testing left insert list function
-    test.leftInsertTest()
+    # test.leftInsertTest()
 
     # testing delete list function
-    #test.deleteListTest()
+    test.deleteListTest()
 
     # testing remove from list function
     #test.rmListTest()

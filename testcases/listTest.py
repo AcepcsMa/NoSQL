@@ -33,24 +33,30 @@ class listTest:
 
     # test create list function
     def createListTest(self):
-        url = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
+        url = "http://" + self.host + ":" + str(self.port) + "/makeList"
+
+        params = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
 
         # case1 create a list
-        response = requests.get(url.format("db0","list1"))
-        self.writeLog(url.format("db0","list1"),"",response.content.decode())
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params),response.content.decode())
 
         # case2 create a list repeatedly
-        response = requests.get(url.format("db0","list1"))
-        self.writeLog(url.format("db0","list1"),"",response.content.decode())
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db100","list1"))
-        self.writeLog(url.format("db100","list1"),"",response.content.decode())
+        params["dbName"] = "db100"
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case4 error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/makelist/{0}/{1}"
-        response = requests.get(errorUrl.format("db0","list2"))
-        self.writeLog(errorUrl.format("db0","list2"),"",response.content.decode())
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/makelist"
+        response = requests.get(url=errorUrl, json=params)
+        self.writeLog(errorUrl, json.dumps(params),response.content.decode())
 
     def getListTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/getList/{0}/{1}"
@@ -122,19 +128,23 @@ class listTest:
         url = "http://" + self.host + ":" + str(self.port) + "/insertList"
 
         # case1 create a list and then insert
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
-        response = requests.get(createUrl.format("db0", "list1"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        createParams = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(createUrl, json=createParams)
         params = {
             "dbName":"db0",
             "listName":"list1",
             "listValue":123
         }
-        response = requests.post(url,json=params)
-        self.writeLog(url,json.dumps(params),response.content.decode())
+        response = requests.put(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case2 insert repeatedly
-        response = requests.post(url,json=params)
-        self.writeLog(url,json.dumps(params),response.content.decode())
+        response = requests.put(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case3 unknown database name
         errorParams = {
@@ -142,8 +152,8 @@ class listTest:
             "listName": "list1",
             "listValue": 123
         }
-        response = requests.post(url,json=errorParams)
-        self.writeLog(url,json.dumps(errorParams),response.content.decode())
+        response = requests.put(url, json=errorParams)
+        self.writeLog(url, json.dumps(errorParams), response.content.decode())
 
         # case4 unknown list name
         errorParams = {
@@ -151,8 +161,8 @@ class listTest:
             "listName": "list999",
             "listValue": 123
         }
-        response = requests.post(url,json=errorParams)
-        self.writeLog(url,json.dumps(errorParams),response.content.decode())
+        response = requests.put(url, json=errorParams)
+        self.writeLog(url, json.dumps(errorParams), response.content.decode())
 
         # case5 different data type
         params = {
@@ -160,8 +170,8 @@ class listTest:
             "listName": "list1",
             "listValue": [1,2,"hello"]
         }
-        response = requests.post(url,json=params)
-        self.writeLog(url,json.dumps(params),response.content.decode())
+        response = requests.put(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case6 error database type
         errorParams = {
@@ -169,8 +179,8 @@ class listTest:
             "listName": "list999",
             "listValue": 123
         }
-        response = requests.post(url,json=errorParams)
-        self.writeLog(url,json.dumps(errorParams),response.content.decode())
+        response = requests.put(url, json=errorParams)
+        self.writeLog(url, json.dumps(errorParams), response.content.decode())
 
         # case7 error list type
         errorParams = {
@@ -178,8 +188,8 @@ class listTest:
             "listName": [4,5,6],
             "listValue": 123
         }
-        response = requests.post(url,json=errorParams)
-        self.writeLog(url,json.dumps(errorParams),response.content.decode())
+        response = requests.put(url, json=errorParams)
+        self.writeLog(url, json.dumps(errorParams), response.content.decode())
 
         # case8 error url
         errorParams = {
@@ -188,8 +198,85 @@ class listTest:
             "listValue": 123
         }
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/insertlist"
-        response = requests.post(errorUrl,json=errorParams)
-        self.writeLog(errorUrl,json.dumps(errorParams),response.content.decode())
+        response = requests.put(errorUrl, json=errorParams)
+        self.writeLog(errorUrl, json.dumps(errorParams), response.content.decode())
+
+    def leftInsertTest(self):
+        url = "http://" + self.host + ":" + str(self.port) + "/leftInsertList"
+
+        # case1 create a list and then insert
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        createParams = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(createUrl, json=createParams)
+        params = {
+            "dbName": "db0",
+            "listName": "list1",
+            "listValue": 123
+        }
+        response = requests.put(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
+
+        # case2 insert repeatedly
+        response = requests.put(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
+
+        # case3 unknown database name
+        errorParams = {
+            "dbName": "db100",
+            "listName": "list1",
+            "listValue": 123
+        }
+        response = requests.put(url, json=errorParams)
+        self.writeLog(url, json.dumps(errorParams), response.content.decode())
+
+        # case4 unknown list name
+        errorParams = {
+            "dbName": "db0",
+            "listName": "list999",
+            "listValue": 123
+        }
+        response = requests.put(url, json=errorParams)
+        self.writeLog(url, json.dumps(errorParams), response.content.decode())
+
+        # case5 different data type
+        params = {
+            "dbName": "db0",
+            "listName": "list1",
+            "listValue": [1, 2, "hello"]
+        }
+        response = requests.put(url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
+
+        # case6 error database type
+        errorParams = {
+            "dbName": [1, 2, 3],
+            "listName": "list999",
+            "listValue": 123
+        }
+        response = requests.put(url, json=errorParams)
+        self.writeLog(url, json.dumps(errorParams), response.content.decode())
+
+        # case7 error list type
+        errorParams = {
+            "dbName": "db0",
+            "listName": [4, 5, 6],
+            "listValue": 123
+        }
+        response = requests.put(url, json=errorParams)
+        self.writeLog(url, json.dumps(errorParams), response.content.decode())
+
+        # case8 error url
+        errorParams = {
+            "dbName": "db0",
+            "listName": "list999",
+            "listValue": 123
+        }
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/insertlist"
+        response = requests.put(errorUrl, json=errorParams)
+        self.writeLog(errorUrl, json.dumps(errorParams), response.content.decode())
 
     def deleteListTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/deleteList/{0}/{1}"
@@ -537,13 +624,16 @@ if __name__ == "__main__":
     test = listTest()
 
     # testing create list function
-    #test.createListTest()
+    # test.createListTest()
 
     # testing get list function
-    #test.getListTest()
+    # test.getListTest()
 
     # testing insert list function
-    #test.insertListTest()
+    # test.insertListTest()
+
+    # testing left insert list function
+    test.leftInsertTest()
 
     # testing delete list function
     #test.deleteListTest()
@@ -573,4 +663,4 @@ if __name__ == "__main__":
     #test.leftGetListTest()
 
     # testing right get function
-    test.rightGetListTest()
+    # test.rightGetListTest()

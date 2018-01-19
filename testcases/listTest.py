@@ -33,24 +33,30 @@ class listTest:
 
     # test create list function
     def createListTest(self):
-        url = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
+        url = "http://" + self.host + ":" + str(self.port) + "/makeList"
+
+        params = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
 
         # case1 create a list
-        response = requests.get(url.format("db0","list1"))
-        self.writeLog(url.format("db0","list1"),"",response.content.decode())
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params),response.content.decode())
 
         # case2 create a list repeatedly
-        response = requests.get(url.format("db0","list1"))
-        self.writeLog(url.format("db0","list1"),"",response.content.decode())
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db100","list1"))
-        self.writeLog(url.format("db100","list1"),"",response.content.decode())
+        params["dbName"] = "db100"
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case4 error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/makelist/{0}/{1}"
-        response = requests.get(errorUrl.format("db0","list2"))
-        self.writeLog(errorUrl.format("db0","list2"),"",response.content.decode())
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/makelist"
+        response = requests.get(url=errorUrl, json=params)
+        self.writeLog(errorUrl, json.dumps(params),response.content.decode())
 
     def getListTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/getList/{0}/{1}"
@@ -537,7 +543,7 @@ if __name__ == "__main__":
     test = listTest()
 
     # testing create list function
-    #test.createListTest()
+    test.createListTest()
 
     # testing get list function
     #test.getListTest()
@@ -573,4 +579,4 @@ if __name__ == "__main__":
     #test.leftGetListTest()
 
     # testing right get function
-    test.rightGetListTest()
+    # test.rightGetListTest()

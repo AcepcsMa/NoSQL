@@ -1,42 +1,33 @@
-DATE: 2018/01/16 12:58:11
-URL: http://localhost:3080/deleteElem/db0/elem1
-PARAMS: 
+DATE: 2018/01/18 23:11:36
+URL: http://localhost:3080/makeList
+PARAMS: {"dbName": "db0", "listName": "list1"}
 RESPONSE: {
-  "data": "elem1", 
-  "msg": "Element Delete Success", 
-  "typeCode": 13
+  "data": "list1", 
+  "msg": "List Create Success", 
+  "typeCode": 17
 }
 
-DATE: 2018/01/16 12:58:11
-URL: http://localhost:3080/deleteElem/db0/elem1
-PARAMS: 
+DATE: 2018/01/18 23:11:36
+URL: http://localhost:3080/makeList
+PARAMS: {"dbName": "db0", "listName": "list1"}
 RESPONSE: {
-  "data": "elem1", 
-  "msg": "Element Does Not Exist", 
-  "typeCode": 3
+  "data": "list1", 
+  "msg": "List Already Exists", 
+  "typeCode": 18
 }
 
-DATE: 2018/01/16 12:58:11
-URL: http://localhost:3080/deleteElem/db100/elem1
-PARAMS: 
+DATE: 2018/01/18 23:11:36
+URL: http://localhost:3080/makeList
+PARAMS: {"dbName": "db100", "listName": "list1"}
 RESPONSE: {
-  "data": "elem1", 
-  "msg": "Element Does Not Exist", 
-  "typeCode": 3
+  "data": "db100", 
+  "msg": "Database Does Not Exist", 
+  "typeCode": 28
 }
 
-DATE: 2018/01/16 12:58:11
-URL: http://localhost:3080/deleteElem/db0/elem100
-PARAMS: 
-RESPONSE: {
-  "data": "elem100", 
-  "msg": "Element Does Not Exist", 
-  "typeCode": 3
-}
-
-DATE: 2018/01/16 12:58:11
-URL: http://localhost:3080/deleteeelem/db0/elem1
-PARAMS: 
+DATE: 2018/01/18 23:11:36
+URL: http://localhost:3080/makelist
+PARAMS: {"dbName": "db100", "listName": "list1"}
 RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <title>404 Not Found</title>
 <h1>Not Found</h1>

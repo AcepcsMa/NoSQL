@@ -375,55 +375,64 @@ class listTest:
         url = "http://" + self.host + ":" + str(self.port) + "/clearList/{0}/{1}"
 
         # case1 create a list, insert some values and then clear
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
-        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertList"
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        createParams = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(createUrl, json=createParams)
 
-        response = requests.get(createUrl.format("db0", "list1"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertList"
         params = {
             "dbName": "db0",
             "listName": "list1",
             "listValue": "hello"
         }
-        response = requests.post(insertUrl, json=params)
-        response = requests.get(url.format("db0","list1"))
+        response = requests.put(insertUrl, json=params)
+        response = requests.put(url.format("db0","list1"))
         self.writeLog(url.format("db0","list1"),"",response.content.decode())
 
         # case2 clear repeatedly
-        response = requests.get(url.format("db0","list1"))
+        response = requests.put(url.format("db0","list1"))
         self.writeLog(url.format("db0","list1"),"",response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db999","list1"))
+        response = requests.put(url.format("db999","list1"))
         self.writeLog(url.format("db999","list1"),"",response.content.decode())
 
         # case4 unknown list name
-        response = requests.get(url.format("db0","list999"))
+        response = requests.put(url.format("db0","list999"))
         self.writeLog(url.format("db0","list999"),"",response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearlist/{0}/{1}"
 
-        response = requests.get(errorUrl.format("db0","list1"))
+        response = requests.put(errorUrl.format("db0","list1"))
         self.writeLog(errorUrl.format("db0","list1"),"",response.content.decode())
 
     def mergeListTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/mergeLists"
 
         # case1 create two lists and then merge into a third list
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
-        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertList"
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        createParams = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(createUrl, json=createParams)
+        createParams["listName"] = "list2"
+        response = requests.post(createUrl, json=createParams)
 
-        response = requests.get(createUrl.format("db0", "list1"))
-        response = requests.get(createUrl.format("db0", "list2"))
+        insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertList"
         params = {
             "dbName": "db0",
             "listName": "list1",
             "listValue": "hello"
         }
-        response = requests.post(insertUrl, json=params)
+        response = requests.put(insertUrl, json=params)
         params["listName"] = "list2"
         params["listValue"] = 123
-        response = requests.post(insertUrl, json=params)
+        response = requests.put(insertUrl, json=params)
 
         mergeParams = {
             "dbName":"db0",
@@ -431,8 +440,8 @@ class listTest:
             "list2":"list2",
             "resultList":"mergeResult"
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url,json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case2 merge result list already exists
         mergeParams = {
@@ -441,8 +450,8 @@ class listTest:
             "list2":"list2",
             "resultList":"mergeResult"
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url,json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case3 merge into the first list
         mergeParams = {
@@ -451,8 +460,8 @@ class listTest:
             "list2":"list2",
             "resultList":""
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url,json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case4 unknown database name
         mergeParams = {
@@ -461,8 +470,8 @@ class listTest:
             "list2":"list2",
             "resultList":"mergeResult"
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url,json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case5 unknown list name
         mergeParams = {
@@ -471,8 +480,8 @@ class listTest:
             "list2":"list456",
             "resultList":"mergeResult"
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url,json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case6 error database name type
         mergeParams = {
@@ -481,8 +490,8 @@ class listTest:
             "list2":"list456",
             "resultList":"mergeResult"
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url,json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case7 error list name type
         mergeParams = {
@@ -491,13 +500,13 @@ class listTest:
             "list2":[1,2,3],
             "resultList":[4,5,6]
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url,json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case8 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/mergelists"
-        response = requests.post(errorUrl,json=mergeParams)
-        self.writeLog(errorUrl,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(errorUrl,json=mergeParams)
+        self.writeLog(errorUrl, json.dumps(mergeParams), response.content.decode())
 
     def searchListTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/searchList/{0}/{1}"
@@ -647,13 +656,13 @@ if __name__ == "__main__":
     # test.deleteListTest()
 
     # testing remove from list function
-    test.rmListTest()
+    # test.rmListTest()
 
     # testing clear list function
-    #test.clearListTest()
+    # test.clearListTest()
 
     # testing merge function
-    #test.mergeListTest()
+    test.mergeListTest()
 
     # testing search function
     #test.searchListTest()

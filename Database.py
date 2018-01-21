@@ -478,42 +478,42 @@ class NoSqlDb(object):
 
     @saveTrigger
     @passwordCheck
-    def clearList(self, dbName, listName, password=None):
-        if self.listLockDict[dbName][listName] is True:
+    def clearList(self, dbName, keyName, password=None):
+        if self.listLockDict[dbName][keyName] is True:
             self.logger.warning("Clear List Locked {0}->{1}")
             return responseCode.LIST_IS_LOCKED
         else:
-            self.lock("LIST", dbName, listName)
-            self.listDict[dbName][listName] = []
-            self.unlock("LIST", dbName, listName)
+            self.lock("LIST", dbName, keyName)
+            self.listDict[dbName][keyName] = []
+            self.unlock("LIST", dbName, keyName)
             self.logger.info("List Clear Success "
-                             "{}->{}".format(dbName, listName))
+                             "{}->{}".format(dbName, keyName))
             return responseCode.LIST_CLEAR_SUCCESS
 
     @saveTrigger
     @passwordCheck
-    def mergeLists(self, dbName, listName1, listName2, resultListName=None, password=None):
-        if resultListName is not None:
-            self.createList(dbName, resultListName)
-            self.lock("LIST", dbName, resultListName)
-            self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName1])
-            self.listDict[dbName][resultListName].extend(self.listDict[dbName][listName2])
-            self.unlock("LIST", dbName, resultListName)
+    def mergeLists(self, dbName, keyName1, keyName2, resultKeyName=None, password=None):
+        if resultKeyName is not None:
+            self.createList(dbName=dbName, keyName=resultKeyName, password=password)
+            self.lock("LIST", dbName, resultKeyName)
+            self.listDict[dbName][resultKeyName].extend(self.listDict[dbName][keyName1])
+            self.listDict[dbName][resultKeyName].extend(self.listDict[dbName][keyName2])
+            self.unlock("LIST", dbName, resultKeyName)
             self.logger.info("Lists Merge Success "
                              "{} merges {}->{}".
-                             format(dbName, listName1, listName2, resultListName))
-            return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][resultListName]
+                             format(dbName, keyName1, keyName2, resultKeyName))
+            return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][resultKeyName]
         else:
-            if self.listLockDict[dbName][listName1] is False:
-                self.lock("LIST", dbName, listName1)
-                self.listDict[dbName][listName1].extend(self.listDict[dbName][listName2])
+            if self.listLockDict[dbName][keyName1] is False:
+                self.lock("LIST", dbName, keyName1)
+                self.listDict[dbName][keyName1].extend(self.listDict[dbName][keyName2])
                 self.logger.info("Lists Merge Success "
                                  "{} merges {}->{}".
-                                 format(dbName, listName1, listName2, listName1))
-                return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][listName1]
+                                 format(dbName, keyName1, keyName2, keyName1))
+                return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][keyName1]
             else:
                 self.logger.info("List Locked "
-                                 "{}->{}".format(dbName, listName1))
+                                 "{}->{}".format(dbName, keyName1))
                 return responseCode.LIST_IS_LOCKED, []
 
     @keyNameValidity

@@ -544,30 +544,46 @@ class listTest:
         self.writeLog(errorUrl.format("db0","a*"),"",response.content.decode())
 
     def setTTLTest(self):
-        url = "http://" + self.host + ":" + str(self.port) + "/setListTTL/{0}/{1}/{2}"
+        url = "http://" + self.host + ":" + str(self.port) + "/setTTL"
 
         # case1 create a list and set TTL
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
-        response = requests.get(createUrl.format("db0","list1"))
-        response = requests.get(url.format("db0","list1",20))
-        self.writeLog(url.format("db0","list1",20),"",response.content.decode())
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        createParams = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(url=createUrl, json=createParams)
+
+        ttlParams = {
+            "dataType": "LIST",
+            "dbName": "db0",
+            "keyName": "list1",
+            "ttl": 20
+        }
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case2 unknown database name
-        response = requests.get(url.format("db123","list1",15))
-        self.writeLog(url.format("db123","list1",15),"",response.content.decode())
+        ttlParams["dbName"] = "db123"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case3 unknown list name
-        response = requests.get(url.format("db0","list123",15))
-        self.writeLog(url.format("db0","list123",15),"",response.content.decode())
+        ttlParams["dbName"] = "db0"
+        ttlParams["keyName"] = "list123"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case4 TTL is not Int type
-        response = requests.get(url.format("db0","list1","hi"))
-        self.writeLog(url.format("db0","list1","hi"),"",response.content.decode())
+        ttlParams["keyName"] = "list1"
+        ttlParams["ttl"] = "abc"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case5 error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setlistTTL/{0}/{1}/{2}"
-        response = requests.get(errorUrl.format("db0", "list1",15))
-        self.writeLog(errorUrl.format("db0","list1",15),"",response.content.decode())
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setttl"
+        response = requests.post(url=errorUrl, json=ttlParams)
+        self.writeLog(errorUrl, json.dumps(ttlParams), response.content.decode())
 
     # test clear TTL function
     def clearTTLTest(self):
@@ -662,13 +678,13 @@ if __name__ == "__main__":
     # test.clearListTest()
 
     # testing merge function
-    test.mergeListTest()
+    # test.mergeListTest()
 
     # testing search function
     #test.searchListTest()
 
     # testing set TTL function
-    #test.setTTLTest()
+    test.setTTLTest()
 
     # testing clear TTL function
     #test.clearTTLTest()

@@ -581,7 +581,7 @@ class listTest:
         self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case5 error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setTTL"
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setttl"
         response = requests.post(url=errorUrl, json=ttlParams)
         self.writeLog(errorUrl, json.dumps(ttlParams), response.content.decode())
 

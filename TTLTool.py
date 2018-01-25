@@ -43,31 +43,34 @@ class TTLTool(object):
                                  result)
 
     def clearTTL(self, dbName, keyName, dataType):
-        lockDict = self.database.getLockDict(dataType)
-        ttlDict = self.database.getTTLDict(dataType)
-
-        if lockDict[dbName][keyName] is True:
-            self.database.logger.warning("{} Locked {}->{}".
-                                         format(dataType, dbName, keyName))
-            return Utils.makeMessage("{} Is Locked".format(dataType),
-                                     responseCode.LOCKED,
-                                     keyName)
+        if not self.database.isDbExist(dbName):
+            code, result = responseCode.DB_NOT_EXIST, dbName
         else:
-            self.database.lock(dataType, dbName, keyName)
+            lockDict = self.database.getLockDict(dataType)
+            ttlDict = self.database.getTTLDict(dataType)
             try:
-                ttlDict[dbName].pop(keyName)
+                if lockDict[dbName][keyName] is True:
+                    self.database.logger.warning("{} Locked {}->{}".
+                                                 format(dataType, dbName, keyName))
+                    code, result = responseCode.LOCKED, keyName
+                else:
+                    self.database.lock(dataType, dbName, keyName)
+                    try:
+                        ttlDict[dbName].pop(keyName)
+                    except:
+                        code, result = responseCode.NOT_SET_TTL, keyName
+                    finally:
+                        self.database.unlock(dataType, dbName, keyName)
+                    self.database.logger.info("{} TTL Clear Success {}->{}".
+                                              format(dataType, dbName, keyName))
+                    self.database.opCount += 1
+                    code, result = responseCode.TTL_CLEAR_SUCCESS, keyName
             except:
-                return Utils.makeMessage("{} Is Not Set TTL".format(dataType),
-                                         responseCode.NOT_SET_TTL,
-                                         keyName)
-            finally:
-                self.database.unlock(dataType, dbName, keyName)
-            self.database.logger.info("{} TTL Clear Success {}->{}".
-                                      format(dataType, dbName, keyName))
-            self.database.opCount += 1
-            return Utils.makeMessage(responseCode.detail[responseCode.TTL_CLEAR_SUCCESS],
-                                     responseCode.TTL_CLEAR_SUCCESS,
-                                     keyName)
+                code, result = responseCode.KEY_NAME_INVALID, keyName
+
+        return Utils.makeMessage(responseCode.detail[code],
+                                 code,
+                                 result)
 
     def showTTL(self, dbName, keyName, dataType):
         try:

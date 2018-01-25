@@ -84,8 +84,12 @@ class listTest:
         url = "http://" + self.host + ":" + str(self.port) + "/leftGetList/{0}/{1}/{2}"
 
         # case1 create a list and get its value
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
-        response = requests.get(createUrl.format("db0", "list1"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        params = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(url=createUrl, json=params)
         response = requests.get(url.format("db0", "list1", 3))
         self.writeLog(url.format("db0", "list1", 3), "", response.content.decode())
 
@@ -106,8 +110,12 @@ class listTest:
         url = "http://" + self.host + ":" + str(self.port) + "/rightGetList/{0}/{1}/{2}"
 
         # case1 create a list and get its value
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList/{0}/{1}"
-        response = requests.get(createUrl.format("db0", "list1"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeList"
+        params = {
+            "dbName": "db0",
+            "listName": "list1"
+        }
+        response = requests.post(url=createUrl, json=params)
         response = requests.get(url.format("db0", "list1", 3))
         self.writeLog(url.format("db0", "list1", 3), "", response.content.decode())
 
@@ -712,13 +720,13 @@ if __name__ == "__main__":
     # test.setTTLTest()
 
     # testing clear TTL function
-    test.clearTTLTest()
+    # test.clearTTLTest()
 
     # testing get size function
-    #test.getSizeTest()
+    # test.getSizeTest()
 
     # testing left get function
-    #test.leftGetListTest()
+    # test.leftGetListTest()
 
     # testing right get function
     # test.rightGetListTest()

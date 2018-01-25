@@ -729,4 +729,4 @@ if __name__ == "__main__":
     # test.leftGetListTest()
 
     # testing right get function
-    test.rightGetListTest()
+    # test.rightGetListTest()

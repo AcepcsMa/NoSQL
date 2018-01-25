@@ -31,9 +31,10 @@ class DbHandler(object):
         return msg
 
     # delete the given database
-    def delDatabase(self, dbName):
+    def delDatabase(self, adminKey, dbName):
         if Utils.isValidType(dbName):
-            code = self.database.delDatabase(dbName)
+            code = self.database.delDatabase(adminKey=adminKey,
+                                             dbName=dbName)
         else:
             code = responseCode.ELEM_TYPE_ERROR
         msg = Utils.makeMessage(responseCode.detail[code],

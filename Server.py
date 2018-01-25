@@ -1076,7 +1076,12 @@ def getAllDatabase():
 @app.route("/delDatabase/<string:dbName>",methods=["DELETE"])
 def delDatabase(dbName):
     myHandler = DbHandler(database)
-    result = myHandler.delDatabase(dbName)
+    try:
+        adminKey = flask.request.json["adminKey"]
+    except:
+        adminKey = None
+    result = myHandler.delDatabase(adminKey=adminKey,
+                                   dbName=dbName)
     return flask.jsonify(result)
 
 @app.route("/save",methods=["PUT"])

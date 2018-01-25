@@ -1087,7 +1087,9 @@ class NoSqlDb(object):
             return responseCode.DB_GET_SUCCESS, list(self.dbNameSet)
 
     @saveTrigger
-    def delDatabase(self, dbName):
+    def delDatabase(self, adminKey, dbName):
+        if adminKey != self.adminKey:
+            return responseCode.ADMIN_KEY_ERROR
         if self.isDbExist(dbName) is True:
             if self.saveLock is False:
                 self.saveLock = True

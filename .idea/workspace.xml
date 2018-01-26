@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database.py" afterPath="$PROJECT_DIR$/Database.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DbHandler.py" afterPath="$PROJECT_DIR$/DbHandler.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcases/listTest.py" afterPath="$PROJECT_DIR$/testcases/listTest.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcases/setTest.py" afterPath="$PROJECT_DIR$/testcases/setTest.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,11 +19,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Server.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="353">
-              <caret line="1078" column="8" lean-forward="true" selection-start-line="1078" selection-start-column="8" selection-end-line="1078" selection-end-column="8" />
+            <state relative-caret-position="-606">
+              <caret line="645" column="0" lean-forward="false" selection-start-line="645" selection-start-column="0" selection-end-line="645" selection-end-column="0" />
               <folding>
                 <element signature="e#37#49#0" expanded="true" />
               </folding>
@@ -32,41 +31,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DbHandler.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DbHandler.py">
+      <file leaf-file-name="setTest.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcases/setTest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="502">
-              <caret line="34" column="37" lean-forward="true" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+            <state relative-caret-position="243">
+              <caret line="634" column="0" lean-forward="false" selection-start-line="634" selection-start-column="0" selection-end-line="635" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ListHandler.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ListHandler.py">
+      <file leaf-file-name="testLog.log" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/testcases/testLog.log">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="228" column="51" lean-forward="false" selection-start-line="228" selection-start-column="51" selection-end-line="228" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Decorator.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Decorator.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ElemHandler.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ElemHandler.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3243">
-              <caret line="142" column="13" lean-forward="false" selection-start-line="142" selection-start-column="13" selection-end-line="142" selection-end-column="13" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -75,21 +54,11 @@
       <file leaf-file-name="Database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="1091" column="47" lean-forward="false" selection-start-line="1091" selection-start-column="47" selection-end-line="1091" selection-end-column="47" />
+            <state relative-caret-position="169">
+              <caret line="763" column="35" lean-forward="false" selection-start-line="763" selection-start-column="35" selection-end-line="763" selection-end-column="35" />
               <folding>
                 <element signature="e#37#46#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TTLTool.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TTLTool.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13">
-              <caret line="57" column="24" lean-forward="false" selection-start-line="57" selection-start-column="24" selection-end-line="57" selection-end-column="24" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -105,7 +74,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>isDict</find>
       <find>self.isInt</find>
       <find>self.isValidType</find>
       <find>self.makeMessage</find>
@@ -135,6 +103,7 @@
       <find>leftGet</find>
       <find>adminKey</find>
       <find>delDatabase</find>
+      <find>makeSet</find>
     </findStrings>
     <replaceStrings>
       <replace>self.database.isExpired(dbName, elemName, &quot;ELEM&quot;)</replace>
@@ -188,7 +157,6 @@
         <option value="$PROJECT_DIR$/testcases/test.conf" />
         <option value="$PROJECT_DIR$/decorator.py" />
         <option value="$PROJECT_DIR$/zset.py" />
-        <option value="$PROJECT_DIR$/testcases/setTest.py" />
         <option value="$PROJECT_DIR$/testcases/zsetTest.py" />
         <option value="$PROJECT_DIR$/zsetHandler.py" />
         <option value="$PROJECT_DIR$/data/db0/setName.txt" />
@@ -222,11 +190,12 @@
         <option value="$PROJECT_DIR$/ElemHandler.py" />
         <option value="$PROJECT_DIR$/testcases/elemTest.py" />
         <option value="$PROJECT_DIR$/TTLTool.py" />
-        <option value="$PROJECT_DIR$/testcases/testLog.log" />
         <option value="$PROJECT_DIR$/testcases/listTest.py" />
-        <option value="$PROJECT_DIR$/Database.py" />
         <option value="$PROJECT_DIR$/DbHandler.py" />
         <option value="$PROJECT_DIR$/Server.py" />
+        <option value="$PROJECT_DIR$/Database.py" />
+        <option value="$PROJECT_DIR$/testcases/setTest.py" />
+        <option value="$PROJECT_DIR$/testcases/testLog.log" />
       </list>
     </option>
   </component>
@@ -300,25 +269,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.listTest">
-    <configuration default="false" name="hashTest" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testcases" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="NoSQL" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testcases/hashTest.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.setTest">
     <configuration default="false" name="server" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -391,6 +342,24 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
+    <configuration default="false" name="setTest" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testcases" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="NoSQL" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testcases/setTest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -456,19 +425,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.hashTest" />
-      <item index="1" class="java.lang.String" itemvalue="Python.server" />
-      <item index="2" class="java.lang.String" itemvalue="Python.listTest" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Utils" />
-      <item index="4" class="java.lang.String" itemvalue="Python.elemTest" />
+      <item index="0" class="java.lang.String" itemvalue="Python.server" />
+      <item index="1" class="java.lang.String" itemvalue="Python.listTest" />
+      <item index="2" class="java.lang.String" itemvalue="Python.Utils" />
+      <item index="3" class="java.lang.String" itemvalue="Python.elemTest" />
+      <item index="4" class="java.lang.String" itemvalue="Python.setTest" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.listTest" />
-        <item index="1" class="java.lang.String" itemvalue="Python.elemTest" />
-        <item index="2" class="java.lang.String" itemvalue="Python.server" />
-        <item index="3" class="java.lang.String" itemvalue="Python.Utils" />
-        <item index="4" class="java.lang.String" itemvalue="Python.hashTest" />
+        <item index="0" class="java.lang.String" itemvalue="Python.setTest" />
+        <item index="1" class="java.lang.String" itemvalue="Python.listTest" />
+        <item index="2" class="java.lang.String" itemvalue="Python.elemTest" />
+        <item index="3" class="java.lang.String" itemvalue="Python.server" />
+        <item index="4" class="java.lang.String" itemvalue="Python.Utils" />
       </list>
     </recent_temporary>
   </component>
@@ -681,13 +650,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/setTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-904">
-          <caret line="580" column="0" lean-forward="false" selection-start-line="580" selection-start-column="0" selection-end-line="580" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testcases/zsetTest.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="496">
@@ -897,14 +859,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/testLog.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testcases/listTest.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="268">
@@ -913,31 +867,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="1091" column="47" lean-forward="false" selection-start-line="1091" selection-start-column="47" selection-end-line="1091" selection-end-column="47" />
-          <folding>
-            <element signature="e#37#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DbHandler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="502">
-          <caret line="34" column="37" lean-forward="true" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+        <state relative-caret-position="433">
+          <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="1078" column="8" lean-forward="true" selection-start-line="1078" selection-start-column="8" selection-end-line="1078" selection-end-column="8" />
+        <state relative-caret-position="-606">
+          <caret line="645" column="0" lean-forward="false" selection-start-line="645" selection-start-column="0" selection-end-line="645" selection-end-column="0" />
           <folding>
             <element signature="e#37#49#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="763" column="35" lean-forward="false" selection-start-line="763" selection-start-column="35" selection-end-line="763" selection-end-column="35" />
+          <folding>
+            <element signature="e#37#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/setTest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="634" column="0" lean-forward="false" selection-start-line="634" selection-start-column="0" selection-end-line="635" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/testLog.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

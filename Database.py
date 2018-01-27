@@ -761,7 +761,7 @@ class NoSqlDb(object):
                 self.setDict[dbName][keyName].add(value)
                 self.unlock("SET", dbName, keyName)
                 self.logger.info("Set Insert Success "
-                                 "0}->{1}->{2}".format(dbName, keyName, value))
+                                 "{0}->{1}->{2}".format(dbName, keyName, value))
                 return responseCode.SET_INSERT_SUCCESS
             else:
                 return responseCode.SET_VALUE_ALREADY_EXIST

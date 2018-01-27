@@ -32,28 +32,35 @@ class setTest:
             testLogFile.write("\n")
 
     def makeSetTest(self):
-        url = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        url = "http://" + self.host + ":" + str(self.port) + "/makeSet"
 
         # case1 make a new set
-        response = requests.get(url.format("db0","set1"))
-        self.writeLog(url.format("db0","set1"), "", response.content.decode())
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case2 make a set repeatedly
-        response = requests.get(url.format("db0", "set1"))
-        self.writeLog(url.format("db0", "set1"), "", response.content.decode())
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db999", "set1"))
-        self.writeLog(url.format("db999", "set1"), "", response.content.decode())
+        params["dbName"] = "db999"
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case4 invalid set name
-        response = requests.get(url.format("db0", "!@abc"))
-        self.writeLog(url.format("db0", "!@abc"), "", response.content.decode())
+        params["dbName"] = "db0"
+        params["setName"] = "!@abc"
+        response = requests.post(url=url, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
         # case5 error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/makeset/{}/{}"
-        response = requests.get(errorUrl.format("db0", "set1"))
-        self.writeLog(errorUrl.format("db0", "set1"), "", response.content.decode())
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/makeset"
+        response = requests.post(url=errorUrl, json=params)
+        self.writeLog(url, json.dumps(params), response.content.decode())
 
     def getSetTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/getSet/{}/{}"
@@ -81,40 +88,44 @@ class setTest:
         url = "http://" + self.host + ":" + str(self.port) + "/insertSet"
 
         # case1 create a set and then insert
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "set1"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
         insertParams = {
             "dbName":"db0",
             "setName":"set1",
             "setValue":"1"
         }
-        response = requests.post(url,json=insertParams)
+        response = requests.put(url,json=insertParams)
         self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case2 insert an existed value
-        response = requests.post(url,json=insertParams)
+        response = requests.put(url,json=insertParams)
         self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case3 unknown database name
         insertParams["dbName"] = "db999"
-        response = requests.post(url, json=insertParams)
+        response = requests.put(url, json=insertParams)
         self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case4 unknown set name
         insertParams["dbName"] = "db0"
         insertParams["setName"] = "set123"
-        response = requests.post(url, json=insertParams)
+        response = requests.put(url, json=insertParams)
         self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case5 error database name type
         insertParams["dbName"] = [7,8,9]
-        response = requests.post(url, json=insertParams)
+        response = requests.put(url, json=insertParams)
         self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case6 error set name type
         insertParams["dbName"] = "db0"
         insertParams["setName"] = [4,5,6]
-        response = requests.post(url, json=insertParams)
+        response = requests.put(url, json=insertParams)
         self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case7 error url
@@ -124,67 +135,72 @@ class setTest:
             "setName": "set1",
             "setValue": "1"
         }
-        response = requests.post(errorUrl, json=insertParams)
+        response = requests.put(errorUrl, json=insertParams)
         self.writeLog(errorUrl, json.dumps(insertParams), response.content.decode())
 
     def rmFromSetTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/rmFromSet"
 
         # case1 create, insert, then remove
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
+
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
-        response = requests.get(createUrl.format("db0", "set1"))
         insertParams = {
             "dbName": "db0",
             "setName": "set1",
             "setValue": "1"
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(insertUrl, json=insertParams)
         removeParams = {
             "dbName":"db0",
             "setName":"set1",
             "setValue":"1"
         }
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case2 remove from an empty set
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case3 unknown database name
         removeParams["dbName"] = "db999"
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case4 unknown set name
         removeParams["dbName"] = "db0"
         removeParams["setName"] = "set123"
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case5 error database name type
         removeParams["dbName"] = [1,2,3]
         removeParams["setName"] = "set1"
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case6 error set name type
         removeParams["dbName"] = "db0"
         removeParams["setName"] = [1,2,3]
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case7 non-existed set value
         removeParams["dbName"] = "db0"
         removeParams["setName"] = "set1"
         removeParams["setValue"] = "hello"
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case8 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/rmfromset"
-        response = requests.post(errorUrl, json=removeParams)
+        response = requests.put(errorUrl, json=removeParams)
         self.writeLog(errorUrl, json.dumps(removeParams), response.content.decode())
 
     def clearSetTest(self):
@@ -617,16 +633,16 @@ if __name__ == "__main__":
     test = setTest()
 
     # testing make set function
-    #test.makeSetTest()
+    # test.makeSetTest()
 
     # testing get set function
     #test.getSetTest()
 
     # testing insert set function
-    #test.insertSetTest()
+    # test.insertSetTest()
 
     # testing remove from set function
-    #test.rmFromSetTest()
+    test.rmFromSetTest()
 
     # testing clear set function
     #test.clearSetTest()
@@ -656,4 +672,4 @@ if __name__ == "__main__":
     #test.clearTTLTest()
 
     # testing get size function
-    test.getSizeTest()
+    # test.getSizeTest()

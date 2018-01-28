@@ -207,33 +207,38 @@ class setTest:
         url = "http://" + self.host + ":" + str(self.port) + "/clearSet/{}/{}"
 
         # case1 create, insert, then clear
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
+
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
-        response = requests.get(createUrl.format("db0", "set1"))
         insertParams = {
             "dbName": "db0",
             "setName": "set1",
             "setValue": "1"
         }
-        response = requests.post(insertUrl, json=insertParams)
-        response = requests.get(url.format("db0","set1"))
+        response = requests.put(insertUrl, json=insertParams)
+        response = requests.put(url.format("db0","set1"))
         self.writeLog(url.format("db0","set1"), "", response.content.decode())
 
         # case2 clear an empty set
-        response = requests.get(url.format("db0","set1"))
+        response = requests.put(url.format("db0","set1"))
         self.writeLog(url.format("db0","set1"), "", response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db123","set1"))
+        response = requests.put(url.format("db123","set1"))
         self.writeLog(url.format("db123","set1"), "", response.content.decode())
 
         # case4 unknown set name
-        response = requests.get(url.format("db0","set123"))
+        response = requests.put(url.format("db0","set123"))
         self.writeLog(url.format("db0","set123"), "", response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearset/{}/{}"
-        response = requests.get(errorUrl.format("db0","set1"))
+        response = requests.put(errorUrl.format("db0","set1"))
         self.writeLog(errorUrl.format("db0","set1"), "", response.content.decode())
 
     def deleteSetTest(self):
@@ -642,10 +647,10 @@ if __name__ == "__main__":
     # test.insertSetTest()
 
     # testing remove from set function
-    test.rmFromSetTest()
+    # test.rmFromSetTest()
 
     # testing clear set function
-    #test.clearSetTest()
+    test.clearSetTest()
 
     # testing delete set function
     #test.deleteSetTest()

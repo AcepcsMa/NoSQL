@@ -245,26 +245,30 @@ class setTest:
         url = "http://" + self.host + ":" + str(self.port) + "/deleteSet/{}/{}"
 
         # case1 create, then delete a set
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "set1"))
-        response = requests.get(url.format("db0","set1"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
+        response = requests.delete(url.format("db0", "set1"))
         self.writeLog(url.format("db0","set1"), "", response.content.decode())
 
         # case2 delete a non-existed set
-        response = requests.get(url.format("db0","set1"))
+        response = requests.delete(url.format("db0", "set1"))
         self.writeLog(url.format("db0","set1"), "", response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db789","set1"))
+        response = requests.delete(url.format("db789", "set1"))
         self.writeLog(url.format("db789","set1"), "", response.content.decode())
 
         # case4 unknown set name
-        response = requests.get(url.format("db0","set123"))
+        response = requests.delete(url.format("db0", "set123"))
         self.writeLog(url.format("db0","set123"), "", response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/deleteset/{}/{}"
-        response = requests.get(errorUrl.format("db0","set123"))
+        response = requests.delete(errorUrl.format("db0", "set123"))
         self.writeLog(errorUrl.format("db0","set123"), "", response.content.decode())
 
     def searchSetTest(self):
@@ -297,15 +301,21 @@ class setTest:
         url = "http://" + self.host + ":" + str(self.port) + "/unionSet"
 
         # case1 create two empty set, then union
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "set1"))
-        response = requests.get(createUrl.format("db0", "set2"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
+        params["setName"] = "set2"
+        response = requests.post(url=createUrl, json=params)
+
         unionParams = {
             "dbName":"db0",
             "setName1":"set1",
             "setName2":"set2"
         }
-        response = requests.post(url,json=unionParams)
+        response = requests.put(url, json=unionParams)
         self.writeLog(url,json.dumps(unionParams),response.content.decode())
 
         # case2 insert common values into two sets, then union
@@ -315,23 +325,23 @@ class setTest:
             "setName": "set1",
             "setValue": 1
         }
-        response = requests.post(insertUrl,json=insertParams)
+        response = requests.put(insertUrl, json=insertParams)
         insertParams = {
             "dbName": "db0",
             "setName": "set2",
             "setValue": 1
         }
-        response = requests.post(url,json=unionParams)
-        self.writeLog(url,json.dumps(unionParams),response.content.decode())
+        response = requests.put(url, json=unionParams)
+        self.writeLog(url, json.dumps(unionParams), response.content.decode())
 
         # case3 unknown database name
         unionParams["dbName"] = "db999"
-        response = requests.post(url, json=unionParams)
+        response = requests.put(url, json=unionParams)
         self.writeLog(url, json.dumps(unionParams), response.content.decode())
 
         # case4 error database name type
         unionParams["dbName"] = [1,2,3]
-        response = requests.post(url, json=unionParams)
+        response = requests.put(url, json=unionParams)
         self.writeLog(url, json.dumps(unionParams), response.content.decode())
 
         # case5 unknown set name
@@ -340,7 +350,7 @@ class setTest:
             "setName1": "set123",
             "setName2": "set2"
         }
-        response = requests.post(url, json=unionParams)
+        response = requests.put(url, json=unionParams)
         self.writeLog(url, json.dumps(unionParams), response.content.decode())
 
         # case6 error set name type
@@ -349,12 +359,12 @@ class setTest:
             "setName1": ["hello","world"],
             "setName2": "set2"
         }
-        response = requests.post(url, json=unionParams)
+        response = requests.put(url, json=unionParams)
         self.writeLog(url, json.dumps(unionParams), response.content.decode())
 
         # error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/unionset"
-        response = requests.post(errorUrl, json=unionParams)
+        response = requests.put(errorUrl, json=unionParams)
         self.writeLog(errorUrl, json.dumps(unionParams), response.content.decode())
 
     def intersectSetTest(self):
@@ -650,16 +660,16 @@ if __name__ == "__main__":
     # test.rmFromSetTest()
 
     # testing clear set function
-    test.clearSetTest()
+    # test.clearSetTest()
 
     # testing delete set function
-    #test.deleteSetTest()
+    # test.deleteSetTest()
 
     # testing search set function
     #test.searchSetTest()
 
     # testing union set function
-    #test.unionSetTest()
+    test.unionSetTest()
 
     # testing intersect set function
     #test.intersectSetTest()

@@ -371,15 +371,20 @@ class setTest:
         url = "http://" + self.host + ":" + str(self.port) + "/intersectSet"
 
         # case1 create two empty set, then intersect
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "set1"))
-        response = requests.get(createUrl.format("db0", "set2"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
+        params["setName"] = "set2"
+        response = requests.post(url=createUrl, json=params)
         intersectParams = {
             "dbName": "db0",
             "setName1": "set1",
             "setName2": "set2"
         }
-        response = requests.post(url, json=intersectParams)
+        response = requests.put(url, json=intersectParams)
         self.writeLog(url, json.dumps(intersectParams), response.content.decode())
 
         # case2 insert common values into two sets, then intersect
@@ -389,24 +394,24 @@ class setTest:
             "setName": "set1",
             "setValue": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(insertUrl, json=insertParams)
         insertParams = {
             "dbName": "db0",
             "setName": "set2",
             "setValue": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
-        response = requests.post(url, json=intersectParams)
+        response = requests.put(insertUrl, json=insertParams)
+        response = requests.put(url, json=intersectParams)
         self.writeLog(url, json.dumps(intersectParams), response.content.decode())
 
         # case3 unknown database name
         intersectParams["dbName"] = "db999"
-        response = requests.post(url, json=intersectParams)
+        response = requests.put(url, json=intersectParams)
         self.writeLog(url, json.dumps(intersectParams), response.content.decode())
 
         # case4 error database name type
         intersectParams["dbName"] = [1, 2, 3]
-        response = requests.post(url, json=intersectParams)
+        response = requests.put(url, json=intersectParams)
         self.writeLog(url, json.dumps(intersectParams), response.content.decode())
 
         # case5 unknown set name
@@ -415,7 +420,7 @@ class setTest:
             "setName1": "set123",
             "setName2": "set2"
         }
-        response = requests.post(url, json=intersectParams)
+        response = requests.put(url, json=intersectParams)
         self.writeLog(url, json.dumps(intersectParams), response.content.decode())
 
         # case6 error set name type
@@ -424,27 +429,32 @@ class setTest:
             "setName1": ["hello", "world"],
             "setName2": "set2"
         }
-        response = requests.post(url, json=intersectParams)
+        response = requests.put(url, json=intersectParams)
         self.writeLog(url, json.dumps(intersectParams), response.content.decode())
 
         # error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/intersectset"
-        response = requests.post(errorUrl, json=intersectParams)
+        response = requests.put(errorUrl, json=intersectParams)
         self.writeLog(errorUrl, json.dumps(intersectParams), response.content.decode())
 
     def diffSetTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/diffSet"
 
         # case1 create two empty set, then diff
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "set1"))
-        response = requests.get(createUrl.format("db0", "set2"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
+        params["setName"] = "set2"
+        response = requests.post(url=createUrl, json=params)
         diffParams = {
             "dbName": "db0",
             "setName1": "set1",
             "setName2": "set2"
         }
-        response = requests.post(url, json=diffParams)
+        response = requests.put(url, json=diffParams)
         self.writeLog(url, json.dumps(diffParams), response.content.decode())
 
         # case2 insert common values into two sets, then diff
@@ -454,24 +464,24 @@ class setTest:
             "setName": "set1",
             "setValue": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(insertUrl, json=insertParams)
         insertParams = {
             "dbName": "db0",
             "setName": "set2",
             "setValue": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
-        response = requests.post(url, json=diffParams)
+        response = requests.put(insertUrl, json=insertParams)
+        response = requests.put(url, json=diffParams)
         self.writeLog(url, json.dumps(diffParams), response.content.decode())
 
         # case3 unknown database name
         diffParams["dbName"] = "db999"
-        response = requests.post(url, json=diffParams)
+        response = requests.put(url, json=diffParams)
         self.writeLog(url, json.dumps(diffParams), response.content.decode())
 
         # case4 error database name type
         diffParams["dbName"] = [1, 2, 3]
-        response = requests.post(url, json=diffParams)
+        response = requests.put(url, json=diffParams)
         self.writeLog(url, json.dumps(diffParams), response.content.decode())
 
         # case5 unknown set name
@@ -480,7 +490,7 @@ class setTest:
             "setName1": "set123",
             "setName2": "set2"
         }
-        response = requests.post(url, json=diffParams)
+        response = requests.put(url, json=diffParams)
         self.writeLog(url, json.dumps(diffParams), response.content.decode())
 
         # case6 error set name type
@@ -489,43 +499,47 @@ class setTest:
             "setName1": ["hello", "world"],
             "setName2": "set2"
         }
-        response = requests.post(url, json=diffParams)
+        response = requests.put(url, json=diffParams)
         self.writeLog(url, json.dumps(diffParams), response.content.decode())
 
         # error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/diffset"
-        response = requests.post(errorUrl, json=diffParams)
+        response = requests.put(errorUrl, json=diffParams)
         self.writeLog(errorUrl, json.dumps(diffParams), response.content.decode())
 
     def replaceSetTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/replaceSet"
 
         # case1 create a set, replace it with new value
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "set1"))
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertSet"
         insertParams = {
             "dbName": "db0",
             "setName": "set1",
             "setValue": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(insertUrl, json=insertParams)
         replaceParams = {
             "dbName":"db0",
             "setName":"set1",
             "setValue":["hello","world"]
         }
-        response = requests.post(url, json=replaceParams)
+        response = requests.put(url, json=replaceParams)
         self.writeLog(url, json.dumps(replaceParams), response.content.decode())
 
         # case2 replace the set with empty value
         replaceParams["setValue"] = []
-        response = requests.post(url, json=replaceParams)
+        response = requests.put(url, json=replaceParams)
         self.writeLog(url, json.dumps(replaceParams), response.content.decode())
 
         # case3 unknown database name
         replaceParams["dbName"] = "db999"
-        response = requests.post(url, json=replaceParams)
+        response = requests.put(url, json=replaceParams)
         self.writeLog(url, json.dumps(replaceParams), response.content.decode())
 
         # case4 unknown set name
@@ -534,7 +548,7 @@ class setTest:
             "setName": "set123",
             "setValue": "1"
         }
-        response = requests.post(url, json=replaceParams)
+        response = requests.put(url, json=replaceParams)
         self.writeLog(url, json.dumps(replaceParams), response.content.decode())
 
         # case5 error url
@@ -544,7 +558,7 @@ class setTest:
             "setName": "set1",
             "setValue": "1"
         }
-        response = requests.post(errorUrl, json=replaceParams)
+        response = requests.put(errorUrl, json=replaceParams)
         self.writeLog(errorUrl, json.dumps(replaceParams), response.content.decode())
 
     def setTTLTest(self):
@@ -669,16 +683,16 @@ if __name__ == "__main__":
     #test.searchSetTest()
 
     # testing union set function
-    test.unionSetTest()
+    # test.unionSetTest()
 
     # testing intersect set function
-    #test.intersectSetTest()
+    # test.intersectSetTest()
 
     # testing diff set function
-    #test.diffSetTest()
+    # test.diffSetTest()
 
     # testing replace set function
-    #test.replaceSetTest()
+    test.replaceSetTest()
 
     # testing set ttl function
     #test.setTTLTest()

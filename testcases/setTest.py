@@ -562,34 +562,49 @@ class setTest:
         self.writeLog(errorUrl, json.dumps(replaceParams), response.content.decode())
 
     def setTTLTest(self):
-        url = "http://" + self.host + ":" + str(self.port) + "/setSetTTL/{}/{}/{}"
+        url = "http://" + self.host + ":" + str(self.port) + "/setTTL"
 
         # case1 create a set, set ttl
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "set1"))
-        response = requests.get(url.format("db0","set1",20))
-        self.writeLog(url.format("db0","set1",20), "", response.content.decode())
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeSet"
+        params = {
+            "dbName": "db0",
+            "setName": "set1"
+        }
+        response = requests.post(url=createUrl, json=params)
+        ttlParams = {
+            "dataType": "SET",
+            "dbName": "db0",
+            "keyName": "set1",
+            "ttl": 20
+        }
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case2 set ttl repeatedly
-        response = requests.get(url.format("db0", "set1", 20))
-        self.writeLog(url.format("db0", "set1", 20), "", response.content.decode())
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db999", "set1", 20))
-        self.writeLog(url.format("db999", "set1", 20), "", response.content.decode())
+        ttlParams["dbName"] = "db999"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case4 unknown set name
-        response = requests.get(url.format("db0", "set123", 20))
-        self.writeLog(url.format("db0", "set123", 20), "", response.content.decode())
+        ttlParams["dbName"] = "db0"
+        ttlParams["keyName"] = "set123"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case5 ttl is not INT type
-        response = requests.get(url.format("db0", "set1", "hello"))
-        self.writeLog(url.format("db0", "set1", "hello"), "", response.content.decode())
+        ttlParams["keyName"] = "set1"
+        ttlParams["ttl"] = "hello"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setSetttl/{}/{}/{}"
-        response = requests.get(errorUrl.format("db0", "set1", 20))
-        self.writeLog(errorUrl.format("db0", "set1", 20), "", response.content.decode())
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setttl/{}/{}/{}"
+        response = requests.post(url=errorUrl, json=ttlParams)
+        self.writeLog(errorUrl, json.dumps(ttlParams), response.content.decode())
 
     def clearTTLTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/clearSetTTL/{}/{}"
@@ -692,10 +707,10 @@ if __name__ == "__main__":
     # test.diffSetTest()
 
     # testing replace set function
-    test.replaceSetTest()
+    # test.replaceSetTest()
 
     # testing set ttl function
-    #test.setTTLTest()
+    test.setTTLTest()
 
     # testing clear ttl function
     #test.clearTTLTest()

@@ -57,14 +57,14 @@ class TTLTool(object):
                     self.database.lock(dataType, dbName, keyName)
                     try:
                         ttlDict[dbName].pop(keyName)
+                        self.database.logger.info("{} TTL Clear Success {}->{}".
+                                                  format(dataType, dbName, keyName))
+                        self.database.opCount += 1
+                        code, result = responseCode.TTL_CLEAR_SUCCESS, keyName
                     except:
                         code, result = responseCode.NOT_SET_TTL, keyName
                     finally:
                         self.database.unlock(dataType, dbName, keyName)
-                    self.database.logger.info("{} TTL Clear Success {}->{}".
-                                              format(dataType, dbName, keyName))
-                    self.database.opCount += 1
-                    code, result = responseCode.TTL_CLEAR_SUCCESS, keyName
             except:
                 code, result = responseCode.KEY_NAME_INVALID, keyName
 

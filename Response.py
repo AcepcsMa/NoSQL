@@ -266,5 +266,6 @@ class responseCode:
         ZSET_GET_SCORE_SUCCESS:"Get Score Success",
         ZSET_GET_VALUES_SUCCESS:"Get Value Success",
         ZSET_GET_RANK_SUCCESS: "ZSet Get Rank Success",
-        TTL_CLEAR_SUCCESS: "TTL Clear Success"
+        TTL_CLEAR_SUCCESS: "TTL Clear Success",
+        NOT_SET_TTL: "TTL Is Not Set"
     }

@@ -558,18 +558,18 @@ class NoSqlDb(object):
 
     @saveTrigger
     @passwordCheck
-    def insertHash(self, dbName, hashName, keyName, value, password=None):
-        if self.hashLockDict[dbName][hashName] is True:
+    def insertHash(self, dbName, keyName, key, value, password=None):
+        if self.hashLockDict[dbName][keyName] is True:
             self.logger.warning("Hash Is Locked "
-                                "{}->{}".format(dbName, hashName))
+                                "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
-            self.lock("HASH", dbName, hashName)
-            self.hashDict[dbName][hashName][keyName] = value
-            self.unlock("HASH", dbName, hashName)
+            self.lock("HASH", dbName, keyName)
+            self.hashDict[dbName][keyName][key] = value
+            self.unlock("HASH", dbName, keyName)
             self.logger.info("Hash Insert Success "
                              "{}->{} {}:{}".
-                             format(dbName, hashName, keyName, value))
+                             format(dbName, keyName, key, value))
             return responseCode.HASH_INSERT_SUCCESS
 
     @passwordCheck

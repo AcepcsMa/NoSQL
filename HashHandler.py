@@ -92,7 +92,7 @@ class HashHandler(object):
     # insert a key-value data into the given hash
     @validTypeCheck
     def insertHash(self, dbName, keyName, key, value, password=None):
-        if Utils.isValidType(keyName) is False:
+        if Utils.isValidType(keyName, key) is False:
             return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
                                      responseCode.ELEM_TYPE_ERROR,
                                      keyName)

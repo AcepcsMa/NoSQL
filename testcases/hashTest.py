@@ -121,8 +121,8 @@ class hashTest:
             "keyName":"key1",
             "value":123
         }
-        response = requests.post(url,json=insertParams)
-        self.writeLog(url,json.dumps(insertParams),response.content.decode())
+        response = requests.put(url,json=insertParams)
+        self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case2 unknown database name
         insertParams = {
@@ -131,8 +131,8 @@ class hashTest:
             "keyName":"key1",
             "value":123
         }
-        response = requests.post(url,json=insertParams)
-        self.writeLog(url,json.dumps(insertParams),response.content.decode())
+        response = requests.put(url, json=insertParams)
+        self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case3 unknown hash name
         insertParams = {
@@ -141,8 +141,8 @@ class hashTest:
             "keyName":"key1",
             "value":123
         }
-        response = requests.post(url,json=insertParams)
-        self.writeLog(url,json.dumps(insertParams),response.content.decode())
+        response = requests.put(url, json=insertParams)
+        self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case4 error database name type
         insertParams = {
@@ -151,8 +151,8 @@ class hashTest:
             "keyName":"key1",
             "value":123
         }
-        response = requests.post(url,json=insertParams)
-        self.writeLog(url,json.dumps(insertParams),response.content.decode())
+        response = requests.put(url, json=insertParams)
+        self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case5 error hash name type
         insertParams = {
@@ -161,8 +161,8 @@ class hashTest:
             "keyName":"key1",
             "value":123
         }
-        response = requests.post(url,json=insertParams)
-        self.writeLog(url,json.dumps(insertParams),response.content.decode())
+        response = requests.put(url,json=insertParams)
+        self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case6 insert an existed key
         insertParams = {
@@ -171,8 +171,8 @@ class hashTest:
             "keyName":"key1",
             "value":789
         }
-        response = requests.post(url,json=insertParams)
-        self.writeLog(url,json.dumps(insertParams),response.content.decode())
+        response = requests.put(url,json=insertParams)
+        self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case7 error key name type
         insertParams = {
@@ -181,8 +181,8 @@ class hashTest:
             "keyName":[7,8,9],
             "value":123
         }
-        response = requests.post(url,json=insertParams)
-        self.writeLog(url,json.dumps(insertParams),response.content.decode())
+        response = requests.put(url,json=insertParams)
+        self.writeLog(url, json.dumps(insertParams), response.content.decode())
 
         # case8 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/inserthash"
@@ -192,8 +192,8 @@ class hashTest:
             "keyName":"key1",
             "value":123
         }
-        response = requests.post(errorUrl,json=insertParams)
-        self.writeLog(errorUrl,json.dumps(insertParams),response.content.decode())
+        response = requests.put(errorUrl,json=insertParams)
+        self.writeLog(errorUrl, json.dumps(insertParams), response.content.decode())
 
     def deleteHashTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/deleteHash/{0}/{1}"
@@ -856,7 +856,7 @@ if __name__ == "__main__":
     #test.getHashTest()
 
     # testing insert hash function
-    #test.insertHashTest()
+    test.insertHashTest()
 
     # testing delete hash function
     #test.deleteHashTest()

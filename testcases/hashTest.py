@@ -205,25 +205,25 @@ class hashTest:
             "hashName": "hash1"
         }
         response = requests.post(createUrl, json=params)
-        response = requests.get(url.format("db0","hash1"))
-        self.writeLog(url.format("db0","hash1"),"",response.content.decode())
+        response = requests.delete(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
 
         # case2 delete a hash repeatedly
-        response = requests.get(url.format("db0","hash1"))
-        self.writeLog(url.format("db0","hash1"),"",response.content.decode())
+        response = requests.delete(url.format("db0", "hash1"))
+        self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db123","hash1"))
-        self.writeLog(url.format("db123","hash1"),"",response.content.decode())
+        response = requests.delete(url.format("db123", "hash1"))
+        self.writeLog(url.format("db123", "hash1"), "", response.content.decode())
 
         # case4 unknown hash name
-        response = requests.get(url.format("db0","hash999"))
-        self.writeLog(url.format("db0","hash999"),"",response.content.decode())
+        response = requests.delete(url.format("db0", "hash999"))
+        self.writeLog(url.format("db0","hash999"), "", response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/deletehash/{0}/{1}"
-        response = requests.get(errorUrl.format("db0","hash999"))
-        self.writeLog(errorUrl.format("db0","hash999"),"",response.content.decode())
+        response = requests.get(errorUrl.format("db0", "hash999"))
+        self.writeLog(errorUrl.format("db0", "hash999"), "", response.content.decode())
 
     def rmFromHashTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/rmFromHash"
@@ -247,9 +247,9 @@ class hashTest:
             "keyName":"key1"
         }
         response = requests.post(createUrl, json=params)
-        response = requests.post(insertUrl, json=insertParams)
-        response = requests.post(url, json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(insertUrl, json=insertParams)
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case2 remove the same key repeatedly
         removeParams = {
@@ -257,8 +257,8 @@ class hashTest:
             "hashName": "hash1",
             "keyName": "key1"
         }
-        response = requests.post(url, json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case3 unknown database name
         removeParams = {
@@ -266,8 +266,8 @@ class hashTest:
             "hashName": "hash1",
             "keyName": "key1"
         }
-        response = requests.post(url, json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case4 unknown hash name
         removeParams = {
@@ -275,8 +275,8 @@ class hashTest:
             "hashName": "hash123",
             "keyName": "key1"
         }
-        response = requests.post(url, json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case5 unknown key name
         removeParams = {
@@ -284,8 +284,8 @@ class hashTest:
             "hashName": "hash1",
             "keyName": "key2"
         }
-        response = requests.post(url, json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case6 error database name type
         removeParams = {
@@ -293,8 +293,8 @@ class hashTest:
             "hashName": "hash1",
             "keyName": "key1"
         }
-        response = requests.post(url, json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case7 error hash name type
         removeParams = {
@@ -302,8 +302,8 @@ class hashTest:
             "hashName": [4,5,6],
             "keyName": "key1"
         }
-        response = requests.post(url, json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case8 error key name type
         removeParams = {
@@ -311,8 +311,8 @@ class hashTest:
             "hashName": "hash1",
             "keyName": [7,8,9]
         }
-        response = requests.post(url, json=removeParams)
-        self.writeLog(url,json.dumps(removeParams),response.content.decode())
+        response = requests.put(url, json=removeParams)
+        self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case9 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/rmfromhash"
@@ -321,8 +321,8 @@ class hashTest:
             "hashName": "hash1",
             "keyName": "key1"
         }
-        response = requests.post(errorUrl, json=removeParams)
-        self.writeLog(errorUrl,json.dumps(removeParams),response.content.decode())
+        response = requests.put(errorUrl, json=removeParams)
+        self.writeLog(errorUrl, json.dumps(removeParams), response.content.decode())
 
     def clearHashTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/clearHash/{}/{}"
@@ -856,13 +856,13 @@ if __name__ == "__main__":
     #test.getHashTest()
 
     # testing insert hash function
-    test.insertHashTest()
+    # test.insertHashTest()
 
     # testing delete hash function
-    #test.deleteHashTest()
+    # test.deleteHashTest()
 
     # testing remove from hash function
-    #test.rmFromHashTest()
+    test.rmFromHashTest()
 
     # testing clear hash function
     #test.clearHashTest()

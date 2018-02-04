@@ -146,7 +146,8 @@ class HashHandler(object):
     # remove a key-value data from the given hash
     @validTypeCheck
     def rmFromHash(self, dbName, keyName, key, password=None):
-        if self.database.isKeyExist(dbName, keyName, key):
+        if self.database.isKeyExist(dbName=dbName, keyName=keyName,
+                                    key=key, password=password):
             if self.database.isExpired("HASH", dbName, keyName) is False:
                 code = self.database.rmFromHash(dbName=dbName, keyName=keyName,
                                                 key=key, password=password)

@@ -267,5 +267,6 @@ class responseCode:
         ZSET_GET_VALUES_SUCCESS:"Get Value Success",
         ZSET_GET_RANK_SUCCESS: "ZSet Get Rank Success",
         TTL_CLEAR_SUCCESS: "TTL Clear Success",
-        NOT_SET_TTL: "TTL Is Not Set"
+        NOT_SET_TTL: "TTL Is Not Set",
+        HASH_KEY_NOT_EXIST: "Hash Key Does Not Exist"
     }

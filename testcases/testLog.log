@@ -1,0 +1,88 @@
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmFromHash
+PARAMS: {"dbName": "db0", "hashName": "hash1", "keyName": "key1"}
+RESPONSE: {
+  "data": "key1", 
+  "msg": "Hash Remove Success", 
+  "typeCode": 39
+}
+
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmFromHash
+PARAMS: {"dbName": "db0", "hashName": "hash1", "keyName": "key1"}
+RESPONSE: {
+  "data": "key1", 
+  "msg": "Hash Key Does Not Exist", 
+  "typeCode": 36
+}
+
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmFromHash
+PARAMS: {"dbName": "db999", "hashName": "hash1", "keyName": "key1"}
+RESPONSE: {
+  "data": "key1", 
+  "msg": "Hash Key Does Not Exist", 
+  "typeCode": 36
+}
+
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmFromHash
+PARAMS: {"dbName": "db0", "hashName": "hash123", "keyName": "key1"}
+RESPONSE: {
+  "data": "key1", 
+  "msg": "Hash Key Does Not Exist", 
+  "typeCode": 36
+}
+
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmFromHash
+PARAMS: {"dbName": "db0", "hashName": "hash1", "keyName": "key2"}
+RESPONSE: {
+  "data": "key2", 
+  "msg": "Hash Key Does Not Exist", 
+  "typeCode": 36
+}
+
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmFromHash
+PARAMS: {"dbName": [1, 2, 3], "hashName": "hash1", "keyName": "key1"}
+RESPONSE: {
+  "data": "hash1", 
+  "msg": "Element Type Error", 
+  "typeCode": 0
+}
+
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmFromHash
+PARAMS: {"dbName": "db0", "hashName": [4, 5, 6], "keyName": "key1"}
+RESPONSE: {
+  "data": [
+    4, 
+    5, 
+    6
+  ], 
+  "msg": "Element Type Error", 
+  "typeCode": 0
+}
+
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmFromHash
+PARAMS: {"dbName": "db0", "hashName": "hash1", "keyName": [7, 8, 9]}
+RESPONSE: {
+  "data": [
+    7, 
+    8, 
+    9
+  ], 
+  "msg": "Hash Key Does Not Exist", 
+  "typeCode": 36
+}
+
+DATE: 2018/02/04 12:51:10
+URL: http://localhost:3080/rmfromhash
+PARAMS: {"dbName": "db0", "hashName": "hash1", "keyName": "key1"}
+RESPONSE: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>
+

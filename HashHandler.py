@@ -183,6 +183,8 @@ class HashHandler(object):
     def replaceHash(self, dbName, keyName, value, password=None):
         if Utils.isDict(value) is False :
             code = responseCode.ELEM_TYPE_ERROR
+        elif not self.database.isDbExist(dbName=dbName):
+            code = responseCode.DB_NOT_EXIST
         else:
             if self.database.isExist("HASH", dbName, keyName) is True:
                 if self.database.isExpired("HASH", dbName, keyName) is False:

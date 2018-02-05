@@ -537,7 +537,7 @@ def rmFromHash():
                                   key=keyName, password=password)
     return flask.jsonify(result)
 
-@app.route("/clearHash/<string:dbName>/<string:hashName>", methods=["GET"])
+@app.route("/clearHash/<string:dbName>/<string:hashName>", methods=["PUT"])
 def clearHash(dbName, hashName):
     myHandler = HashHandler(database)
     try:

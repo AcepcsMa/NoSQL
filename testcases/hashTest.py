@@ -341,25 +341,25 @@ class hashTest:
             "value": 123
         }
         response = requests.post(createUrl, json=params)
-        response = requests.post(insertUrl, json=insertParams)
-        response = requests.get(url.format("db0","hash1"))
+        response = requests.put(insertUrl, json=insertParams)
+        response = requests.put(url.format("db0", "hash1"))
         self.writeLog(url.format("db0","hash1"), "", response.content.decode())
 
         # case2 clear an empty hash
-        response = requests.get(url.format("db0", "hash1"))
+        response = requests.put(url.format("db0", "hash1"))
         self.writeLog(url.format("db0", "hash1"), "", response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db999", "hash1"))
+        response = requests.put(url.format("db999", "hash1"))
         self.writeLog(url.format("db999", "hash1"), "", response.content.decode())
 
         # case4 unknown hash name
-        response = requests.get(url.format("db0", "hash123"))
+        response = requests.put(url.format("db0", "hash123"))
         self.writeLog(url.format("db0", "hash123"), "", response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearhash/{}/{}"
-        response = requests.get(errorUrl.format("db0","hash1"))
+        response = requests.put(errorUrl.format("db0","hash1"))
         self.writeLog(errorUrl.format("db0","hash1"), "", response.content.decode())
 
     def replaceHashTest(self):
@@ -381,8 +381,8 @@ class hashTest:
                 "key3":3
             }
         }
-        response = requests.post(url,json=replaceParams)
-        self.writeLog(url,json.dumps(replaceParams),response.content.decode())
+        response = requests.put(url,json=replaceParams)
+        self.writeLog(url, json.dumps(replaceParams), response.content.decode())
 
         # case2 error element type
         replaceParams = {
@@ -390,7 +390,7 @@ class hashTest:
             "hashName": "hash1",
             "hashValue": [1,2,3]
         }
-        response = requests.post(url, json=replaceParams)
+        response = requests.put(url, json=replaceParams)
         self.writeLog(url, json.dumps(replaceParams), response.content.decode())
 
         # case3 unknown database name
@@ -403,7 +403,7 @@ class hashTest:
                 "key3": 3
             }
         }
-        response = requests.post(url, json=replaceParams)
+        response = requests.put(url, json=replaceParams)
         self.writeLog(url, json.dumps(replaceParams), response.content.decode())
 
         # case4 unknown hash name
@@ -416,12 +416,12 @@ class hashTest:
                 "key3": 3
             }
         }
-        response = requests.post(url, json=replaceParams)
+        response = requests.put(url, json=replaceParams)
         self.writeLog(url, json.dumps(replaceParams), response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/replacehash"
-        response = requests.post(errorUrl, json=replaceParams)
+        response = requests.put(errorUrl, json=replaceParams)
         self.writeLog(errorUrl, json.dumps(replaceParams), response.content.decode())
 
     def mergeHashTest(self):
@@ -862,13 +862,13 @@ if __name__ == "__main__":
     # test.deleteHashTest()
 
     # testing remove from hash function
-    test.rmFromHashTest()
+    # test.rmFromHashTest()
 
     # testing clear hash function
-    #test.clearHashTest()
+    # test.clearHashTest()
 
     # testing replace hash function
-    #test.replaceHashTest()
+    test.replaceHashTest()
 
     # testing merge hashs function
     #test.mergeHashTest()

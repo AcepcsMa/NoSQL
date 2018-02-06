@@ -220,7 +220,7 @@ class HashHandler(object):
                 code = self.database.mergeHashs(dbName=dbName, keyName1=keyName1,
                                                 keyName2=keyName2, resultKeyName=resultKeyName,
                                                 mergeMode=mergeMode, password=password)
-                result = resultKeyName
+                result = resultKeyName if resultKeyName is not None else (keyName1 if mergeMode == 0 else keyName2)
             else:
                 code, result = responseCode.HASH_EXPIRED, "{} or {}".format(keyName1, keyName2)
         else:

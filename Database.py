@@ -655,7 +655,7 @@ class NoSqlDb(object):
         otherDictName = keyName2 if mergeMode == 0 else keyName1
 
         if resultKeyName is not None:
-            self.createHash(dbName, resultKeyName)
+            self.createHash(dbName=dbName, keyName=resultKeyName, password=password)
             self.lock("HASH", dbName, resultKeyName)
             baseKeys = self.hashDict[dbName][baseDictName].keys()
             otherKeys = self.hashDict[dbName][otherDictName].keys()
@@ -676,6 +676,7 @@ class NoSqlDb(object):
                 for key in otherKeys:
                     if key not in baseKeys:
                         self.hashDict[dbName][baseDictName][key] = self.hashDict[dbName][otherDictName][key]
+                self.unlock("HASH", dbName, baseDictName)
                 self.logger.info("Hash Merge Success "
                                  "{} merges {} -> {}".
                                  format(keyName1, keyName2, keyName1))

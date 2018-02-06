@@ -17,7 +17,7 @@ class Utils(object):
     @staticmethod
     def isValidType(*elems):
         for elem in elems:
-            if isinstance(elem, str) is False and isinstance(elem, int) is False:
+            if elem is not None and not isinstance(elem, str) and not isinstance(elem, int):
                 return False
         return True
 

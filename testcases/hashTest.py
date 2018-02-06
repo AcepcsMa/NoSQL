@@ -430,25 +430,24 @@ class hashTest:
         # case1 create two hashs and then merge into a third hash
         createUrl = "http://" + self.host + ":" + str(self.port) + "/makeHash"
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertHash"
-
         params = {
             "dbName": "db0",
             "hashName": "hash1"
         }
-        response = requests.post(createUrl, json=params)
-        params["hashName"] = "hash2"
-        response = requests.post(createUrl, json=params)
-
-        insertParmas = {
+        insertParams = {
             "dbName": "db0",
             "hashName": "hash1",
             "keyName": "key1",
-            "value":1
+            "value": 123
         }
-        response = requests.post(insertUrl, json=params)
+        response = requests.post(createUrl, json=params)
+        response = requests.put(insertUrl, json=insertParams)
+
         params["hashName"] = "hash2"
-        params["keyName"] = "key2"
-        response = requests.post(insertUrl, json=params)
+        response = requests.post(createUrl, json=params)
+        insertParams["hashName"] = "hash2"
+        insertParams["keyName"] = "key2"
+        response = requests.put(insertUrl, json=params)
 
         mergeParams = {
             "dbName":"db0",
@@ -457,12 +456,12 @@ class hashTest:
             "resultHash":"mergeResult",
             "mode":0
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url, json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case2 merge result hash already exists
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url,json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case3 merge into the first hash
         mergeParams = {
@@ -472,8 +471,8 @@ class hashTest:
             "resultHash": "",
             "mode": 0
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url, json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case4 unknown database name
         mergeParams = {
@@ -483,8 +482,8 @@ class hashTest:
             "resultHash": "mergeResult",
             "mode": 0
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url, json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case5 unknown hash name
         mergeParams = {
@@ -494,8 +493,8 @@ class hashTest:
             "resultHash": "mergeResult",
             "mode": 0
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url, json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case6 error database name type
         mergeParams = {
@@ -505,8 +504,8 @@ class hashTest:
             "resultHash": "mergeResult",
             "mode": 0
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url, json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case7 error hash name type
         mergeParams = {
@@ -516,13 +515,13 @@ class hashTest:
             "resultHash": "mergeResult",
             "mode": 0
         }
-        response = requests.post(url,json=mergeParams)
-        self.writeLog(url,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(url, json=mergeParams)
+        self.writeLog(url, json.dumps(mergeParams), response.content.decode())
 
         # case8 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/mergehashs"
-        response = requests.post(errorUrl,json=mergeParams)
-        self.writeLog(errorUrl,json.dumps(mergeParams),response.content.decode())
+        response = requests.put(errorUrl, json=mergeParams)
+        self.writeLog(errorUrl, json.dumps(mergeParams), response.content.decode())
 
     def searchHashTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/searchHash/{}/{}"
@@ -868,10 +867,10 @@ if __name__ == "__main__":
     # test.clearHashTest()
 
     # testing replace hash function
-    test.replaceHashTest()
+    # test.replaceHashTest()
 
     # testing merge hashs function
-    #test.mergeHashTest()
+    test.mergeHashTest()
 
     # testing search hash function
     #test.searchHashTest()

@@ -200,12 +200,14 @@ class HashHandler(object):
         return msg
 
     # merge two hashs
-    @validTypeCheck
     def mergeHashs(self, dbName, keyName1, keyName2, resultKeyName=None, mergeMode=0, password=None):
-        if Utils.isValidType(keyName2) is False:
+        if (not Utils.isValidType(keyName1)
+                or not Utils.isValidType(keyName2)
+                or not Utils.isValidType(resultKeyName)
+                or not Utils.isValidType(dbName)):
             return Utils.makeMessage(responseCode.detail[responseCode.ELEM_TYPE_ERROR],
-                                    responseCode.ELEM_TYPE_ERROR,
-                                    keyName2)
+                                     responseCode.ELEM_TYPE_ERROR,
+                                     keyName2)
 
         if resultKeyName is not None:
             if self.database.isExist("HASH", dbName, resultKeyName) is True:
@@ -218,7 +220,7 @@ class HashHandler(object):
                 code = self.database.mergeHashs(dbName=dbName, keyName1=keyName1,
                                                 keyName2=keyName2, resultKeyName=resultKeyName,
                                                 mergeMode=mergeMode, password=password)
-                result = resultKeyName
+                result = resultKeyName if resultKeyName is not None else (keyName1 if mergeMode == 0 else keyName2)
             else:
                 code, result = responseCode.HASH_EXPIRED, "{} or {}".format(keyName1, keyName2)
         else:

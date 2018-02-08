@@ -713,12 +713,12 @@ class hashTest:
             "keyName": "key1",
             "value": 1
         }
-        response = requests.post(insertUrl, json=insertParmas)
-        response = requests.get(url.format("db0", "hash1", "key1"))
+        response = requests.put(insertUrl, json=insertParmas)
+        response = requests.put(url.format("db0", "hash1", "key1"))
         self.writeLog(url.format("db0", "hash1", "key1"), "", response.content.decode())
 
         # case2 increase non-existed key
-        response = requests.get(url.format("db0", "hash1", "key2"))
+        response = requests.put(url.format("db0", "hash1", "key2"))
         self.writeLog(url.format("db0", "hash1", "key2"), "", response.content.decode())
 
         # case3 increase non-int key
@@ -728,21 +728,21 @@ class hashTest:
             "keyName": "key3",
             "value": "1"
         }
-        response = requests.post(insertUrl, json=insertParmas)
-        response = requests.get(url.format("db0", "hash1", "key3"))
+        response = requests.put(insertUrl, json=insertParmas)
+        response = requests.put(url.format("db0", "hash1", "key3"))
         self.writeLog(url.format("db0", "hash1", "key3"), "", response.content.decode())
 
         # case4 unknown database name
-        response = requests.get(url.format("db999", "hash1", "key2"))
+        response = requests.put(url.format("db999", "hash1", "key2"))
         self.writeLog(url.format("db0", "hash1", "key2"), "", response.content.decode())
 
         # case5 unknown hash name
-        response = requests.get(url.format("db0", "hash2", "key2"))
+        response = requests.put(url.format("db0", "hash2", "key2"))
         self.writeLog(url.format("db0", "hash2", "key2"), "", response.content.decode())
 
         # error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/increasehash/{}/{}/{}"
-        response = requests.get(errorUrl.format("db0", "hash1", "key1"))
+        response = requests.put(errorUrl.format("db0", "hash1", "key1"))
         self.writeLog(errorUrl.format("db0", "hash1", "key1"), "", response.content.decode())
 
     def decreaseTest(self):
@@ -762,12 +762,12 @@ class hashTest:
             "keyName": "key1",
             "value": 1
         }
-        response = requests.post(insertUrl, json=insertParmas)
-        response = requests.get(url.format("db0", "hash1", "key1"))
+        response = requests.put(insertUrl, json=insertParmas)
+        response = requests.put(url.format("db0", "hash1", "key1"))
         self.writeLog(url.format("db0", "hash1", "key1"), "", response.content.decode())
 
         # case2 decrease non-existed key
-        response = requests.get(url.format("db0", "hash1", "key2"))
+        response = requests.put(url.format("db0", "hash1", "key2"))
         self.writeLog(url.format("db0", "hash1", "key2"), "", response.content.decode())
 
         # case3 decrease non-int key
@@ -777,21 +777,21 @@ class hashTest:
             "keyName": "key3",
             "value": "1"
         }
-        response = requests.post(insertUrl, json=insertParmas)
-        response = requests.get(url.format("db0", "hash1", "key3"))
+        response = requests.put(insertUrl, json=insertParmas)
+        response = requests.put(url.format("db0", "hash1", "key3"))
         self.writeLog(url.format("db0", "hash1", "key3"), "", response.content.decode())
 
         # case4 unknown database name
-        response = requests.get(url.format("db999", "hash1", "key2"))
+        response = requests.put(url.format("db999", "hash1", "key2"))
         self.writeLog(url.format("db0", "hash1", "key2"), "", response.content.decode())
 
         # case5 unknown hash name
-        response = requests.get(url.format("db0", "hash2", "key2"))
+        response = requests.put(url.format("db0", "hash2", "key2"))
         self.writeLog(url.format("db0", "hash2", "key2"), "", response.content.decode())
 
         # error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/decreasehash/{}/{}/{}"
-        response = requests.get(errorUrl.format("db0", "hash1", "key1"))
+        response = requests.put(errorUrl.format("db0", "hash1", "key1"))
         self.writeLog(errorUrl.format("db0", "hash1", "key1"), "", response.content.decode())
 
     def getKeySetTest(self):
@@ -906,16 +906,16 @@ if __name__ == "__main__":
     # test.setTTLTest()
 
     # testing clear ttl function
-    test.clearTTLTest()
+    # test.clearTTLTest()
 
     # testing get size function
     #test.getSizeTest()
 
     # testing increase hash function
-    #test.increaseTest()
+    # test.increaseTest()
 
     # testing decrease hash function
-    #test.decreaseTest()
+    test.decreaseTest()
 
     # testing get key set function
     #test.getKeySetTest()

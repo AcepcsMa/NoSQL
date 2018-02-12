@@ -17,7 +17,9 @@ class ZSetHandler(object):
                                    dbName)
 
         if self.database.isExist("ZSET", dbName, keyName) is False:
-            code = self.database.createZSet(dbName, keyName)
+            code = self.database.createZSet(dbName=dbName,
+                                            keyName=keyName,
+                                            password=password)
         else:
             code = responseCode.ZSET_ALREADY_EXIST
         msg = Utils.makeMessage(responseCode.detail[code],

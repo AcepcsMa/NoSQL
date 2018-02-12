@@ -915,7 +915,7 @@ if __name__ == "__main__":
     # test.increaseTest()
 
     # testing decrease hash function
-    test.decreaseTest()
+    # test.decreaseTest()
 
     # testing get key set function
     #test.getKeySetTest()

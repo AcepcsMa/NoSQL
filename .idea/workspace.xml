@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="20bbb43c-7099-4893-bcce-5033b2e601a2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HashHandler.py" afterPath="$PROJECT_DIR$/HashHandler.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ZSetHandler.py" afterPath="$PROJECT_DIR$/ZSetHandler.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcases/hashTest.py" afterPath="$PROJECT_DIR$/testcases/hashTest.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcases/zsetTest.py" afterPath="$PROJECT_DIR$/testcases/zsetTest.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,8 +23,8 @@
       <file leaf-file-name="Server.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="284">
-              <caret line="624" column="22" lean-forward="false" selection-start-line="624" selection-start-column="13" selection-end-line="624" selection-end-column="22" />
+            <state relative-caret-position="-479">
+              <caret line="846" column="0" lean-forward="false" selection-start-line="846" selection-start-column="0" selection-end-line="846" selection-end-column="0" />
               <folding>
                 <element signature="e#37#49#0" expanded="true" />
               </folding>
@@ -31,11 +32,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hashTest.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/testcases/hashTest.py">
+      <file leaf-file-name="zsetTest.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/testcases/zsetTest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="524">
-              <caret line="917" column="23" lean-forward="false" selection-start-line="917" selection-start-column="0" selection-end-line="918" selection-end-column="0" />
+            <state relative-caret-position="217">
+              <caret line="676" column="0" lean-forward="true" selection-start-line="676" selection-start-column="0" selection-end-line="676" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ZSetHandler.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ZSetHandler.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="244">
+              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -54,7 +65,7 @@
       <file leaf-file-name="Response.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Response.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="616">
+            <state relative-caret-position="6210">
               <caret line="270" column="26" lean-forward="false" selection-start-line="270" selection-start-column="8" selection-end-line="270" selection-end-column="26" />
               <folding />
             </state>
@@ -64,7 +75,7 @@
       <file leaf-file-name="HashHandler.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HashHandler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="547">
+            <state relative-caret-position="6969">
               <caret line="304" column="101" lean-forward="false" selection-start-line="304" selection-start-column="101" selection-end-line="304" selection-end-column="101" />
               <folding />
             </state>
@@ -74,8 +85,8 @@
       <file leaf-file-name="Database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="699" column="8" lean-forward="false" selection-start-line="699" selection-start-column="8" selection-end-line="699" selection-end-column="8" />
+            <state relative-caret-position="366">
+              <caret line="909" column="8" lean-forward="false" selection-start-line="909" selection-start-column="8" selection-end-line="909" selection-end-column="8" />
               <folding>
                 <element signature="e#37#46#0" expanded="true" />
               </folding>
@@ -86,7 +97,7 @@
       <file leaf-file-name="Utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
+            <state relative-caret-position="437">
               <caret line="19" column="91" lean-forward="false" selection-start-line="19" selection-start-column="91" selection-end-line="19" selection-end-column="91" />
               <folding />
             </state>
@@ -104,8 +115,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>validTypeCheck</find>
-      <find>GET_SCORE</find>
       <find>ZSET_GET_VALUES_SUCCESS</find>
       <find>GET_RANK</find>
       <find>password&quot;: None</find>
@@ -134,6 +143,8 @@
       <find>increaseH</find>
       <find>KEY</find>
       <find>HASH_KEY_NOT_EXIST</find>
+      <find>rmFromSet</find>
+      <find>makeZSet</find>
     </findStrings>
     <replaceStrings>
       <replace>self.database.isExpired(dbName, elemName, &quot;ELEM&quot;)</replace>
@@ -187,7 +198,6 @@
         <option value="$PROJECT_DIR$/testcases/test.conf" />
         <option value="$PROJECT_DIR$/decorator.py" />
         <option value="$PROJECT_DIR$/zset.py" />
-        <option value="$PROJECT_DIR$/testcases/zsetTest.py" />
         <option value="$PROJECT_DIR$/zsetHandler.py" />
         <option value="$PROJECT_DIR$/data/db0/setName.txt" />
         <option value="$PROJECT_DIR$/data/db0/setTTL.txt" />
@@ -211,7 +221,6 @@
         <option value="$PROJECT_DIR$/Decorator.py" />
         <option value="$PROJECT_DIR$/SetHandler.py" />
         <option value="$PROJECT_DIR$/ListHandler.py" />
-        <option value="$PROJECT_DIR$/ZSetHandler.py" />
         <option value="$PROJECT_DIR$/Timer.py" />
         <option value="$PROJECT_DIR$/ElemHandler.py" />
         <option value="$PROJECT_DIR$/testcases/elemTest.py" />
@@ -225,6 +234,8 @@
         <option value="$PROJECT_DIR$/Database.py" />
         <option value="$PROJECT_DIR$/HashHandler.py" />
         <option value="$PROJECT_DIR$/testcases/hashTest.py" />
+        <option value="$PROJECT_DIR$/ZSetHandler.py" />
+        <option value="$PROJECT_DIR$/testcases/zsetTest.py" />
         <option value="$PROJECT_DIR$/testcases/testLog.log" />
       </list>
     </option>
@@ -250,7 +261,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -279,6 +289,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -299,7 +310,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.hashTest">
+  <component name="RunManager" selected="Python.zsetTest">
     <configuration default="false" name="server" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -336,24 +347,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="elemTest" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testcases" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="NoSQL" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testcases/elemTest.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="setTest" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -385,6 +378,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="NoSQL" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testcases/hashTest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="zsetTest" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/testcases" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="NoSQL" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testcases/zsetTest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -457,17 +468,17 @@
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.server" />
       <item index="1" class="java.lang.String" itemvalue="Python.listTest" />
-      <item index="2" class="java.lang.String" itemvalue="Python.elemTest" />
-      <item index="3" class="java.lang.String" itemvalue="Python.setTest" />
-      <item index="4" class="java.lang.String" itemvalue="Python.hashTest" />
+      <item index="2" class="java.lang.String" itemvalue="Python.setTest" />
+      <item index="3" class="java.lang.String" itemvalue="Python.hashTest" />
+      <item index="4" class="java.lang.String" itemvalue="Python.zsetTest" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.hashTest" />
-        <item index="1" class="java.lang.String" itemvalue="Python.server" />
-        <item index="2" class="java.lang.String" itemvalue="Python.setTest" />
-        <item index="3" class="java.lang.String" itemvalue="Python.listTest" />
-        <item index="4" class="java.lang.String" itemvalue="Python.elemTest" />
+        <item index="0" class="java.lang.String" itemvalue="Python.zsetTest" />
+        <item index="1" class="java.lang.String" itemvalue="Python.hashTest" />
+        <item index="2" class="java.lang.String" itemvalue="Python.server" />
+        <item index="3" class="java.lang.String" itemvalue="Python.setTest" />
+        <item index="4" class="java.lang.String" itemvalue="Python.listTest" />
       </list>
     </recent_temporary>
   </component>
@@ -692,13 +703,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/zsetTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="496">
-          <caret line="692" column="4" lean-forward="false" selection-start-line="692" selection-start-column="4" selection-end-line="692" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/db0/setName.txt" />
     <entry file="file://$PROJECT_DIR$/data/db0/setTTL.txt" />
     <entry file="file://$PROJECT_DIR$/data/db0/listTTL.txt" />
@@ -774,13 +778,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ZSetHandler.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ElemHandler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3243">
@@ -824,19 +821,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/setTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="739" column="0" lean-forward="true" selection-start-line="739" selection-start-column="0" selection-end-line="739" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Decorator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
           <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -850,7 +838,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
+        <state relative-caret-position="437">
           <caret line="19" column="91" lean-forward="false" selection-start-line="19" selection-start-column="91" selection-end-line="19" selection-end-column="91" />
           <folding />
         </state>
@@ -860,7 +848,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="127">
           <caret line="237" column="0" lean-forward="false" selection-start-line="237" selection-start-column="0" selection-end-line="237" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -868,7 +855,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="219">
           <caret line="1996" column="0" lean-forward="false" selection-start-line="1996" selection-start-column="0" selection-end-line="1996" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -876,7 +862,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
           <caret line="418" column="0" lean-forward="false" selection-start-line="418" selection-start-column="0" selection-end-line="418" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -884,7 +869,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="127">
           <caret line="231" column="0" lean-forward="false" selection-start-line="231" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -892,7 +876,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="265">
           <caret line="321" column="0" lean-forward="false" selection-start-line="321" selection-start-column="0" selection-end-line="321" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -900,42 +883,65 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
           <caret line="8" column="51" lean-forward="true" selection-start-line="8" selection-start-column="51" selection-end-line="8" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="624" column="22" lean-forward="false" selection-start-line="624" selection-start-column="13" selection-end-line="624" selection-end-column="22" />
-          <folding>
-            <element signature="e#37#49#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Response.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
+        <state relative-caret-position="6210">
           <caret line="270" column="26" lean-forward="false" selection-start-line="270" selection-start-column="8" selection-end-line="270" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HashHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6969">
+          <caret line="304" column="101" lean-forward="false" selection-start-line="304" selection-start-column="101" selection-end-line="304" selection-end-column="101" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/hashTest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="874" column="11" lean-forward="true" selection-start-line="874" selection-start-column="11" selection-end-line="874" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/setTest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1749">
+          <caret line="150" column="0" lean-forward="true" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Database.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="699" column="8" lean-forward="false" selection-start-line="699" selection-start-column="8" selection-end-line="699" selection-end-column="8" />
+        <state relative-caret-position="366">
+          <caret line="909" column="8" lean-forward="false" selection-start-line="909" selection-start-column="8" selection-end-line="909" selection-end-column="8" />
           <folding>
             <element signature="e#37#46#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HashHandler.py">
+    <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="304" column="101" lean-forward="false" selection-start-line="304" selection-start-column="101" selection-end-line="304" selection-end-column="101" />
+        <state relative-caret-position="-479">
+          <caret line="846" column="0" lean-forward="false" selection-start-line="846" selection-start-column="0" selection-end-line="846" selection-end-column="0" />
+          <folding>
+            <element signature="e#37#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ZSetHandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="244">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -948,10 +954,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/hashTest.py">
+    <entry file="file://$PROJECT_DIR$/testcases/zsetTest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="524">
-          <caret line="917" column="23" lean-forward="false" selection-start-line="917" selection-start-column="0" selection-end-line="918" selection-end-column="0" />
+        <state relative-caret-position="217">
+          <caret line="676" column="0" lean-forward="true" selection-start-line="676" selection-start-column="0" selection-end-line="676" selection-end-column="0" />
           <folding />
         </state>
       </provider>

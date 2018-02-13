@@ -146,95 +146,103 @@ class zsetTest:
         url = "http://" + self.host + ":" + str(self.port) + "/rmFromZSet"
 
         # case1 create, insert, then remove
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
-        response = requests.get(createUrl.format("db0", "zset1"))
+        response = requests.post(url=createUrl, json=createParams)
         insertParams = {
             "dbName": "db0",
             "zsetName": "zset1",
             "value": "hello",
             "score": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         removeParams = {
             "dbName":"db0",
             "zsetName":"zset1",
             "value":"hello"
         }
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url=url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case2 remove from an empty set
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url=url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case3 unknown database name
         removeParams["dbName"] = "db999"
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url=url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case4 unknown set name
         removeParams["dbName"] = "db0"
         removeParams["zsetName"] = "zset123"
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url=url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case5 error database name type
         removeParams["dbName"] = [1,2,3]
         removeParams["zsetName"] = "zset1"
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url=url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case6 error set name type
         removeParams["dbName"] = "db0"
         removeParams["zsetName"] = [1,2,3]
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url=url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case7 non-existed set value
         removeParams["dbName"] = "db0"
         removeParams["zsetName"] = "zset1"
         removeParams["value"] = "key"
-        response = requests.post(url, json=removeParams)
+        response = requests.put(url=url, json=removeParams)
         self.writeLog(url, json.dumps(removeParams), response.content.decode())
 
         # case8 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/rmfromzset"
-        response = requests.post(errorUrl, json=removeParams)
+        response = requests.put(url=errorUrl, json=removeParams)
         self.writeLog(errorUrl, json.dumps(removeParams), response.content.decode())
 
     def clearZSetTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/clearZSet/{}/{}"
 
         # case1 create, insert, then clear
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
-        response = requests.get(createUrl.format("db0", "zset1"))
+        response = requests.post(url=createUrl, json=createParams)
         insertParams = {
             "dbName": "db0",
             "zsetName": "zset1",
             "value": "hello",
             "score": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
-        response = requests.get(url.format("db0","zset1"))
+        response = requests.put(url=insertUrl, json=insertParams)
+        response = requests.put(url.format("db0","zset1"))
         self.writeLog(url.format("db0","zset1"), "", response.content.decode())
 
         # case2 clear an empty set
-        response = requests.get(url.format("db0","zset1"))
+        response = requests.put(url.format("db0","zset1"))
         self.writeLog(url.format("db0","zset1"), "", response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db123","zset1"))
+        response = requests.put(url.format("db123","zset1"))
         self.writeLog(url.format("db123","zset1"), "", response.content.decode())
 
         # case4 unknown set name
-        response = requests.get(url.format("db0","zset123"))
+        response = requests.put(url.format("db0","zset123"))
         self.writeLog(url.format("db0","zset123"), "", response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearzset/{}/{}"
-        response = requests.get(errorUrl.format("db0","zset1"))
+        response = requests.put(errorUrl.format("db0","zset1"))
         self.writeLog(errorUrl.format("db0","zset1"), "", response.content.decode())
 
     def deleteSetTest(self):
@@ -676,13 +684,13 @@ if __name__ == "__main__":
     #test.getZSetTest()
 
     # testing insert zset function
-    test.insertZSetTest()
+    # test.insertZSetTest()
 
     # testing remove from zset function
-    #test.rmFromZSetTest()
+    # test.rmFromZSetTest()
 
     # testing clear zset function
-    #test.clearZSetTest()
+    test.clearZSetTest()
 
     # testing delete zset function
     #test.deleteSetTest()

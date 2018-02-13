@@ -249,39 +249,53 @@ class zsetTest:
         url = "http://" + self.host + ":" + str(self.port) + "/deleteZSet/{}/{}"
 
         # case1 create, then delete a set
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
-        response = requests.get(url.format("db0","zset1"))
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
+        response = requests.delete(url.format("db0", "zset1"))
         self.writeLog(url.format("db0","zset1"), "", response.content.decode())
 
         # case2 delete a non-existed set
-        response = requests.get(url.format("db0","zset1"))
+        response = requests.delete(url.format("db0","zset1"))
         self.writeLog(url.format("db0","zset1"), "", response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db789","zset1"))
+        response = requests.delete(url.format("db789","zset1"))
         self.writeLog(url.format("db789","zset1"), "", response.content.decode())
 
         # case4 unknown set name
-        response = requests.get(url.format("db0","zset123"))
+        response = requests.delete(url.format("db0","zset123"))
         self.writeLog(url.format("db0","zset123"), "", response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/deletezset/{}/{}"
-        response = requests.get(errorUrl.format("db0","zset123"))
+        response = requests.delete(errorUrl.format("db0","zset123"))
         self.writeLog(errorUrl.format("db0","zset123"), "", response.content.decode())
 
     def searchZSetTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/searchZSet/{}/{}"
 
         # case1 create several sets, then search
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
-        response = requests.get(createUrl.format("db0", "zs"))
-        response = requests.get(createUrl.format("db0", "z1"))
-        response = requests.get(createUrl.format("db0", "abczs"))
-        response = requests.get(createUrl.format("db0", "set"))
-        response = requests.get(url.format("db0","z*"))
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
+        createParams["zsetName"] = "zs"
+        response = requests.post(url=createUrl, json=createParams)
+        createParams["zsetName"] = "z1"
+        response = requests.post(url=createUrl, json=createParams)
+        createParams["zsetName"] = "abczs"
+        response = requests.post(url=createUrl, json=createParams)
+        createParams["zsetName"] = "set"
+        response = requests.post(url=createUrl, json=createParams)
+        createParams["zsetName"] = "z*"
+        response = requests.post(url=createUrl, json=createParams)
+        response = requests.get(url=url.format("db0", "z*"))
         self.writeLog(url.format("db0","z*"), "", response.content.decode())
 
         # case2 unknown database name
@@ -301,8 +315,13 @@ class zsetTest:
         url = "http://" + self.host + ":" + str(self.port) + "/findMinFromZSet/{}/{}"
 
         # case1 create a zset, insert, then find min
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
+
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
         insertParams = {
             "dbName": "db0",
@@ -310,17 +329,18 @@ class zsetTest:
             "value": "hello",
             "score": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "world"
         insertParams["score"] = 3
-        response = requests.post(insertUrl, json=insertParams)
-        response = requests.get(url.format("db0","zset1"))
-        self.writeLog(url.format("db0","zset1"),"",response.content.decode())
+        response = requests.put(url=insertUrl, json=insertParams)
+        response = requests.get(url.format("db0", "zset1"))
+        self.writeLog(url.format("db0","zset1"), "", response.content.decode())
 
         # case2 find min in an empty zset
-        response = requests.get(createUrl.format("db0", "zset2"))
-        response = requests.get(url.format("db0","zset2"))
-        self.writeLog(url.format("db0","zset2"),"",response.content.decode())
+        createParams["zsetName"] = "zset2"
+        response = requests.post(url=createUrl, json=createParams)
+        response = requests.get(url.format("db0", "zset2"))
+        self.writeLog(url.format("db0","zset2"), "", response.content.decode())
 
         # case3 unknown database name
         response = requests.get(url.format("db123", "zset2"))
@@ -690,16 +710,16 @@ if __name__ == "__main__":
     # test.rmFromZSetTest()
 
     # testing clear zset function
-    test.clearZSetTest()
+    # test.clearZSetTest()
 
     # testing delete zset function
-    #test.deleteSetTest()
+    # test.deleteSetTest()
 
     # testing search zset function
-    #test.searchZSetTest()
+    # test.searchZSetTest()
 
     # testing find min from zset function
-    #test.findMinTest()
+    test.findMinTest()
 
     # testing find max from zset function
     #test.findMaxTest()

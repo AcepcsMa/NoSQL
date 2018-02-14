@@ -439,11 +439,15 @@ class zsetTest:
         self.writeLog(errorUrl.format("db0", "zset1", "hello"), "", response.content.decode())
 
     def getValuesByRangeTest(self):
-        url = "http://" + self.host + ":" + str(self.port) + "/getValuesByRange"
+        url = "http://" + self.host + ":" + str(self.port) + "/getValuesByRange/{}/{}/{}/{}"
 
         # case1 create a zset, insert, then get values by range
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
         insertParams = {
             "dbName": "db0",
@@ -451,57 +455,33 @@ class zsetTest:
             "value": "a",
             "score": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "b"
         insertParams["score"] = 3
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "c"
         insertParams["score"] = 5
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
 
-        getParams = {
-            "dbName": "db0",
-            "zsetName": "zset1",
-            "start": 1,
-            "end": 3
-        }
-        response = requests.post(url,json=getParams)
-        self.writeLog(url, json.dumps(getParams), response.content.decode())
+        response = requests.get(url.format("db0", "zset1", 1, 5))
+        self.writeLog(url.format("db0", "zset1", 1, 5), "", response.content.decode())
 
         # case2 no value is inside the range
-        getParams = {
-            "dbName": "db0",
-            "zsetName": "zset1",
-            "start": 10,
-            "end": 20
-        }
-        response = requests.post(url, json=getParams)
-        self.writeLog(url, json.dumps(getParams), response.content.decode())
+        response = requests.get(url.format("db0", "zset1", 10, 20))
+        self.writeLog(url.format("db0", "zset1", 10, 20), "", response.content.decode())
 
         # case3 unknown database name
-        getParams = {
-            "dbName": "db123",
-            "zsetName": "zset1",
-            "start": 1,
-            "end": 3
-        }
-        response = requests.post(url, json=getParams)
-        self.writeLog(url, json.dumps(getParams), response.content.decode())
+        response = requests.get(url.format("db123", "zset1", 1, 5))
+        self.writeLog(url.format("db123", "zset1", 1, 5), "", response.content.decode())
 
         # case4 unknown zset name
-        getParams = {
-            "dbName": "db0",
-            "zsetName": "zset123",
-            "start": 1,
-            "end": 3
-        }
-        response = requests.post(url, json=getParams)
-        self.writeLog(url, json.dumps(getParams), response.content.decode())
+        response = requests.get(url.format("db0", "zset123", 1, 5))
+        self.writeLog(url.format("db0", "zset123", 1, 5), "", response.content.decode())
 
         # case5 error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/getvaluesbyrange"
-        response = requests.post(errorUrl, json=getParams)
-        self.writeLog(errorUrl, json.dumps(getParams), response.content.decode())
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/getvaluesbyrange/{}/{}/{}/{}"
+        response = requests.get(errorUrl.format("db0", "zset1", 1, 5))
+        self.writeLog(errorUrl.format("db0", "zset1", 1, 5), "", response.content.decode())
 
     def getSizeTest(self):
         url = "http://" + self.host + ":" + str(self.port) + "/getZSetSize/{}/{}"
@@ -738,6 +718,7 @@ if __name__ == "__main__":
     # test.getScoreTest()
 
     # testing get values by range function
+    test.getValuesByRangeTest()
 
     # testing get size function
     # test.getSizeTest()

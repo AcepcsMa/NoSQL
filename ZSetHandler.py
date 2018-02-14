@@ -215,7 +215,7 @@ class ZSetHandler(object):
             code, result = responseCode.ZSET_NOT_EXIST, keyName
         msg = Utils.makeMessage(responseCode.detail[code],
                                 code,
-                                keyName)
+                                result)
         return msg
 
     @validTypeCheck

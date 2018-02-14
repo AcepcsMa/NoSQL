@@ -1023,9 +1023,11 @@ class NoSqlDb(object):
     @passwordCheck
     def getValuesByRange(self, dbName, keyName, start, end, password=None):
         traverseResult = self.zsetDict[dbName][keyName].get()
-        traverseResult = [result for result in traverseResult
-                          if result[1] >= start and result[1] < end]
-        return traverseResult
+        result = dict()
+        for each in traverseResult:
+            if each[1] >= start and each[1] < end:
+                result[each[0]] = each[1]
+        return result
 
     @passwordCheck
     def getSize(self, dbName, keyName, type, password=None):

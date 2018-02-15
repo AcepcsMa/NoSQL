@@ -487,22 +487,26 @@ class zsetTest:
         url = "http://" + self.host + ":" + str(self.port) + "/getZSetSize/{}/{}"
 
         # case1 create a zset, insert, then get size
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
         insertParams = {
             "dbName": "db0",
             "zsetName": "zset1",
-            "value": "hello",
+            "value": "a",
             "score": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "b"
         insertParams["score"] = 3
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "c"
         insertParams["score"] = 5
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
 
         response = requests.get(url.format("db0", "zset1"))
         self.writeLog(url.format("db0", "zset1"), "", response.content.decode())
@@ -529,8 +533,12 @@ class zsetTest:
         url = "http://" + self.host + ":" + str(self.port) + "/getRank/{}/{}/{}"
 
         # case1 create a zset, insert
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
         insertParams = {
             "dbName": "db0",
@@ -538,13 +546,14 @@ class zsetTest:
             "value": "a",
             "score": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "b"
         insertParams["score"] = 3
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "c"
         insertParams["score"] = 5
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
+
         response = requests.get(url.format("db0", "zset1", "b"))
         self.writeLog(url.format("db0", "zset1", "b"), "", response.content.decode())
 
@@ -570,8 +579,12 @@ class zsetTest:
         url = "http://" + self.host + ":" + str(self.port) + "/rmFromZSetByScore"
 
         # case1 create, insert, then remove
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
         insertUrl = "http://" + self.host + ":" + str(self.port) + "/insertZSet"
         insertParams = {
             "dbName": "db0",
@@ -579,20 +592,20 @@ class zsetTest:
             "value": "a",
             "score": 1
         }
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "b"
         insertParams["score"] = 3
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         insertParams["value"] = "c"
         insertParams["score"] = 5
-        response = requests.post(insertUrl, json=insertParams)
+        response = requests.put(url=insertUrl, json=insertParams)
         removeParam = {
             "dbName": "db0",
             "zsetName": "zset1",
             "start": 1,
-            "end": 3
+            "end": 4
         }
-        response = requests.post(url, json=removeParam)
+        response = requests.put(url=url, json=removeParam)
         self.writeLog(url, json.dumps(removeParam), response.content.decode())
 
         # case2 score is out of range
@@ -602,23 +615,23 @@ class zsetTest:
             "start": 90,
             "end": 100
         }
-        response = requests.post(url, json=removeParam)
+        response = requests.put(url=url, json=removeParam)
         self.writeLog(url, json.dumps(removeParam), response.content.decode())
 
         # case3 unknown database name
         removeParam["dbName"] = "db123"
-        response = requests.post(url, json=removeParam)
+        response = requests.put(url=url, json=removeParam)
         self.writeLog(url, json.dumps(removeParam), response.content.decode())
 
         # case4 unknown zset name
         removeParam["dbName"] = "db0"
         removeParam["zsetName"] = "zset123"
-        response = requests.post(url, json=removeParam)
+        response = requests.put(url=url, json=removeParam)
         self.writeLog(url, json.dumps(removeParam), response.content.decode())
 
         # case5 error url
         errorUrl = "http://" + self.host + ":" + str(self.port) + "/rmfromzsetbyscore"
-        response = requests.post(errorUrl, json=removeParam)
+        response = requests.put(url=errorUrl, json=removeParam)
         self.writeLog(errorUrl, json.dumps(removeParam), response.content.decode())
 
     def setTTLTest(self):
@@ -718,16 +731,16 @@ if __name__ == "__main__":
     # test.getScoreTest()
 
     # testing get values by range function
-    test.getValuesByRangeTest()
+    # test.getValuesByRangeTest()
 
     # testing get size function
     # test.getSizeTest()
 
     # testing rank function
-    #test.getRankTest()
+    # test.getRankTest()
 
     # testing remove by score function
-    #test.rmByScoreTest()
+    test.rmByScoreTest()
 
     # testing set ttl function
     #test.setTTLTest()

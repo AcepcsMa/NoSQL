@@ -635,67 +635,106 @@ class zsetTest:
         self.writeLog(errorUrl, json.dumps(removeParam), response.content.decode())
 
     def setTTLTest(self):
-        url = "http://" + self.host + ":" + str(self.port) + "/setZSetTTL/{}/{}/{}"
+        url = "http://" + self.host + ":" + str(self.port) + "/setTTL"
 
         # case1 create a set, set ttl
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
-        response = requests.get(url.format("db0","zset1",20))
-        self.writeLog(url.format("db0","zet1",20), "", response.content.decode())
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
+
+        ttlParams = {
+            "dataType": "ZSET",
+            "dbName": "db0",
+            "keyName": "zset1",
+            "ttl": 60
+        }
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case2 set ttl repeatedly
-        response = requests.get(url.format("db0", "zset1", 20))
-        self.writeLog(url.format("db0", "zset1", 20), "", response.content.decode())
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case3 unknown database name
-        response = requests.get(url.format("db999", "zset1", 20))
-        self.writeLog(url.format("db999", "zset1", 20), "", response.content.decode())
+        ttlParams["dbName"] = "db999"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case4 unknown set name
-        response = requests.get(url.format("db0", "zset123", 20))
-        self.writeLog(url.format("db0", "zset123", 20), "", response.content.decode())
+        ttlParams["dbName"] = "db0"
+        ttlParams["keyName"] = "zset123"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # case5 ttl is not INT type
-        response = requests.get(url.format("db0", "zset1", "hello"))
-        self.writeLog(url.format("db0", "zset1", "hello"), "", response.content.decode())
+        ttlParams["keyName"] = "zset1"
+        ttlParams["ttl"] = "hello"
+        response = requests.post(url=url, json=ttlParams)
+        self.writeLog(url, json.dumps(ttlParams), response.content.decode())
 
         # error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setzsetttl/{}/{}/{}"
-        response = requests.get(errorUrl.format("db0", "zset1", 20))
-        self.writeLog(errorUrl.format("db0", "zset1", 20), "", response.content.decode())
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/setttl"
+        response = requests.post(url=errorUrl, json=ttlParams)
+        self.writeLog(errorUrl, json.dumps(ttlParams), response.content.decode())
 
     def clearTTLTest(self):
-        url = "http://" + self.host + ":" + str(self.port) + "/clearZSetTTL/{}/{}"
+        url = "http://" + self.host + ":" + str(self.port) + "/clearTTL"
 
         # case1 set a TTL and then clear it
-        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet/{}/{}"
-        response = requests.get(createUrl.format("db0", "zset1"))
-        setUrl = "http://" + self.host + ":" + str(self.port) + "/setZSetTTL/{}/{}/{}"
-        response = requests.get(setUrl.format("db0","zset1",20))
-        response = requests.get(url.format("db0", "zset1"))
-        self.writeLog(url.format("db0", "zset1"), "", response.content.decode())
+        createParams = {
+            "dbName": "db0",
+            "zsetName": "zset1"
+        }
+        createUrl = "http://" + self.host + ":" + str(self.port) + "/makeZSet"
+        response = requests.post(url=createUrl, json=createParams)
+
+        setUrl = "http://" + self.host + ":" + str(self.port) + "/setTTL"
+        ttlParams = {
+            "dataType": "ZSET",
+            "dbName": "db0",
+            "keyName": "zset1",
+            "ttl": 60
+        }
+        response = requests.post(url=setUrl, json=ttlParams)
+
+        clearParams = {
+            "dataType": "ZSET",
+            "dbName": "db0",
+            "keyName": "zset1"
+        }
+        response = requests.post(url=url, json=clearParams)
+        self.writeLog(url, json.dumps(clearParams), response.content.decode())
 
         # case2 clear TTL repeatedly
-        response = requests.get(url.format("db0", "zset1"))
-        self.writeLog(url.format("db0", "zset1"), "", response.content.decode())
+        response = requests.post(url=url, json=clearParams)
+        self.writeLog(url, json.dumps(clearParams), response.content.decode())
 
         # case3 clear non-existed TTL
-        response = requests.get(createUrl.format("db0","zset2"))
-        response = requests.get(url.format("db0", "zset2"))
-        self.writeLog(url.format("db0", "zset2"), "", response.content.decode())
+        createParams["zsetName"] = "zset2"
+        response = requests.post(url=createUrl, json=createParams)
+        clearParams["keyName"] = "zset2"
+        response = requests.post(url=url, json=clearParams)
+        self.writeLog(url, json.dumps(clearParams), response.content.decode())
 
         # case4 unknown database name
-        response = requests.get(url.format("db999", "zset1"))
-        self.writeLog(url.format("db999", "zset1"), "", response.content.decode())
+        clearParams["dbName"] = "db999"
+        clearParams["keyName"] = "zset1"
+        response = requests.post(url=url, json=clearParams)
+        self.writeLog(url, json.dumps(clearParams), response.content.decode())
 
         # case5 unknown element name
-        response = requests.get(url.format("db0", "zset999"))
-        self.writeLog(url.format("db0", "zset999"), "", response.content.decode())
+        clearParams["dbName"] = "db0"
+        clearParams["keyName"] = "zset999"
+        response = requests.post(url=url, json=clearParams)
+        self.writeLog(url, json.dumps(clearParams), response.content.decode())
 
         # case6 error url
-        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearzsetttl/{0}/{1}"
-        response = requests.get(errorUrl.format("db0", "zset1"))
-        self.writeLog(errorUrl.format("db0", "zset1"), "", response.content.decode())
+        errorUrl = "http://" + self.host + ":" + str(self.port) + "/clearttl"
+        response = requests.post(url=errorUrl, json=clearParams)
+        self.writeLog(errorUrl, json.dumps(clearParams), response.content.decode())
 
 if __name__ == "__main__":
     test = zsetTest()
@@ -740,10 +779,10 @@ if __name__ == "__main__":
     # test.getRankTest()
 
     # testing remove by score function
-    test.rmByScoreTest()
+    # test.rmByScoreTest()
 
     # testing set ttl function
-    #test.setTTLTest()
+    # test.setTTLTest()
 
     # testing clear ttl function
-    #test.clearTTLTest()
+    test.clearTTLTest()

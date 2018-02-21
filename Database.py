@@ -8,6 +8,7 @@ import logging
 import random
 from ZSet import ZSet
 from TTLTool import *
+from DataFactory import *
 
 class NoSqlDb(object):
 
@@ -29,29 +30,19 @@ class NoSqlDb(object):
         self.invertedTypeDict = dict()
 
         # element structures
-        self.elemName = dict()
-        self.elemDict = dict()
-        self.elemLockDict = dict()
+        self.elemName, self.elemDict, self.elemLockDict = DataFactory.getDataContainer(self.dbNameSet)
 
         # list structures
-        self.listName = dict()
-        self.listDict = dict()
-        self.listLockDict = dict()
+        self.listName, self.listDict, self.listLockDict = DataFactory.getDataContainer(self.dbNameSet)
 
         # hash structures
-        self.hashName = dict()
-        self.hashDict = dict()
-        self.hashLockDict = dict()
+        self.hashName, self.hashDict, self.hashLockDict = DataFactory.getDataContainer(self.dbNameSet)
 
         # set structures
-        self.setName = dict()
-        self.setDict = dict()
-        self.setLockDict = dict()
+        self.setName, self.setDict, self.setLockDict = DataFactory.getDataContainer(self.dbNameSet)
 
         # zset structures
-        self.zsetName = dict()
-        self.zsetDict = dict()
-        self.zsetLockDict = dict()
+        self.zsetName, self.zsetDict, self.zsetLockDict = DataFactory.getDataContainer(self.dbNameSet)
 
         self.saveLock = False
 

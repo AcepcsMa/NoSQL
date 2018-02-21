@@ -8,6 +8,7 @@ import logging
 import random
 from ZSet import ZSet
 from TTLTool import *
+from DataFactory import *
 
 class NoSqlDb(object):
 
@@ -26,72 +27,24 @@ class NoSqlDb(object):
 
     def initDb(self):
 
-        self.invertedTypeDict = dict()
+        self.invertedTypeDict = DataFactory.getInvertedTypeContainer(self.dbNameSet)
 
-        # element structures
-        self.elemName = dict()
-        self.elemDict = dict()
-        self.elemLockDict = dict()
-
-        # list structures
-        self.listName = dict()
-        self.listDict = dict()
-        self.listLockDict = dict()
-
-        # hash structures
-        self.hashName = dict()
-        self.hashDict = dict()
-        self.hashLockDict = dict()
-
-        # set structures
-        self.setName = dict()
-        self.setDict = dict()
-        self.setLockDict = dict()
-
-        # zset structures
-        self.zsetName = dict()
-        self.zsetDict = dict()
-        self.zsetLockDict = dict()
-
-        self.saveLock = False
+        # initialize data containers
+        self.elemName, self.elemDict, self.elemLockDict = DataFactory.getDataContainer(self.dbNameSet)
+        self.listName, self.listDict, self.listLockDict = DataFactory.getDataContainer(self.dbNameSet)
+        self.hashName, self.hashDict, self.hashLockDict = DataFactory.getDataContainer(self.dbNameSet)
+        self.setName, self.setDict, self.setLockDict = DataFactory.getDataContainer(self.dbNameSet)
+        self.zsetName, self.zsetDict, self.zsetLockDict = DataFactory.getDataContainer(self.dbNameSet)
 
         # TTL structure
-        self.elemTTL = dict()
-        self.listTTL = dict()
-        self.hashTTL = dict()
-        self.setTTL = dict()
-        self.zsetTTL = dict()
+        self.elemTTL = DataFactory.getTTLContainer(self.dbNameSet)
+        self.listTTL = DataFactory.getTTLContainer(self.dbNameSet)
+        self.hashTTL = DataFactory.getTTLContainer(self.dbNameSet)
+        self.setTTL = DataFactory.getTTLContainer(self.dbNameSet)
+        self.zsetTTL = DataFactory.getTTLContainer(self.dbNameSet)
 
         self.dbPassword = dict()
-
-        for dbName in self.dbNameSet:
-            self.invertedTypeDict[dbName] = dict()
-
-            self.elemName[dbName] = set()
-            self.elemDict[dbName] = dict()
-            self.elemLockDict[dbName] = dict()
-
-            self.listName[dbName] = set()
-            self.listDict[dbName] = dict()
-            self.listDict[dbName] = dict()
-
-            self.hashName[dbName] = set()
-            self.hashDict[dbName] = dict()
-            self.hashLockDict[dbName] = dict()
-
-            self.setName[dbName] = set()
-            self.setDict[dbName] = dict()
-            self.setLockDict[dbName] = dict()
-
-            self.zsetName[dbName] = set()
-            self.zsetDict[dbName] = dict()
-            self.zsetLockDict[dbName] = dict()
-
-            self.elemTTL[dbName] = dict()
-            self.listTTL[dbName] = dict()
-            self.hashTTL[dbName] = dict()
-            self.setTTL[dbName] = dict()
-            self.zsetTTL[dbName] = dict()
+        self.saveLock = False
 
     def initLog(self, config):
         # check log directory
@@ -1232,6 +1185,7 @@ class NoSqlDb(object):
 
             for dbName in dbNameSet:
                 self.dbNameSet.add(dbName)
+                self.invertedTypeDict[dbName] = dict()
 
                 # init element structure
                 self.elemName[dbName] = set()

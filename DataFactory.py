@@ -18,4 +18,16 @@ class DataFactory(object):
         return DataFactory.initDataContainer(dataNameContainer, dataDictContainer,
                                              dataLockDictContainer, dbNameSet)
 
+    @staticmethod
+    def getTTLContainer(dbNameSet):
+        ttlContainer = dict()
+        for dbName in dbNameSet:
+            ttlContainer[dbName] = dict()
+        return ttlContainer
 
+    @staticmethod
+    def getInvertedTypeContainer(dbNameSet):
+        invertedTypeContainer = dict()
+        for dbName in dbNameSet:
+            invertedTypeContainer[dbName] = dict()
+        return invertedTypeContainer

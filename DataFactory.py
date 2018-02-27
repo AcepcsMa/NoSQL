@@ -51,3 +51,23 @@ class DataFactory(object):
         names["SET"] = setName
         names["ZSET"] = zsetName
         return names
+
+    @staticmethod
+    def getTTLDictContainer(elemTTL, listTTL, hashTTL, setTTL, zsetTTL):
+        ttlDicts = dict()
+        ttlDicts["ELEM"] = elemTTL
+        ttlDicts["LIST"] = listTTL
+        ttlDicts["HASH"] = hashTTL
+        ttlDicts["SET"] = setTTL
+        ttlDicts["ZSET"] = zsetTTL
+        return ttlDicts
+
+    @staticmethod
+    def getValueDictContainer(elemValues, listValues, hashValues, setValues, zsetValues):
+        valueDicts = dict()
+        valueDicts["ELEM"] = elemValues
+        valueDicts["LIST"] = listValues
+        valueDicts["HASH"] = hashValues
+        valueDicts["SET"] = setValues
+        valueDicts["ZSET"] = zsetValues
+        return valueDicts

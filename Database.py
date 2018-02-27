@@ -43,6 +43,14 @@ class NoSqlDb(object):
         self.setTTL = DataFactory.getTTLContainer(self.dbNameSet)
         self.zsetTTL = DataFactory.getTTLContainer(self.dbNameSet)
 
+        self.lockDicts = DataFactory.getLockDictContainer(self.elemLockDict, self.listLockDict,
+                                                          self.hashLockDict, self.setLockDict,
+                                                          self.zsetLockDict)
+
+        self.dataNameSets = DataFactory.getNameSetContainer(self.elemName, self.listName,
+                                                            self.hashName, self.setName,
+                                                            self.zsetName)
+
         self.dbPassword = dict()
         self.saveLock = False
 
@@ -89,34 +97,18 @@ class NoSqlDb(object):
         return message
 
     def getLockDict(self, type):
-        if type == "ELEM":
-            lockDict = self.elemLockDict
-        elif type == "LIST":
-            lockDict = self.listLockDict
-        elif type == "HASH":
-            lockDict = self.hashLockDict
-        elif type == "SET":
-            lockDict = self.setLockDict
-        elif type == "ZSET":
-            lockDict = self.zsetLockDict
-        else:
-            raise Exception("Type Error")
-        return lockDict
+        try:
+            lockDict = self.lockDicts[type]
+            return lockDict
+        except:
+            return None
 
     def getNameSet(self, type):
-        if type == "ELEM":
-            nameSet = self.elemName
-        elif type == "LIST":
-            nameSet = self.listName
-        elif type == "HASH":
-            nameSet = self.hashName
-        elif type == "SET":
-            nameSet = self.setName
-        elif type == "ZSET":
-            nameSet = self.zsetName
-        else:
-            raise Exception("Type Error")
-        return nameSet
+        try:
+            nameSet = self.dataNameSets[type]
+            return nameSet
+        except:
+            return None
 
     def getTTLDict(self, type):
         if type == "ELEM":

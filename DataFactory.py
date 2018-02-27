@@ -31,3 +31,23 @@ class DataFactory(object):
         for dbName in dbNameSet:
             invertedTypeContainer[dbName] = dict()
         return invertedTypeContainer
+
+    @staticmethod
+    def getLockDictContainer(elemLockDict, listLockDict, hashLockDict, setLockDict, zsetLockDict):
+        lockDicts = dict()
+        lockDicts["ELEM"] = elemLockDict
+        lockDicts["LIST"] = listLockDict
+        lockDicts["HASH"] = hashLockDict
+        lockDicts["SET"] = setLockDict
+        lockDicts["ZSET"] = zsetLockDict
+        return lockDicts
+
+    @staticmethod
+    def getNameSetContainer(elemName, listName, hashName, setName, zsetName):
+        names = dict()
+        names["ELEM"] = elemName
+        names["LIST"] = listName
+        names["HASH"] = hashName
+        names["SET"] = setName
+        names["ZSET"] = zsetName
+        return names

@@ -690,7 +690,7 @@ if __name__ == "__main__":
     test = listTest()
 
     # testing create list function
-    # test.createListTest()
+    test.createListTest()
 
     # testing get list function
     # test.getListTest()

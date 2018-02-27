@@ -51,6 +51,14 @@ class NoSqlDb(object):
                                                             self.hashName, self.setName,
                                                             self.zsetName)
 
+        self.ttlDicts = DataFactory.getTTLDictContainer(self.elemTTL, self.listTTL,
+                                                        self.hashTTL, self.setTTL,
+                                                        self.zsetTTL)
+
+        self.valueDicts = DataFactory.getValueDictContainer(self.elemDict, self.listDict,
+                                                            self.hashDict, self.setDict,
+                                                            self.zsetDict)
+
         self.dbPassword = dict()
         self.saveLock = False
 
@@ -111,34 +119,18 @@ class NoSqlDb(object):
             return None
 
     def getTTLDict(self, type):
-        if type == "ELEM":
-            ttlDict = self.elemTTL
-        elif type == "LIST":
-            ttlDict = self.listTTL
-        elif type == "HASH":
-            ttlDict = self.hashTTL
-        elif type == "SET":
-            ttlDict = self.setTTL
-        elif type == "ZSET":
-            ttlDict = self.zsetTTL
-        else:
-            raise Exception("Type Error")
-        return ttlDict
+        try:
+            ttlDict = self.ttlDicts[type]
+            return ttlDict
+        except:
+            return None
 
     def getValueDict(self, type):
-        if type == "ELEM":
-            valueDict = self.elemDict
-        elif type == "LIST":
-            valueDict = self.listDict
-        elif type == "HASH":
-            valueDict = self.hashDict
-        elif type == "SET":
-            valueDict = self.setDict
-        elif type == "ZSET":
-            valueDict = self.zsetDict
-        else:
-            raise Exception("Type Error")
-        return valueDict
+        try:
+            valueDict = self.valueDicts[type]
+            return valueDict
+        except:
+            return None
 
     def lock(self, type, dbName, keyName):
         lockDict = self.getLockDict(type)

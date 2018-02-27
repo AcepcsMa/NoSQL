@@ -690,7 +690,7 @@ if __name__ == "__main__":
     test = listTest()
 
     # testing create list function
-    test.createListTest()
+    # test.createListTest()
 
     # testing get list function
     # test.getListTest()
@@ -720,7 +720,7 @@ if __name__ == "__main__":
     # test.setTTLTest()
 
     # testing clear TTL function
-    # test.clearTTLTest()
+    test.clearTTLTest()
 
     # testing get size function
     # test.getSizeTest()

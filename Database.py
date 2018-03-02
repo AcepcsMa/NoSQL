@@ -1161,47 +1161,30 @@ class NoSqlDb(object):
 
     def loadDb(self):
         try:
-            if os.path.exists("data") is False:
+            if not os.path.exists("data"):
                 os.mkdir("data")
                 for dbName in self.dbNameSet:
                     os.mkdir("data/{}".format(dbName))
-            dbNameSet = os.listdir("data")  # find all dbName in the data directory
+            else:
+                dbNameSet = os.listdir("data")  # find all dbName in the data directory
 
-            for dbName in dbNameSet:
-                self.dbNameSet.add(dbName)
-                self.invertedTypeDict[dbName] = dict()
+                customDbNameSet = set(dbNameSet).difference(set(self.dbNameSet))
+                DataFactory.initDataContainer(self.elemName, self.elemDict, self.elemLockDict, customDbNameSet)
+                DataFactory.initDataContainer(self.listName, self.listDict, self.listLockDict, customDbNameSet)
+                DataFactory.initDataContainer(self.hashName, self.hashDict, self.hashLockDict, customDbNameSet)
+                DataFactory.initDataContainer(self.setName, self.setDict, self.setLockDict, customDbNameSet)
+                DataFactory.initDataContainer(self.zsetName, self.zsetDict, self.zsetLockDict, customDbNameSet)
 
-                # init element structure
-                self.elemName[dbName] = set()
-                self.elemLockDict[dbName] = dict()
-                self.elemDict[dbName] = dict()
+                for dbName in dbNameSet:
+                    self.dbNameSet.add(dbName)
+                    self.invertedTypeDict[dbName] = dict()
 
-                # init list structure
-                self.listName[dbName] = set()
-                self.listLockDict[dbName] = dict()
-                self.listDict[dbName] = dict()
-
-                # init hash structure
-                self.hashName[dbName] = set()
-                self.hashLockDict[dbName] = dict()
-                self.hashDict[dbName] = dict()
-
-                # init set structure
-                self.setName[dbName] = set()
-                self.setLockDict[dbName] = dict()
-                self.setDict[dbName] = dict()
-
-                # init zset structure
-                self.zsetName[dbName] = set()
-                self.zsetLockDict[dbName] = dict()
-                self.zsetDict[dbName] = dict()
-
-                # load data
-                self.loadData(dbName, "ELEM", "elemName.txt", "elemValue.txt", "elemTTL.txt")
-                self.loadData(dbName, "LIST", "listName.txt", "listValue.txt", "listTTL.txt")
-                self.loadData(dbName, "HASH", "hashName.txt", "hashValue.txt", "hashTTL.txt")
-                self.loadData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
-                self.loadZSet(dbName, "zsetName.txt", "zsetValue.txt", "zsetTTL.txt")
+                    # load data
+                    self.loadData(dbName, "ELEM", "elemName.txt", "elemValue.txt", "elemTTL.txt")
+                    self.loadData(dbName, "LIST", "listName.txt", "listValue.txt", "listTTL.txt")
+                    self.loadData(dbName, "HASH", "hashName.txt", "hashValue.txt", "hashTTL.txt")
+                    self.loadData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
+                    self.loadZSet(dbName, "zsetName.txt", "zsetValue.txt", "zsetTTL.txt")
 
             self.logger.info("Database Load Success")
 

@@ -769,8 +769,8 @@ class NoSqlDb(object):
         if (self.setLockDict[dbName][setName1] is True
                 or self.setLockDict[dbName][setName2] is True):
             self.logger.warning("Set Is Locked "
-                                "{0}->{1} or {2}->{3}".
-                                format(dbName, setName1, dbName, setName2))
+                                "{0}->{1} or {2}->{3}"
+                                .format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
@@ -780,8 +780,8 @@ class NoSqlDb(object):
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
             self.logger.info("Set Union Success "
-                             "{}->{} unions {}->{} to {}->{}".
-                             format(dbName, setName1, dbName, setName2, dbName, unionResult))
+                             "{}->{} unions {}->{} to {}->{}"
+                             .format(dbName, setName1, dbName, setName2, dbName, unionResult))
             return responseCode.SET_UNION_SUCCESS
 
     @saveTrigger
@@ -790,8 +790,8 @@ class NoSqlDb(object):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
             self.logger.warning("Set Is Locked "
-                                "{0}->{1} or {2}->{3}".
-                                format(dbName, setName1, dbName, setName2))
+                                "{0}->{1} or {2}->{3}"
+                                .format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
@@ -801,8 +801,8 @@ class NoSqlDb(object):
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
             self.logger.info("Set Intersect Success "
-                             "{}->{} intersects {}->{} to {}->{}".
-                             format(dbName, setName1, dbName, setName2, dbName, intersectResult))
+                             "{}->{} intersects {}->{} to {}->{}"
+                             .format(dbName, setName1, dbName, setName2, dbName, intersectResult))
             return responseCode.SET_INTERSECT_SUCCESS
 
     @saveTrigger
@@ -811,8 +811,8 @@ class NoSqlDb(object):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
             self.logger.warning("Set Is Locked "
-                                "{}->{} or {}->{}".
-                                format(dbName, setName1, dbName, setName2))
+                                "{}->{} or {}->{}"
+                                .format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
@@ -822,8 +822,8 @@ class NoSqlDb(object):
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
             self.logger.info("Set Diff Success "
-                             "{}->{} unions {}->{} to {}->{}".
-                             format(dbName, setName1, dbName, setName2, dbName, diffResult))
+                             "{}->{} unions {}->{} to {}->{}"
+                             .format(dbName, setName1, dbName, setName2, dbName, diffResult))
             return responseCode.SET_DIFF_SUCCESS
 
     @saveTrigger
@@ -870,13 +870,13 @@ class NoSqlDb(object):
                 self.lock("ZSET", dbName, keyName)
                 if self.zsetDict[dbName][keyName].add(value, score) is True:
                     self.logger.info("ZSet Insert Success "
-                                     "{0}->{1}->{2}:{3}".
-                                     format(dbName, keyName, value, score))
+                                     "{0}->{1}->{2}:{3}"
+                                     .format(dbName, keyName, value, score))
                     return responseCode.ZSET_INSERT_SUCCESS
                 else:
                     self.logger.warning("ZSet Insert Fail(Value Existed) "
-                                        "{}->{}:{}".
-                                        format(dbName, keyName, value))
+                                        "{}->{}:{}"
+                                        .format(dbName, keyName, value))
                     return responseCode.ZSET_VALUE_ALREADY_EXIST
             finally:
                 self.unlock("ZSET", dbName, keyName)
@@ -894,8 +894,8 @@ class NoSqlDb(object):
             self.unlock("ZSET", dbName, keyName)
             if(result is True):
                 self.logger.info("ZSet Remove Success "
-                                 "{}->{}:{}".
-                                 format(dbName, keyName, value))
+                                 "{}->{}:{}"
+                                 .format(dbName, keyName, value))
             else:
                 self.logger.info("ZSet Remove Fail(Value Not Existed) "
                                  "{}->{}:{}".

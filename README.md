@@ -5,17 +5,17 @@ This is a NoSQL Database implemented in Python (running in memory like Redis).
 Multiple data structures are implemented and the corresponding APIs are well developed.
 
 # Development Tool
-1. Python 3.6.0
-2. Flask
+1. ```Python 3.6.0```
+2. ```Flask```
 
 # Project Goal
 1. Build 5(or more) data structures: 
 
-	+ ***ELEMENT*** => The most common variable which can be Integer / String.
-	+ ***LIST*** => A Sequential container of flexible length.
-	+ ***HASH*** => A Key-Value mapping.
-	+ ***SET*** => A container composed of unique data.
-	+ ***ZSET*** => A **sorted** container composed of unique data.
+	+ ```ELEMENT``` => The most common variable which can be Integer / String.
+	+ ```LIST``` => A Sequential container of flexible length.
+	+ ```HASH``` => A Key-Value mapping.
+	+ ```SET``` => A container composed of unique data.
+	+ ```ZSET``` => A **sorted** container composed of unique data.
 
 2. Implement CRUD operations for each data structure mentioned above.
 
@@ -25,33 +25,32 @@ Multiple data structures are implemented and the corresponding APIs are well dev
 
 # User Manual
 1. ***ELEMENT***
-	+ *makeElem (dbName, elemName, value)*
-	+ *getElem (dbName, elemName)*
-	+ *updateElem (dbName, elemName, value)*
-	+ *searchElem (dbName, regex)*
-	+ *searchAllElem (dbName)*
-	+ *increaseElem (dbName, elemName)*
-	+ *decreaseElem (dbName, elemName)*
-	+ *deleteElem (dbName, elemName)*
+	+ ```HTTP POST```: *makeElem (dbName, elemName, value)*
+	+ ```HTTP GET```: *getElem (dbName, elemName)*
+	+ ```HTTP PUT```: *updateElem (dbName, elemName, value)*
+	+ ```HTTP GET```: *searchElem (dbName, regex)*
+	+ ```HTTP GET```: *searchAllElem (dbName)*
+	+ ```HTTP PUT```: *increaseElem (dbName, elemName)*
+	+ ```HTTP PUT```: *decreaseElem (dbName, elemName)*
+	+ ```HTTP DELETE```: *deleteElem (dbName, elemName)*
 	
 2. ***LIST***
-	+ *makeList (dbName, listName)*
-	+ *getList (dbName, listName)*
-	+ *leftGetList (dbName, listName, count)*
-	+ *rightGetList (dbName, listName, count)*
-	+ *getByRange (dbName, listName, start, end)*
-	+ *getRandom (dbName, listName, count)*
-	+ *insertList (dbName, listName, value)*
-	+ *leftInsertList (dbName, listName, value)*
-	+ *deleteList (dbName, listName)*
-	+ *rmFromList (dbName, listName, value)*
-	+ *clearList (dbName, listName)*
-	+ *mergeLists (dbName, listName1, listName2, resultListName)*
-	+ *searchList (dbName, regex)*
-	+ *searchAllList (dbName)*
-	+ *getListSize (dbName, listName)*
+	+ ```HTTP POST```: *makeList (dbName, listName)*
+	+ ```HTTP GET```: *getList (dbName, listName)*
+	+ ```HTTP GET```: *leftGetList (dbName, listName, count)*
+	+ ```HTTP GET```: *rightGetList (dbName, listName, count)*
+	+ ```HTTP GET```: *getByRange (dbName, listName, start, end)*
+	+ ```HTTP GET```: *getRandom (dbName, listName, count)*
+	+ ```HTTP PUT```: *insertList (dbName, listName, value)*
+	+ ```HTTP PUT```: *leftInsertList (dbName, listName, value)*
+	+ ```HTTP DELETE```: *deleteList (dbName, listName)*
+	+ ```HTTP PUT```: *rmFromList (dbName, listName, value)*
+	+ ```HTTP PUT```: *clearList (dbName, listName)*
+	+ ```HTTP PUT```: *mergeLists (dbName, listName1, listName2, resultListName)*
+	+ ```HTTP GET```: *searchList (dbName, regex)*
+	+ ```HTTP GET```: *searchAllList (dbName)*
+	+ ```HTTP GET```: *getListSize (dbName, listName)*
 
-	
 3. ***HASH***
 	+ *makeHash (dbName, hashName)*
 	+ *getHash (dbName, hashName)*
@@ -104,7 +103,18 @@ Multiple data structures are implemented and the corresponding APIs are well dev
 	+ *getRank (dbName, zsetName, value)*
 	+ *rmFromZSetByScore (dbName, zsetName, start, end)*
 
-
+6. ***COMMON OPERATIONS***
+	+ *addDatabase (adminKey, dbName)*
+	+ *getAllDatabase (adminKey)*
+	+ *delDatabase (adminKey, dbName)*
+	+ *saveDatabase ()*
+	+ *changeSaveInterval (interval)*
+	+ *setDbPassword (adminKey, dbName, password)*
+	+ *changeDbPassword (adminKey, dbName, originalPwd, newPwd)*
+	+ *removeDbPassword (adminKey, dbName)*
+	+ *getType (dbName, keyName)*
+	+ *setTTL (dataType, dbName, keyName, ttl)*
+	+ *clearTTL (dataType, dbName, keyName)*
 
 
 

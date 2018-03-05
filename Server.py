@@ -31,7 +31,7 @@ def setDbPassword():
     return flask.jsonify(result)
 
 @app.route("/changeDbPassword",methods=["PUT"])
-def changeadDbPassword():
+def changeDbPassword():
     myHandler = DbHandler(database)
     try:
         adminKey = flask.request.json["adminKey"]

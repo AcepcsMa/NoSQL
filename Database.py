@@ -374,6 +374,9 @@ class NoSqlDb(object):
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.LIST_IS_LOCKED
         else:
+            if len(self.listDict[dbName][keyName]) > 0:
+                return responseCode.LIST_NOT_EMPTY
+
             self.lock("LIST", dbName, keyName)
             self.listName[dbName].remove(keyName)
             self.listDict[dbName].pop(keyName)
@@ -525,6 +528,8 @@ class NoSqlDb(object):
                                 "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
+            if len(self.hashDict[dbName][keyName]) > 0:
+                return responseCode.HASH_NOT_EMPTY
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName].pop(keyName)
             self.hashName[dbName].remove(keyName)
@@ -745,6 +750,8 @@ class NoSqlDb(object):
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
+            if len(self.setDict[dbName][keyName]) > 0:
+                return responseCode.SET_NOT_EMPTY
             self.lock("SET", dbName, keyName)
             self.setName[dbName].discard(keyName)
             self.setDict[dbName].pop(keyName)
@@ -926,6 +933,8 @@ class NoSqlDb(object):
                                 "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
+            if len(self.zsetDict[dbName][keyName].valueDict) > 0:
+                return responseCode.ZSET_NOT_EMPTY
             self.lock("ZSET", dbName, keyName)
             self.zsetName[dbName].discard(keyName)
             self.zsetDict[dbName].pop(keyName)

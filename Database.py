@@ -272,30 +272,30 @@ class NoSqlDb(object):
 
     @saveTrigger
     @passwordCheck
-    def increaseElem(self, dbName, keyName, password=None):
+    def increaseElem(self, dbName, keyName, value, password=None):
         if self.elemLockDict[dbName][keyName] is True: # element is locked
             self.rdbLogger.warning("Increase Element Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
             self.lock("ELEM", dbName, keyName)
-            self.elemDict[dbName][keyName] += 1
+            self.elemDict[dbName][keyName] += value
             self.unlock("ELEM", dbName, keyName)
             self.rdbLogger.info("Increase Element Success "
                              "{0}->{1}".format(dbName, keyName))
-            self.aofLogger.info("INCREASE_ELEM\t{}\t{}".format(dbName, keyName))
+            self.aofLogger.info("INCREASE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
             return responseCode.ELEM_INCR_SUCCESS
 
     @saveTrigger
     @passwordCheck
-    def decreaseElem(self, dbName, keyName, password=None):
+    def decreaseElem(self, dbName, keyName, value, password=None):
         if self.elemLockDict[dbName][keyName] is True: # element is locked
             self.rdbLogger.warning("Decrease Element Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
             self.lock("ELEM", dbName, keyName)
-            self.elemDict[dbName][keyName] -= 1
+            self.elemDict[dbName][keyName] -= value
             self.unlock("ELEM", dbName, keyName)
             self.rdbLogger.info("Decrease Element Success "
                              "{0}->{1}".format(dbName, keyName))

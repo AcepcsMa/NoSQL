@@ -716,6 +716,8 @@ class NoSqlDb(object):
         self.setDict[dbName][keyName] = set()
         self.invertedTypeDict[dbName][keyName] = responseCode.SET_TYPE
         self.unlock("SET", dbName, keyName)
+        self.aofLogger.info("CREATE_SET\t{}\t{}"
+                            .format(dbName, keyName))
         self.rdbLogger.info("Set Create Success "
                          "{0}->{1}".format(dbName, keyName))
         return responseCode.SET_CREATE_SUCCESS
@@ -743,6 +745,8 @@ class NoSqlDb(object):
                 self.lock("SET", dbName, keyName)
                 self.setDict[dbName][keyName].add(value)
                 self.unlock("SET", dbName, keyName)
+                self.aofLogger.info("INSERT_SET\t{}\t{}\t{}"
+                                    .format(dbName, keyName, value))
                 self.rdbLogger.info("Set Insert Success "
                                  "{0}->{1}->{2}".format(dbName, keyName, value))
                 return responseCode.SET_INSERT_SUCCESS
@@ -761,6 +765,8 @@ class NoSqlDb(object):
                 self.lock("SET", dbName, keyName)
                 self.setDict[dbName][keyName].discard(value)
                 self.unlock("SET", dbName, keyName)
+                self.aofLogger.info("REMOVE_FROM_SET\t{}\t{}\t{}"
+                                    .format(dbName, keyName, value))
                 self.rdbLogger.info("Set Remove Success "
                                  "{0}->{1}->{2}".format(dbName, keyName, value))
                 return responseCode.SET_REMOVE_SUCCESS
@@ -778,6 +784,8 @@ class NoSqlDb(object):
             self.lock("SET", dbName, keyName)
             self.setDict[dbName][keyName].clear()
             self.unlock("SET", dbName, keyName)
+            self.aofLogger.info("CLEAR_SET\t{}\t{}"
+                                .format(dbName, keyName))
             self.rdbLogger.info("Set Clear Success "
                              "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_CLEAR_SUCCESS
@@ -798,6 +806,8 @@ class NoSqlDb(object):
             self.invertedTypeDict[dbName].pop(keyName)
             self.unlock("SET", dbName, keyName)
             self.setLockDict[dbName].pop(keyName)
+            self.aofLogger.info("DELETE_SET\t{}\t{}"
+                                .format(dbName, keyName))
             self.rdbLogger.info("Set Delete Success "
                              "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_DELETE_SUCCESS
@@ -812,23 +822,23 @@ class NoSqlDb(object):
 
     @saveTrigger
     @passwordCheck
-    def unionSet(self, dbName, setName1, setName2, unionResult, password=None):
-        if (self.setLockDict[dbName][setName1] is True
-                or self.setLockDict[dbName][setName2] is True):
+    def unionSet(self, dbName, keyName1, keyName2, unionResult, password=None):
+        if (self.setLockDict[dbName][keyName1] is True
+                or self.setLockDict[dbName][keyName2] is True):
             self.rdbLogger.warning("Set Is Locked "
                                 "{0}->{1} or {2}->{3}"
-                                   .format(dbName, setName1, dbName, setName2))
+                                   .format(dbName, keyName1, dbName, keyName2))
             return responseCode.SET_IS_LOCKED
         else:
-            self.lock("SET", dbName, setName1)
-            self.lock("SET", dbName, setName2)
-            unionResult.append(list(self.setDict[dbName][setName1].
-                                    union(self.setDict[dbName][setName2])))
-            self.unlock("SET", dbName, setName1)
-            self.unlock("SET", dbName, setName2)
+            self.lock("SET", dbName, keyName1)
+            self.lock("SET", dbName, keyName2)
+            unionResult.append(list(self.setDict[dbName][keyName1].
+                                    union(self.setDict[dbName][keyName2])))
+            self.unlock("SET", dbName, keyName1)
+            self.unlock("SET", dbName, keyName2)
             self.rdbLogger.info("Set Union Success "
                              "{}->{} unions {}->{} to {}->{}"
-                                .format(dbName, setName1, dbName, setName2, dbName, unionResult))
+                                .format(dbName, keyName1, dbName, keyName2, dbName, unionResult))
             return responseCode.SET_UNION_SUCCESS
 
     @saveTrigger
@@ -884,6 +894,8 @@ class NoSqlDb(object):
             self.lock("SET", dbName, keyName)
             self.setDict[dbName][keyName] = value
             self.unlock("SET", dbName, keyName)
+            self.aofLogger.info("REPLACE_SET\t{}\t{}\t{}"
+                                .format(dbName, keyName, str(value)))
             self.rdbLogger.info("Set Replace Success "
                              "{}->{}".format(dbName, keyName))
             return responseCode.SET_REPLACE_SUCCESS

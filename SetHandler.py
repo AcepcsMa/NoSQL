@@ -176,8 +176,8 @@ class SetHandler(object):
         if self.database.isExist("SET", dbName, setName1, setName2):
             if self.database.isExpired("SET", dbName,setName1, setName2) is False:
                 unionResult = [None]
-                code = self.database.unionSet(dbName=dbName, setName1=setName1,
-                                              setName2=setName2, unionResult=unionResult,
+                code = self.database.unionSet(dbName=dbName, keyName1=setName1,
+                                              keyName2=setName2, unionResult=unionResult,
                                               password=password)
                 result = unionResult[1]
             else:

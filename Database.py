@@ -684,8 +684,8 @@ class NoSqlDb(object):
         self.lock("HASH", dbName, keyName)
         self.hashDict[dbName][keyName][key] += value
         self.unlock("HASH", dbName, keyName)
-        self.aofLogger.info("INCREASE_HASH\t{}\t{}\t{}"
-                            .format(dbName, keyName, key))
+        self.aofLogger.info("INCREASE_HASH\t{}\t{}\t{}\t{}"
+                            .format(dbName, keyName, key, value))
         self.rdbLogger.info("Hash Value Increase Success "
                          "{}->{}:{}".format(dbName, keyName, key))
         return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][keyName][key]
@@ -701,8 +701,8 @@ class NoSqlDb(object):
         self.lock("HASH", dbName, keyName)
         self.hashDict[dbName][keyName][key] -= value
         self.unlock("HASH", dbName, keyName)
-        self.aofLogger.info("DECREASE_HASH\t{}\t{}\t{}"
-                            .format(dbName, keyName, key))
+        self.aofLogger.info("DECREASE_HASH\t{}\t{}\t{}\t{}"
+                            .format(dbName, keyName, key, value))
         self.rdbLogger.info("Hash Value Decrease Success "
                          "{}->{}:{}".format(dbName, keyName, key))
         return responseCode.HASH_DECR_SUCCESS, self.hashDict[dbName][keyName][key]

@@ -115,7 +115,7 @@ class ElemHandler(object):
 
     # increase the value of an element
     @validTypeCheck
-    def increaseElem(self, dbName, keyName, password=None):
+    def increaseElem(self, dbName, keyName, value, password=None):
         if self.database.isExist("ELEM", dbName, keyName) is False:
             code = responseCode.ELEM_NOT_EXIST
         else:
@@ -125,6 +125,7 @@ class ElemHandler(object):
                                                      password=password)[1]): # check if the element can be increased
                     code = self.database.increaseElem(dbName=dbName,
                                                       keyName=keyName,
+                                                      value=value,
                                                       password=password)
                 else:
                     code = responseCode.ELEM_TYPE_ERROR
@@ -137,7 +138,7 @@ class ElemHandler(object):
 
     # decrease the value of an element
     @validTypeCheck
-    def decreaseElem(self, dbName, keyName, password=None):
+    def decreaseElem(self, dbName, keyName, value, password=None):
         if self.database.isExist("ELEM", dbName, keyName) is False:
             code = responseCode.ELEM_NOT_EXIST
         else:
@@ -147,6 +148,7 @@ class ElemHandler(object):
                                                      password=password)[1]): # check if the element can be increased
                     code = self.database.decreaseElem(dbName=dbName,
                                                       keyName=keyName,
+                                                      value=value,
                                                       password=password)
                 else:
                     code = responseCode.ELEM_TYPE_ERROR

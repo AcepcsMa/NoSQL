@@ -67,14 +67,22 @@ class NoSqlDb(object):
         if os.path.exists(config["LOG_PATH"]) is False:
             os.mkdir(config["LOG_PATH"])
 
-        # register a logger
-        self.logger = logging.getLogger('dbLogger')
-        self.logger.setLevel(logging.INFO)
-        hdr = logging.FileHandler(config["LOG_PATH"] + "db.log", mode="a")
+        # register a rdb logger
+        self.rdbLogger = logging.getLogger('rdbLogger')
+        self.rdbLogger.setLevel(logging.INFO)
+        rdbHandler = logging.FileHandler(config["LOG_PATH"] + "rdb.log", mode="a")
         formatter = logging.Formatter('[%(asctime)s] %(name)s:'
                                       '%(levelname)s: %(message)s')
-        hdr.setFormatter(formatter)
-        self.logger.addHandler(hdr)
+        rdbHandler.setFormatter(formatter)
+        self.rdbLogger.addHandler(rdbHandler)
+
+        # register a aof logger
+        self.aofLogger = logging.getLogger('aofLogger')
+        self.aofLogger.setLevel(logging.INFO)
+        aofHandler = logging.FileHandler(config["LOG_PATH"] + "aof.log", mode="a")
+        formatter = logging.Formatter('[%(asctime)s] %(message)s')
+        aofHandler.setFormatter(formatter)
+        self.aofLogger.addHandler(aofHandler)
 
     def translateType(self, dataType):
         typeCode = responseCode.ELEM_TYPE_ERROR
@@ -174,7 +182,7 @@ class NoSqlDb(object):
                     searchResult.add(name)
             except:
                 continue
-        self.logger.info(logInfo.format(dbName, expression))
+        self.rdbLogger.info(logInfo.format(dbName, expression))
         return list(searchResult)
 
     @passwordCheck
@@ -223,15 +231,16 @@ class NoSqlDb(object):
         self.elemDict[dbName][keyName] = value
         self.invertedTypeDict[dbName][keyName] = responseCode.ELEM_TYPE
         self.unlock("ELEM", dbName, keyName)
-        self.logger.info("Create Element Success "
+        self.rdbLogger.info("Create Element Success "
                          "{0}->{1}->{2}".format(dbName, keyName, value))
+        self.aofLogger.info("CREATE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
         return responseCode.ELEM_CREATE_SUCCESS
 
     @saveTrigger
     @passwordCheck
     def updateElem(self, dbName, keyName, value, password=None):
         if self.elemLockDict[dbName][keyName] is True: # element is locked
-            self.logger.warning("Update Element Locked "
+            self.rdbLogger.warning("Update Element Locked "
                                 "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.ELEM_IS_LOCKED
 
@@ -239,8 +248,9 @@ class NoSqlDb(object):
             self.lock("ELEM", dbName, keyName)
             self.elemDict[dbName][keyName] = value
             self.unlock("ELEM", dbName, keyName)
-            self.logger.info("Update Element Success "
+            self.rdbLogger.info("Update Element Success "
                              "{0}->{1}->{2}".format(dbName, keyName, value))
+            self.aofLogger.info("UPDATE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
             return responseCode.ELEM_UPDATE_SUCCESS
 
     @passwordCheck
@@ -249,7 +259,7 @@ class NoSqlDb(object):
             elemValue = self.elemDict[dbName][keyName]
         except:
             elemValue = None
-        self.logger.info("Get Element Success "
+        self.rdbLogger.info("Get Element Success "
                          "{0}->{1}".format(dbName, keyName))
         return (responseCode.ELEM_GET_SUCCESS, elemValue)
 
@@ -257,44 +267,48 @@ class NoSqlDb(object):
     def searchAllElem(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
-        self.logger.info("Search All Elements in {0}".format(dbName))
+        self.rdbLogger.info("Search All Elements in {0}".format(dbName))
         return list(self.elemName[dbName])
 
     @saveTrigger
     @passwordCheck
-    def increaseElem(self, dbName, keyName, password=None):
+    def increaseElem(self, dbName, keyName, value, password=None):
         if self.elemLockDict[dbName][keyName] is True: # element is locked
-            self.logger.warning("Increase Element Locked "
+            self.rdbLogger.warning("Increase Element Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
             self.lock("ELEM", dbName, keyName)
-            self.elemDict[dbName][keyName] += 1
+            self.elemDict[dbName][keyName] += value
             self.unlock("ELEM", dbName, keyName)
-            self.logger.info("Increase Element Success "
+            self.rdbLogger.info("Increase Element Success "
                              "{0}->{1}".format(dbName, keyName))
+            self.aofLogger.info("INCREASE_ELEM\t{}\t{}\t{}"
+                                .format(dbName, keyName, value))
             return responseCode.ELEM_INCR_SUCCESS
 
     @saveTrigger
     @passwordCheck
-    def decreaseElem(self, dbName, keyName, password=None):
+    def decreaseElem(self, dbName, keyName, value, password=None):
         if self.elemLockDict[dbName][keyName] is True: # element is locked
-            self.logger.warning("Decrease Element Locked "
+            self.rdbLogger.warning("Decrease Element Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
             self.lock("ELEM", dbName, keyName)
-            self.elemDict[dbName][keyName] -= 1
+            self.elemDict[dbName][keyName] -= value
             self.unlock("ELEM", dbName, keyName)
-            self.logger.info("Decrease Element Success "
+            self.rdbLogger.info("Decrease Element Success "
                              "{0}->{1}".format(dbName, keyName))
+            self.aofLogger.info("DECREASE_ELEM\t{}\t{}\t{}"
+                                .format(dbName, keyName, value))
             return responseCode.ELEM_DECR_SUCCESS
 
     @saveTrigger
     @passwordCheck
     def deleteElem(self, dbName, keyName, password=None):
         if self.elemLockDict[dbName][keyName] is True:  # element is locked
-            self.logger.warning("Delete Element Locked "
+            self.rdbLogger.warning("Delete Element Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.ELEM_IS_LOCKED
         else:
@@ -307,8 +321,9 @@ class NoSqlDb(object):
             except:
                 pass
             self.elemLockDict[dbName].pop(keyName)
-            self.logger.info("Delete Element Success "
+            self.rdbLogger.info("Delete Element Success "
                              "{0}->{1}".format(dbName, keyName))
+            self.aofLogger.info("DELETE_ELEM\t{}\t{}".format(dbName, keyName))
             return responseCode.ELEM_DELETE_SUCCESS
 
     @keyNameValidity
@@ -320,8 +335,9 @@ class NoSqlDb(object):
         self.listDict[dbName][keyName] = list()
         self.invertedTypeDict[dbName][keyName] = responseCode.LIST_TYPE
         self.unlock("LIST", dbName, keyName)
-        self.logger.info("Create List Success "
+        self.rdbLogger.info("Create List Success "
                          "{0}->{1}".format(dbName, keyName))
+        self.aofLogger.info("CREATE_LIST\t{}\t{}".format(dbName, keyName))
         return responseCode.LIST_CREATE_SUCCESS
 
     @passwordCheck
@@ -337,7 +353,7 @@ class NoSqlDb(object):
                 listValue = None
         except:
             listValue = None
-        self.logger.info("Get List Success "
+        self.rdbLogger.info("Get List Success "
                          "{0}->{1}".format(dbName, keyName))
         return (responseCode.LIST_GET_SUCCESS, listValue)
 
@@ -352,17 +368,19 @@ class NoSqlDb(object):
     @passwordCheck
     def insertList(self, dbName, keyName, value, isLeft=None, password=None):
         if self.listLockDict[dbName][keyName] is True:
-            self.logger.warning("Insert List Locked "
+            self.rdbLogger.warning("Insert List Locked "
                                 "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.LIST_IS_LOCKED
         else:
             self.lock("LIST", dbName, keyName)
             if isLeft is None:
                 self.listDict[dbName][keyName].append(value)
+                self.aofLogger.info("INSERT_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
             else:
                 self.listDict[dbName][keyName].insert(0, value)
+                self.aofLogger.info("LEFT_INSERT_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
             self.unlock("LIST", dbName, keyName)
-            self.logger.info("Insert List Success "
+            self.rdbLogger.info("Insert List Success "
                              "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.LIST_INSERT_SUCCESS
 
@@ -370,10 +388,13 @@ class NoSqlDb(object):
     @passwordCheck
     def deleteList(self, dbName, keyName, password=None):
         if self.listLockDict[dbName][keyName] is True:
-            self.logger.warning("Delete List Locked "
+            self.rdbLogger.warning("Delete List Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.LIST_IS_LOCKED
         else:
+            if len(self.listDict[dbName][keyName]) > 0:
+                return responseCode.LIST_NOT_EMPTY
+
             self.lock("LIST", dbName, keyName)
             self.listName[dbName].remove(keyName)
             self.listDict[dbName].pop(keyName)
@@ -384,15 +405,16 @@ class NoSqlDb(object):
                 pass
             self.unlock("LIST", dbName, keyName)
             self.listLockDict[dbName].pop(keyName)
-            self.logger.info("Delete List Success "
+            self.rdbLogger.info("Delete List Success "
                              "{0}->{1}".format(dbName, keyName))
+            self.aofLogger.info("DELETE_LIST\t{}\t{}".format(dbName, keyName))
             return responseCode.LIST_DELETE_SUCCESS
 
     @saveTrigger
     @passwordCheck
     def rmFromList(self, dbName, keyName, value, password=None):
         if self.listLockDict[dbName][keyName] is True:
-            self.logger.warning("Insert List Locked "
+            self.rdbLogger.warning("Insert List Locked "
                                 "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.LIST_IS_LOCKED
         else:
@@ -402,29 +424,31 @@ class NoSqlDb(object):
                 self.lock("LIST", dbName, keyName)
                 self.listDict[dbName][keyName].remove(value)
                 self.unlock("LIST", dbName, keyName)
-                self.logger.info("Remove From List Success "
+                self.rdbLogger.info("Remove From List Success "
                                  "{0}->{1}->{2}".format(dbName, keyName, value))
+                self.aofLogger.info("REMOVE_FROM_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
                 return responseCode.LIST_REMOVE_SUCCESS
 
     @passwordCheck
     def searchAllList(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
-        self.logger.info("Search All List Success {0}".format(dbName))
+        self.rdbLogger.info("Search All List Success {0}".format(dbName))
         return list(self.listName[dbName])
 
     @saveTrigger
     @passwordCheck
     def clearList(self, dbName, keyName, password=None):
         if self.listLockDict[dbName][keyName] is True:
-            self.logger.warning("Clear List Locked {0}->{1}")
+            self.rdbLogger.warning("Clear List Locked {0}->{1}")
             return responseCode.LIST_IS_LOCKED
         else:
             self.lock("LIST", dbName, keyName)
             self.listDict[dbName][keyName] = []
             self.unlock("LIST", dbName, keyName)
-            self.logger.info("List Clear Success "
+            self.rdbLogger.info("List Clear Success "
                              "{}->{}".format(dbName, keyName))
+            self.aofLogger.info("CLEAR_LIST\t{}\t{}".format(dbName, keyName))
             return responseCode.LIST_CLEAR_SUCCESS
 
     @saveTrigger
@@ -436,20 +460,22 @@ class NoSqlDb(object):
             self.listDict[dbName][resultKeyName].extend(self.listDict[dbName][keyName1])
             self.listDict[dbName][resultKeyName].extend(self.listDict[dbName][keyName2])
             self.unlock("LIST", dbName, resultKeyName)
-            self.logger.info("Lists Merge Success "
+            self.rdbLogger.info("Lists Merge Success "
                              "{} merges {}->{}".
-                             format(dbName, keyName1, keyName2, resultKeyName))
+                                format(dbName, keyName1, keyName2, resultKeyName))
+            self.aofLogger.info("MERGE_LIST\t{}\t{}\t{}\t{}".format(dbName, keyName1, keyName2, resultKeyName))
             return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][resultKeyName]
         else:
             if self.listLockDict[dbName][keyName1] is False:
                 self.lock("LIST", dbName, keyName1)
                 self.listDict[dbName][keyName1].extend(self.listDict[dbName][keyName2])
-                self.logger.info("Lists Merge Success "
+                self.rdbLogger.info("Lists Merge Success "
                                  "{} merges {}->{}".
-                                 format(dbName, keyName1, keyName2, keyName1))
+                                    format(dbName, keyName1, keyName2, keyName1))
+                self.aofLogger.info("MERGE_LIST\t{}\t{}\t{}\t{}".format(dbName, keyName1, keyName2, keyName1))
                 return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][keyName1]
             else:
-                self.logger.info("List Locked "
+                self.rdbLogger.info("List Locked "
                                  "{}->{}".format(dbName, keyName1))
                 return responseCode.LIST_IS_LOCKED, []
 
@@ -463,11 +489,12 @@ class NoSqlDb(object):
             self.hashDict[dbName][keyName] = dict()
             self.invertedTypeDict[dbName][keyName] = responseCode.HASH_TYPE
             self.unlock("HASH", dbName, keyName)
-            self.logger.info("Hash Create Success "
+            self.rdbLogger.info("Hash Create Success "
                              "{}->{}".format(dbName, keyName))
+            self.aofLogger.info("CREATE_HASH\t{}\t{}".format(dbName, keyName))
             return responseCode.HASH_CREATE_SUCCESS
         else:
-            self.logger.warning("Hash Create Fail(Hash Exists) "
+            self.rdbLogger.warning("Hash Create Fail(Hash Exists) "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.HASH_EXISTED
 
@@ -497,16 +524,17 @@ class NoSqlDb(object):
     @passwordCheck
     def insertHash(self, dbName, keyName, key, value, password=None):
         if self.hashLockDict[dbName][keyName] is True:
-            self.logger.warning("Hash Is Locked "
+            self.rdbLogger.warning("Hash Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName][keyName][key] = value
             self.unlock("HASH", dbName, keyName)
-            self.logger.info("Hash Insert Success "
-                             "{}->{} {}:{}".
-                             format(dbName, keyName, key, value))
+            self.aofLogger.info("INSERT_HASH\t{}\t{}\t{}\t{}"
+                                .format(dbName, keyName, key, value))
+            self.rdbLogger.info("Hash Insert Success {}->{} {}:{}"
+                                .format(dbName, keyName, key, value))
             return responseCode.HASH_INSERT_SUCCESS
 
     @passwordCheck
@@ -521,10 +549,12 @@ class NoSqlDb(object):
     @passwordCheck
     def deleteHash(self, dbName, keyName, password=None):
         if self.hashLockDict[dbName][keyName] is True:
-            self.logger.warning("Hash Is Locked "
+            self.rdbLogger.warning("Hash Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
+            if len(self.hashDict[dbName][keyName]) > 0:
+                return responseCode.HASH_NOT_EMPTY
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName].pop(keyName)
             self.hashName[dbName].remove(keyName)
@@ -535,7 +565,8 @@ class NoSqlDb(object):
                 pass
             self.unlock("HASH", dbName, keyName)
             self.hashLockDict[dbName].pop(keyName)
-            self.logger.info("Hash Delete Success "
+            self.aofLogger.info("DELETE_HASH\t{}\t{}".format(dbName, keyName))
+            self.rdbLogger.info("Hash Delete Success "
                              "{}->{}".format(dbName, keyName))
             return responseCode.HASH_DELETE_SUCCESS
 
@@ -543,14 +574,16 @@ class NoSqlDb(object):
     @passwordCheck
     def rmFromHash(self, dbName, keyName, key, password=None):
         if self.hashLockDict[dbName][keyName] is True:
-            self.logger.warning("Hash Is Locked "
+            self.rdbLogger.warning("Hash Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName][keyName].pop(key)
             self.unlock("HASH", dbName, keyName)
-            self.logger.info("Hash Value Remove Success "
+            self.aofLogger.info("REMOVE_FROM_HASH\t{}\t{}\t{}"
+                                .format(dbName, keyName, key))
+            self.rdbLogger.info("Hash Value Remove Success "
                              "{}->{}:{}".format(dbName, keyName, key))
             return responseCode.HASH_REMOVE_SUCCESS
 
@@ -558,14 +591,16 @@ class NoSqlDb(object):
     @passwordCheck
     def clearHash(self, dbName, keyName, password=None):
         if self.hashLockDict[dbName][keyName] is True:
-            self.logger.warning("Hash Is Locked "
-                                "{}->{}".format(dbName, keyName))
+            self.rdbLogger.warning("Hash Is Locked {}->{}"
+                                   .format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName][keyName].clear()
             self.unlock("HASH", dbName, keyName)
-            self.logger.info("Hash Clear Success "
+            self.aofLogger.info("CLEAR_HASH\t{}\t{}"
+                                .format(dbName, keyName))
+            self.rdbLogger.info("Hash Clear Success "
                              "{}->{}".format(dbName, keyName))
             return responseCode.HASH_CLEAR_SUCCESS
 
@@ -573,14 +608,16 @@ class NoSqlDb(object):
     @passwordCheck
     def replaceHash(self, dbName, keyName, hashValue, password=None):
         if self.hashLockDict[dbName][keyName] is True:
-            self.logger.warning("Hash Is Locked "
+            self.rdbLogger.warning("Hash Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.HASH_IS_LOCKED
         else:
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName][keyName] = hashValue
             self.unlock("HASH", dbName, keyName)
-            self.logger.info("Hash Replace Success "
+            self.aofLogger.info("REPLACE_HASH\t{}\t{}\t{}"
+                                .format(dbName, keyName, str(hashValue)))
+            self.rdbLogger.info("Hash Replace Success "
                              "{}->{}".format(dbName, keyName))
             return responseCode.HASH_REPLACE_SUCCESS
 
@@ -601,9 +638,11 @@ class NoSqlDb(object):
                 if key not in baseKeys:
                     self.hashDict[dbName][resultKeyName][key] = self.hashDict[dbName][otherDictName][key]
             self.unlock("HASH", dbName, resultKeyName)
-            self.logger.info("Hash Merge Success "
+            self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}"
+                                .format(dbName, keyName1, keyName2, resultKeyName))
+            self.rdbLogger.info("Hash Merge Success "
                              "{} merges {} -> {}".
-                             format(keyName1, keyName2, resultKeyName))
+                                format(keyName1, keyName2, resultKeyName))
 
         else:
             if self.hashLockDict[dbName][baseDictName] is False:
@@ -614,13 +653,15 @@ class NoSqlDb(object):
                     if key not in baseKeys:
                         self.hashDict[dbName][baseDictName][key] = self.hashDict[dbName][otherDictName][key]
                 self.unlock("HASH", dbName, baseDictName)
-                self.logger.info("Hash Merge Success "
+                self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}"
+                                    .format(dbName, keyName1, keyName2, baseDictName))
+                self.rdbLogger.info("Hash Merge Success "
                                  "{} merges {} -> {}".
-                                 format(keyName1, keyName2, keyName1))
+                                    format(keyName1, keyName2, keyName1))
             else:
-                self.logger.warning("Hash Is Locked "
+                self.rdbLogger.warning("Hash Is Locked "
                                     "{}->{} or {}->{}".
-                                    format(dbName, keyName1, dbName, keyName2))
+                                       format(dbName, keyName1, dbName, keyName2))
                 return responseCode.HASH_IS_LOCKED
         return responseCode.HASH_MERGE_SUCCESS
 
@@ -628,7 +669,7 @@ class NoSqlDb(object):
     def searchAllHash(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
-        self.logger.info("Search All Hash Success "
+        self.rdbLogger.info("Search All Hash Success "
                          "{0}".format(dbName))
         return list(self.hashName[dbName])
 
@@ -636,14 +677,16 @@ class NoSqlDb(object):
     @passwordCheck
     def increaseHash(self, dbName, keyName, key, value, password=None):
         if isinstance(self.hashDict[dbName][keyName][key], int) is False:
-            self.logger.warning("Hash Value Type Is Not Integer "
+            self.rdbLogger.warning("Hash Value Type Is Not Integer "
                                 "{}->{}:{}".format(dbName, keyName, key))
             return responseCode.ELEM_TYPE_ERROR, None
 
         self.lock("HASH", dbName, keyName)
         self.hashDict[dbName][keyName][key] += value
         self.unlock("HASH", dbName, keyName)
-        self.logger.info("Hash Value Increase Success "
+        self.aofLogger.info("INCREASE_HASH\t{}\t{}\t{}"
+                            .format(dbName, keyName, key))
+        self.rdbLogger.info("Hash Value Increase Success "
                          "{}->{}:{}".format(dbName, keyName, key))
         return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][keyName][key]
 
@@ -651,14 +694,16 @@ class NoSqlDb(object):
     @passwordCheck
     def decreaseHash(self, dbName, keyName, key, value, password=None):
         if isinstance(self.hashDict[dbName][keyName][key], int) is False:
-            self.logger.warning("Hash Value Type Is Not Integer "
+            self.rdbLogger.warning("Hash Value Type Is Not Integer "
                                 "{}->{}:{}".format(dbName, keyName, key))
             return responseCode.ELEM_TYPE_ERROR, None
 
         self.lock("HASH", dbName, keyName)
         self.hashDict[dbName][keyName][key] -= value
         self.unlock("HASH", dbName, keyName)
-        self.logger.info("Hash Value Decrease Success "
+        self.aofLogger.info("DECREASE_HASH\t{}\t{}\t{}"
+                            .format(dbName, keyName, key))
+        self.rdbLogger.info("Hash Value Decrease Success "
                          "{}->{}:{}".format(dbName, keyName, key))
         return responseCode.HASH_DECR_SUCCESS, self.hashDict[dbName][keyName][key]
 
@@ -671,7 +716,7 @@ class NoSqlDb(object):
         self.setDict[dbName][keyName] = set()
         self.invertedTypeDict[dbName][keyName] = responseCode.SET_TYPE
         self.unlock("SET", dbName, keyName)
-        self.logger.info("Set Create Success "
+        self.rdbLogger.info("Set Create Success "
                          "{0}->{1}".format(dbName, keyName))
         return responseCode.SET_CREATE_SUCCESS
 
@@ -690,7 +735,7 @@ class NoSqlDb(object):
     @passwordCheck
     def insertSet(self, dbName, keyName, value, password=None):
         if self.setLockDict[dbName][keyName] is True:
-            self.logger.warning("Set Is Locked "
+            self.rdbLogger.warning("Set Is Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
@@ -698,7 +743,7 @@ class NoSqlDb(object):
                 self.lock("SET", dbName, keyName)
                 self.setDict[dbName][keyName].add(value)
                 self.unlock("SET", dbName, keyName)
-                self.logger.info("Set Insert Success "
+                self.rdbLogger.info("Set Insert Success "
                                  "{0}->{1}->{2}".format(dbName, keyName, value))
                 return responseCode.SET_INSERT_SUCCESS
             else:
@@ -708,7 +753,7 @@ class NoSqlDb(object):
     @passwordCheck
     def rmFromSet(self, dbName, keyName, value, password=None):
         if self.setLockDict[dbName][keyName] is True:
-            self.logger.warning("Set Is Locked "
+            self.rdbLogger.warning("Set Is Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
@@ -716,7 +761,7 @@ class NoSqlDb(object):
                 self.lock("SET", dbName, keyName)
                 self.setDict[dbName][keyName].discard(value)
                 self.unlock("SET", dbName, keyName)
-                self.logger.info("Set Remove Success "
+                self.rdbLogger.info("Set Remove Success "
                                  "{0}->{1}->{2}".format(dbName, keyName, value))
                 return responseCode.SET_REMOVE_SUCCESS
             else:
@@ -726,14 +771,14 @@ class NoSqlDb(object):
     @passwordCheck
     def clearSet(self, dbName, keyName, password=None):
         if self.setLockDict[dbName][keyName] is True:
-            self.logger.warning("Set Is Locked "
+            self.rdbLogger.warning("Set Is Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, keyName)
             self.setDict[dbName][keyName].clear()
             self.unlock("SET", dbName, keyName)
-            self.logger.info("Set Clear Success "
+            self.rdbLogger.info("Set Clear Success "
                              "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_CLEAR_SUCCESS
 
@@ -741,17 +786,19 @@ class NoSqlDb(object):
     @passwordCheck
     def deleteSet(self, dbName, keyName, password=None):
         if self.setLockDict[dbName][keyName] is True:
-            self.logger.warning("Set Is Locked "
+            self.rdbLogger.warning("Set Is Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
+            if len(self.setDict[dbName][keyName]) > 0:
+                return responseCode.SET_NOT_EMPTY
             self.lock("SET", dbName, keyName)
             self.setName[dbName].discard(keyName)
             self.setDict[dbName].pop(keyName)
             self.invertedTypeDict[dbName].pop(keyName)
             self.unlock("SET", dbName, keyName)
             self.setLockDict[dbName].pop(keyName)
-            self.logger.info("Set Delete Success "
+            self.rdbLogger.info("Set Delete Success "
                              "{0}->{1}".format(dbName, keyName))
             return responseCode.SET_DELETE_SUCCESS
 
@@ -759,7 +806,7 @@ class NoSqlDb(object):
     def searchAllSet(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
-        self.logger.info("Search All Set Success "
+        self.rdbLogger.info("Search All Set Success "
                          "{0}".format(dbName))
         return list(self.setName[dbName])
 
@@ -768,9 +815,9 @@ class NoSqlDb(object):
     def unionSet(self, dbName, setName1, setName2, unionResult, password=None):
         if (self.setLockDict[dbName][setName1] is True
                 or self.setLockDict[dbName][setName2] is True):
-            self.logger.warning("Set Is Locked "
+            self.rdbLogger.warning("Set Is Locked "
                                 "{0}->{1} or {2}->{3}"
-                                .format(dbName, setName1, dbName, setName2))
+                                   .format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
@@ -779,9 +826,9 @@ class NoSqlDb(object):
                                     union(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
-            self.logger.info("Set Union Success "
+            self.rdbLogger.info("Set Union Success "
                              "{}->{} unions {}->{} to {}->{}"
-                             .format(dbName, setName1, dbName, setName2, dbName, unionResult))
+                                .format(dbName, setName1, dbName, setName2, dbName, unionResult))
             return responseCode.SET_UNION_SUCCESS
 
     @saveTrigger
@@ -789,9 +836,9 @@ class NoSqlDb(object):
     def intersectSet(self, dbName, setName1, setName2, intersectResult, password=None):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
-            self.logger.warning("Set Is Locked "
+            self.rdbLogger.warning("Set Is Locked "
                                 "{0}->{1} or {2}->{3}"
-                                .format(dbName, setName1, dbName, setName2))
+                                   .format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
@@ -800,9 +847,9 @@ class NoSqlDb(object):
                                         intersection(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
-            self.logger.info("Set Intersect Success "
+            self.rdbLogger.info("Set Intersect Success "
                              "{}->{} intersects {}->{} to {}->{}"
-                             .format(dbName, setName1, dbName, setName2, dbName, intersectResult))
+                                .format(dbName, setName1, dbName, setName2, dbName, intersectResult))
             return responseCode.SET_INTERSECT_SUCCESS
 
     @saveTrigger
@@ -810,9 +857,9 @@ class NoSqlDb(object):
     def diffSet(self, dbName, setName1, setName2, diffResult, password=None):
         if (self.setLockDict[dbName][setName1] is True
             or self.setLockDict[dbName][setName2] is True):
-            self.logger.warning("Set Is Locked "
+            self.rdbLogger.warning("Set Is Locked "
                                 "{}->{} or {}->{}"
-                                .format(dbName, setName1, dbName, setName2))
+                                   .format(dbName, setName1, dbName, setName2))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, setName1)
@@ -821,23 +868,23 @@ class NoSqlDb(object):
                                    difference(self.setDict[dbName][setName2])))
             self.unlock("SET", dbName, setName1)
             self.unlock("SET", dbName, setName2)
-            self.logger.info("Set Diff Success "
+            self.rdbLogger.info("Set Diff Success "
                              "{}->{} unions {}->{} to {}->{}"
-                             .format(dbName, setName1, dbName, setName2, dbName, diffResult))
+                                .format(dbName, setName1, dbName, setName2, dbName, diffResult))
             return responseCode.SET_DIFF_SUCCESS
 
     @saveTrigger
     @passwordCheck
     def replaceSet(self, dbName, keyName, value, password=None):
         if self.setLockDict[dbName][keyName] is True:
-            self.logger.warning("Set Is Locked "
+            self.rdbLogger.warning("Set Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.SET_IS_LOCKED
         else:
             self.lock("SET", dbName, keyName)
             self.setDict[dbName][keyName] = value
             self.unlock("SET", dbName, keyName)
-            self.logger.info("Set Replace Success "
+            self.rdbLogger.info("Set Replace Success "
                              "{}->{}".format(dbName, keyName))
             return responseCode.SET_REPLACE_SUCCESS
 
@@ -850,7 +897,7 @@ class NoSqlDb(object):
         self.zsetDict[dbName][keyName] = ZSet()
         self.invertedTypeDict[dbName][keyName] = responseCode.ZSET_TYPE
         self.unlock("ZSET", dbName, keyName)
-        self.logger.info("ZSet Create Success "
+        self.rdbLogger.info("ZSet Create Success "
                          "{0}->{1}".format(dbName, keyName))
         return responseCode.ZSET_CREATE_SUCCESS
 
@@ -862,21 +909,21 @@ class NoSqlDb(object):
     @passwordCheck
     def insertZSet(self, dbName, keyName, value, score, password=None):
         if self.zsetLockDict[dbName][keyName] is True:
-            self.logger.warning("ZSet Is Locked "
+            self.rdbLogger.warning("ZSet Is Locked "
                                 "{0}->{1}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
             try:
                 self.lock("ZSET", dbName, keyName)
                 if self.zsetDict[dbName][keyName].add(value, score) is True:
-                    self.logger.info("ZSet Insert Success "
+                    self.rdbLogger.info("ZSet Insert Success "
                                      "{0}->{1}->{2}:{3}"
-                                     .format(dbName, keyName, value, score))
+                                        .format(dbName, keyName, value, score))
                     return responseCode.ZSET_INSERT_SUCCESS
                 else:
-                    self.logger.warning("ZSet Insert Fail(Value Existed) "
+                    self.rdbLogger.warning("ZSet Insert Fail(Value Existed) "
                                         "{}->{}:{}"
-                                        .format(dbName, keyName, value))
+                                           .format(dbName, keyName, value))
                     return responseCode.ZSET_VALUE_ALREADY_EXIST
             finally:
                 self.unlock("ZSET", dbName, keyName)
@@ -885,7 +932,7 @@ class NoSqlDb(object):
     @passwordCheck
     def rmFromZSet(self, dbName, keyName, value, password=None):
         if self.zsetLockDict[dbName][keyName] is True:
-            self.logger.warning("ZSet Is Locked "
+            self.rdbLogger.warning("ZSet Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
@@ -893,13 +940,13 @@ class NoSqlDb(object):
             result = self.zsetDict[dbName][keyName].remove(value)
             self.unlock("ZSET", dbName, keyName)
             if(result is True):
-                self.logger.info("ZSet Remove Success "
+                self.rdbLogger.info("ZSet Remove Success "
                                  "{}->{}:{}"
-                                 .format(dbName, keyName, value))
+                                    .format(dbName, keyName, value))
             else:
-                self.logger.info("ZSet Remove Fail(Value Not Existed) "
+                self.rdbLogger.info("ZSet Remove Fail(Value Not Existed) "
                                  "{}->{}:{}".
-                                 format(dbName, keyName, value))
+                                    format(dbName, keyName, value))
             return responseCode.ZSET_REMOVE_SUCCESS if result is True \
                 else responseCode.ZSET_NOT_CONTAIN_VALUE
 
@@ -907,14 +954,14 @@ class NoSqlDb(object):
     @passwordCheck
     def clearZSet(self, dbName, keyName, password=None):
         if self.zsetLockDict[dbName][keyName] is True:
-            self.logger.warning("ZSet Is Locked "
+            self.rdbLogger.warning("ZSet Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
             self.lock("ZSET", dbName, keyName)
             self.zsetDict[dbName][keyName].clear()
             self.unlock("ZSET", dbName, keyName)
-            self.logger.info("ZSet Clear Success "
+            self.rdbLogger.info("ZSet Clear Success "
                              "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_CLEAR_SUCCESS
 
@@ -922,17 +969,19 @@ class NoSqlDb(object):
     @passwordCheck
     def deleteZSet(self, dbName, keyName, password=None):
         if self.zsetLockDict[dbName][keyName] is True:
-            self.logger.warning("ZSet Is Locked "
+            self.rdbLogger.warning("ZSet Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_IS_LOCKED
         else:
+            if len(self.zsetDict[dbName][keyName].valueDict) > 0:
+                return responseCode.ZSET_NOT_EMPTY
             self.lock("ZSET", dbName, keyName)
             self.zsetName[dbName].discard(keyName)
             self.zsetDict[dbName].pop(keyName)
             self.invertedTypeDict[dbName].pop(keyName)
             self.unlock("ZSET", dbName, keyName)
             self.zsetLockDict[dbName].pop(keyName)
-            self.logger.info("ZSet Delete Success "
+            self.rdbLogger.info("ZSet Delete Success "
                              "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_DELETE_SUCCESS
 
@@ -940,7 +989,7 @@ class NoSqlDb(object):
     def searchAllZSet(self, dbName, password=None):
         if self.isDbExist(dbName) is False:
             return []
-        self.logger.info("Search All ZSet Success "
+        self.rdbLogger.info("Search All ZSet Success "
                          "{}".format(dbName))
         return list(self.zsetName[dbName])
 
@@ -981,16 +1030,16 @@ class NoSqlDb(object):
     @passwordCheck
     def rmByScore(self, dbName, keyName, start, end, password=None):
         if self.zsetLockDict[dbName][keyName] is True:
-            self.logger.warning("ZSet Is Locked "
+            self.rdbLogger.warning("ZSet Is Locked "
                                 "{}->{}".format(dbName, keyName))
             return (responseCode.ZSET_IS_LOCKED, 0)
         else:
             self.lock("ZSET", dbName, keyName)
             result = self.zsetDict[dbName][keyName].removeByScore(start, end)
             self.unlock("ZSET", dbName, keyName)
-            self.logger.info("ZSet Remove By Score Success "
+            self.rdbLogger.info("ZSet Remove By Score Success "
                              "{}->{} [{},{})".
-                             format(dbName, keyName, start, end))
+                                format(dbName, keyName, start, end))
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
 
     @saveTrigger
@@ -999,7 +1048,7 @@ class NoSqlDb(object):
             return responseCode.ADMIN_KEY_ERROR
 
         if self.saveLock is True:
-            self.logger.warning("Database Save Locked "
+            self.rdbLogger.warning("Database Save Locked "
                                 "{0}".format(dbName))
             return responseCode.DB_SAVE_LOCKED
         else:
@@ -1011,11 +1060,11 @@ class NoSqlDb(object):
                 self.listName[dbName] = set()
                 self.listDict[dbName] = dict()
                 self.elemLockDict[dbName] = dict()
-                self.logger.info("Database Add Success "
+                self.rdbLogger.info("Database Add Success "
                                  "{}".format(dbName))
                 return responseCode.DB_CREATE_SUCCESS
             else:
-                self.logger.warning("Database Already Exists "
+                self.rdbLogger.warning("Database Already Exists "
                                     "{}".format(dbName))
                 return responseCode.DB_EXISTED
 
@@ -1023,7 +1072,7 @@ class NoSqlDb(object):
         if adminKey != self.adminKey:
             return responseCode.ADMIN_KEY_ERROR, None
         else:
-            self.logger.info("Get All Database Names Success")
+            self.rdbLogger.info("Get All Database Names Success")
             return responseCode.DB_GET_SUCCESS, list(self.dbNameSet)
 
     @saveTrigger
@@ -1041,15 +1090,15 @@ class NoSqlDb(object):
                         os.rmdir(os.path.join(root, name))
                 os.rmdir("data"+os.sep+dbName)
                 self.saveLock = False
-                self.logger.info("Database Delete Success "
+                self.rdbLogger.info("Database Delete Success "
                                  "{}".format(dbName))
                 return responseCode.DB_DELETE_SUCCESS
             else:
-                self.logger.warning("Database Delete Fail(Save Locked) "
+                self.rdbLogger.warning("Database Delete Fail(Save Locked) "
                                     "{}".format(dbName))
                 return responseCode.DB_SAVE_LOCKED
         else:
-            self.logger.warning("Database Delete Fail(Not Existed) "
+            self.rdbLogger.warning("Database Delete Fail(Not Existed) "
                                 "{}".format(dbName))
             return responseCode.DB_NOT_EXIST
 
@@ -1103,12 +1152,12 @@ class NoSqlDb(object):
                 self.saveZSet(dbName, "zsetName.txt","zsetValue.txt", "zsetTTL.txt")
 
             self.saveLock = False
-            self.logger.info("Database Save Success")
+            self.rdbLogger.info("Database Save Success")
             self.opCount = 0    # once save process is done, reload the op count
             return responseCode.DB_SAVE_SUCCESS
 
         else:
-            self.logger.warning("Database Save Locked")
+            self.rdbLogger.warning("Database Save Locked")
             return responseCode.DB_SAVE_LOCKED
 
     def loadZSet(self, dbName, dataFileName, valueFileName, TTLFileName):
@@ -1186,10 +1235,10 @@ class NoSqlDb(object):
                     self.loadData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
                     self.loadZSet(dbName, "zsetName.txt", "zsetValue.txt", "zsetTTL.txt")
 
-            self.logger.info("Database Load Success")
+            self.rdbLogger.info("Database Load Success")
 
         except Exception as e:
-            self.logger.warning("Database Load Fail {0}".format(str(e)))
+            self.rdbLogger.warning("Database Load Fail {0}".format(str(e)))
 
     def setDbPassword(self, adminKey, dbName, password):
         if adminKey != self.adminKey:

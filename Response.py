@@ -138,6 +138,11 @@ class responseCode:
     DB_PASSWORD_NOT_EXIST = 130
     DB_PASSWORD_REMOVE_SUCCESS = 131
     DB_PASSWORD_LENGTH_ERROR = 132
+    LIST_NOT_EMPTY = 133
+    HASH_NOT_EMPTY = 134
+    SET_NOT_EMPTY = 135
+    ZSET_NOT_EMPTY = 136
+
 
     detail = {
         HASH_CREATE_SUCCESS:"Hash Create Success",
@@ -269,5 +274,9 @@ class responseCode:
         TTL_CLEAR_SUCCESS: "TTL Clear Success",
         NOT_SET_TTL: "TTL Is Not Set",
         HASH_KEY_NOT_EXIST: "Hash Key Does Not Exist",
-        LOCKED: "Data Is Locked"
+        LOCKED: "Data Is Locked",
+        LIST_NOT_EMPTY: "Error, List Is Not Empty",
+        SET_NOT_EMPTY: "Error, Set Is Not Empty",
+        ZSET_NOT_EMPTY: "Error, ZSet Is Not Empty",
+        HASH_NOT_EMPTY: "Error, Hash Is Not Empty"
     }

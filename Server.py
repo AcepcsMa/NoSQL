@@ -31,7 +31,7 @@ def setDbPassword():
     return flask.jsonify(result)
 
 @app.route("/changeDbPassword",methods=["PUT"])
-def changeadDbPassword():
+def changeDbPassword():
     myHandler = DbHandler(database)
     try:
         adminKey = flask.request.json["adminKey"]
@@ -164,8 +164,9 @@ def searchAllElem(dbName):
                                      password=password)
     return flask.jsonify(result)
 
-@app.route("/increaseElem/<string:dbName>/<string:elemName>", methods=["PUT"])
-def increaseElem(dbName, elemName):
+@app.route("/increaseElem/<string:dbName>/<string:elemName>/<int:value>", methods=["PUT"])
+@app.route("/increaseElem/<string:dbName>/<string:elemName>", methods=["PUT"], defaults={"value": 1})
+def increaseElem(dbName, elemName, value):
     myHandler = ElemHandler(database)
     try:
         password = flask.request.args.get("password")
@@ -173,11 +174,13 @@ def increaseElem(dbName, elemName):
         password = None
     result = myHandler.increaseElem(dbName=dbName,
                                     keyName=elemName,
+                                    value=value,
                                     password=password)
     return flask.jsonify(result)
 
-@app.route("/decreaseElem/<string:dbName>/<string:elemName>", methods=["PUT"])
-def decreaseElem(dbName, elemName):
+@app.route("/decreaseElem/<string:dbName>/<string:elemName>/<int:value>", methods=["PUT"])
+@app.route("/decreaseElem/<string:dbName>/<string:elemName>", methods=["PUT"], defaults={"value": 1})
+def decreaseElem(dbName, elemName, value):
     myHandler = ElemHandler(database)
     try:
         password = flask.request.args.get("password")
@@ -185,6 +188,7 @@ def decreaseElem(dbName, elemName):
         password = None
     result = myHandler.decreaseElem(dbName=dbName,
                                     keyName=elemName,
+                                    value=value,
                                     password=password)
     return flask.jsonify(result)
 

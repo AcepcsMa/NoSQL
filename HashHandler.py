@@ -277,28 +277,31 @@ class HashHandler(object):
         return msg
 
     @validTypeCheck
-    def increaseHash(self, dbName, keyName, key, password=None):
+    def increaseHash(self, dbName, keyName, key, value, password=None):
         if self.database.isKeyExist(dbName=dbName, keyName=keyName,
                                     key=key, password=password):
             if self.database.isExpired("HASH", dbName, keyName) is False:
                 code, result = self.database.increaseHash(dbName=dbName, keyName=keyName,
-                                                          key=key, password=password)
+                                                          value=value, key=key,
+                                                          password=password)
             else:
                 code, result = responseCode.HASH_EXPIRED, keyName
         else:
-            code, result = responseCode.HASH_KEY_NOT_EXIST, "{}->{}->{}".format(dbName, keyName, key)
+            code, result = (responseCode.HASH_KEY_NOT_EXIST,
+                            "{}->{}->{}".format(dbName, keyName, key))
         msg = Utils.makeMessage(responseCode.detail[code],
                                 code,
                                 result)
         return msg
 
     @validTypeCheck
-    def decreaseHash(self, dbName, keyName, key, password=None):
+    def decreaseHash(self, dbName, keyName, key, value, password=None):
         if self.database.isKeyExist(dbName=dbName, keyName=keyName,
                                     key=key, password=password):
             if self.database.isExpired("HASH", dbName, keyName) is False:
                 code, result = self.database.decreaseHash(dbName=dbName, keyName=keyName,
-                                                          key=key, password=password)
+                                                          key=key, value=value,
+                                                          password=password)
             else:
                 code, result = responseCode.HASH_EXPIRED, keyName
         else:

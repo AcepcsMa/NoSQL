@@ -634,14 +634,14 @@ class NoSqlDb(object):
 
     @saveTrigger
     @passwordCheck
-    def increaseHash(self, dbName, keyName, key, password=None):
+    def increaseHash(self, dbName, keyName, key, value, password=None):
         if isinstance(self.hashDict[dbName][keyName][key], int) is False:
             self.logger.warning("Hash Value Type Is Not Integer "
                                 "{}->{}:{}".format(dbName, keyName, key))
             return responseCode.ELEM_TYPE_ERROR, None
 
         self.lock("HASH", dbName, keyName)
-        self.hashDict[dbName][keyName][key] += 1
+        self.hashDict[dbName][keyName][key] += value
         self.unlock("HASH", dbName, keyName)
         self.logger.info("Hash Value Increase Success "
                          "{}->{}:{}".format(dbName, keyName, key))
@@ -649,14 +649,14 @@ class NoSqlDb(object):
 
     @saveTrigger
     @passwordCheck
-    def decreaseHash(self, dbName, keyName, key, password=None):
+    def decreaseHash(self, dbName, keyName, key, value, password=None):
         if isinstance(self.hashDict[dbName][keyName][key], int) is False:
             self.logger.warning("Hash Value Type Is Not Integer "
                                 "{}->{}:{}".format(dbName, keyName, key))
             return responseCode.ELEM_TYPE_ERROR, None
 
         self.lock("HASH", dbName, keyName)
-        self.hashDict[dbName][keyName][key] -= 1
+        self.hashDict[dbName][keyName][key] -= value
         self.unlock("HASH", dbName, keyName)
         self.logger.info("Hash Value Decrease Success "
                          "{}->{}:{}".format(dbName, keyName, key))

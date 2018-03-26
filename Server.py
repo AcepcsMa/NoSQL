@@ -622,26 +622,30 @@ def getHashSize(dbName, hashName):
                                password=password)
     return flask.jsonify(result)
 
-@app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>", methods=["PUT"])
-def increaseHash(dbName, hashName, keyName):
+@app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>/<int:value>", methods=["PUT"])
+@app.route("/increaseHash/<string:dbName>/<string:hashName>/<string:keyName>", methods=["PUT"], defaults={"value": 1})
+def increaseHash(dbName, hashName, keyName, value):
     myHandler = HashHandler(database)
     try:
         password = flask.request.args.get("password")
     except:
         password = None
     result = myHandler.increaseHash(dbName=dbName, keyName=hashName,
-                                    key=keyName, password=password)
+                                    key=keyName, value=value,
+                                    password=password)
     return flask.jsonify(result)
 
-@app.route("/decreaseHash/<string:dbName>/<string:hashName>/<string:keyName>", methods=["PUT"])
-def decreaseHash(dbName, hashName, keyName):
+@app.route("/decreaseHash/<string:dbName>/<string:hashName>/<string:keyName>/<int:value>", methods=["PUT"])
+@app.route("/decreaseHash/<string:dbName>/<string:hashName>/<string:keyName>", methods=["PUT"], defaults={"value": 1})
+def decreaseHash(dbName, hashName, keyName, value):
     myHandler = HashHandler(database)
     try:
         password = flask.request.args.get("password")
     except:
         password = None
     result = myHandler.decreaseHash(dbName=dbName, keyName=hashName,
-                                    key=keyName, password=password)
+                                    key=keyName, value=value,
+                                    password=password)
     return flask.jsonify(result)
 
 @app.route("/makeSet",methods=["POST"])

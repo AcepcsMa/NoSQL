@@ -909,6 +909,8 @@ class NoSqlDb(object):
         self.zsetDict[dbName][keyName] = ZSet()
         self.invertedTypeDict[dbName][keyName] = responseCode.ZSET_TYPE
         self.unlock("ZSET", dbName, keyName)
+        self.aofLogger.info("CREATE_ZSET\t{}\t{}"
+                            .format(dbName, keyName))
         self.rdbLogger.info("ZSet Create Success "
                          "{0}->{1}".format(dbName, keyName))
         return responseCode.ZSET_CREATE_SUCCESS
@@ -928,8 +930,9 @@ class NoSqlDb(object):
             try:
                 self.lock("ZSET", dbName, keyName)
                 if self.zsetDict[dbName][keyName].add(value, score) is True:
-                    self.rdbLogger.info("ZSet Insert Success "
-                                     "{0}->{1}->{2}:{3}"
+                    self.aofLogger.info("INSERT_ZSET\t{}\t{}\t{}\t{}"
+                                        .format(dbName, keyName, value, score))
+                    self.rdbLogger.info("ZSet Insert Success {0}->{1}->{2}:{3}"
                                         .format(dbName, keyName, value, score))
                     return responseCode.ZSET_INSERT_SUCCESS
                 else:
@@ -952,13 +955,13 @@ class NoSqlDb(object):
             result = self.zsetDict[dbName][keyName].remove(value)
             self.unlock("ZSET", dbName, keyName)
             if(result is True):
-                self.rdbLogger.info("ZSet Remove Success "
-                                 "{}->{}:{}"
+                self.aofLogger.info("REMOVE_FROM_ZSET\t{}\t{}\t{}"
+                                    .format(dbName, keyName, value))
+                self.rdbLogger.info("ZSet Remove Success {}->{}:{}"
                                     .format(dbName, keyName, value))
             else:
                 self.rdbLogger.info("ZSet Remove Fail(Value Not Existed) "
-                                 "{}->{}:{}".
-                                    format(dbName, keyName, value))
+                                 "{}->{}:{}".format(dbName, keyName, value))
             return responseCode.ZSET_REMOVE_SUCCESS if result is True \
                 else responseCode.ZSET_NOT_CONTAIN_VALUE
 
@@ -973,8 +976,10 @@ class NoSqlDb(object):
             self.lock("ZSET", dbName, keyName)
             self.zsetDict[dbName][keyName].clear()
             self.unlock("ZSET", dbName, keyName)
-            self.rdbLogger.info("ZSet Clear Success "
-                             "{}->{}".format(dbName, keyName))
+            self.aofLogger.info("CLEAR_ZSET\t{}\t{}"
+                                .format(dbName, keyName))
+            self.rdbLogger.info("ZSet Clear Success {}->{}"
+                                .format(dbName, keyName))
             return responseCode.ZSET_CLEAR_SUCCESS
 
     @saveTrigger
@@ -993,6 +998,8 @@ class NoSqlDb(object):
             self.invertedTypeDict[dbName].pop(keyName)
             self.unlock("ZSET", dbName, keyName)
             self.zsetLockDict[dbName].pop(keyName)
+            self.aofLogger.info("DELETE_ZSET\t{}\t{}"
+                                .format(dbName, keyName))
             self.rdbLogger.info("ZSet Delete Success "
                              "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_DELETE_SUCCESS
@@ -1049,10 +1056,12 @@ class NoSqlDb(object):
             self.lock("ZSET", dbName, keyName)
             result = self.zsetDict[dbName][keyName].removeByScore(start, end)
             self.unlock("ZSET", dbName, keyName)
+            self.aofLogger.info("REMOVE_FROM_ZSET_BY_SCORE\t{}\t{}\t{}"
+                                .format(dbName, keyName, str(result)))
             self.rdbLogger.info("ZSet Remove By Score Success "
                              "{}->{} [{},{})".
                                 format(dbName, keyName, start, end))
-            return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, result)
+            return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, len(result))
 
     @saveTrigger
     def addDb(self, adminKey, dbName):

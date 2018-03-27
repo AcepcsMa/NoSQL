@@ -251,4 +251,4 @@ class ZSet(object):
         deleteKeys = [key for key in self.valueDict.keys() if self.valueDict[key] >= start and self.valueDict[key] < end]
         for key in deleteKeys:
             self.remove(key)
-        return len(deleteKeys)
+        return deleteKeys

@@ -1081,6 +1081,8 @@ class NoSqlDb(object):
                 self.listName[dbName] = set()
                 self.listDict[dbName] = dict()
                 self.elemLockDict[dbName] = dict()
+                self.aofLogger.info("ADD_DATABASE\t{}"
+                                    .format(dbName))
                 self.rdbLogger.info("Database Add Success "
                                  "{}".format(dbName))
                 return responseCode.DB_CREATE_SUCCESS
@@ -1111,6 +1113,8 @@ class NoSqlDb(object):
                         os.rmdir(os.path.join(root, name))
                 os.rmdir("data"+os.sep+dbName)
                 self.saveLock = False
+                self.aofLogger.info("DELETE_DATABASE\t{}"
+                                    .format(dbName))
                 self.rdbLogger.info("Database Delete Success "
                                  "{}".format(dbName))
                 return responseCode.DB_DELETE_SUCCESS
@@ -1273,6 +1277,10 @@ class NoSqlDb(object):
             return responseCode.DB_PASSWORD_LENGTH_ERROR
 
         self.dbPassword[dbName] = password
+        self.aofLogger.info("SET_DATABASE_PWD\t{}\t{}"
+                            .format(dbName, password))
+        self.rdbLogger.info("Set Database password\t{}"
+                            .format(dbName))
         return responseCode.DB_PASSWORD_SET_SUCCESS
 
     def changeDbPassword(self, adminKey, dbName, originalPwd, newPwd):
@@ -1291,6 +1299,10 @@ class NoSqlDb(object):
             return responseCode.ELEM_TYPE_ERROR
 
         self.dbPassword[dbName] = newPwd
+        self.aofLogger.info("CHANGE_DATABASE_PWD\t{}\t{}"
+                            .format(dbName, newPwd))
+        self.rdbLogger.info("Change Database password\t{}"
+                            .format(dbName))
         return responseCode.DB_PASSWORD_CHANGE_SUCCESS
 
     def removeDbPassword(self, adminKey, dbName):
@@ -1301,4 +1313,8 @@ class NoSqlDb(object):
             return responseCode.DB_PASSWORD_NOT_EXIST
 
         self.dbPassword.pop(dbName)
+        self.aofLogger.info("REMOVE_DATABASE_PWD\t{}"
+                            .format(dbName))
+        self.rdbLogger.info("Remove Database password\t{}"
+                            .format(dbName))
         return responseCode.DB_PASSWORD_REMOVE_SUCCESS

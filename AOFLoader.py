@@ -5,24 +5,42 @@ class AOFLoader(object):
     def __init__(self, aofLogPath, db):
         self.logPath = aofLogPath
         self.db = db
-        self.load()
+        self.loadLogs()
 
-    def load(self):
+    def loadMapping(self):
+        self.mapping = {
+            "CREATE_ELEM": self.createElem,
+            "UPDATE_ELEM": self.updateElem,
+            "INCREASE_ELEM": self.increaseElem,
+            "DECREASE_ELEM": self.decreaseElem,
+            "DELETE_ELEM": self.deleteElem
+        }
+
+    def loadLogs(self):
         self.logs = []
         with open(self.logPath, "r") as aofLog:
             for line in aofLog.readlines():
                 self.logs.append(line)
 
-    def createElem(self):
+    def build(self):
+        for log in self.logs:
+            terms = log.split("\t")
+            op = terms[0]
+            self.mapping[op](terms[1:])
+
+    def createElem(self, terms):
         pass
 
-    def increaseElem(self):
+    def updateElem(self, terms):
         pass
 
-    def decreaseElem(self):
+    def increaseElem(self, terms):
         pass
 
-    def deleteElem(self):
+    def decreaseElem(self, terms):
+        pass
+
+    def deleteElem(self, terms):
         pass
 
     def createList(self):

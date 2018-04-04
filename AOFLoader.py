@@ -5,9 +5,13 @@ class AOFLoader(object):
     def __init__(self, aofLogPath, db):
         self.logPath = aofLogPath
         self.db = db
+        self.load()
 
     def load(self):
-        pass
+        self.logs = []
+        with open(self.logPath, "r") as aofLog:
+            for line in aofLog.readlines():
+                self.logs.append(line)
 
     def createElem(self):
         pass
@@ -67,4 +71,55 @@ class AOFLoader(object):
         pass
 
     def decreaseHash(self):
+        pass
+
+    def createSet(self):
+        pass
+
+    def insertSet(self):
+        pass
+
+    def removeFromSet(self):
+        pass
+
+    def deleteSet(self):
+        pass
+
+    def clearSet(self):
+        pass
+
+    def replaceSet(self):
+        pass
+
+    def createZSet(self):
+        pass
+
+    def insertZSet(self):
+        pass
+
+    def removeFromZSet(self):
+        pass
+
+    def deleteZSet(self):
+        pass
+
+    def clearZSet(self):
+        pass
+
+    def removeFromZSetByScore(self):
+        pass
+
+    def addDatabase(self):
+        pass
+
+    def deleteDatabase(self):
+        pass
+
+    def setDatabasePwd(self):
+        pass
+
+    def changeDatabasePwd(self):
+        pass
+
+    def deleteDatabasePwd(self):
         pass

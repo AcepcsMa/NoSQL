@@ -13,7 +13,14 @@ class AOFLoader(object):
             "UPDATE_ELEM": self.updateElem,
             "INCREASE_ELEM": self.increaseElem,
             "DECREASE_ELEM": self.decreaseElem,
-            "DELETE_ELEM": self.deleteElem
+            "DELETE_ELEM": self.deleteElem,
+            "CREATE_LIST": self.createList,
+            "INSERT_LIST": self.rightInsertList,
+            "LEFT_INSERT_LIST": self.leftInsertList,
+            "DELETE_LIST": self.deleteList,
+            "REMOVE_FROM_LIST": self.removeFromList,
+            "CLEAR_LIST": self.clearList,
+            "MERGE_LIST": self.mergeList
         }
 
     def loadLogs(self):
@@ -43,25 +50,25 @@ class AOFLoader(object):
     def deleteElem(self, terms):
         pass
 
-    def createList(self):
+    def createList(self, terms):
         pass
 
-    def leftInsertList(self):
+    def leftInsertList(self, terms):
         pass
 
-    def rightInsertList(self):
+    def rightInsertList(self, terms):
         pass
 
-    def removeFromList(self):
+    def removeFromList(self, terms):
         pass
 
-    def deleteList(self):
+    def deleteList(self, terms):
         pass
 
-    def clearList(self):
+    def clearList(self, terms):
         pass
 
-    def mergeList(self):
+    def mergeList(self, terms):
         pass
 
     def createHash(self):

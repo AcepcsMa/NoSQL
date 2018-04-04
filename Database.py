@@ -272,7 +272,7 @@ class NoSqlDb(object):
 
     @saveTrigger
     @passwordCheck
-    def increaseElem(self, dbName, keyName, value, password=None):
+    def increaseElem(self, dbName, keyName, value=1, password=None):
         if self.elemLockDict[dbName][keyName] is True: # element is locked
             self.rdbLogger.warning("Increase Element Locked "
                                 "{0}->{1}".format(dbName, keyName))
@@ -289,7 +289,7 @@ class NoSqlDb(object):
 
     @saveTrigger
     @passwordCheck
-    def decreaseElem(self, dbName, keyName, value, password=None):
+    def decreaseElem(self, dbName, keyName, value=1, password=None):
         if self.elemLockDict[dbName][keyName] is True: # element is locked
             self.rdbLogger.warning("Decrease Element Locked "
                                 "{0}->{1}".format(dbName, keyName))

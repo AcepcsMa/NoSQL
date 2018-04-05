@@ -20,7 +20,16 @@ class AOFLoader(object):
             "DELETE_LIST": self.deleteList,
             "REMOVE_FROM_LIST": self.removeFromList,
             "CLEAR_LIST": self.clearList,
-            "MERGE_LIST": self.mergeList
+            "MERGE_LIST": self.mergeList,
+            "CREATE_HASH": self.createHash,
+            "INSERT_HASH": self.insertHash,
+            "DELETE_HASH": self.deleteHash,
+            "REMOVE_FROM_HASH": self.removeFromHash,
+            "CLEAR_HASH": self.clearHash,
+            "REPLACE_HASH": self.replaceHash,
+            "MERGE_HASH": self.mergeHash,
+            "INCREASE_HASH": self.increaseHash,
+            "DECREASE_HASH": self.decreaseHash
         }
 
     def loadLogs(self):
@@ -35,17 +44,28 @@ class AOFLoader(object):
             op = terms[0]
             self.mapping[op](terms[1:])
 
+    def parseElemArgs(self, terms):
+        return {
+            "dbName": terms[0],
+            "keyName": terms[1],
+            "value": terms[2]
+        }
+
     def createElem(self, terms):
-        pass
+        args = self.parseElemArgs(terms)
+        self.db.createElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
 
     def updateElem(self, terms):
-        pass
+        args = self.parseElemArgs(terms)
+        self.db.updateElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
 
     def increaseElem(self, terms):
-        pass
+        args = self.parseElemArgs(terms)
+        self.db.increaseElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
 
     def decreaseElem(self, terms):
-        pass
+        args = self.parseElemArgs(terms)
+        self.db.decreaseElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
 
     def deleteElem(self, terms):
         pass

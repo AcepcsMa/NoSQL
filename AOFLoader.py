@@ -51,6 +51,20 @@ class AOFLoader(object):
             "value": terms[2]
         }
 
+    def parseListArgs(self, terms):
+        args = {
+            "dbName": terms[0],
+            "keyName": terms[1]
+        }
+        if len(terms) == 3:
+            args["value"] = terms[2]
+        elif len(terms) == 4:
+            args.pop("keyName")
+            args["keyName1"] = terms[1]
+            args["keyName2"] = terms[2]
+            args["resultKeyName"] = terms[3]
+        return args
+
     def createElem(self, terms):
         args = self.parseElemArgs(terms)
         self.db.createElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
@@ -68,7 +82,8 @@ class AOFLoader(object):
         self.db.decreaseElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
 
     def deleteElem(self, terms):
-        pass
+        args = self.parseElemArgs(terms)
+        self.db.deleteElem(dbName=args["dbName"], keyName=args["keyName"])
 
     def createList(self, terms):
         pass

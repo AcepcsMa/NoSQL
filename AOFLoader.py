@@ -5,6 +5,7 @@ class AOFLoader(object):
     def __init__(self, aofLogPath, db):
         self.logPath = aofLogPath
         self.db = db
+        self.loadMapping()
         self.loadLogs()
 
     def loadMapping(self):
@@ -34,9 +35,13 @@ class AOFLoader(object):
 
     def loadLogs(self):
         self.logs = []
+        self.pwdLogs = []
         with open(self.logPath, "r") as aofLog:
             for line in aofLog.readlines():
-                self.logs.append(line)
+                if "DATABASE_PWD" in line:
+                    self.pwdLogs.append(line)   # separate pwd operations
+                else:
+                    self.logs.append(line)
 
     def build(self):
         for log in self.logs:
@@ -67,44 +72,64 @@ class AOFLoader(object):
 
     def createElem(self, terms):
         args = self.parseElemArgs(terms)
-        self.db.createElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
+        self.db.createElem(dbName=args["dbName"],
+                           keyName=args["keyName"],
+                           value=args["value"])
 
     def updateElem(self, terms):
         args = self.parseElemArgs(terms)
-        self.db.updateElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
+        self.db.updateElem(dbName=args["dbName"],
+                           keyName=args["keyName"],
+                           value=args["value"])
 
     def increaseElem(self, terms):
         args = self.parseElemArgs(terms)
-        self.db.increaseElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
+        self.db.increaseElem(dbName=args["dbName"],
+                             keyName=args["keyName"],
+                             value=args["value"])
 
     def decreaseElem(self, terms):
         args = self.parseElemArgs(terms)
-        self.db.decreaseElem(dbName=args["dbName"], keyName=args["keyName"], value=args["value"])
+        self.db.decreaseElem(dbName=args["dbName"],
+                             keyName=args["keyName"],
+                             value=args["value"])
 
     def deleteElem(self, terms):
         args = self.parseElemArgs(terms)
         self.db.deleteElem(dbName=args["dbName"], keyName=args["keyName"])
 
     def createList(self, terms):
-        pass
+        args = self.parseListArgs(terms)
+        self.db.createList(dbName=args["dbName"], keyName=args["keyName"])
 
     def leftInsertList(self, terms):
-        pass
+        args = self.parseListArgs(terms)
+        self.db.insertList(dbName=args["dbName"], keyName=args["keyName"],
+                           value=args["value"], isLeft=True)
 
     def rightInsertList(self, terms):
-        pass
+        args = self.parseListArgs(terms)
+        self.db.insertList(dbName=args["dbName"], keyName=args["keyName"],
+                           value=args["value"], isLeft=None)
 
     def removeFromList(self, terms):
-        pass
+        args = self.parseListArgs(terms)
+        self.db.rmFromList(dbName=args["dbName"],
+                           keyName=args["keyName"],
+                           value=args["value"])
 
     def deleteList(self, terms):
-        pass
+        args = self.parseListArgs(terms)
+        self.db.deleteList(dbName=args["dbName"], keyName=args["keyName"])
 
     def clearList(self, terms):
-        pass
+        args = self.parseListArgs(terms)
+        self.db.clearList(dbName=args["dbName"], keyName=args["keyName"])
 
     def mergeList(self, terms):
-        pass
+        args = self.parseListArgs(terms)
+        self.db.mergeLists(dbName=args["dbName"], keyName1=args["keyName1"],
+                           keyName2=args["keyName2"], resultKeyName=args["resultKeyName"])
 
     def createHash(self):
         pass

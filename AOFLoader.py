@@ -47,27 +47,48 @@ class AOFLoader(object):
         for log in self.logs:
             terms = log.split("\t")
             op = terms[0]
-            self.mapping[op](terms[1:])
+            self.mapping[op](terms)
 
     def parseElemArgs(self, terms):
         return {
-            "dbName": terms[0],
-            "keyName": terms[1],
-            "value": terms[2]
+            "dbName": terms[1],
+            "keyName": terms[2],
+            "value": terms[3]
         }
 
     def parseListArgs(self, terms):
         args = {
-            "dbName": terms[0],
-            "keyName": terms[1]
+            "dbName": terms[1],
+            "keyName": terms[2]
         }
-        if len(terms) == 3:
-            args["value"] = terms[2]
-        elif len(terms) == 4:
+        if len(terms) == 4:
+            args["value"] = terms[3]
+        elif len(terms) == 5:
             args.pop("keyName")
-            args["keyName1"] = terms[1]
-            args["keyName2"] = terms[2]
-            args["resultKeyName"] = terms[3]
+            args["keyName1"] = terms[2]
+            args["keyName2"] = terms[3]
+            args["resultKeyName"] = terms[4]
+        return args
+
+    def parseHashArgs(self, terms):
+        args = {
+            "dbName": terms[1],
+            "keyName": terms[2]
+        }
+        if len(terms) == 4:
+            if terms[0] == "REMOVE_FROM_HASH":
+                args["key"] = terms[3]
+            elif terms[0] == "REPLACE_HASH":
+                args["value"] = terms[3]
+        elif len(terms) == 5:
+            if terms[0] in ["INSERT_HASH", "DECREASE_HASH", "INCREASE_HASH"]:
+                args["key"] = terms[3]
+                args["value"] = terms[4]
+            elif terms[0] == "MERGE_HASH":
+                args.pop("keyName")
+                args["keyName1"] = terms[2]
+                args["keyName2"] = terms[3]
+                args["resultKeyName"] = terms[4]
         return args
 
     def createElem(self, terms):

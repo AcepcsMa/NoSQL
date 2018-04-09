@@ -152,32 +152,49 @@ class AOFLoader(object):
         self.db.mergeLists(dbName=args["dbName"], keyName1=args["keyName1"],
                            keyName2=args["keyName2"], resultKeyName=args["resultKeyName"])
 
-    def createHash(self):
-        pass
+    def createHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.createHash(dbName=args["dbName"], keyName=args["keyName"])
 
-    def insertHash(self):
-        pass
+    def insertHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.insertHash(dbName=args["dbName"], keyName=args["keyName"],
+                           key=args["key"], value=args["value"])
 
-    def clearHash(self):
-        pass
+    def clearHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.clearHash(dbName=args["dbName"], keyName=args["keyName"])
 
-    def removeFromHash(self):
-        pass
+    def removeFromHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.rmFromHash(dbName=args["dbName"],
+                           keyName=args["keyName"],
+                           key=args["key"])
 
-    def deleteHash(self):
-        pass
+    def deleteHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.createHash(dbName=args["dbName"], keyName=args["keyName"])
 
-    def replaceHash(self):
-        pass
+    def replaceHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.replaceHash(dbName=args["dbName"],
+                            keyName=args["keyName"],
+                            hashValue=args["value"])
 
-    def mergeHash(self):
-        pass
+    def mergeHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.mergeHashs(dbName=args["dbName"], keyName1=args["keyName1"],
+                           keyName2=args["keyName2"], resultKeyName=args["resultKeyName"])
 
-    def increaseHash(self):
-        pass
+    def increaseHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.increaseHash(dbName=args["dbName"], keyName=args["keyName"],
+                             key=args["key"], value=args["value"])
 
-    def decreaseHash(self):
-        pass
+    def decreaseHash(self, terms):
+        args = self.parseHashArgs(terms)
+        self.db.decreaseHash(dbName=args["dbName"], keyName=args["keyName"],
+                             key=args["key"], value=args["value"])
 
     def createSet(self):
         pass

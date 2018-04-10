@@ -84,11 +84,21 @@ class AOFLoader(object):
             if terms[0] in ["INSERT_HASH", "DECREASE_HASH", "INCREASE_HASH"]:
                 args["key"] = terms[3]
                 args["value"] = terms[4]
-            elif terms[0] == "MERGE_HASH":
-                args.pop("keyName")
-                args["keyName1"] = terms[2]
-                args["keyName2"] = terms[3]
-                args["resultKeyName"] = terms[4]
+        elif len(terms) == 6:
+            args.pop("keyName")
+            args["keyName1"] = terms[2]
+            args["keyName2"] = terms[3]
+            args["resultKeyName"] = terms[4]
+            args["mergeMode"] = terms[5]
+        return args
+
+    def parseSetArgs(self, terms):
+        args = {
+            "dbName": terms[1],
+            "keyName": terms[2]
+        }
+        if len(terms) == 4:
+            args["value"] = terms[3]
         return args
 
     def createElem(self, terms):
@@ -184,7 +194,8 @@ class AOFLoader(object):
     def mergeHash(self, terms):
         args = self.parseHashArgs(terms)
         self.db.mergeHashs(dbName=args["dbName"], keyName1=args["keyName1"],
-                           keyName2=args["keyName2"], resultKeyName=args["resultKeyName"])
+                           keyName2=args["keyName2"], resultKeyName=args["resultKeyName"],
+                           mergeMode=args["mergeMode"])
 
     def increaseHash(self, terms):
         args = self.parseHashArgs(terms)

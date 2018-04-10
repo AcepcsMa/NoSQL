@@ -638,8 +638,8 @@ class NoSqlDb(object):
                 if key not in baseKeys:
                     self.hashDict[dbName][resultKeyName][key] = self.hashDict[dbName][otherDictName][key]
             self.unlock("HASH", dbName, resultKeyName)
-            self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}"
-                                .format(dbName, keyName1, keyName2, resultKeyName))
+            self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}\{}"
+                                .format(dbName, keyName1, keyName2, resultKeyName, mergeMode))
             self.rdbLogger.info("Hash Merge Success "
                              "{} merges {} -> {}".
                                 format(keyName1, keyName2, resultKeyName))
@@ -653,8 +653,8 @@ class NoSqlDb(object):
                     if key not in baseKeys:
                         self.hashDict[dbName][baseDictName][key] = self.hashDict[dbName][otherDictName][key]
                 self.unlock("HASH", dbName, baseDictName)
-                self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}"
-                                    .format(dbName, keyName1, keyName2, baseDictName))
+                self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}\t{}"
+                                    .format(dbName, keyName1, keyName2, baseDictName, mergeMode))
                 self.rdbLogger.info("Hash Merge Success "
                                  "{} merges {} -> {}".
                                     format(keyName1, keyName2, keyName1))

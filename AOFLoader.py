@@ -30,7 +30,13 @@ class AOFLoader(object):
             "REPLACE_HASH": self.replaceHash,
             "MERGE_HASH": self.mergeHash,
             "INCREASE_HASH": self.increaseHash,
-            "DECREASE_HASH": self.decreaseHash
+            "DECREASE_HASH": self.decreaseHash,
+            "CREATE_SET": self.createSet,
+            "INSERT_SET": self.insertSet,
+            "REMOVE_FROM_SET": self.removeFromSet,
+            "CLEAR_SET": self.clearSet,
+            "DELETE_SET": self.deleteSet,
+            "REPLACE_SET": self.replaceSet
         }
 
     def loadLogs(self):
@@ -207,23 +213,35 @@ class AOFLoader(object):
         self.db.decreaseHash(dbName=args["dbName"], keyName=args["keyName"],
                              key=args["key"], value=args["value"])
 
-    def createSet(self):
-        pass
+    def createSet(self, terms):
+        args = self.parseSetArgs(terms)
+        self.db.createSet(dbName=args["dbName"], keyName=args["keyName"])
 
-    def insertSet(self):
-        pass
+    def insertSet(self, terms):
+        args = self.parseSetArgs(terms)
+        self.db.insertSet(dbName=args["dbName"], 
+                          keyName=args["keyName"], 
+                          value=args["value"])
 
-    def removeFromSet(self):
-        pass
+    def removeFromSet(self, terms):
+        args = self.parseSetArgs(terms)
+        self.db.rmFromSet(dbName=args["dbName"], 
+                          keyName=args["keyName"], 
+                          value=args["value"])
 
     def deleteSet(self):
-        pass
+        args = self.parseSetArgs(terms)
+        self.db.deleteSet(dbName=args["dbName"], keyName=args["keyName"])
 
     def clearSet(self):
-        pass
+        args = self.parseSetArgs(terms)
+        self.db.clearSet(dbName=args["dbName"], keyName=args["keyName"])
 
     def replaceSet(self):
-        pass
+        args = self.parseSetArgs(terms)
+        self.db.replaceSet(dbName=args["dbName"], 
+                           keyName=args["keyName"], 
+                           value=args["value"])
 
     def createZSet(self):
         pass

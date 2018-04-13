@@ -259,23 +259,33 @@ class AOFLoader(object):
                            keyName=args["keyName"], 
                            value=args["value"])
 
-    def createZSet(self):
-        pass
+    def createZSet(self, terms):
+        args = self.parseZSetArgs(terms)
+        self.db.createZSet(dbName=args["dbName"], keyName=args["keyName"])
 
-    def insertZSet(self):
-        pass
+    def insertZSet(self, terms):
+        args = self.parseZSetArgs(terms)
+        self.db.insertZSet(dbName=args["dbName"], keyName=args["keyName"],
+                           value=args["value"], score=args["score"])
 
-    def removeFromZSet(self):
-        pass
+    def removeFromZSet(self, terms):
+        args = self.parseZSetArgs(terms)
+        self.db.rmFromZSet(dbName=args["dbName"],
+                           keyName=args["keyName"],
+                           value=args["value"])
 
-    def deleteZSet(self):
-        pass
+    def deleteZSet(self, terms):
+        args = self.parseZSetArgs(terms)
+        self.db.deleteZSet(dbName=args["dbName"], keyName=args["keyName"])
 
-    def clearZSet(self):
-        pass
+    def clearZSet(self, terms):
+        args = self.parseZSetArgs(terms)
+        self.db.clearZSet(dbName=args["dbName"], keyName=args["keyName"])
 
-    def removeFromZSetByScore(self):
-        pass
+    def removeFromZSetByScore(self, terms):
+        args = self.parseZSetArgs(terms)
+        self.db.createZSet(dbName=args["dbName"], keyName=args["keyName"],
+                           start=args["start"], end=args["end"])
 
     def addDatabase(self):
         pass

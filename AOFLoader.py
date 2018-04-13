@@ -107,6 +107,22 @@ class AOFLoader(object):
             args["value"] = terms[3]
         return args
 
+    def parseZSetArgs(self, terms):
+        args = {
+            "dbName": terms[1],
+            "keyName": terms[2]
+        }
+        if len(terms) == 4:
+            args["value"] = terms[3]
+        elif len(terms) == 5:
+            if terms[0] == "INSERT_ZSET":
+                args["value"] = terms[3]
+                args["score"] = terms[4]
+            if terms[0] == "REMOVE_FROM_ZSET_BY_SCORE":
+                args["start"] = terms[3]
+                args["end"] = terms[4]
+        return args
+
     def createElem(self, terms):
         args = self.parseElemArgs(terms)
         self.db.createElem(dbName=args["dbName"],
@@ -229,15 +245,15 @@ class AOFLoader(object):
                           keyName=args["keyName"], 
                           value=args["value"])
 
-    def deleteSet(self):
+    def deleteSet(self, terms):
         args = self.parseSetArgs(terms)
         self.db.deleteSet(dbName=args["dbName"], keyName=args["keyName"])
 
-    def clearSet(self):
+    def clearSet(self, terms):
         args = self.parseSetArgs(terms)
         self.db.clearSet(dbName=args["dbName"], keyName=args["keyName"])
 
-    def replaceSet(self):
+    def replaceSet(self, terms):
         args = self.parseSetArgs(terms)
         self.db.replaceSet(dbName=args["dbName"], 
                            keyName=args["keyName"], 

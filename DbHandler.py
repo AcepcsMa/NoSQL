@@ -13,8 +13,8 @@ class DbHandler(object):
     # add a customized database
     def addDatabase(self, adminKey, dbName):
         if Utils.isValidType(dbName):
-            code = self.database.addDb(adminKey=adminKey,
-                                       dbName=dbName)
+            code = self.database.addDatabase(adminKey=adminKey,
+                                             dbName=dbName)
         else:
             code = responseCode.ELEM_TYPE_ERROR
         msg = Utils.makeMessage(responseCode.detail[code],

@@ -123,6 +123,17 @@ class AOFLoader(object):
                 args["end"] = terms[4]
         return args
 
+    def parseDbArgs(self, terms):
+        args = {
+            "dbName": terms[1]
+        }
+        if len(terms) == 3:
+            args["password"] = terms[2]
+        elif len(terms) == 4:
+            args["originalPwd"] = terms[2]
+            args["newPassword"] = terms[3]
+        return args
+
     def createElem(self, terms):
         args = self.parseElemArgs(terms)
         self.db.createElem(dbName=args["dbName"],
@@ -287,17 +298,30 @@ class AOFLoader(object):
         self.db.createZSet(dbName=args["dbName"], keyName=args["keyName"],
                            start=args["start"], end=args["end"])
 
-    def addDatabase(self):
-        pass
+    def addDatabase(self, terms):
+        args = self.parseDbArgs(terms)
+        adminKey = self.db.adminKey
+        self.db.addDatabase(adminKey=adminKey, dbName=args["dbName"])
 
-    def deleteDatabase(self):
-        pass
+    def deleteDatabase(self, terms):
+        args = self.parseDbArgs(terms)
+        adminKey = self.db.adminKey
+        self.db.delDatabase(adminKey=adminKey, dbName=args["dbName"])
 
-    def setDatabasePwd(self):
-        pass
+    def setDatabasePwd(self, terms):
+        args = self.parseDbArgs(terms)
+        adminKey = self.db.adminKey
+        self.db.setDbPassword(adminKey=adminKey,
+                              dbName=args["dbName"],
+                              password=args["password"])
 
-    def changeDatabasePwd(self):
-        pass
+    def changeDatabasePwd(self, terms):
+        args = self.parseDbArgs(terms)
+        adminKey = self.db.adminKey
+        self.db.changeDbPassword(adminKey=adminKey, dbName=args["dbName"],
+                      originalPwd=args["originalPwd"], newPwd=args["newPassword"])
 
-    def deleteDatabasePwd(self):
-        pass
+    def deleteDatabasePwd(self, terms):
+        args = self.parseDbArgs(terms)
+        adminKey = self.db.adminKey
+        self.db.removeDbPassword(adminKey=adminKey, dbName=args["dbName"])

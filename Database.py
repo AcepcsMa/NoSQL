@@ -1064,7 +1064,7 @@ class NoSqlDb(object):
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, len(result))
 
     @saveTrigger
-    def addDb(self, adminKey, dbName):
+    def addDatabase(self, adminKey, dbName):
         if adminKey != self.adminKey:
             return responseCode.ADMIN_KEY_ERROR
 
@@ -1300,7 +1300,7 @@ class NoSqlDb(object):
 
         self.dbPassword[dbName] = newPwd
         self.aofLogger.info("CHANGE_DATABASE_PWD\t{}\t{}"
-                            .format(dbName, newPwd))
+                            .format(dbName, originalPwd, newPwd))
         self.rdbLogger.info("Change Database password\t{}"
                             .format(dbName))
         return responseCode.DB_PASSWORD_CHANGE_SUCCESS

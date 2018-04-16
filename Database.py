@@ -19,6 +19,7 @@ class NoSqlDb(object):
         self.dbNameSet = {"db0", "db1", "db2", "db3", "db4"}  # initialize databases
         self.saveTrigger = config["SAVE_TRIGGER"]
         self.adminKey = config["ADMIN_KEY"]
+        self.saveSchema = config["SAVE_SCHEMA"]
         self.opCount = 0
 
         self.initDb()
@@ -1264,6 +1265,18 @@ class NoSqlDb(object):
 
         except Exception as e:
             self.rdbLogger.warning("Database Load Fail {0}".format(str(e)))
+
+    def rdbSave(self):
+        pass
+
+    def aofSave(self):
+        pass
+
+    def rdbLoad(self):
+        pass
+
+    def aofLoad(self):
+        pass
 
     def setDbPassword(self, adminKey, dbName, password):
         if adminKey != self.adminKey:

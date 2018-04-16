@@ -36,7 +36,18 @@ class AOFLoader(object):
             "REMOVE_FROM_SET": self.removeFromSet,
             "CLEAR_SET": self.clearSet,
             "DELETE_SET": self.deleteSet,
-            "REPLACE_SET": self.replaceSet
+            "REPLACE_SET": self.replaceSet,
+            "CREATE_ZSET": self.createZSet,
+            "INSERT_ZSET": self.insertZSet,
+            "REMOVE_FROM_ZSET": self.removeFromZSet,
+            "CLEAR_ZSET": self.clearZSet,
+            "DELETE_ZSET": self.deleteZSet,
+            "REMOVE_FROM_ZSET_BY_SCORE": self.removeFromZSetByScore,
+            "ADD_DATABASE": self.addDatabase,
+            "DELETE_DATABASE": self.deleteDatabase,
+            "SET_DATABASE_PWD": self.setDatabasePwd,
+            "CHANGE_DATABASE_PWD": self.changeDatabasePwd,
+            "REMOVE_DATABASE_PWD": self.deleteDatabasePwd
         }
 
     def loadLogs(self):
@@ -48,6 +59,7 @@ class AOFLoader(object):
                     self.pwdLogs.append(line)   # separate pwd operations
                 else:
                     self.logs.append(line)
+        self.logs.extend(self.pwdLogs)  # put pwd ops behind normal data ops
 
     def build(self):
         for log in self.logs:

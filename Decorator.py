@@ -13,7 +13,7 @@ def saveTrigger(func):
         # when opCounts reach the trigger, save automatically
         if self.opCount == self.saveTrigger:
             self.opCount = 0
-            self.saveDb()
+            self.rdbSave()
             self.logger.info("Auto Save Triggers")
         return result
     return trigger

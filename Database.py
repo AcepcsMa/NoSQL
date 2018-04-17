@@ -7,6 +7,7 @@ import json
 import logging
 import random
 from ZSet import ZSet
+from AOFLoader import AOFLoader
 from TTLTool import *
 from DataFactory import *
 
@@ -20,11 +21,13 @@ class NoSqlDb(object):
         self.saveTrigger = config["SAVE_TRIGGER"]
         self.adminKey = config["ADMIN_KEY"]
         self.saveSchema = config["SAVE_SCHEMA"]
+        self.aofLogPath = config["AOF_LOG_PATH"]
         self.opCount = 0
+        self.aofLoader = AOFLoader(self.aofLogPath, self)
 
         self.initDb()
         self.initLog(config)
-        self.loadDb()
+        self.rdbLoad()
 
     def initDb(self):
 
@@ -222,6 +225,12 @@ class NoSqlDb(object):
                     return True
                 else:
                     return False
+
+    def writeLog(self, log):
+        if self.saveSchema == "RDB":
+            self.rdbLogger.info(log)
+        elif self.saveSchema == "AOF":
+            self.aofLogger.info(log)
 
     @keyNameValidity
     @saveTrigger
@@ -1158,7 +1167,7 @@ class NoSqlDb(object):
         with open("data" + os.sep + dbName + os.sep + TTLFileName, "w") as TTLFile:
             TTLFile.write(json.dumps(ttl[dbName]))
 
-    def saveDb(self):
+    def rdbSave(self):
         if self.saveLock is False:
             # check if the data directory exists
             if os.path.exists("./data/") is False:
@@ -1186,7 +1195,7 @@ class NoSqlDb(object):
             self.rdbLogger.warning("Database Save Locked")
             return responseCode.DB_SAVE_LOCKED
 
-    def loadZSet(self, dbName, dataFileName, valueFileName, TTLFileName):
+    def rdbLoadZSet(self, dbName, dataFileName, valueFileName, TTLFileName):
         # load names
         with open("data" + os.sep + dbName + os.sep + dataFileName, "r") as nameFile:
             names = json.loads(nameFile.read())
@@ -1207,7 +1216,7 @@ class NoSqlDb(object):
         with open("data" + os.sep + dbName + os.sep + TTLFileName, "r") as TTLFile:
             self.zsetTTL[dbName] = json.loads(TTLFile.read())
 
-    def loadData(self, dbName, dataType, dataFileName, valueFileName, TTLFileName):
+    def rdbLoadData(self, dbName, dataType, dataFileName, valueFileName, TTLFileName):
         nameDict = self.getNameSet(dataType)
         valueDict = self.getValueDict(dataType)
         ttlDict = self.getTTLDict(dataType)
@@ -1234,7 +1243,7 @@ class NoSqlDb(object):
         with open("data" + os.sep + dbName + os.sep + TTLFileName, "r") as TTLFile:
             ttlDict[dbName] = json.loads(TTLFile.read())
 
-    def loadDb(self):
+    def rdbLoad(self):
         try:
             if not os.path.exists("data"):
                 os.mkdir("data")
@@ -1255,28 +1264,22 @@ class NoSqlDb(object):
                     self.invertedTypeDict[dbName] = dict()
 
                     # load data
-                    self.loadData(dbName, "ELEM", "elemName.txt", "elemValue.txt", "elemTTL.txt")
-                    self.loadData(dbName, "LIST", "listName.txt", "listValue.txt", "listTTL.txt")
-                    self.loadData(dbName, "HASH", "hashName.txt", "hashValue.txt", "hashTTL.txt")
-                    self.loadData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
-                    self.loadZSet(dbName, "zsetName.txt", "zsetValue.txt", "zsetTTL.txt")
+                    self.rdbLoadData(dbName, "ELEM", "elemName.txt", "elemValue.txt", "elemTTL.txt")
+                    self.rdbLoadData(dbName, "LIST", "listName.txt", "listValue.txt", "listTTL.txt")
+                    self.rdbLoadData(dbName, "HASH", "hashName.txt", "hashValue.txt", "hashTTL.txt")
+                    self.rdbLoadData(dbName, "SET", "setName.txt", "setValue.txt", "setTTL.txt")
+                    self.rdbLoadZSet(dbName, "zsetName.txt", "zsetValue.txt", "zsetTTL.txt")
 
             self.rdbLogger.info("Database Load Success")
 
         except Exception as e:
             self.rdbLogger.warning("Database Load Fail {0}".format(str(e)))
 
-    def rdbSave(self):
-        pass
-
     def aofSave(self):
         pass
 
-    def rdbLoad(self):
-        pass
-
     def aofLoad(self):
-        pass
+        self.aofLoader.build()
 
     def setDbPassword(self, adminKey, dbName, password):
         if adminKey != self.adminKey:

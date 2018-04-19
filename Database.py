@@ -241,9 +241,10 @@ class NoSqlDb(object):
         self.elemDict[dbName][keyName] = value
         self.invertedTypeDict[dbName][keyName] = responseCode.ELEM_TYPE
         self.unlock("ELEM", dbName, keyName)
-        self.rdbLogger.info("Create Element Success "
-                         "{0}->{1}->{2}".format(dbName, keyName, value))
-        self.aofLogger.info("CREATE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
+        self.writeLog("CREATE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
+        # self.rdbLogger.info("Create Element Success "
+        #                  "{0}->{1}->{2}".format(dbName, keyName, value))
+        # self.aofLogger.info("CREATE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
         return responseCode.ELEM_CREATE_SUCCESS
 
     @saveTrigger
@@ -258,9 +259,10 @@ class NoSqlDb(object):
             self.lock("ELEM", dbName, keyName)
             self.elemDict[dbName][keyName] = value
             self.unlock("ELEM", dbName, keyName)
-            self.rdbLogger.info("Update Element Success "
-                             "{0}->{1}->{2}".format(dbName, keyName, value))
-            self.aofLogger.info("UPDATE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
+            self.writeLog("UPDATE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
+            # self.rdbLogger.info("Update Element Success "
+            #                  "{0}->{1}->{2}".format(dbName, keyName, value))
+            # self.aofLogger.info("UPDATE_ELEM\t{}\t{}\t{}".format(dbName, keyName, value))
             return responseCode.ELEM_UPDATE_SUCCESS
 
     @passwordCheck
@@ -291,10 +293,12 @@ class NoSqlDb(object):
             self.lock("ELEM", dbName, keyName)
             self.elemDict[dbName][keyName] += value
             self.unlock("ELEM", dbName, keyName)
-            self.rdbLogger.info("Increase Element Success "
-                             "{0}->{1}".format(dbName, keyName))
-            self.aofLogger.info("INCREASE_ELEM\t{}\t{}\t{}"
-                                .format(dbName, keyName, value))
+            self.writeLog("INCREASE_ELEM\t{}\t{}\t{}"
+                          .format(dbName, keyName, value))
+            # self.rdbLogger.info("Increase Element Success "
+            #                  "{0}->{1}".format(dbName, keyName))
+            # self.aofLogger.info("INCREASE_ELEM\t{}\t{}\t{}"
+            #                     .format(dbName, keyName, value))
             return responseCode.ELEM_INCR_SUCCESS
 
     @saveTrigger
@@ -308,10 +312,12 @@ class NoSqlDb(object):
             self.lock("ELEM", dbName, keyName)
             self.elemDict[dbName][keyName] -= value
             self.unlock("ELEM", dbName, keyName)
-            self.rdbLogger.info("Decrease Element Success "
-                             "{0}->{1}".format(dbName, keyName))
-            self.aofLogger.info("DECREASE_ELEM\t{}\t{}\t{}"
-                                .format(dbName, keyName, value))
+            self.writeLog("DECREASE_ELEM\t{}\t{}\t{}"
+                          .format(dbName, keyName, value))
+            # self.rdbLogger.info("Decrease Element Success "
+            #                  "{0}->{1}".format(dbName, keyName))
+            # self.aofLogger.info("DECREASE_ELEM\t{}\t{}\t{}"
+            #                     .format(dbName, keyName, value))
             return responseCode.ELEM_DECR_SUCCESS
 
     @saveTrigger
@@ -331,9 +337,10 @@ class NoSqlDb(object):
             except:
                 pass
             self.elemLockDict[dbName].pop(keyName)
-            self.rdbLogger.info("Delete Element Success "
-                             "{0}->{1}".format(dbName, keyName))
-            self.aofLogger.info("DELETE_ELEM\t{}\t{}".format(dbName, keyName))
+            self.writeLog("DELETE_ELEM\t{}\t{}".format(dbName, keyName))
+            # self.rdbLogger.info("Delete Element Success "
+            #                  "{0}->{1}".format(dbName, keyName))
+            # self.aofLogger.info("DELETE_ELEM\t{}\t{}".format(dbName, keyName))
             return responseCode.ELEM_DELETE_SUCCESS
 
     @keyNameValidity
@@ -345,9 +352,10 @@ class NoSqlDb(object):
         self.listDict[dbName][keyName] = list()
         self.invertedTypeDict[dbName][keyName] = responseCode.LIST_TYPE
         self.unlock("LIST", dbName, keyName)
-        self.rdbLogger.info("Create List Success "
-                         "{0}->{1}".format(dbName, keyName))
-        self.aofLogger.info("CREATE_LIST\t{}\t{}".format(dbName, keyName))
+        self.writeLog("CREATE_LIST\t{}\t{}".format(dbName, keyName))
+        # self.rdbLogger.info("Create List Success "
+        #                  "{0}->{1}".format(dbName, keyName))
+        # self.aofLogger.info("CREATE_LIST\t{}\t{}".format(dbName, keyName))
         return responseCode.LIST_CREATE_SUCCESS
 
     @passwordCheck
@@ -385,13 +393,15 @@ class NoSqlDb(object):
             self.lock("LIST", dbName, keyName)
             if isLeft is None:
                 self.listDict[dbName][keyName].append(value)
-                self.aofLogger.info("INSERT_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
+                self.writeLog("INSERT_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
+                # self.aofLogger.info("INSERT_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
             else:
                 self.listDict[dbName][keyName].insert(0, value)
-                self.aofLogger.info("LEFT_INSERT_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
+                self.writeLog("LEFT_INSERT_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
+                # self.aofLogger.info("LEFT_INSERT_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
             self.unlock("LIST", dbName, keyName)
-            self.rdbLogger.info("Insert List Success "
-                             "{0}->{1}->{2}".format(dbName, keyName, value))
+            # self.rdbLogger.info("Insert List Success "
+            #                  "{0}->{1}->{2}".format(dbName, keyName, value))
             return responseCode.LIST_INSERT_SUCCESS
 
     @saveTrigger
@@ -415,9 +425,10 @@ class NoSqlDb(object):
                 pass
             self.unlock("LIST", dbName, keyName)
             self.listLockDict[dbName].pop(keyName)
-            self.rdbLogger.info("Delete List Success "
-                             "{0}->{1}".format(dbName, keyName))
-            self.aofLogger.info("DELETE_LIST\t{}\t{}".format(dbName, keyName))
+            self.writeLog("DELETE_LIST\t{}\t{}".format(dbName, keyName))
+            # self.rdbLogger.info("Delete List Success "
+            #                  "{0}->{1}".format(dbName, keyName))
+            # self.aofLogger.info("DELETE_LIST\t{}\t{}".format(dbName, keyName))
             return responseCode.LIST_DELETE_SUCCESS
 
     @saveTrigger
@@ -434,9 +445,10 @@ class NoSqlDb(object):
                 self.lock("LIST", dbName, keyName)
                 self.listDict[dbName][keyName].remove(value)
                 self.unlock("LIST", dbName, keyName)
-                self.rdbLogger.info("Remove From List Success "
-                                 "{0}->{1}->{2}".format(dbName, keyName, value))
-                self.aofLogger.info("REMOVE_FROM_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
+                self.writeLog("REMOVE_FROM_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
+                # self.rdbLogger.info("Remove From List Success "
+                #                  "{0}->{1}->{2}".format(dbName, keyName, value))
+                # self.aofLogger.info("REMOVE_FROM_LIST\t{}\t{}\t{}".format(dbName, keyName, value))
                 return responseCode.LIST_REMOVE_SUCCESS
 
     @passwordCheck
@@ -456,9 +468,10 @@ class NoSqlDb(object):
             self.lock("LIST", dbName, keyName)
             self.listDict[dbName][keyName] = []
             self.unlock("LIST", dbName, keyName)
-            self.rdbLogger.info("List Clear Success "
-                             "{}->{}".format(dbName, keyName))
-            self.aofLogger.info("CLEAR_LIST\t{}\t{}".format(dbName, keyName))
+            self.writeLog("CLEAR_LIST\t{}\t{}".format(dbName, keyName))
+            # self.rdbLogger.info("List Clear Success "
+            #                  "{}->{}".format(dbName, keyName))
+            # self.aofLogger.info("CLEAR_LIST\t{}\t{}".format(dbName, keyName))
             return responseCode.LIST_CLEAR_SUCCESS
 
     @saveTrigger
@@ -470,19 +483,21 @@ class NoSqlDb(object):
             self.listDict[dbName][resultKeyName].extend(self.listDict[dbName][keyName1])
             self.listDict[dbName][resultKeyName].extend(self.listDict[dbName][keyName2])
             self.unlock("LIST", dbName, resultKeyName)
-            self.rdbLogger.info("Lists Merge Success "
-                             "{} merges {}->{}".
-                                format(dbName, keyName1, keyName2, resultKeyName))
-            self.aofLogger.info("MERGE_LIST\t{}\t{}\t{}\t{}".format(dbName, keyName1, keyName2, resultKeyName))
+            self.writeLog("MERGE_LIST\t{}\t{}\t{}\t{}".format(dbName, keyName1, keyName2, resultKeyName))
+            # self.rdbLogger.info("Lists Merge Success "
+            #                  "{} merges {}->{}".
+            #                     format(dbName, keyName1, keyName2, resultKeyName))
+            # self.aofLogger.info("MERGE_LIST\t{}\t{}\t{}\t{}".format(dbName, keyName1, keyName2, resultKeyName))
             return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][resultKeyName]
         else:
             if self.listLockDict[dbName][keyName1] is False:
                 self.lock("LIST", dbName, keyName1)
                 self.listDict[dbName][keyName1].extend(self.listDict[dbName][keyName2])
-                self.rdbLogger.info("Lists Merge Success "
-                                 "{} merges {}->{}".
-                                    format(dbName, keyName1, keyName2, keyName1))
-                self.aofLogger.info("MERGE_LIST\t{}\t{}\t{}\t{}".format(dbName, keyName1, keyName2, keyName1))
+                self.writeLog("MERGE_LIST\t{}\t{}\t{}\t{}".format(dbName, keyName1, keyName2, keyName1))
+                # self.rdbLogger.info("Lists Merge Success "
+                #                  "{} merges {}->{}".
+                #                     format(dbName, keyName1, keyName2, keyName1))
+                # self.aofLogger.info("MERGE_LIST\t{}\t{}\t{}\t{}".format(dbName, keyName1, keyName2, keyName1))
                 return responseCode.LIST_MERGE_SUCCESS, self.listDict[dbName][keyName1]
             else:
                 self.rdbLogger.info("List Locked "

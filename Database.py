@@ -514,9 +514,10 @@ class NoSqlDb(object):
             self.hashDict[dbName][keyName] = dict()
             self.invertedTypeDict[dbName][keyName] = responseCode.HASH_TYPE
             self.unlock("HASH", dbName, keyName)
-            self.rdbLogger.info("Hash Create Success "
-                             "{}->{}".format(dbName, keyName))
-            self.aofLogger.info("CREATE_HASH\t{}\t{}".format(dbName, keyName))
+            self.writeLog("CREATE_HASH\t{}\t{}".format(dbName, keyName))
+            # self.rdbLogger.info("Hash Create Success "
+            #                  "{}->{}".format(dbName, keyName))
+            # self.aofLogger.info("CREATE_HASH\t{}\t{}".format(dbName, keyName))
             return responseCode.HASH_CREATE_SUCCESS
         else:
             self.rdbLogger.warning("Hash Create Fail(Hash Exists) "
@@ -556,10 +557,12 @@ class NoSqlDb(object):
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName][keyName][key] = value
             self.unlock("HASH", dbName, keyName)
-            self.aofLogger.info("INSERT_HASH\t{}\t{}\t{}\t{}"
-                                .format(dbName, keyName, key, value))
-            self.rdbLogger.info("Hash Insert Success {}->{} {}:{}"
-                                .format(dbName, keyName, key, value))
+            self.writeLog("INSERT_HASH\t{}\t{}\t{}\t{}"
+                          .format(dbName, keyName, key, value))
+            # self.aofLogger.info("INSERT_HASH\t{}\t{}\t{}\t{}"
+            #                     .format(dbName, keyName, key, value))
+            # self.rdbLogger.info("Hash Insert Success {}->{} {}:{}"
+            #                     .format(dbName, keyName, key, value))
             return responseCode.HASH_INSERT_SUCCESS
 
     @passwordCheck
@@ -590,9 +593,10 @@ class NoSqlDb(object):
                 pass
             self.unlock("HASH", dbName, keyName)
             self.hashLockDict[dbName].pop(keyName)
-            self.aofLogger.info("DELETE_HASH\t{}\t{}".format(dbName, keyName))
-            self.rdbLogger.info("Hash Delete Success "
-                             "{}->{}".format(dbName, keyName))
+            self.writeLog("DELETE_HASH\t{}\t{}".format(dbName, keyName))
+            # self.aofLogger.info("DELETE_HASH\t{}\t{}".format(dbName, keyName))
+            # self.rdbLogger.info("Hash Delete Success "
+            #                  "{}->{}".format(dbName, keyName))
             return responseCode.HASH_DELETE_SUCCESS
 
     @saveTrigger
@@ -606,10 +610,12 @@ class NoSqlDb(object):
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName][keyName].pop(key)
             self.unlock("HASH", dbName, keyName)
-            self.aofLogger.info("REMOVE_FROM_HASH\t{}\t{}\t{}"
-                                .format(dbName, keyName, key))
-            self.rdbLogger.info("Hash Value Remove Success "
-                             "{}->{}:{}".format(dbName, keyName, key))
+            self.writeLog("REMOVE_FROM_HASH\t{}\t{}\t{}"
+                          .format(dbName, keyName, key))
+            # self.aofLogger.info("REMOVE_FROM_HASH\t{}\t{}\t{}"
+            #                     .format(dbName, keyName, key))
+            # self.rdbLogger.info("Hash Value Remove Success "
+            #                  "{}->{}:{}".format(dbName, keyName, key))
             return responseCode.HASH_REMOVE_SUCCESS
 
     @saveTrigger
@@ -623,10 +629,11 @@ class NoSqlDb(object):
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName][keyName].clear()
             self.unlock("HASH", dbName, keyName)
-            self.aofLogger.info("CLEAR_HASH\t{}\t{}"
-                                .format(dbName, keyName))
-            self.rdbLogger.info("Hash Clear Success "
-                             "{}->{}".format(dbName, keyName))
+            self.writeLog("CLEAR_HASH\t{}\t{}".format(dbName, keyName))
+            # self.aofLogger.info("CLEAR_HASH\t{}\t{}"
+            #                     .format(dbName, keyName))
+            # self.rdbLogger.info("Hash Clear Success "
+            #                  "{}->{}".format(dbName, keyName))
             return responseCode.HASH_CLEAR_SUCCESS
 
     @saveTrigger
@@ -640,10 +647,12 @@ class NoSqlDb(object):
             self.lock("HASH", dbName, keyName)
             self.hashDict[dbName][keyName] = hashValue
             self.unlock("HASH", dbName, keyName)
-            self.aofLogger.info("REPLACE_HASH\t{}\t{}\t{}"
-                                .format(dbName, keyName, str(hashValue)))
-            self.rdbLogger.info("Hash Replace Success "
-                             "{}->{}".format(dbName, keyName))
+            self.writeLog("REPLACE_HASH\t{}\t{}\t{}"
+                          .format(dbName, keyName, str(hashValue)))
+            # self.aofLogger.info("REPLACE_HASH\t{}\t{}\t{}"
+            #                     .format(dbName, keyName, str(hashValue)))
+            # self.rdbLogger.info("Hash Replace Success "
+            #                  "{}->{}".format(dbName, keyName))
             return responseCode.HASH_REPLACE_SUCCESS
 
     @saveTrigger
@@ -663,11 +672,13 @@ class NoSqlDb(object):
                 if key not in baseKeys:
                     self.hashDict[dbName][resultKeyName][key] = self.hashDict[dbName][otherDictName][key]
             self.unlock("HASH", dbName, resultKeyName)
-            self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}\{}"
-                                .format(dbName, keyName1, keyName2, resultKeyName, mergeMode))
-            self.rdbLogger.info("Hash Merge Success "
-                             "{} merges {} -> {}".
-                                format(keyName1, keyName2, resultKeyName))
+            self.writeLog("MERGE_HASH\t{}\t{}\t{}\t{}\{}"
+                          .format(dbName, keyName1, keyName2, resultKeyName, mergeMode))
+            # self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}\{}"
+            #                     .format(dbName, keyName1, keyName2, resultKeyName, mergeMode))
+            # self.rdbLogger.info("Hash Merge Success "
+            #                  "{} merges {} -> {}".
+            #                     format(keyName1, keyName2, resultKeyName))
 
         else:
             if self.hashLockDict[dbName][baseDictName] is False:
@@ -678,11 +689,13 @@ class NoSqlDb(object):
                     if key not in baseKeys:
                         self.hashDict[dbName][baseDictName][key] = self.hashDict[dbName][otherDictName][key]
                 self.unlock("HASH", dbName, baseDictName)
-                self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}\t{}"
-                                    .format(dbName, keyName1, keyName2, baseDictName, mergeMode))
-                self.rdbLogger.info("Hash Merge Success "
-                                 "{} merges {} -> {}".
-                                    format(keyName1, keyName2, keyName1))
+                self.writeLog("MERGE_HASH\t{}\t{}\t{}\t{}\t{}"
+                              .format(dbName, keyName1, keyName2, baseDictName, mergeMode))
+                # self.aofLogger.info("MERGE_HASH\t{}\t{}\t{}\t{}\t{}"
+                #                     .format(dbName, keyName1, keyName2, baseDictName, mergeMode))
+                # self.rdbLogger.info("Hash Merge Success "
+                #                  "{} merges {} -> {}".
+                #                     format(keyName1, keyName2, keyName1))
             else:
                 self.rdbLogger.warning("Hash Is Locked "
                                     "{}->{} or {}->{}".
@@ -709,10 +722,12 @@ class NoSqlDb(object):
         self.lock("HASH", dbName, keyName)
         self.hashDict[dbName][keyName][key] += value
         self.unlock("HASH", dbName, keyName)
-        self.aofLogger.info("INCREASE_HASH\t{}\t{}\t{}\t{}"
-                            .format(dbName, keyName, key, value))
-        self.rdbLogger.info("Hash Value Increase Success "
-                         "{}->{}:{}".format(dbName, keyName, key))
+        self.writeLog("INCREASE_HASH\t{}\t{}\t{}\t{}"
+                      .format(dbName, keyName, key, value))
+        # self.aofLogger.info("INCREASE_HASH\t{}\t{}\t{}\t{}"
+        #                     .format(dbName, keyName, key, value))
+        # self.rdbLogger.info("Hash Value Increase Success "
+        #                  "{}->{}:{}".format(dbName, keyName, key))
         return responseCode.HASH_INCR_SUCCESS, self.hashDict[dbName][keyName][key]
 
     @saveTrigger
@@ -726,10 +741,12 @@ class NoSqlDb(object):
         self.lock("HASH", dbName, keyName)
         self.hashDict[dbName][keyName][key] -= value
         self.unlock("HASH", dbName, keyName)
-        self.aofLogger.info("DECREASE_HASH\t{}\t{}\t{}\t{}"
-                            .format(dbName, keyName, key, value))
-        self.rdbLogger.info("Hash Value Decrease Success "
-                         "{}->{}:{}".format(dbName, keyName, key))
+        self.writeLog("DECREASE_HASH\t{}\t{}\t{}\t{}"
+                      .format(dbName, keyName, key, value))
+        # self.aofLogger.info("DECREASE_HASH\t{}\t{}\t{}\t{}"
+        #                     .format(dbName, keyName, key, value))
+        # self.rdbLogger.info("Hash Value Decrease Success "
+        #                  "{}->{}:{}".format(dbName, keyName, key))
         return responseCode.HASH_DECR_SUCCESS, self.hashDict[dbName][keyName][key]
 
     @keyNameValidity

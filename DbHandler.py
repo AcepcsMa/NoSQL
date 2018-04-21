@@ -44,7 +44,7 @@ class DbHandler(object):
 
     # save the data into file
     def saveDb(self):
-        code = self.database.rdbSave()
+        code = self.database.saveDatabase()
         return Utils.makeMessage(responseCode.detail[code],
                                  code,
                                  time.time())

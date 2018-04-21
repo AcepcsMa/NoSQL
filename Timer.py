@@ -15,7 +15,7 @@ class Timer(threading.Thread):
 
     def setInterval(self, interval):
         self.saveInterval = interval
-        self.database.rdbSave()
+        self.database.saveDatabase()
         return Utils.makeMessage(responseCode.detail[responseCode.SAVE_INTERVAL_CHANGE_SUCCESS],
                                responseCode.SAVE_INTERVAL_CHANGE_SUCCESS,
                                interval)

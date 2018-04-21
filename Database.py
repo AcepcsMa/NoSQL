@@ -857,10 +857,11 @@ class NoSqlDb(object):
         self.zsetDict[dbName][keyName] = ZSet()
         self.invertedTypeDict[dbName][keyName] = responseCode.ZSET_TYPE
         self.unlock("ZSET", dbName, keyName)
-        self.aofLogger.info("CREATE_ZSET\t{}\t{}"
-                            .format(dbName, keyName))
-        self.rdbLogger.info("ZSet Create Success "
-                         "{0}->{1}".format(dbName, keyName))
+        self.writeLog("CREATE_ZSET\t{}\t{}".format(dbName, keyName))
+        # self.aofLogger.info("CREATE_ZSET\t{}\t{}"
+        #                     .format(dbName, keyName))
+        # self.rdbLogger.info("ZSet Create Success "
+        #                  "{0}->{1}".format(dbName, keyName))
         return responseCode.ZSET_CREATE_SUCCESS
 
     @passwordCheck
@@ -878,10 +879,12 @@ class NoSqlDb(object):
             try:
                 self.lock("ZSET", dbName, keyName)
                 if self.zsetDict[dbName][keyName].add(value, score) is True:
-                    self.aofLogger.info("INSERT_ZSET\t{}\t{}\t{}\t{}"
-                                        .format(dbName, keyName, value, score))
-                    self.rdbLogger.info("ZSet Insert Success {0}->{1}->{2}:{3}"
-                                        .format(dbName, keyName, value, score))
+                    self.writeLog("INSERT_ZSET\t{}\t{}\t{}\t{}"
+                                  .format(dbName, keyName, value, score))
+                    # self.aofLogger.info("INSERT_ZSET\t{}\t{}\t{}\t{}"
+                    #                     .format(dbName, keyName, value, score))
+                    # self.rdbLogger.info("ZSet Insert Success {0}->{1}->{2}:{3}"
+                    #                     .format(dbName, keyName, value, score))
                     return responseCode.ZSET_INSERT_SUCCESS
                 else:
                     self.rdbLogger.warning("ZSet Insert Fail(Value Existed) "
@@ -903,10 +906,12 @@ class NoSqlDb(object):
             result = self.zsetDict[dbName][keyName].remove(value)
             self.unlock("ZSET", dbName, keyName)
             if(result is True):
-                self.aofLogger.info("REMOVE_FROM_ZSET\t{}\t{}\t{}"
-                                    .format(dbName, keyName, value))
-                self.rdbLogger.info("ZSet Remove Success {}->{}:{}"
-                                    .format(dbName, keyName, value))
+                self.writeLog("REMOVE_FROM_ZSET\t{}\t{}\t{}"
+                              .format(dbName, keyName, value))
+                # self.aofLogger.info("REMOVE_FROM_ZSET\t{}\t{}\t{}"
+                #                     .format(dbName, keyName, value))
+                # self.rdbLogger.info("ZSet Remove Success {}->{}:{}"
+                #                     .format(dbName, keyName, value))
             else:
                 self.rdbLogger.info("ZSet Remove Fail(Value Not Existed) "
                                  "{}->{}:{}".format(dbName, keyName, value))
@@ -924,10 +929,11 @@ class NoSqlDb(object):
             self.lock("ZSET", dbName, keyName)
             self.zsetDict[dbName][keyName].clear()
             self.unlock("ZSET", dbName, keyName)
-            self.aofLogger.info("CLEAR_ZSET\t{}\t{}"
-                                .format(dbName, keyName))
-            self.rdbLogger.info("ZSet Clear Success {}->{}"
-                                .format(dbName, keyName))
+            self.writeLog("CLEAR_ZSET\t{}\t{}".format(dbName, keyName))
+            # self.aofLogger.info("CLEAR_ZSET\t{}\t{}"
+            #                     .format(dbName, keyName))
+            # self.rdbLogger.info("ZSet Clear Success {}->{}"
+            #                     .format(dbName, keyName))
             return responseCode.ZSET_CLEAR_SUCCESS
 
     @saveTrigger
@@ -946,10 +952,12 @@ class NoSqlDb(object):
             self.invertedTypeDict[dbName].pop(keyName)
             self.unlock("ZSET", dbName, keyName)
             self.zsetLockDict[dbName].pop(keyName)
-            self.aofLogger.info("DELETE_ZSET\t{}\t{}"
-                                .format(dbName, keyName))
-            self.rdbLogger.info("ZSet Delete Success "
-                             "{}->{}".format(dbName, keyName))
+            self.writeLog("DELETE_ZSET\t{}\t{}"
+                          .format(dbName, keyName))
+            # self.aofLogger.info("DELETE_ZSET\t{}\t{}"
+            #                     .format(dbName, keyName))
+            # self.rdbLogger.info("ZSet Delete Success "
+            #                  "{}->{}".format(dbName, keyName))
             return responseCode.ZSET_DELETE_SUCCESS
 
     @passwordCheck
@@ -1004,11 +1012,13 @@ class NoSqlDb(object):
             self.lock("ZSET", dbName, keyName)
             result = self.zsetDict[dbName][keyName].removeByScore(start, end)
             self.unlock("ZSET", dbName, keyName)
-            self.aofLogger.info("REMOVE_FROM_ZSET_BY_SCORE\t{}\t{}\t{}"
-                                .format(dbName, keyName, str(result)))
-            self.rdbLogger.info("ZSet Remove By Score Success "
-                             "{}->{} [{},{})".
-                                format(dbName, keyName, start, end))
+            self.writeLog("REMOVE_FROM_ZSET_BY_SCORE\t{}\t{}\t{}"
+                          .format(dbName, keyName, str(result)))
+            # self.aofLogger.info("REMOVE_FROM_ZSET_BY_SCORE\t{}\t{}\t{}"
+            #                     .format(dbName, keyName, str(result)))
+            # self.rdbLogger.info("ZSet Remove By Score Success "
+            #                  "{}->{} [{},{})".
+            #                     format(dbName, keyName, start, end))
             return (responseCode.ZSET_REMOVE_BY_SCORE_SUCCESS, len(result))
 
     @saveTrigger
@@ -1029,10 +1039,11 @@ class NoSqlDb(object):
                 self.listName[dbName] = set()
                 self.listDict[dbName] = dict()
                 self.elemLockDict[dbName] = dict()
-                self.aofLogger.info("ADD_DATABASE\t{}"
-                                    .format(dbName))
-                self.rdbLogger.info("Database Add Success "
-                                 "{}".format(dbName))
+                self.writeLog("ADD_DATABASE\t{}".format(dbName))
+                # self.aofLogger.info("ADD_DATABASE\t{}"
+                #                     .format(dbName))
+                # self.rdbLogger.info("Database Add Success "
+                #                  "{}".format(dbName))
                 return responseCode.DB_CREATE_SUCCESS
             else:
                 self.rdbLogger.warning("Database Already Exists "
@@ -1061,10 +1072,11 @@ class NoSqlDb(object):
                         os.rmdir(os.path.join(root, name))
                 os.rmdir("data"+os.sep+dbName)
                 self.saveLock = False
-                self.aofLogger.info("DELETE_DATABASE\t{}"
-                                    .format(dbName))
-                self.rdbLogger.info("Database Delete Success "
-                                 "{}".format(dbName))
+                self.writeLog("DELETE_DATABASE\t{}".format(dbName))
+                # self.aofLogger.info("DELETE_DATABASE\t{}"
+                #                     .format(dbName))
+                # self.rdbLogger.info("Database Delete Success "
+                #                  "{}".format(dbName))
                 return responseCode.DB_DELETE_SUCCESS
             else:
                 self.rdbLogger.warning("Database Delete Fail(Save Locked) "
@@ -1231,10 +1243,12 @@ class NoSqlDb(object):
             return responseCode.DB_PASSWORD_LENGTH_ERROR
 
         self.dbPassword[dbName] = password
-        self.aofLogger.info("SET_DATABASE_PWD\t{}\t{}"
-                            .format(dbName, password))
-        self.rdbLogger.info("Set Database password\t{}"
-                            .format(dbName))
+        self.writeLog("SET_DATABASE_PWD\t{}\t{}"
+                      .format(dbName, password))
+        # self.aofLogger.info("SET_DATABASE_PWD\t{}\t{}"
+        #                     .format(dbName, password))
+        # self.rdbLogger.info("Set Database password\t{}"
+        #                     .format(dbName))
         return responseCode.DB_PASSWORD_SET_SUCCESS
 
     def changeDbPassword(self, adminKey, dbName, originalPwd, newPwd):
@@ -1253,10 +1267,12 @@ class NoSqlDb(object):
             return responseCode.ELEM_TYPE_ERROR
 
         self.dbPassword[dbName] = newPwd
-        self.aofLogger.info("CHANGE_DATABASE_PWD\t{}\t{}"
-                            .format(dbName, originalPwd, newPwd))
-        self.rdbLogger.info("Change Database password\t{}"
-                            .format(dbName))
+        self.writeLog("CHANGE_DATABASE_PWD\t{}\t{}"
+                      .format(dbName, originalPwd, newPwd))
+        # self.aofLogger.info("CHANGE_DATABASE_PWD\t{}\t{}"
+        #                     .format(dbName, originalPwd, newPwd))
+        # self.rdbLogger.info("Change Database password\t{}"
+        #                     .format(dbName))
         return responseCode.DB_PASSWORD_CHANGE_SUCCESS
 
     def removeDbPassword(self, adminKey, dbName):
@@ -1267,8 +1283,9 @@ class NoSqlDb(object):
             return responseCode.DB_PASSWORD_NOT_EXIST
 
         self.dbPassword.pop(dbName)
-        self.aofLogger.info("REMOVE_DATABASE_PWD\t{}"
-                            .format(dbName))
-        self.rdbLogger.info("Remove Database password\t{}"
-                            .format(dbName))
+        self.writeLog("REMOVE_DATABASE_PWD\t{}".format(dbName))
+        # self.aofLogger.info("REMOVE_DATABASE_PWD\t{}"
+        #                     .format(dbName))
+        # self.rdbLogger.info("Remove Database password\t{}"
+        #                     .format(dbName))
         return responseCode.DB_PASSWORD_REMOVE_SUCCESS

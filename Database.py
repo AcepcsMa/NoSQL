@@ -1118,6 +1118,12 @@ class NoSqlDb(object):
             self.rdbLogger.warning("Database Save Locked")
             return responseCode.DB_SAVE_LOCKED
 
+    def loadDatabase(self):
+        if self.saveSchema == "RDB":
+            self.rdbLoad()
+        elif self.saveSchema == "AOF":
+            self.aofLoad()
+
     def rdbLoadZSet(self, dbName, dataFileName, valueFileName, TTLFileName):
         # load names
         with open("data" + os.sep + dbName + os.sep + dataFileName, "r") as nameFile:

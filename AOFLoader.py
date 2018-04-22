@@ -53,13 +53,16 @@ class AOFLoader(object):
     def loadLogs(self):
         self.logs = []
         self.pwdLogs = []
-        with open(self.logPath, "r") as aofLog:
-            for line in aofLog.readlines():
-                if "DATABASE_PWD" in line:
-                    self.pwdLogs.append(line)   # separate pwd operations
-                else:
-                    self.logs.append(line)
-        self.logs.extend(self.pwdLogs)  # put pwd ops behind normal data ops
+        try:
+            with open(self.logPath, "r") as aofLog:
+                for line in aofLog.readlines():
+                    if "DATABASE_PWD" in line:
+                        self.pwdLogs.append(line)   # separate pwd operations
+                    else:
+                        self.logs.append(line)
+            self.logs.extend(self.pwdLogs)  # put pwd ops behind normal data ops
+        except:
+            self.db.rdbLoad()
 
     def build(self):
         for log in self.logs:
